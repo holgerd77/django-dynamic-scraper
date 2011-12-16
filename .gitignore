@@ -1,0 +1,14 @@
+*.pyc
+*.db
+.scrapy
+dbs
+thumbnails/*.jpg
+.DS_Store
+.project
+.pydevproject
+.settings
+*.swp
+*.egg-info
+dist
+build
+docs/_build
