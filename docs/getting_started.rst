@@ -33,8 +33,9 @@ from this example is used in the following guidelines.
 
 .. warning::
 	While there is a testsuite for DDS with tests for most of its' features and the app runs relatively stable,
-	DDS is pre-alpha and still in an early development phase. Expect API changes in future releases which will
-	require manual adaption in your code.  
+	DDS is **pre-alpha** and still in an early development phase. Expect API changes in future releases 
+	which will require manual adaption in your code. During pre-alpha phase, API and/or DB changes can also
+	occur after minor release updates (e.g. from 0.1.0 to 0.1.1).  
 
 
 .. _Scrapy: http://www.scrapy.org 
