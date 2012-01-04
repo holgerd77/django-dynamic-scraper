@@ -2,7 +2,7 @@
 *.db
 .scrapy
 dbs
-thumbnails/*.jpg
+example_project/open_news/thumbnails/*.jpg
 .DS_Store
 .project
 .pydevproject
