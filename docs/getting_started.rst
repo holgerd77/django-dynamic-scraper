@@ -64,6 +64,15 @@ For **scraping images** you will also need the Python Image Library:
 
 * `Python Image Libray (PIL) 1.1.7+ <http://www.pythonware.com/products/pil/>`_ (earlier versions untested)
 
+And finally: DDS is using ``South`` for **migrations in the DB schema** between different versions
+(e.g. if a new attribute is added to a model class). If you don't exactly know what ``South`` is and
+what it does, it is highly recommended that you take the (relatively short) time to learn how to use it.
+Since DDS is in an early development stage, it is very likely that the DB schema will change in the
+future, and using ``South`` instead of ``syncdb`` to create and update your DB schema will make your
+life a lot easier if you want to keep pace with the latest versions of DDS:
+
+* `South 0.7+ <http://south.aeracode.org/>`_ (earlier versions untested) 
+
 .. note::
    Please drop a note if you have tested DDS with older versions of the libraries above!
 
