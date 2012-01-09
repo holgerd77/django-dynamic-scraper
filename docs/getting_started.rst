@@ -257,7 +257,7 @@ We will use these code snippets in our examples.
 
 .. note::
 	If you don't want to manually create the necessary DB objects for the example project, you can also run
-	``python open_news/create_db_objects.py`` from within the ``example_project`` directory in your 
+	``python manage.py loaddata open_news/open_news.json`` from within the ``example_project`` directory in your 
 	favorite shell to have all the objects necessary for the example created automatically .
 
 1. First we have to define a base 
