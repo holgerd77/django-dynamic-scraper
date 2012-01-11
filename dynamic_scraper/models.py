@@ -83,7 +83,7 @@ class Scraper(models.Model):
         return self.scraperelem_set.filter(q1 | q2 | q3).filter(mandatory=True)
     
     def __unicode__(self):
-        return self.name
+        return self.name + " (" + self.scraped_obj_class.name + ")"
 
 
 class ScraperElem(models.Model):
@@ -101,6 +101,9 @@ class SchedulerRuntime(models.Model):
     next_action_time = models.DateTimeField(default=datetime.datetime.now)
     next_action_factor = models.FloatField(blank=True, null=True)
     num_zero_actions = models.IntegerField(default=0)
+    
+    def __unicode__(self):
+        return str(self.id)
 
 
 class ScraperRuntime(models.Model):
@@ -110,6 +113,8 @@ class ScraperRuntime(models.Model):
         ('I', 'INACTIVE'),
     )
     name = models.CharField(max_length=200)
+    scraper = models.ForeignKey(Scraper)
+    url = models.URLField()
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
     num_criticals = models.IntegerField(default=0)
     last_critical_msg = models.CharField(max_length=200, blank=True)
@@ -120,4 +125,4 @@ class ScraperRuntime(models.Model):
     scheduler_runtime = models.ForeignKey(SchedulerRuntime)
 
     def __unicode__(self):
-        return self.name
+        return self.name + " (" + self.scraper.__unicode__() + ")"

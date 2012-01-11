@@ -32,7 +32,7 @@ in our ``scraper`` directory::
 	    
 	    def __init__(self, *args, **kwargs):
 	        self._set_ref_object(Article, **kwargs)
-	        self.scraper = self.ref_object.news_website.scraper
+	        self.scraper_runtime = self.ref_object.news_website.scraper_runtime
 	        self.scheduler_runtime = self.ref_object.checker_runtime
 	        self.check_url = self.ref_object.url
 	        super(ArticleChecker, self).__init__(self, *args, **kwargs) 
@@ -41,7 +41,7 @@ The checker class inherits from the :ref:`django_checker` class from DDS and mai
 information what to check and what parameters to use for checking. Be careful that the reference object
 is now the scraped object itself, since the checker is scraping from the item page url of this object. The
 url field to check is set with ``self.check_url = self.ref_object.url``. Furthermore the checker needs some
-configuration data from the scraper of the reference object. The scheduler runtime is used to schedule the
+configuration data from the scraper runtime of the reference object. The scheduler runtime is used to schedule the
 next check. So if you want to use checkers for your scraped object, you have to provide a foreign key to 
 a :ref:`scheduler_runtime` object in your model class.
 

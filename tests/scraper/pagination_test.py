@@ -10,8 +10,8 @@ class PaginationTest(ScraperTest):
     def setUp(self):
         super(PaginationTest, self).setUp()
         
-        self.event_website.url = os.path.join(self.SERVER_URL, 'site_generic/event_main')
-        self.event_website.save()
+        self.scraper_rt.url = os.path.join(self.SERVER_URL, 'site_generic/event_main')
+        self.scraper_rt.save()
         
         self.scraper.use_pagination = True
         self.scraper.pagination_append_str = '{page}.html'

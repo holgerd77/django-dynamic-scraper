@@ -61,8 +61,8 @@ class ScraperRunTest(ScraperTest):
     def test_missing_mandatory(self):
         self.se_desc.mandatory = True
         self.se_desc.save()
-        self.event_website.url = os.path.join(self.SERVER_URL, 'site_missing_mandatory/event_main.html')
-        self.event_website.save()
+        self.scraper_rt.url = os.path.join(self.SERVER_URL, 'site_missing_mandatory/event_main.html')
+        self.scraper_rt.save()
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 2)
@@ -72,8 +72,8 @@ class ScraperRunTest(ScraperTest):
         self.se_url.processors = u'pre_url'
         self.se_url.proc_ctxt = u"'pre_url': 'http://localhost:8010/static/site_with_processor/'"
         self.se_url.save()
-        self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_processor/event_main.html')
-        self.event_website.save()
+        self.scraper_rt.url = os.path.join(self.SERVER_URL, 'site_with_processor/event_main.html')
+        self.scraper_rt.save()
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 2)
@@ -82,8 +82,8 @@ class ScraperRunTest(ScraperTest):
     def test_reg_exp(self):
         self.se_desc.reg_exp = u'(\d{6})'
         self.se_desc.save()
-        self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_reg_exp/event_main.html')
-        self.event_website.save()
+        self.scraper_rt.url = os.path.join(self.SERVER_URL, 'site_with_reg_exp/event_main.html')
+        self.scraper_rt.save()
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 2)
@@ -102,8 +102,8 @@ class ScraperRunTest(ScraperTest):
         self.soa_desc.attr_type = 'I'
         self.soa_desc.save()
         
-        self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_imgs/event_main.html')
-        self.event_website.save()
+        self.scraper_rt.url = os.path.join(self.SERVER_URL, 'site_with_imgs/event_main.html')
+        self.scraper_rt.save()
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 2)

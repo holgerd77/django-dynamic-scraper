@@ -64,14 +64,15 @@ For **scraping images** you will also need the Python Image Library:
 
 * `Python Image Libray (PIL) 1.1.7+ <http://www.pythonware.com/products/pil/>`_ (earlier versions untested)
 
-And finally: DDS is using ``South`` for **migrations in the DB schema** between different versions
-(e.g. if a new attribute is added to a model class). If you don't exactly know what ``South`` is and
-what it does, it is highly recommended that you take the (relatively short) time to learn how to use it.
-Since DDS is in an early development stage, it is very likely that the DB schema will change in the
-future, and using ``South`` instead of ``syncdb`` to create and update your DB schema will make your
-life a lot easier if you want to keep pace with the latest versions of DDS:
+..
+	And finally: DDS is using ``South`` for **migrations in the DB schema** between different versions
+	(e.g. if a new attribute is added to a model class). If you don't exactly know what ``South`` is and
+	what it does, it is highly recommended that you take the (relatively short) time to learn how to use it.
+	Since DDS is in an early development stage, it is very likely that the DB schema will change in the
+	future, and using ``South`` instead of ``syncdb`` to create and update your DB schema will make your
+	life a lot easier if you want to keep pace with the latest versions of DDS:
 
-* `South 0.7+ <http://south.aeracode.org/>`_ (earlier versions untested) 
+	* `South 0.7+ <http://south.aeracode.org/>`_ (earlier versions untested) 
 
 .. note::
    Please drop a note if you have tested DDS with older versions of the libraries above!
@@ -118,8 +119,6 @@ code for this two model classes::
 	
 	class NewsWebsite(models.Model):
 	    name = models.CharField(max_length=200)
-	    url = models.URLField()
-	    scraper = models.ForeignKey(Scraper)
 	    scraper_runtime = models.ForeignKey(ScraperRuntime)
 	    
 	    def __unicode__(self):
@@ -140,13 +139,10 @@ code for this two model classes::
 	class ArticleItem(DjangoItem):
 	    django_model = Article
 
-As you can see, there are three foreign key fields defined in the two models referencing DDS models.
-The :ref:`scraper` is provided in the ``NewsWebsite`` model class, defining how articles are beeing scraped.
-The ``NewsWebsite`` class has also a reference to the :ref:`scraper_runtime` DDS model, which saves runtime
-information about the scraper, e.g. if the scraper is active or not. These two classes are separate to be
-more flexible with your model design, e.g. imagine a superclass ``NewsWebsiteGroup`` containing the scraper
-for different ``NewsWebsite`` items, each having its own runtime. The ``NewsWebsite`` model class has another 
-important field: ``url``. From this location, news articles are being scraped.
+As you can see, there is one foreign key field defined in each model referencing DDS models.
+The ``NewsWebsite`` class has a reference to the :ref:`scraper_runtime` DDS model, which saves the runtime
+information about the scraping process, e.g. the url to be scraped or information if the scraper is active 
+or not. 
 
 The ``Article`` class to store scraped news articles also has one extra mandatory field called ``checker_runtime``,
 referencing the :ref:`scheduler_runtime` class from the DDS models. An object of this class stores 
@@ -296,8 +292,8 @@ two rows due to space issues):
 In addition to our scraper we also need a :ref:`scraper_runtime` to run our scraper. To create a 
 :ref:`scraper_runtime` object in your django admin, create a :ref:`scheduler_runtime` object first,
 leaving all the values in their default state. Than create a :ref:`scraper_runtime` object, 
-giving it a meaningful name ('Wikinews Scraper Runtime'), assign the created scheduler runtime
-object to it and save the scraper runtime object.
+giving it a meaningful name ('Wikinews Runtime'), assign the created scheduler runtime
+object as well as the created scraper to it and save the scraper runtime object.
 
 
 Create the domain entity reference object (NewsWebsite) for our open news example
@@ -308,8 +304,7 @@ The last dataset we have to add is the reference object of our domain, meaning a
 object for the Wikinews Website.
 
 To do this open the NewsWebsite form in the Django admin, give the object a meaningful name ('Wikinews')
-and assign the scraper and the scraper runtime created before. The url is the overview url of
-the Wikinews website. This is the url used to scrape our news articles.     
+and assign the scraper runtime created before.    
 
 .. image:: images/screenshot_django-admin_add_domain_ref_object.png
 
@@ -406,11 +401,9 @@ in the ``__init__`` function::
 	
 	    def __init__(self, *args, **kwargs):
 	        self._set_ref_object(NewsWebsite, **kwargs)
-	        self.scraper = self.ref_object.scraper
 	        self.scraper_runtime = self.ref_object.scraper_runtime
 	        self.scraped_obj_class = Article
 	        self.scraped_obj_item_class = ArticleItem
-	        self._set_start_urls(self.ref_object.url)
 	        super(ArticleSpider, self).__init__(self, *args, **kwargs)
 
 TODO

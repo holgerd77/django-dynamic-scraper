@@ -22,11 +22,9 @@ class EventSpider(DjangoSpider):
 
     def __init__(self, *args, **kwargs):
         self._set_ref_object(EventWebsite, **kwargs)
-        self.scraper = self.ref_object.scraper
         self.scraper_runtime = self.ref_object.scraper_runtime
         self.scraped_obj_class = Event
         self.scraped_obj_item_class = EventItem
-        self._set_start_urls(self.ref_object.url)
         super(EventSpider, self).__init__(self, *args, **kwargs)
 
 
@@ -44,7 +42,7 @@ class EventChecker(DjangoChecker):
     
     def __init__(self, *args, **kwargs):
         self._set_ref_object(Event, **kwargs)
-        self.scraper = self.ref_object.event_website.scraper
+        self.scraper_runtime = self.ref_object.event_website.scraper_runtime
         self.scheduler_runtime = self.ref_object.checker_runtime
         self.check_url = self.ref_object.url
         super(EventChecker, self).__init__(self, *args, **kwargs)
@@ -112,11 +110,11 @@ class ScraperTest(TestCase):
         self.sched_rt = SchedulerRuntime()
         self.sched_rt.save()
         
-        self.scraper_rt = ScraperRuntime(name=u'Events Runtime', scheduler_runtime=self.sched_rt)
+        self.scraper_rt = ScraperRuntime(name=u'Events Runtime', scraper=self.scraper, 
+            url=os.path.join(self.SERVER_URL, 'site_generic/event_main.html'), scheduler_runtime=self.sched_rt)
         self.scraper_rt.save()
         
-        self.event_website = EventWebsite(pk=1, name=u'Event Website', url=os.path.join(self.SERVER_URL, 'site_generic/event_main.html'),
-            scraper=self.scraper, scraper_runtime=self.scraper_rt)
+        self.event_website = EventWebsite(pk=1, name=u'Event Website', scraper_runtime=self.scraper_rt)
         self.event_website.save()
         
         

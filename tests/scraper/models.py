@@ -5,8 +5,6 @@ from scrapy.contrib_exp.djangoitem import DjangoItem
 
 class EventWebsite(models.Model):
     name = models.CharField(max_length=200)
-    url = models.URLField()
-    scraper = models.ForeignKey(Scraper)
     scraper_runtime = models.ForeignKey(ScraperRuntime)
     
     def __unicode__(self):

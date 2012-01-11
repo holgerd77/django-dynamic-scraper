@@ -17,11 +17,12 @@ class DjangoSpider(DjangoBaseSpider):
 
     def __init__(self, *args, **kwargs):
         mandatory_vars = [
-            'scraper',
             'scraper_runtime',
             'scraped_obj_class',
             'scraped_obj_item_class',
         ]
+        self.scraper = self.scraper_runtime.scraper
+        self._set_start_urls(self.scraper_runtime.url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
         self.scheduler_runtime = self.scraper_runtime.scheduler_runtime
         self._check_mandatory_vars(mandatory_vars)
@@ -48,9 +49,6 @@ class DjangoSpider(DjangoBaseSpider):
 
 
     def _set_start_urls(self, scrape_url):
-        
-        if not hasattr(self, 'scraper'):
-            raise CloseSpider('Please provide a scraper before calling this method!')
         
         if self.scraper.use_pagination:
             if not self.scraper.pagination_append_str:

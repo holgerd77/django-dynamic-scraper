@@ -13,27 +13,21 @@ class DjangoChecker(DjangoBaseSpider):
     
     name = "django_checker"
 
-    '''
-        Load scraped object
-        Make x_path test, 404 test
-        if(failed): Delete item
-        else: Set next check time via scheduler and scraper settings
-        That's all! :-) 
-    '''
 
     def __init__(self, *args, **kwargs):
         mandatory_vars = [
             'ref_object',
-            'scraper',
+            'scraper_runtime',
             'check_url',
         ]
+        self.scraper = self.scraper_runtime.scraper
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
         self._check_mandatory_vars(mandatory_vars)
         self.start_urls.append(self.check_url)
         self._set_conf(**kwargs)
         dispatcher.connect(self.response_received, signal=signals.response_received)
 
-    
+
     def _del_ref_object(self):
         try:
             img_elem = self.scraper.get_image_elem()

@@ -8,7 +8,7 @@ class ArticleChecker(DjangoChecker):
     
     def __init__(self, *args, **kwargs):
         self._set_ref_object(Article, **kwargs)
-        self.scraper = self.ref_object.news_website.scraper
+        self.scraper_runtime = self.ref_object.news_website.scraper_runtime
         self.scheduler_runtime = self.ref_object.checker_runtime
         self.check_url = self.ref_object.url
         super(ArticleChecker, self).__init__(self, *args, **kwargs)

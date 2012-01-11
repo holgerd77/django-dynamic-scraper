@@ -123,7 +123,6 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'djkombu',
     'djcelery',
-    'south',
     'dynamic_scraper',
     'open_news',
 )

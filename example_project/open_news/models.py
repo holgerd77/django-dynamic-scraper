@@ -1,12 +1,10 @@
 from django.db import models
-from dynamic_scraper.models import Scraper, ScraperRuntime, SchedulerRuntime
 from scrapy.contrib_exp.djangoitem import DjangoItem
+from dynamic_scraper.models import ScraperRuntime, SchedulerRuntime
 
 
 class NewsWebsite(models.Model):
     name = models.CharField(max_length=200)
-    url = models.URLField()
-    scraper = models.ForeignKey(Scraper)
     scraper_runtime = models.ForeignKey(ScraperRuntime)
     
     def __unicode__(self):
