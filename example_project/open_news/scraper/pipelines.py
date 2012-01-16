@@ -1,12 +1,18 @@
+from django.db.utils import IntegrityError
 from scrapy import log
 from scrapy.exceptions import DropItem
-from django.db.utils import IntegrityError
+from dynamic_scraper.models import SchedulerRuntime
 
 class DjangoWriterPipeline(object):
     
     def process_item(self, item, spider):
         try:
             item['news_website'] = spider.ref_object
+            
+            checker_rt = SchedulerRuntime()
+            checker_rt.save()
+            item['checker_runtime'] = checker_rt
+            
             item.save()
             spider.action_successful = True
             spider.log("Item saved.", log.INFO)

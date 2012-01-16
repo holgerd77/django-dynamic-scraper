@@ -52,7 +52,6 @@ class DjangoImagesPipeline(ImagesPipeline):
 class ValidationPipeline(object):
 
     def process_item(self, item, spider):
-        
         url_elem = spider.scraper.get_follow_url_elem()
         url_name = url_elem.scraped_obj_attr.name
         if url_name in item and item[url_name] == 'DOUBLE':
@@ -68,6 +67,6 @@ class ValidationPipeline(object):
         if not spider.conf['DO_ACTION']:
             spider.log("TESTMODE: Item not saved.", log.INFO)
             raise DropItem()
-        
+
         return item
 

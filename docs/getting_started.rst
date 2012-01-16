@@ -408,6 +408,7 @@ in the ``__init__`` function::
 
 TODO
 
+.. _adding_pipeline_class:
 
 Adding the pipeline class
 -------------------------
@@ -415,15 +416,21 @@ Adding the pipeline class
 Since you maybe want to add some extra attributes to your scraped items, DDS is not saving the scraped items
 for you but you have to do it manually in your own item pipeline::
 
+	from django.db.utils import IntegrityError
 	from scrapy import log
 	from scrapy.exceptions import DropItem
-	from django.db.utils import IntegrityError
+	from dynamic_scraper.models import SchedulerRuntime
 
 	class DjangoWriterPipeline(object):
 	    
 	    def process_item(self, item, spider):
 	        try:
 	            item['news_website'] = spider.ref_object
+	            
+	            checker_rt = SchedulerRuntime()
+	            checker_rt.save()
+	            item['checker_runtime'] = checker_rt
+	            
 	            item.save()
 	            spider.action_successful = True
 	            spider.log("Item saved.", log.INFO)

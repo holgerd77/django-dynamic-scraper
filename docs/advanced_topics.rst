@@ -43,7 +43,8 @@ is now the scraped object itself, since the checker is scraping from the item pa
 url field to check is set with ``self.check_url = self.ref_object.url``. Furthermore the checker needs some
 configuration data from the scraper runtime of the reference object. The scheduler runtime is used to schedule the
 next check. So if you want to use checkers for your scraped object, you have to provide a foreign key to 
-a :ref:`scheduler_runtime` object in your model class.
+a :ref:`scheduler_runtime` object in your model class. The scheduler runtime object also has to be saved
+manually in your pipeline class (see: :ref:`adding_pipeline_class`).
 
 Set check parameters for each scraper
 -------------------------------------

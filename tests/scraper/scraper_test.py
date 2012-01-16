@@ -32,6 +32,11 @@ class DjangoWriterPipeline(object):
     
     def process_item(self, item, spider):
         item['event_website'] = spider.ref_object
+        
+        checker_rt = SchedulerRuntime()
+        checker_rt.save()
+        item['checker_runtime'] = checker_rt
+        
         item.save()
         return item 
 

@@ -8,7 +8,7 @@ from scrapy.contrib.loader.processor import TakeFirst
 from scrapy.exceptions import CloseSpider
 
 from dynamic_scraper.spiders.django_base_spider import DjangoBaseSpider
-from dynamic_scraper.models import ScraperElem, SchedulerRuntime
+from dynamic_scraper.models import ScraperElem
 from dynamic_scraper.utils.scheduler import Scheduler
 from dynamic_scraper.utils import processors
 
@@ -140,9 +140,6 @@ class DjangoSpider(DjangoBaseSpider):
     def parse_item(self, response, hxs=None):
         self._set_loader(response, hxs, self.scraped_obj_item_class())
         if not self.follow_url:
-            check_rt = SchedulerRuntime()
-            check_rt.save()
-            self.loader.add_value('checker_runtime', check_rt)
             self.item_count += 1
             
         elems = self.scraper.get_scrape_elems()

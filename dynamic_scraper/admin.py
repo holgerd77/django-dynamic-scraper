@@ -23,13 +23,13 @@ class ScraperAdmin(admin.ModelAdmin):
     ]
 
 class ScraperRuntimeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'scraper', 'show_url', 'status', 'scheduler_runtime',)
+    list_display = ('name', 'scraper', 'url_', 'status', 'scheduler_runtime',)
     list_filter = ('scraper', 'status',)
     search_fields = ['name']
     
-    def show_url(self, instance):
+    def url_(self, instance):
         return '<a href="%s" target="_blank">%s</a>' % (instance.url, instance.url)
-    show_url.allow_tags = True
+    url_.allow_tags = True
 
 class SchedulerRuntimeAdmin(admin.ModelAdmin):
     list_display = ('id', 'next_action_time', 'next_action_factor', 'num_zero_actions',)
