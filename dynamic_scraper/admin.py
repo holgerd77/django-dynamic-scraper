@@ -26,6 +26,7 @@ class ScraperRuntimeAdmin(admin.ModelAdmin):
     list_display = ('name', 'scraper', 'url_', 'status', 'scheduler_runtime',)
     list_filter = ('scraper', 'status',)
     search_fields = ['name']
+    raw_id_fields = ('scheduler_runtime',)
     
     def url_(self, instance):
         return '<a href="%s" target="_blank">%s</a>' % (instance.url, instance.url)
