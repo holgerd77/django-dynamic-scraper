@@ -156,7 +156,8 @@
 		"model": "open_news.newswebsite",
 		"fields": {
 			"scraper_runtime": 1,
-			"name": "Wikinews"
+			"name": "Wikinews",
+			"url": "http://en.wikinews.org/wiki/Main_Page"
 		}
 	}
 ]

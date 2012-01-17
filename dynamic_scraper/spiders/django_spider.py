@@ -16,21 +16,24 @@ from dynamic_scraper.utils import processors
 class DjangoSpider(DjangoBaseSpider):
 
     def __init__(self, *args, **kwargs):
+        self._set_conf(**kwargs)
+        
+        if self.scraper_runtime:
+            self.scraper = self.scraper_runtime.scraper
+            self.scheduler_runtime = self.scraper_runtime.scheduler_runtime
+        
         mandatory_vars = [
-            'scraper_runtime',
             'scraped_obj_class',
             'scraped_obj_item_class',
         ]
-        self.scraper = self.scraper_runtime.scraper
+        self._check_mandatory_vars(mandatory_vars)
+        
         self._set_start_urls(self.scraper_runtime.url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
-        self.scheduler_runtime = self.scraper_runtime.scheduler_runtime
-        self._check_mandatory_vars(mandatory_vars)
         self._check_scraper_config()
         self.follow_url = False
         self.loader = None
         self.item_count = 0
-        self._set_conf(**kwargs)
 
 
     def _check_scraper_config(self):

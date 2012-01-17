@@ -15,16 +15,19 @@ class DjangoChecker(DjangoBaseSpider):
 
 
     def __init__(self, *args, **kwargs):
+        self._set_conf(**kwargs)
+        
+        if self.scraper_runtime:
+            self.scraper = self.scraper_runtime.scraper
+        
         mandatory_vars = [
-            'ref_object',
-            'scraper_runtime',
             'check_url',
         ]
-        self.scraper = self.scraper_runtime.scraper
-        self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
         self._check_mandatory_vars(mandatory_vars)
+        
         self.start_urls.append(self.check_url)
-        self._set_conf(**kwargs)
+        self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
+        
         dispatcher.connect(self.response_received, signal=signals.response_received)
 
 
@@ -43,6 +46,8 @@ class DjangoChecker(DjangoBaseSpider):
         except ScraperElem.DoesNotExist:
             pass
         
+        if self.scheduler_runtime:
+            self.scheduler_runtime.delete()
         self.ref_object.delete()
         self.action_successful = True
         self.log("Item deleted.", log.INFO)

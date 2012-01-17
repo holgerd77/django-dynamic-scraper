@@ -22,10 +22,19 @@ class DjangoBaseSpider(BaseSpider):
     
     def _check_mandatory_vars(self, mandatory_vars):
         mandatory_vars.append('ref_object')
-        mandatory_vars.append('scheduler_runtime')
+        mandatory_vars.append('scraper_runtime')
+        
+        if self.conf['RUN_TYPE'] == 'TASK' and not getattr(self, 'scheduler_runtime', None):
+            msg = "You have to provide a scheduler_runtime when running with run_type TASK."
+            log.msg(msg, log.ERROR)
+            raise CloseSpider(msg)
+        
         for var in mandatory_vars:
-            if not hasattr(self, var):
-                raise CloseSpider("Missing attribute %s (Command: %s)." % var % self.command)
+            attr = getattr(self, var, None)
+            if not attr:
+                msg = "Missing attribute %s (Command: %s)." % (var, self.command)
+                log.msg(msg, log.ERROR)
+                raise CloseSpider(msg)
     
     
     def _set_conf(self, **kwargs):
@@ -42,11 +51,15 @@ class DjangoBaseSpider(BaseSpider):
     
     def _set_ref_object(self, ref_object_class, **kwargs):
         if not 'id' in kwargs:
-            raise CloseSpider("You have to provide an ID (Command: %s)." % self.command)
+            msg = "You have to provide an ID (Command: %s)." % self.command
+            log.msg(msg, log.ERROR)
+            raise CloseSpider(msg)
         try:
             self.ref_object = ref_object_class.objects.get(id=kwargs['id'])
         except ObjectDoesNotExist:
-            raise CloseSpider("Object with ID " + kwargs['id'] + " not found (Command: %s)." % self.command)
+            msg = "Object with ID " + kwargs['id'] + " not found (Command: %s)." % self.command
+            log.msg(msg, log.ERROR)
+            raise CloseSpider(msg)
     
     
     def spider_closed(self):
@@ -54,12 +67,17 @@ class DjangoBaseSpider(BaseSpider):
             
             time_delta, factor, num_crawls = self.scheduler.calc_next_action_time(\
                     self.action_successful,\
-                    self.scheduler_runtime.next_crawl_factor,\
-                    self.scheduler_runtime.num_zero_crawls)
-            self.scheduler_runtime.next_crawl_time = datetime.datetime.now() + time_delta
-            self.scheduler_runtime.next_crawl_factor = factor
-            self.scheduler_runtime.num_zero_crawls = num_crawls
+                    self.scheduler_runtime.next_action_factor,\
+                    self.scheduler_runtime.num_zero_actions)
+            self.scheduler_runtime.next_action_time = datetime.datetime.now() + time_delta
+            self.scheduler_runtime.next_action_factor = factor
+            self.scheduler_runtime.num_zero_actions = num_crawls
             self.scheduler_runtime.save()
+            msg  = "Scheduler runtime updated (Next action time: "
+            msg += "%s, " % str(self.scheduler_runtime.next_action_time.strftime("%Y-%m-%d %H:%m"))
+            msg += "Next action factor: %s, " % str(self.scheduler_runtime.next_action_factor)
+            msg += "Zero actions: %s)" % str(self.scheduler_runtime.num_zero_actions)
+            self.log(msg, log.INFO)
         
         if hasattr(self, 'scraper_runtime'):
             self.scraper_runtime.save()

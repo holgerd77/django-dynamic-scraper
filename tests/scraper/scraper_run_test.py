@@ -1,3 +1,4 @@
+import datetime
 import os.path
 
 from scrapy.exceptions import CloseSpider 
@@ -41,13 +42,45 @@ class ScraperRunTest(ScraperTest):
     
     def test_testmode(self):
         kwargs = {
-        'id': 1,
+            'id': 1,
         }
         spider = EventSpider(**kwargs)
         self.crawler.crawl(spider)
         self.crawler.start()
         
         self.assertEqual(len(Event.objects.all()), 0)
+    
+    
+    def test_task_run_type(self):
+        self.scraper_rt.url = os.path.join(self.SERVER_URL, 'not_existing_site/event_main.html')
+        self.scraper_rt.save()
+        
+        kwargs = {
+            'id': 1,
+            'do_action': 'yes',
+            'run_type': 'TASK',
+        }
+        spider = EventSpider(**kwargs)
+        self.crawler.crawl(spider)
+        self.crawler.start()
+        
+        self.assertEqual(spider.scheduler_runtime.num_zero_actions, 1)
+    
+    
+    def test_no_task_run_type(self):
+        self.scraper_rt.url = os.path.join(self.SERVER_URL, 'not_existing_site/event_main.html')
+        self.scraper_rt.save()
+        
+        kwargs = {
+            'id': 1,
+            'do_action': 'yes',
+            'run_type': 'SHELL',
+        }
+        spider = EventSpider(**kwargs)
+        self.crawler.crawl(spider)
+        self.crawler.start()
+        
+        self.assertEqual(spider.scheduler_runtime.num_zero_actions, 0)
         
         
     def test_num_items(self):

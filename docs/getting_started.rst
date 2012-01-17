@@ -104,6 +104,9 @@ project settings.
 Creating your Django models
 ===========================
 
+Create your model classes
+-------------------------
+
 When you want to build a Django app using Django Dynamic Scraper to fill up your models with data you have
 to provide *two model classes*. The *first class* stores your scraped data, in our news example this is a
 class called ``Article`` storing articles scraped from different news websites. 
@@ -119,7 +122,7 @@ code for this two model classes::
 	
 	class NewsWebsite(models.Model):
 	    name = models.CharField(max_length=200)
-	    scraper_runtime = models.ForeignKey(ScraperRuntime)
+	    scraper_runtime = models.ForeignKey(ScraperRuntime, blank=True, null=True, on_delete=models.SET_NULL)
 	    
 	    def __unicode__(self):
 	        return self.name
@@ -130,7 +133,7 @@ code for this two model classes::
 	    news_website = models.ForeignKey(NewsWebsite) 
 	    description = models.TextField(blank=True)
 	    url = models.URLField()
-	    checker_runtime = models.ForeignKey(SchedulerRuntime)
+	    checker_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
 	    
 	    def __unicode__(self):
 	        return self.title
@@ -154,6 +157,34 @@ Last but not least: Django Dynamic Scraper uses the (still experimental (!)) Dja
 being able to directly store the scraped data into the Django DB. You can store the item class 
 (here: ``ArticleItem``) telling Scrapy which model class to use for storing the data directly underneath the
 associated model class.
+
+.. note::
+   For having a loose coupling between your runtime objects and your domain model objects you should declare
+   the foreign keys to the runtime objects with the ``blank=True, null=True, on_delete=models.SET_NULL``
+   field options. This will prevent a cascading delete of your reference object as well as the associated
+   scraped objects when a scraper_runtime object is deleted accidentally.
+
+Deletion of objects
+-------------------
+
+If you delete model objects via the Django admin interface, the runtime objects are not
+deleted as well. If you want this to happen, you have to to add a handler reacting to 
+Django's `pre_delete signals <https://docs.djangoproject.com/en/dev/topics/db/models/#overriding-model-methods>`_
+to your ``models.py`` file::
+
+	from django.db.models.signals import pre_delete
+	from django.dispatch import receiver
+	
+	@receiver(pre_delete)
+	def pre_delete_handler(sender, instance, using, **kwargs):
+	    if isinstance(instance, NewsWebsite) and instance.scraper_runtime:
+	        instance.scraper_runtime.delete()
+	    if isinstance(instance, Article) and instance.checker_runtime:
+	        instance.checker_runtime.delete()
+
+.. note::
+   When you run a checker, ``checker_runtime`` objects associated with the model instance checked
+   are deleted automatically (see: :ref:`item_checkers`)! 
 
 .. _DjangoItem: http://readthedocs.org/docs/scrapy/en/latest/experimental/djangoitems.html
 
