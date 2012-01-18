@@ -139,7 +139,6 @@ configuration could look similar to this::
 	BROKER_USER = "guest"
 	BROKER_PASSWORD = "guest"
 	BROKER_VHOST = "/"
-	CELERY_IMPORTS = ("dynamic_scraper.utils.tasks",)
 	CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 

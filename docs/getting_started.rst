@@ -182,10 +182,6 @@ to your ``models.py`` file::
 	    if isinstance(instance, Article) and instance.checker_runtime:
 	        instance.checker_runtime.delete()
 
-.. note::
-   When you run a checker, ``checker_runtime`` objects associated with the model instance checked
-   are deleted automatically (see: :ref:`item_checkers`)! 
-
 .. _DjangoItem: http://readthedocs.org/docs/scrapy/en/latest/experimental/djangoitems.html
 
 Defining the object to be scraped

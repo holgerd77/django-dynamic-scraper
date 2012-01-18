@@ -45,9 +45,7 @@ class DjangoChecker(DjangoBaseSpider):
                         self.log("Associated image could not be deleted!", log.ERROR)
         except ScraperElem.DoesNotExist:
             pass
-        
-        if self.scheduler_runtime:
-            self.scheduler_runtime.delete()
+
         self.ref_object.delete()
         self.action_successful = True
         self.log("Item deleted.", log.INFO)
@@ -65,16 +63,19 @@ class DjangoChecker(DjangoBaseSpider):
         hxs = HtmlXPathSelector(response)
             
         # x_path test
+        if not self.scraper.checker_x_path:
+            self.log("No 404. Item kept.", log.INFO)
+            return
         try:
             test_select = hxs.select(self.scraper.checker_x_path).extract()
-            if len(test_select) == 0:
-                return
-            test_select = test_select[0]
         except ValueError:
             self.log('Invalid checker x_path!', log.ERROR)
             return
-        if test_select == self.scraper.checker_x_path_result:
+        if len(test_select) > 0 and test_select[0] == self.scraper.checker_x_path_result:
             self.log("XPath result string '" + self.scraper.checker_x_path_result + "' found on page.", log.INFO)
             if self.conf['DO_ACTION']:
                 self._del_ref_object()
+            return
+        else:
+            self.log("XPath result string not found. Item kept.", log.INFO)
             return

@@ -24,7 +24,7 @@ class ScraperAdmin(admin.ModelAdmin):
 
 class ScraperRuntimeAdmin(admin.ModelAdmin):
     list_display = ('name', 'scraper', 'url_', 'status', 'scheduler_runtime',)
-    list_filter = ('scraper', 'status',)
+    list_filter = ('status', 'scraper',)
     search_fields = ['name']
     raw_id_fields = ('scheduler_runtime',)
     
