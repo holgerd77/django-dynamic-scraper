@@ -1,7 +1,5 @@
 import datetime
 from django.db import models
-from django.db.models.signals import pre_delete
-from django.dispatch import receiver
 from django.db.models import Q
 
 
@@ -126,12 +124,11 @@ class ScraperRuntime(models.Model):
     last_warning_msg = models.CharField(max_length=200, blank=True)
     scheduler_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
 
+    def delete(self, *args, **kwargs):
+        scheduler_runtime = self.scheduler_runtime
+        super(ScraperRuntime, self).delete(*args, **kwargs)
+        scheduler_runtime.delete()
+
     def __unicode__(self):
         return self.name + " (" + self.scraper.__unicode__() + ")"
     
-@receiver(pre_delete)
-def pre_delete_handler(sender, instance, using, **kwargs):
-    if isinstance(instance, ScraperRuntime) and instance.scheduler_runtime:
-        instance.scheduler_runtime.delete()
-            
-pre_delete.connect(pre_delete_handler)

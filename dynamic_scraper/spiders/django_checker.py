@@ -45,7 +45,7 @@ class DjangoChecker(DjangoBaseSpider):
                         self.log("Associated image could not be deleted!", log.ERROR)
         except ScraperElem.DoesNotExist:
             pass
-
+        
         self.ref_object.delete()
         self.action_successful = True
         self.log("Item deleted.", log.INFO)
