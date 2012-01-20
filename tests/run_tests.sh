@@ -19,7 +19,8 @@ ScraperRunTest.test_scraper
 ScraperRunTest.test_testmode
 ScraperRunTest.test_task_run_type
 ScraperRunTest.test_no_task_run_type
-ScraperRunTest.test_num_items
+ScraperRunTest.test_max_items_read
+ScraperRunTest.test_max_items_save
 ScraperRunTest.test_missing_mandatory
 ScraperRunTest.test_processor
 ScraperRunTest.test_reg_exp

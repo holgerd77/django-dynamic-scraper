@@ -83,12 +83,20 @@ class ScraperRunTest(ScraperTest):
         self.assertEqual(spider.scheduler_runtime.num_zero_actions, 0)
         
         
-    def test_num_items(self):
-        self.scraper.max_items = 3
+    def test_max_items_read(self):
+        self.scraper.max_items_read = 3
         self.scraper.save()
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 3)
+        
+    def test_max_items_save(self):
+        self.scraper.max_items_read = 3
+        self.scraper.max_items_save = 2
+        self.scraper.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 2)
     
     
     def test_missing_mandatory(self):
