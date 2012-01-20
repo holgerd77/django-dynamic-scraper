@@ -78,7 +78,7 @@ class DjangoBaseSpider(BaseSpider):
             msg += "Next action factor: %s, " % str(self.scheduler_runtime.next_action_factor)
             msg += "Zero actions: %s)" % str(self.scheduler_runtime.num_zero_actions)
             self.log(msg, log.INFO)
-        
+            
         if hasattr(self, 'scraper_runtime'):
             self.scraper_runtime.save()
     

@@ -15,7 +15,7 @@ class ScraperElemInline(admin.TabularInline):
     extra = 3
     
 class ScraperAdmin(admin.ModelAdmin):
-    list_display = ('name', 'scraped_obj_class', 'max_items', 'use_pagination',)
+    list_display = ('name', 'scraped_obj_class', 'max_items_read', 'max_items_save', 'use_pagination',)
     list_filter = ('scraped_obj_class',)
     search_fields = ['name']
     inlines = [

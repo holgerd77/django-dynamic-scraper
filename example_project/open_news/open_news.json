@@ -57,7 +57,8 @@
 			"pagination_range": "",
 			"pagination_append_str": "",
 			"checker_x_path": "",
-			"max_items": null,
+			"max_items_read": null,
+			"max_items_save": null,
 			"use_pagination": false,
 			"pagination_on_start": false,
 			"scraped_obj_class": 1

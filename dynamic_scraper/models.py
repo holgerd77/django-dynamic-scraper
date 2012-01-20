@@ -40,7 +40,8 @@ class ScrapedObjAttr(models.Model):
 class Scraper(models.Model):
     name = models.CharField(max_length=200)
     scraped_obj_class = models.ForeignKey(ScrapedObjClass)
-    max_items = models.IntegerField(blank=True, null=True)
+    max_items_read = models.IntegerField(blank=True, null=True, help_text="Max number of items to be read (empty: unlimited).")
+    max_items_save = models.IntegerField(blank=True, null=True, help_text="Max number of items to be saved (empty: unlimited).")
     use_pagination = models.BooleanField(default=False)
     pagination_append_str = models.CharField(max_length=200, blank=True)
     pagination_on_start = models.BooleanField(default=False)

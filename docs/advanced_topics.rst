@@ -61,7 +61,7 @@ article. So for the checker we take a random article url to a not existing artic
 "http://en.wikinews.org/wiki/Random_article_text".
 
 If your url found is responding with a 404 when invoked, you don't have to provide any parameters for your
-checker, since the checker will delete items checked automatically when their url is returning a 404 response.
+checker, since the checker will delete items checked automatically when their url is returning a 404 response twice.
 Otherwise you have to provide an XPath for your chosen url which will extract a string from that url uniquely
 indicating, that the content originally expected is not there any more. For our Wikinews example and the url
 we choose above there is a text and a url provided suggesting to create the currently not existing wiki page,
@@ -69,7 +69,12 @@ so we can use the XPath ``//a[@href="http://en.wikinews.org/wiki/This_wiki_artic
 and the result string "create this page" to uniquely identifying a scraped item not existing any more.
 
 .. note:: Attention! Make sure that the XPath/result string combination you choose is NOT succeeding on normal
-          item pages, otherwise the checker will delete all your items! 
+          item pages, otherwise the checker will delete all your items!
+          
+.. note:: 
+   To make sure your items aren't deleted accidentally on a 404 response, 404 checks are only deleted on
+   the second try while XPath checks are deleted at once. So to save crawling resources always try to realize
+   your checking with XPath checks, otherwise the crawler need double the amount of checks!
 
 Testing/running your checkers
 -----------------------------

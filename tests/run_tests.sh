@@ -27,6 +27,7 @@ ScraperRunTest.test_reg_exp
 ScraperRunTest.test_with_imgs
 CheckerRunTest.test_keep_video
 CheckerRunTest.test_404_delete
+CheckerRunTest.test_404_delete_with_zero_actions
 CheckerRunTest.test_404_delete_with_img
 CheckerRunTest.test_x_path_delete
 PaginationTest.test_config_append_str_without_page

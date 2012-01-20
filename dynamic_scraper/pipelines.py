@@ -67,6 +67,12 @@ class ValidationPipeline(object):
         if not spider.conf['DO_ACTION']:
             spider.log("TESTMODE: Item not saved.", log.INFO)
             raise DropItem()
+        
+        if spider.scraper.max_items_save and spider.items_save_count >= spider.scraper.max_items_save:
+            spider.log("Max items save reached, item not saved.", log.INFO)
+            raise DropItem()
+        
+        spider.items_save_count += 1
 
         return item
 

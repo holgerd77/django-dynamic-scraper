@@ -54,10 +54,15 @@ class DjangoChecker(DjangoBaseSpider):
     def response_received(self, **kwargs):
         # 404 test
         if kwargs['response'].status == 404:
-            self.log("Checker test returned 404.", log.INFO)
-            if self.conf['DO_ACTION']:
-                self._del_ref_object()
-        
+            
+            if self.scheduler_runtime.num_zero_actions == 0:
+                self.log("Checker test returned second 404.", log.INFO)
+                if self.conf['DO_ACTION']:
+                    self._del_ref_object()
+            else:
+                self.log("Checker test returned first 404.", log.INFO)
+                self.action_successful = True
+
 
     def parse(self, response):
         hxs = HtmlXPathSelector(response)

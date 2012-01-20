@@ -33,7 +33,8 @@ class DjangoSpider(DjangoBaseSpider):
         self._check_scraper_config()
         self.follow_url = False
         self.loader = None
-        self.item_count = 0
+        self.items_read_count = 0
+        self.items_save_count = 0
 
 
     def _check_scraper_config(self):
@@ -143,7 +144,7 @@ class DjangoSpider(DjangoBaseSpider):
     def parse_item(self, response, hxs=None):
         self._set_loader(response, hxs, self.scraped_obj_item_class())
         if not self.follow_url:
-            self.item_count += 1
+            self.items_read_count += 1
             
         elems = self.scraper.get_scrape_elems()
         for elem in elems:
@@ -159,8 +160,8 @@ class DjangoSpider(DjangoBaseSpider):
         base_objects = hxs.select(base_elem.x_path)
         if(len(base_objects) == 0):
             self.log("No base objects found!", log.ERROR)
-        if(self.scraper.max_items):
-            items_left = min(len(base_objects), self.scraper.max_items - self.item_count)
+        if(self.scraper.max_items_read):
+            items_left = min(len(base_objects), self.scraper.max_items_read - self.items_read_count)
             base_objects = base_objects[0:items_left]
         
         for obj in base_objects:

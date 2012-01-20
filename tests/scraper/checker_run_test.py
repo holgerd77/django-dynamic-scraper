@@ -1,7 +1,7 @@
 import os.path
 
 from scraper.models import Event
-from scraper.scraper_test import ScraperTest
+from scraper.scraper_test import EventChecker, ScraperTest
 from dynamic_scraper.models import SchedulerRuntime
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -40,6 +40,25 @@ class CheckerRunTest(ScraperTest):
         
         self.run_event_checker(1)
         self.assertEqual(len(Event.objects.all()), 0)
+    
+    
+    def test_404_delete_with_zero_actions(self):
+        self.event.url = 'http://localhost:8010/static/site_for_checker/event_which_is_not_there.html'
+        self.event.save()
+        
+        self.event.checker_runtime.num_zero_actions = 3
+        self.event.checker_runtime.save()
+        
+        kwargs = {
+            'id': 1,
+            'do_action': 'yes',
+            'run_type': 'TASK',
+        }
+        checker = EventChecker(**kwargs)
+        self.crawler.crawl(checker)
+        self.crawler.start()
+        
+        self.assertEqual(len(Event.objects.all()), 1)
         
     
     def test_x_path_delete(self):
