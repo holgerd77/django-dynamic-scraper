@@ -143,14 +143,8 @@
 			"status": "P",
 			"scraper": 1,
 			"url": "http://en.wikinews.org/wiki/Main_Page",
-			"num_errors": 0,
-			"last_warning_msg": "",
 			"name": "Wikinews Runtime",
-			"num_warnings": 0,
-			"scheduler_runtime": 1,
-			"num_criticals": 0,
-			"last_error_msg": "",
-			"last_critical_msg": ""
+			"scheduler_runtime": 1
 		}
 	}, {
 		"pk": 1,

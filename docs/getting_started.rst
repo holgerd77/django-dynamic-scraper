@@ -475,6 +475,7 @@ for you but you have to do it manually in your own item pipeline::
 
 TODO
 
+.. _running_scrapers:
 
 Running/Testing your scraper
 ============================

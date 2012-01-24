@@ -81,27 +81,12 @@ class DjangoSpider(DjangoBaseSpider):
                 self.start_urls.append(scrape_url)
         else:
             self.start_urls.append(scrape_url)
-        
-
-    def log(self, message, level=log.DEBUG):
-        
-        if(level == log.CRITICAL):
-            self.scraper_runtime.num_criticals += 1
-            self.scraper_runtime.last_critical_msg = message
-        if(level == log.ERROR):
-            self.scraper_runtime.num_errors += 1
-            self.scraper_runtime.last_error_msg = message
-        if(level == log.WARNING):
-            self.scraper_runtime.num_warnings += 1
-            self.scraper_runtime.last_warning_msg = message
-            
-        super(DjangoSpider, self).log(message, level)
 
 
     def _set_loader_context(self, context_str):
         try:
-            add_ctxt1 = "'pre_log_msg': '" + self.pre_log_msg + "'"
-            context_str = ", ".join([context_str, add_ctxt1])
+            #add_ctxt1 = "'pre_log_msg': '" + self.pre_log_msg + "'"
+            #context_str = ", ".join([context_str, add_ctxt1])
             context_str = context_str.strip(', ')
             context = ast.literal_eval("{" + context_str + "}")
             self.loader.context = context

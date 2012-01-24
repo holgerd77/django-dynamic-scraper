@@ -117,12 +117,6 @@ class ScraperRuntime(models.Model):
     scraper = models.ForeignKey(Scraper)
     url = models.URLField()
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
-    num_criticals = models.IntegerField(default=0)
-    last_critical_msg = models.CharField(max_length=200, blank=True)
-    num_errors = models.IntegerField(default=0)
-    last_error_msg = models.CharField(max_length=200, blank=True)
-    num_warnings = models.IntegerField(default=0)
-    last_warning_msg = models.CharField(max_length=200, blank=True)
     scheduler_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
 
     def delete(self, *args, **kwargs):
@@ -132,4 +126,31 @@ class ScraperRuntime(models.Model):
 
     def __unicode__(self):
         return self.name + " (" + self.scraper.__unicode__() + ")"
+
+
+class Log(models.Model):
+    LEVEL_CHOICES = (
+        (50, 'CRITICAL'),
+        (40, 'ERROR'),
+        (30, 'WARNING'),
+        (20, 'INFO'),
+        (10, 'DEBUG'),
+    )
+    message = models.CharField(max_length=255)
+    ref_object = models.CharField(max_length=200)
+    level = models.IntegerField(choices=LEVEL_CHOICES)
+    spider_name = models.CharField(max_length=200)
+    scraper_runtime = models.ForeignKey(ScraperRuntime)
+    scraper = models.ForeignKey(Scraper)
+    date = models.DateTimeField(default=datetime.datetime.now)
     
+    @staticmethod
+    def numeric_level(level):
+        numeric_level = 0
+        for choice in Log.LEVEL_CHOICES:
+            if choice[1] == level:
+                numeric_level = choice[0]
+        return numeric_level        
+    
+    class Meta:
+        ordering = ['-date']

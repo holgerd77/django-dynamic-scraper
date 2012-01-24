@@ -69,8 +69,8 @@ class ScraperTest(TestCase):
         'id': id,
         'do_action': 'yes'
         }
-        spider = EventSpider(**kwargs)
-        self.crawler.crawl(spider)
+        self.spider = EventSpider(**kwargs)
+        self.crawler.crawl(self.spider)
         self.crawler.start()
         
     
@@ -79,8 +79,8 @@ class ScraperTest(TestCase):
         'id': id,
         'do_action': 'yes'
         }
-        checker = EventChecker(**kwargs)
-        self.crawler.crawl(checker)
+        self.checker = EventChecker(**kwargs)
+        self.crawler.crawl(self.checker)
         self.crawler.start()
 
     

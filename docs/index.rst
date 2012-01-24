@@ -31,9 +31,9 @@ User Manual
    
    getting_started
    advanced_topics
+   basic_services
+   reference
    development
-   model_reference
-   api_reference
 
 
 Indices and tables

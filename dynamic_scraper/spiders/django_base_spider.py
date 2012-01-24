@@ -1,10 +1,13 @@
 import datetime
 from scrapy import log, signals
+from scrapy.conf import settings
 from scrapy.spider import BaseSpider
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy.exceptions import CloseSpider
 
 from django.core.exceptions import ObjectDoesNotExist
+
+from dynamic_scraper.models import Log
 
 
 class DjangoBaseSpider(BaseSpider):
@@ -16,6 +19,9 @@ class DjangoBaseSpider(BaseSpider):
     conf = {
         "DO_ACTION": False,
         "RUN_TYPE": 'SHELL',
+        "LOG_ENABLED": True,
+        "LOG_LEVEL": 'ERROR',
+        "LOG_LIMIT": 250,
     }
     command = 'scrapy crawl SPIDERNAME -a id=REF_OBJECT_ID [-a do_action=(yes|no) -a run_type=(TASK|SHELL)]'
     
@@ -45,7 +51,11 @@ class DjangoBaseSpider(BaseSpider):
                 self.conf['DO_ACTION'] = True
             else:
                 self.conf['DO_ACTION'] = False
-        self.pre_log_msg = "[" + self.ref_object.__class__.__name__ + "(" + str(self.ref_object.id)  + ")] "
+        
+        self.conf['LOG_ENABLED'] = settings.get('DSCRAPER_LOG_ENABLED', self.conf['LOG_ENABLED'])
+        self.conf['LOG_LEVEL'] = settings.get('DSCRAPER_LOG_LEVEL', self.conf['LOG_LEVEL'])
+        self.conf['LOG_LIMIT'] = settings.get('DSCRAPER_LOG_LIMIT', self.conf['LOG_LIMIT'])
+        
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)
                 
     
@@ -84,7 +94,24 @@ class DjangoBaseSpider(BaseSpider):
     
     
     def log(self, message, level=log.DEBUG):
-        message = self.pre_log_msg + message
+        if self.conf['RUN_TYPE'] == 'TASK' and self.conf['DO_ACTION']:
+            
+            if self.conf['LOG_ENABLED'] and level >= Log.numeric_level(self.conf['LOG_LEVEL']):
+                l = Log()
+                l.message = message
+                l.ref_object = self.ref_object.__class__.__name__ + " (" + str(self.ref_object.id) + ")"
+                l.level = int(level)
+                l.spider_name = self.name
+                l.scraper_runtime = self.scraper_runtime
+                l.scraper = self.scraper
+                l.save()
+                
+                #Delete old logs
+                if Log.objects.count() > self.conf['LOG_LIMIT']:
+                    items = Log.objects.all()[self.conf['LOG_LIMIT']:]
+                    for item in items:
+                        item.delete()
+                
         super(DjangoBaseSpider, self).log(message, level)
         
     

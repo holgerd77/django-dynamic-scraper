@@ -35,3 +35,7 @@ IMAGES_STORE = os.path.join(PROJECT_ROOT, '../thumbnails')
 IMAGES_THUMBS = {
     'small': (170, 170),
 }
+
+DSCRAPER_LOG_ENABLED = True
+DSCRAPER_LOG_LEVEL = 'INFO'
+DSCRAPER_LOG_LIMIT = 5

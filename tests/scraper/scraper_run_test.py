@@ -1,11 +1,12 @@
 import datetime
 import os.path
 
+from scrapy import log
 from scrapy.exceptions import CloseSpider 
 
 from scraper.models import Event
 from scraper.scraper_test import EventSpider, ScraperTest
-from dynamic_scraper.models import SchedulerRuntime
+from dynamic_scraper.models import SchedulerRuntime, Log
 
 
 class ScraperRunTest(ScraperTest):
@@ -65,6 +66,9 @@ class ScraperRunTest(ScraperTest):
         self.crawler.start()
         
         self.assertEqual(spider.scheduler_runtime.num_zero_actions, 1)
+        
+        spider.log("Test message", log.ERROR)
+        self.assertGreater(Log.objects.count(), 0)
     
     
     def test_no_task_run_type(self):
@@ -81,6 +85,9 @@ class ScraperRunTest(ScraperTest):
         self.crawler.start()
         
         self.assertEqual(spider.scheduler_runtime.num_zero_actions, 0)
+        
+        spider.log("Test message", log.ERROR)
+        self.assertEqual(Log.objects.count(), 0)
         
         
     def test_max_items_read(self):
@@ -151,4 +158,5 @@ class ScraperRunTest(ScraperTest):
         self.assertEqual(Event.objects.get(title='Event 1').description, '1d7c0c2ea752d7aa951e88f2bc90a3f17058c473.jpg')
         self.assertTrue(os.access(path1, os.F_OK))
         self.assertTrue(os.access(path2, os.F_OK))
+
         

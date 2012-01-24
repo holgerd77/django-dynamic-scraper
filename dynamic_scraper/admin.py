@@ -36,7 +36,24 @@ class SchedulerRuntimeAdmin(admin.ModelAdmin):
     list_display = ('id', 'next_action_time', 'next_action_factor', 'num_zero_actions',)
     search_fields = ['id']
 
+class LogAdmin(admin.ModelAdmin):
+    list_display = ('message', 'ref_object', 'level', 'spider_name', 'scraper_runtime_', 'scraper_', 'date_',)
+    list_filter = ('level', 'spider_name', 'scraper',)
+    search_fields = ['scraper_runtime',]
+    raw_id_fields = ('scraper_runtime',)
+    
+    def scraper_runtime_(self, instance):
+        return instance.scraper_runtime.name
+
+    def scraper_(self, instance):
+        return instance.scraper.name
+    
+    def date_(self, instance):
+        return instance.date.strftime('%Y-%m-%d %H:%M')
+
+
 admin.site.register(ScrapedObjClass, ScrapedObjClassAdmin)
 admin.site.register(Scraper, ScraperAdmin)
 admin.site.register(ScraperRuntime, ScraperRuntimeAdmin)
 admin.site.register(SchedulerRuntime, SchedulerRuntimeAdmin)
+admin.site.register(Log, LogAdmin)
