@@ -54,12 +54,12 @@
 			"checker_x_path_ref_url": "",
 			"checker_x_path_result": "",
 			"name": "Wikinews Scraper",
-			"pagination_range": "",
+			"pagination_page_replace": "",
 			"pagination_append_str": "",
 			"checker_x_path": "",
 			"max_items_read": null,
 			"max_items_save": null,
-			"use_pagination": false,
+			"pagination_type": "N",
 			"pagination_on_start": false,
 			"scraped_obj_class": 1
 		}

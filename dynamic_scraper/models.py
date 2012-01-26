@@ -38,14 +38,20 @@ class ScrapedObjAttr(models.Model):
 
 
 class Scraper(models.Model):
+    PAGINATION_TYPE = (
+        ('N', 'NONE'),
+        ('R', 'RANGE_FUNCT'),
+        ('F', 'FREE_LIST'),
+    )
     name = models.CharField(max_length=200)
     scraped_obj_class = models.ForeignKey(ScrapedObjClass)
     max_items_read = models.IntegerField(blank=True, null=True, help_text="Max number of items to be read (empty: unlimited).")
     max_items_save = models.IntegerField(blank=True, null=True, help_text="Max number of items to be saved (empty: unlimited).")
-    use_pagination = models.BooleanField(default=False)
-    pagination_append_str = models.CharField(max_length=200, blank=True)
+    pagination_type = models.CharField(max_length=1, choices=PAGINATION_TYPE, default='N')
     pagination_on_start = models.BooleanField(default=False)
-    pagination_range = models.CharField(max_length=200, blank=True)
+    pagination_append_str = models.CharField(max_length=200, blank=True, help_text="Syntax: /somepartofurl/{page}/moreurlstuff.html")
+    pagination_page_replace = models.TextField(blank=True, 
+        help_text="RANGE_FUNCT: uses Python range funct., syntax: [start], stop[, step], FREE_LIST: 'Replace text 1', 'Some other text 2', 'Maybe a number 3', ...")
     checker_x_path = models.CharField(max_length=200, blank=True)
     checker_x_path_result = models.CharField(max_length=200, blank=True)
     checker_x_path_ref_url = models.URLField(blank=True)

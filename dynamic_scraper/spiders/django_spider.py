@@ -54,32 +54,49 @@ class DjangoSpider(DjangoBaseSpider):
 
     def _set_start_urls(self, scrape_url):
         
-        if self.scraper.use_pagination:
+        if self.scraper.pagination_type != 'N':
             if not self.scraper.pagination_append_str:
                 raise CloseSpider('Please provide a pagination_append_str for pagination (e.g. "/archive/{page}/")!')
             if self.scraper.pagination_append_str.find('{page}') == -1:
-                raise CloseSpider('Pagination_append_str has to contain "{page}" as placeholder for page number')
-            if not self.scraper.pagination_range:
-                raise CloseSpider('Please provide a pagination_range for pagination (e.g. "1, 10")!')
+                raise CloseSpider('Pagination_append_str has to contain "{page}" as placeholder for page replace!')
+            if not self.scraper.pagination_page_replace:
+                raise CloseSpider('Please provide a pagination_page_replace context corresponding to pagination_type!')
+        
+        if self.scraper.pagination_type == 'R':
             try:
-                p_range = self.scraper.pagination_range
-                p_range = p_range.split(',')
-                if len(p_range) > 3:
+                pages = self.scraper.pagination_page_replace
+                pages = pages.split(',')
+                if len(pages) > 3:
                     raise Exception
-                p_range = range(*map(int, p_range)) 
+                pages = range(*map(int, pages)) 
             except Exception:
-                raise CloseSpider('Pagination_range has to be provided as python range function arguments ' +\
-                    '[start], stop[, step] (e.g. "1, 50, 10", no brackets)!')
+                raise CloseSpider('Pagination_page_replace for pagination_type "RANGE_FUNCT" ' +\
+                                  'has to be provided as python range function arguments ' +\
+                                  '[start], stop[, step] (e.g. "1, 50, 10", no brackets)!')
+        
+        if self.scraper.pagination_type == 'F':
+            try:
+                pages = self.scraper.pagination_page_replace
+                pages = pages.strip(', ')
+                pages = ast.literal_eval("[" + pages + ",]")
+            except SyntaxError:
+                raise CloseSpider('Wrong pagination_page_replace format for pagination_type "FREE_LIST", ' +\
+                                  "Syntax: 'Replace string 1', 'Another replace string 2', 'A number 3', ...")
+                
+        
+        
+        if self.scraper.pagination_type != 'N':
             append_str = self.scraper.pagination_append_str
             if scrape_url[-1:] == '/' and append_str[0:1] == '/':
                 append_str = append_str[1:]
 
-            for page in p_range:
+            for page in pages:
                 url = scrape_url + append_str.format(page=page)
                 self.start_urls.append(url)
             if not self.scraper.pagination_on_start:
                 self.start_urls.append(scrape_url)
-        else:
+        
+        if self.scraper.pagination_type == 'N':
             self.start_urls.append(scrape_url)
 
 
