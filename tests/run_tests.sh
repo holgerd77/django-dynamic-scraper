@@ -16,6 +16,7 @@ tests="
 ScraperRunTest.test_missing_base_elem
 ScraperRunTest.test_missing_url_elem
 ScraperRunTest.test_scraper
+ScraperRunTest.test_standard_field_as_follow_url_hack
 ScraperRunTest.test_testmode
 ScraperRunTest.test_task_run_type
 ScraperRunTest.test_no_task_run_type
@@ -30,6 +31,7 @@ CheckerRunTest.test_404_delete
 CheckerRunTest.test_404_delete_with_zero_actions
 CheckerRunTest.test_404_delete_with_img
 CheckerRunTest.test_x_path_delete
+CheckerRunTest.test_checker_test_wrong_checker_config
 PaginationTest.test_config_append_str_without_page
 PaginationTest.test_p_on_start
 PaginationTest.test_range_funct_type_wrong_replace_format

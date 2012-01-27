@@ -238,7 +238,12 @@ should look similar to the screenshot below:
 
 .. image:: images/screenshot_django-admin_add_scraped_obj_class.png
 
-
+.. note::
+	Though it is a bit of a hack: if you want to **scrape items on a website not leading to detail pages** you can do
+	this by defining another (non url) field as the ``follow_url`` field, e.g. a title or an id. Make sure that this
+	field is unique since the ``follow_url`` field is also used as an identifier for preventing double
+	entries in the DB and don't use the ``follow_url`` option in your scraper definitions. It is also not possible
+	to use checkers with this workaround. However: it works, I even wrote a unit test for this hack! :-)
 
 Defining your scrapers
 ======================
@@ -401,8 +406,7 @@ And this is your ``settings.py`` file::
 	BOT_NAME = 'open_news'
 	BOT_VERSION = '1.0'
 	
-	SPIDER_MODULES = ['open_news.scraper']
-	NEWSPIDER_MODULE = 'open_news.scraper'
+	SPIDER_MODULES = ['dynamic_scraper.spiders', 'open_news.scraper',]
 	USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
 	
 	ITEM_PIPELINES = [
@@ -410,7 +414,7 @@ And this is your ``settings.py`` file::
 	    'open_news.scraper.pipelines.DjangoWriterPipeline',
 	]
 
-The ``SPIDER_MODULES`` and ``NEWSPIDER_MODULE`` settings are referencing our ``scraper`` package where
+The ``SPIDER_MODULES`` setting is referencing the basic spiders of DDS and our ``scraper`` package where
 Scrapy will find the (yet to be written) spider module. For the ``ITEM_PIPELINES`` setting we have to
 add (at least) two pipelines. The first one is the mandatory pipeline from DDS, doing stuff like checking
 for the mandatory attributes we have defined in our scraper in the DB or preventing double entries already

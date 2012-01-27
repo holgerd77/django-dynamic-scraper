@@ -81,9 +81,7 @@ class DjangoSpider(DjangoBaseSpider):
                 pages = ast.literal_eval("[" + pages + ",]")
             except SyntaxError:
                 raise CloseSpider('Wrong pagination_page_replace format for pagination_type "FREE_LIST", ' +\
-                                  "Syntax: 'Replace string 1', 'Another replace string 2', 'A number 3', ...")
-                
-        
+                                  "Syntax: 'Replace string 1', 'Another replace string 2', 'A number 3', ...")   
         
         if self.scraper.pagination_type != 'N':
             append_str = self.scraper.pagination_append_str
@@ -172,9 +170,12 @@ class DjangoSpider(DjangoBaseSpider):
             url_name = url_elem.scraped_obj_attr.name
             if(item and url_name in item):
                 cnt = self.scraped_obj_class.objects.filter(url=item[url_name]).count()
+                cnt2 = self.scraper.get_scrape_elems_with_follow_url().count()
                 # Check for double items
-                if(cnt > 0):
+                if cnt > 0:
                     item[url_name] = 'DOUBLE'
+                elif cnt2 == 0:
+                    yield item
                 else:
                     yield Request(item[url_name], callback=self.parse_item, meta={'item':item})
                     

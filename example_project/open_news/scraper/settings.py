@@ -20,8 +20,7 @@ setup_environ(example_project.settings)
 BOT_NAME = 'open_news'
 BOT_VERSION = '1.0'
 
-SPIDER_MODULES = ['open_news.scraper']
-NEWSPIDER_MODULE = 'open_news.scraper'
+SPIDER_MODULES = ['dynamic_scraper.spiders', 'open_news.scraper',]
 USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
 
 ITEM_PIPELINES = [

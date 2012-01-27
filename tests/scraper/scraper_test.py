@@ -9,6 +9,7 @@ from scrapy.xlib.pydispatch import dispatcher
 
 from dynamic_scraper.spiders.django_spider import DjangoSpider
 from dynamic_scraper.spiders.django_checker import DjangoChecker
+from dynamic_scraper.spiders.checker_test import CheckerTest
 from dynamic_scraper.models import *
 from scraper.models import EventWebsite, Event, EventItem
 
@@ -82,7 +83,20 @@ class ScraperTest(TestCase):
         self.checker = EventChecker(**kwargs)
         self.crawler.crawl(self.checker)
         self.crawler.start()
-
+    
+    
+    def run_checker_test(self, id):
+        kwargs = {
+        'id': id,
+        }
+        self.checker_test = CheckerTest(**kwargs)
+        self.checker_test.conf['RUN_TYPE'] = 'TASK'
+        self.checker_test.conf['DO_ACTION'] = True
+        self.checker_test.conf['LOG_ENABLED'] = True
+        self.checker_test.conf['LOG_LEVEL'] = 'DEBUG' 
+        self.crawler.crawl(self.checker_test)
+        self.crawler.start()
+    
     
     def setUp(self):        
         self.sc = ScrapedObjClass(name='Event')

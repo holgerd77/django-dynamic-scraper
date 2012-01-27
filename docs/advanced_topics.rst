@@ -76,8 +76,8 @@ and the result string "create this page" to uniquely identifying a scraped item 
    the second try while XPath checks are deleted at once. So to save crawling resources always try to realize
    your checking with XPath checks, otherwise the crawler need double the amount of checks!
 
-Testing/running your checkers
------------------------------
+Running your checkers
+---------------------
 You can test your DDS checkers the same way you would run your scrapers::
 
 	scrapy crawl CHECKERNAME -a id=REF_OBJECT_ID [-a do_action=(yes|no) -a run_type=(TASK|SHELL)]
@@ -91,6 +91,20 @@ the DB to the checker reference url, look for the item ID and then run::
 	scrapy crawl article_checker -a id=ITEM_ID -a do_action=yes
 
 If everything works well, your item should have been deleted.
+
+Run checker tests
+-----------------
+Django Dynamic Scraper comes with a build-in scraper called ``checker_test`` which can be used to test your checkers
+against the defined reference url. You can run this checker on the command line with the following command::
+
+	scrapy crawl checker_test -a id=SCRAPER_ID
+	
+This scraper is useful both to look, if you have chosen a valid ``checker_x_path_ref_url`` and corresponding ``checker_x_path`` 
+and ``checker_x_path_result`` values as well as to see over time if your reference urls stay valid. For this use case
+there exists a pre-defined celery task called ``run_checker_tests`` which can be used to run the checker test
+for all the scrapers having a valid checker configuration. If a checker breaks over time (e.g. through a 
+renewed "Item not found" page) an error message will occur in the log table in the Django admin. 
+
 
 Scheduling scrapers/checkers
 ============================

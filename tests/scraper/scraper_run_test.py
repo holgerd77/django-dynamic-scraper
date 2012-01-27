@@ -29,6 +29,20 @@ class ScraperRunTest(ScraperTest):
         self.assertEqual(Event.objects.get(title='Event 1').description, u'Event 1 description')
     
     
+    def test_standard_field_as_follow_url_hack(self):
+        self.se_desc.x_path = u'a/text()'
+        self.se_desc.follow_url = False
+        self.se_desc.save()
+        self.soa_title.attr_type = 'U'
+        self.soa_title.save()
+        self.soa_url.attr_type = 'S'
+        self.soa_url.save()
+        
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 4)
+        
+    
     def test_double(self):
         checker_rt = SchedulerRuntime()
         checker_rt.save()

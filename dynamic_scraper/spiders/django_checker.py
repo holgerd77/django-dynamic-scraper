@@ -66,7 +66,7 @@ class DjangoChecker(DjangoBaseSpider):
 
     def parse(self, response):
         hxs = HtmlXPathSelector(response)
-            
+        
         # x_path test
         if not self.scraper.checker_x_path:
             self.log("No 404. Item kept.", log.INFO)

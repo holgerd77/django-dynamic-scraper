@@ -1,8 +1,9 @@
 import os.path
 
+from scrapy.exceptions import CloseSpider
 from scraper.models import Event
 from scraper.scraper_test import EventChecker, ScraperTest
-from dynamic_scraper.models import SchedulerRuntime
+from dynamic_scraper.models import SchedulerRuntime, Log
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -14,6 +15,7 @@ class CheckerRunTest(ScraperTest):
         
         self.scraper.checker_x_path = u'//div[@class="event_not_found"]/div/text()'
         self.scraper.checker_x_path_result = u'Event was deleted!'
+        self.scraper.checker_x_path_ref_url = u'http://localhost:8010/static/site_for_checker/event_not_found.html'
         self.scraper.save()
         
         scheduler_rt = SchedulerRuntime()
@@ -91,5 +93,12 @@ class CheckerRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.all()), 0)   
         self.assertFalse(os.path.exists(path))
         
-            
-    
+         
+    def test_checker_test_wrong_checker_config(self):
+        self.scraper.checker_x_path_ref_url = ''
+        self.scraper.save()
+        
+        self.assertRaises(CloseSpider, self.run_checker_test, 1)
+        
+        
+        

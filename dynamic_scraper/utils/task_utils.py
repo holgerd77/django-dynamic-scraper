@@ -1,6 +1,6 @@
 import datetime
 import urllib, httplib
-
+from dynamic_scraper.models import Scraper
 
 class TaskUtils():
     
@@ -41,3 +41,10 @@ class TaskUtils():
         for ref_object in ref_obj_list:
             self._run_spider(id=ref_object.id, spider=checker_name, run_type='TASK', do_action='yes')
 
+
+    def run_checker_tests(self):
+        
+        scraper_list = Scraper.objects.filter(checker_x_path__isnull=False, checker_x_path_result__isnull=False, checker_x_path_ref_url__isnull=False)
+
+        for scraper in scraper_list:
+            self._run_spider(id=scraper.id, spider='checker_test', run_type='TASK', do_action='yes')

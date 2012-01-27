@@ -15,7 +15,8 @@ class ScraperElemInline(admin.TabularInline):
     extra = 3
     
 class ScraperAdmin(admin.ModelAdmin):
-    list_display = ('name', 'scraped_obj_class', 'max_items_read', 'max_items_save', 'pagination_type',)
+    list_display = ('id', 'name', 'scraped_obj_class', 'max_items_read', 'max_items_save', 'pagination_type',)
+    list_display_links = ('name',)
     list_filter = ('scraped_obj_class',)
     search_fields = ['name']
     inlines = [
@@ -23,7 +24,8 @@ class ScraperAdmin(admin.ModelAdmin):
     ]
 
 class ScraperRuntimeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'scraper', 'url_', 'status', 'scheduler_runtime',)
+    list_display = ('id', 'name', 'scraper', 'url_', 'status', 'scheduler_runtime',)
+    list_display_links = ('name',)
     list_filter = ('status', 'scraper',)
     search_fields = ['name']
     raw_id_fields = ('scheduler_runtime',)

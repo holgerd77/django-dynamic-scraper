@@ -89,6 +89,10 @@ class Scraper(models.Model):
         q3 = Q(scraped_obj_attr__attr_type='I')
         return self.scraperelem_set.filter(q1 | q2 | q3).filter(mandatory=True)
     
+    def get_scrape_elems_with_follow_url(self):
+        q1 = Q(follow_url=True)
+        return self.scraperelem_set.filter(q1)
+    
     def __unicode__(self):
         return self.name + " (" + self.scraped_obj_class.name + ")"
 
@@ -146,8 +150,8 @@ class Log(models.Model):
     ref_object = models.CharField(max_length=200)
     level = models.IntegerField(choices=LEVEL_CHOICES)
     spider_name = models.CharField(max_length=200)
-    scraper_runtime = models.ForeignKey(ScraperRuntime)
-    scraper = models.ForeignKey(Scraper)
+    scraper_runtime = models.ForeignKey(ScraperRuntime, blank=True, null=True)
+    scraper = models.ForeignKey(Scraper, blank=True, null=True)
     date = models.DateTimeField(default=datetime.datetime.now)
     
     @staticmethod

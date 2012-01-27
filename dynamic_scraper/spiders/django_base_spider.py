@@ -102,8 +102,10 @@ class DjangoBaseSpider(BaseSpider):
                 l.ref_object = self.ref_object.__class__.__name__ + " (" + str(self.ref_object.id) + ")"
                 l.level = int(level)
                 l.spider_name = self.name
-                l.scraper_runtime = self.scraper_runtime
-                l.scraper = self.scraper
+                if hasattr(self, 'scraper_runtime'):
+                    l.scraper_runtime = self.scraper_runtime
+                if hasattr(self, 'scraper'):
+                    l.scraper = self.scraper
                 l.save()
                 
                 #Delete old logs
