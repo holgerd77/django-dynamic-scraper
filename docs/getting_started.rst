@@ -168,24 +168,20 @@ Deletion of objects
 -------------------
 
 If you delete model objects via the Django admin interface, the runtime objects are not
-deleted as well. If you want this to happen, you have to override the delete methods of your model classes
-in your ``models.py`` file, e.g. to delete the ``checker_runtime`` when deleting an article::
+deleted as well. If you want this to happen, you can use Django's 
+`pre_delete signals <https://docs.djangoproject.com/en/dev/topics/db/models/#overriding-model-methods>`_
+in your ``models.py`` to delete e.g. the ``checker_runtime`` when deleting an article::
 
-	class Article(models.Model):
-	
-	    ...
+	@receiver(pre_delete)
+	def pre_delete_handler(sender, instance, using, **kwargs):
+	    ....
+	    
+	    if isinstance(instance, Article):
+	        if instance.checker_runtime:
+	            instance.checker_runtime.delete()
+	            
+	pre_delete.connect(pre_delete_handler)
 
-	    def delete(self, *args, **kwargs):
-	        checker_runtime = self.checker_runtime
-	        super(Article, self).delete(*args, **kwargs)
-	        checker_runtime.delete()
-
-.. note::
-   Normally it is recommended in the Django documentation that you use the 
-   `pre_delete or post_delete signals <https://docs.djangoproject.com/en/dev/topics/db/models/#overriding-model-methods>`_ to customize 
-   delete behaviour. However I had pretty much problems to get this running together with 
-   ``on_delete=models.SET_NULL`` field option mentioned above so I would recommend using the solution presented here.
-   Note that the ``delete()`` method of an object is not always called, see Django doc for more information. 
 
 .. _DjangoItem: http://readthedocs.org/docs/scrapy/en/latest/experimental/djangoitems.html
 
