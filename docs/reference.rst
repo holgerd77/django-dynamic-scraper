@@ -72,8 +72,23 @@ TODO
 ScraperRuntime
 --------------
 
-TODO
+``url``
+^^^^^^^
 
+Url used for scraping.
+
+
+``status``
+^^^^^^^^^^
+		
+Status of the scraper runtime, influencing in which context the scraper is executed.
+		
+======== ===========================================================================
+ACTIVE   Scraper can be run manually and is included on scheduled task execution
+MANUAL   Scraper can only be run manually and is ignored on scheduled task execution
+PAUSE    Scraper is not executed, use for short pausing
+INACTIVE Scraper is not executed, use for longer interruption of scraper use
+======== ===========================================================================
 
 .. _scheduler_runtime:
 

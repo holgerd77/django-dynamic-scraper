@@ -120,6 +120,7 @@ class SchedulerRuntime(models.Model):
 class ScraperRuntime(models.Model):
     STATUS_CHOICES = (
         ('A', 'ACTIVE'),
+        ('M', 'MANUAL'),
         ('P', 'PAUSED'),
         ('I', 'INACTIVE'),
     )

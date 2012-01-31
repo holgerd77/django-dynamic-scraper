@@ -38,12 +38,16 @@ class DjangoSpider(DjangoBaseSpider):
 
 
     def _check_scraper_config(self):
+        if self.scraper_runtime.status == 'P' or self.scraper_runtime.status == 'I':
+            msg = 'Scraper runtime status set to %s!' % (self.scraper_runtime.get_status_display())
+            self.log(msg, log.WARNING)
+            raise CloseSpider(msg)
         try:
             self.scraper.get_base_elem() 
         except ScraperElem.DoesNotExist:
             raise CloseSpider('Please define a base scraper elem in your database!')
         try:
-            self.scraper.get_detail_page_url_elem() 
+            self.scraper.get_detail_page_url_elem()
         except ScraperElem.DoesNotExist:
             raise CloseSpider('Please define a detail page url scraper elem in your database!')
         if(len(self.scraper.get_base_elems()) > 1):
