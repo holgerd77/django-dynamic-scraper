@@ -31,7 +31,7 @@ class DjangoSpider(DjangoBaseSpider):
         self._set_start_urls(self.scraper_runtime.url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
         self._check_scraper_config()
-        self.follow_url = False
+        self.from_detail_page = False
         self.loader = None
         self.items_read_count = 0
         self.items_save_count = 0
@@ -43,13 +43,13 @@ class DjangoSpider(DjangoBaseSpider):
         except ScraperElem.DoesNotExist:
             raise CloseSpider('Please define a base scraper elem in your database!')
         try:
-            self.scraper.get_follow_url_elem() 
+            self.scraper.get_detail_page_url_elem() 
         except ScraperElem.DoesNotExist:
-            raise CloseSpider('Please define a url scraper elem in your database!')
+            raise CloseSpider('Please define a detail page url scraper elem in your database!')
         if(len(self.scraper.get_base_elems()) > 1):
             raise CloseSpider('A scraper can\'t have more than one base scraper elem!')
-        if(len(self.scraper.get_follow_url_elems()) > 1):
-            raise CloseSpider('A scraper can\'t have more than one url scraper elem!')
+        if(len(self.scraper.get_detail_page_url_elems()) > 1):
+            raise CloseSpider('A scraper can\'t have more than one detail page url scraper elem!')
 
 
     def _set_start_urls(self, scrape_url):
@@ -100,8 +100,6 @@ class DjangoSpider(DjangoBaseSpider):
 
     def _set_loader_context(self, context_str):
         try:
-            #add_ctxt1 = "'pre_log_msg': '" + self.pre_log_msg + "'"
-            #context_str = ", ".join([context_str, add_ctxt1])
             context_str = context_str.strip(', ')
             context = ast.literal_eval("{" + context_str + "}")
             self.loader.context = context
@@ -120,7 +118,7 @@ class DjangoSpider(DjangoBaseSpider):
 
 
     def _scrape_item_attr(self, scraper_elem):
-        if(self.follow_url == scraper_elem.follow_url):
+        if(self.from_detail_page == scraper_elem.from_detail_page):
             procs = self._get_processors(scraper_elem.processors)
             self._set_loader_context(scraper_elem.proc_ctxt)
             if(scraper_elem.reg_exp):
@@ -131,19 +129,19 @@ class DjangoSpider(DjangoBaseSpider):
 
     def _set_loader(self, response, hxs, item):
         if not hxs:
-            self.follow_url = True
+            self.from_detail_page = True
             item = response.request.meta['item']
             self.loader = XPathItemLoader(item=item, response=response)
             self.loader.default_output_processor = TakeFirst()
         else:
-            self.follow_url = False
+            self.from_detail_page = False
             self.loader = XPathItemLoader(item=item, selector=hxs)
             self.loader.default_output_processor = TakeFirst()
 
 
     def parse_item(self, response, hxs=None):
         self._set_loader(response, hxs, self.scraped_obj_item_class())
-        if not self.follow_url:
+        if not self.from_detail_page:
             self.items_read_count += 1
             
         elems = self.scraper.get_scrape_elems()
@@ -156,7 +154,7 @@ class DjangoSpider(DjangoBaseSpider):
     def parse(self, response):
         hxs = HtmlXPathSelector(response)
         base_elem = self.scraper.get_base_elem()
-        url_elem = self.scraper.get_follow_url_elem()
+        url_elem = self.scraper.get_detail_page_url_elem()
         base_objects = hxs.select(base_elem.x_path)
         if(len(base_objects) == 0):
             self.log("No base objects found!", log.ERROR)
@@ -170,7 +168,7 @@ class DjangoSpider(DjangoBaseSpider):
             url_name = url_elem.scraped_obj_attr.name
             if(item and url_name in item):
                 cnt = self.scraped_obj_class.objects.filter(url=item[url_name]).count()
-                cnt2 = self.scraper.get_scrape_elems_with_follow_url().count()
+                cnt2 = self.scraper.get_from_detail_page_scrape_elems().count()
                 # Check for double items
                 if cnt > 0:
                     item[url_name] = 'DOUBLE'

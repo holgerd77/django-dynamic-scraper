@@ -26,7 +26,7 @@ class ScrapedObjAttr(models.Model):
     ATTR_TYPE_CHOICES = (
         ('S', 'STANDARD'),
         ('B', 'BASE'),
-        ('U', 'FOLLOW_URL'),
+        ('U', 'DETAIL_PAGE_URL'),
         ('I', 'IMAGE'),
     )
     name = models.CharField(max_length=200)
@@ -62,10 +62,10 @@ class Scraper(models.Model):
     def get_base_elem(self):
         return self.scraperelem_set.get(scraped_obj_attr__attr_type='B')
     
-    def get_follow_url_elems(self):
+    def get_detail_page_url_elems(self):
         return self.scraperelem_set.filter(scraped_obj_attr__attr_type='U')
     
-    def get_follow_url_elem(self):
+    def get_detail_page_url_elem(self):
         return self.scraperelem_set.get(scraped_obj_attr__attr_type='U')
 
     def get_standard_elems(self):
@@ -89,8 +89,8 @@ class Scraper(models.Model):
         q3 = Q(scraped_obj_attr__attr_type='I')
         return self.scraperelem_set.filter(q1 | q2 | q3).filter(mandatory=True)
     
-    def get_scrape_elems_with_follow_url(self):
-        q1 = Q(follow_url=True)
+    def get_from_detail_page_scrape_elems(self):
+        q1 = Q(from_detail_page=True)
         return self.scraperelem_set.filter(q1)
     
     def __unicode__(self):
@@ -102,7 +102,7 @@ class ScraperElem(models.Model):
     scraper = models.ForeignKey(Scraper)   
     x_path = models.CharField(max_length=200)
     reg_exp = models.CharField(max_length=200, blank=True)
-    follow_url = models.BooleanField()
+    from_detail_page = models.BooleanField()
     processors = models.CharField(max_length=200, blank=True)
     proc_ctxt = models.CharField(max_length=200, blank=True)
     mandatory = models.BooleanField(default=True)

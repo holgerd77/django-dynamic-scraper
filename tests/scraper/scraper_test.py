@@ -114,16 +114,16 @@ class ScraperTest(TestCase):
         self.scraper.save()
         
         self.se_base = ScraperElem(scraped_obj_attr=self.soa_base, scraper=self.scraper, 
-        x_path=u'//ul/li', follow_url=False)
+        x_path=u'//ul/li', from_detail_page=False)
         self.se_base.save()
         self.se_title = ScraperElem(scraped_obj_attr=self.soa_title, scraper=self.scraper, 
-            x_path=u'a/text()', follow_url=False)
+            x_path=u'a/text()', from_detail_page=False)
         self.se_title.save()
         self.se_url = ScraperElem(scraped_obj_attr=self.soa_url, scraper=self.scraper, 
-            x_path=u'a/@href', follow_url=False)
+            x_path=u'a/@href', from_detail_page=False)
         self.se_url.save()
         self.se_desc = ScraperElem(scraped_obj_attr=self.soa_desc, scraper=self.scraper, 
-            x_path=u'//div/div[@class="description"]/text()', follow_url=True, mandatory=False)
+            x_path=u'//div/div[@class="description"]/text()', from_detail_page=True, mandatory=False)
         self.se_desc.save()
         
         self.sched_rt = SchedulerRuntime()

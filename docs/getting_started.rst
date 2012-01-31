@@ -222,23 +222,23 @@ types (taken from ``dynamic_scraper.models.ScrapedObjAttr``)::
 	ATTR_TYPE_CHOICES = (
 	    ('S', 'STANDARD'),
 	    ('B', 'BASE'),
-	    ('U', 'FOLLOW_URL'),
+	    ('U', 'DETAIL_PAGE_URL'),
 	    ('I', 'IMAGE'),
 	)
 
-``STANDARD``, ``BASE`` and ``FOLLOW_URL`` should be clear by now, ``IMAGE`` represents attributes which will 
+``STANDARD``, ``BASE`` and ``DETAIL_PAGE_URL`` should be clear by now, ``IMAGE`` represents attributes which will 
 hold images or screenshots. So for our open news example we define a base attribute called 'base' with 
 type ``BASE``, two standard elements 'title' and 'description' with type ``STANDARD`` 
-and a url field called 'url' with type ``FOLLOW_URL``. Your definition form for your scraped obj class 
+and a url field called 'url' with type ``DETAIL_PAGE_URL``. Your definition form for your scraped obj class 
 should look similar to the screenshot below:
 
 .. image:: images/screenshot_django-admin_add_scraped_obj_class.png
 
 .. note::
 	Though it is a bit of a hack: if you want to **scrape items on a website not leading to detail pages** you can do
-	this by defining another (non url) field as the ``follow_url`` field, e.g. a title or an id. Make sure that this
-	field is unique since the ``follow_url`` field is also used as an identifier for preventing double
-	entries in the DB and don't use the ``follow_url`` option in your scraper definitions. It is also not possible
+	this by defining another (non url) field as the ``DETAIL_PAGE_URL`` field, e.g. a title or an id. Make sure that this
+	field is unique since the ``DETAIL_PAGE_URL`` field is also used as an identifier for preventing double
+	entries in the DB and don't use the ``from_detail_page`` option in your scraper definitions. It is also not possible
 	to use checkers with this workaround. However: it works, I even wrote a unit test for this hack! :-)
 
 Defining your scrapers
@@ -256,7 +256,7 @@ The main part of defining a scraper in DDS is to create several scraper elements
 the data for the specific :ref:`scraped_obj_attr` by following the main concepts of Scrapy_ for scraping
 data from websites. In the fields named 'x_path' and 'reg_exp' an XPath and (optionally) a regular expression
 is defined to extract the data from the page, following Scrapy's concept of 
-`XPathSelectors <http://readthedocs.org/docs/scrapy/en/latest/topics/selectors.html>`_. The 'follow_url'
+`XPathSelectors <http://readthedocs.org/docs/scrapy/en/latest/topics/selectors.html>`_. The 'from_detail_page'
 check box tells the scraper, if the data for the object attibute for the scraper element should be extracted
 from the overview page or the detail page of the specific item. The fields 'processors' and 'processors_ctxt' are
 used to define output processors for your scraped data like they are defined in Scrapy's
@@ -298,7 +298,7 @@ scraper element on default.
 2. It is not necessary but just for the purpose of this example let's scrape the title of a news article
 from the article detail page. On an article detail page the headline of the article is enclosed by a
 ``<h1>`` tag with an id named 'firstHeading'. So ``//h1[@id="firstHeading"]/text()`` should give us the headline.
-Since we want to scrape from the detail page, we have to activate the 'follow_url' check box.
+Since we want to scrape from the detail page, we have to activate the 'from_detail_page' check box.
 
 3. All the standard elements we want to scrape from the overview page are defined relative to the
 base element. Therefore keep in mind to leave the trailing double slashes of XPath definitions.

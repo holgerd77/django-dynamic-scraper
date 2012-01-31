@@ -52,7 +52,7 @@ class DjangoImagesPipeline(ImagesPipeline):
 class ValidationPipeline(object):
 
     def process_item(self, item, spider):
-        url_elem = spider.scraper.get_follow_url_elem()
+        url_elem = spider.scraper.get_detail_page_url_elem()
         url_name = url_elem.scraped_obj_attr.name
         if url_name in item and item[url_name] == 'DOUBLE':
             raise DropItem("Double item.")
