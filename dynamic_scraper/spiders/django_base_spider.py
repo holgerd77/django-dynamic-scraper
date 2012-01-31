@@ -51,6 +51,7 @@ class DjangoBaseSpider(BaseSpider):
                 self.conf['DO_ACTION'] = True
             else:
                 self.conf['DO_ACTION'] = False
+        self.pre_log_msg = "[" + self.ref_object.__class__.__name__ + "(" + str(self.ref_object.id)  + ")] "
         
         self.conf['LOG_ENABLED'] = settings.get('DSCRAPER_LOG_ENABLED', self.conf['LOG_ENABLED'])
         self.conf['LOG_LEVEL'] = settings.get('DSCRAPER_LOG_LEVEL', self.conf['LOG_LEVEL'])

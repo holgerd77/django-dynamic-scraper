@@ -104,6 +104,8 @@ class DjangoSpider(DjangoBaseSpider):
 
     def _set_loader_context(self, context_str):
         try:
+            add_ctxt1 = "'pre_log_msg': '" + self.pre_log_msg + "'"
+            context_str = ", ".join([context_str, add_ctxt1])
             context_str = context_str.strip(', ')
             context = ast.literal_eval("{" + context_str + "}")
             self.loader.context = context
