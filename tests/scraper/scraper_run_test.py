@@ -130,6 +130,17 @@ class ScraperRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.all()), 2)
     
     
+    def test_scraper_runtime_pause_status(self):
+        self.scraper_rt.status = 'P'
+        self.scraper_rt.save()
+        self.assertRaises(CloseSpider, self.run_event_spider, 1)
+
+
+    def test_scraper_runtime_inactive_status(self):
+        self.scraper_rt.status = 'I'
+        self.scraper_rt.save()
+        self.assertRaises(CloseSpider, self.run_event_spider, 1)
+   
     def test_processor(self):
         self.se_url.processors = u'pre_url'
         self.se_url.proc_ctxt = u"'pre_url': 'http://localhost:8010/static/site_with_processor/'"

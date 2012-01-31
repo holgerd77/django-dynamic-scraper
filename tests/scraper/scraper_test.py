@@ -130,7 +130,8 @@ class ScraperTest(TestCase):
         self.sched_rt.save()
         
         self.scraper_rt = ScraperRuntime(name=u'Events Runtime', scraper=self.scraper, 
-            url=os.path.join(self.SERVER_URL, 'site_generic/event_main.html'), scheduler_runtime=self.sched_rt)
+            url=os.path.join(self.SERVER_URL, 'site_generic/event_main.html'), 
+            status='A', scheduler_runtime=self.sched_rt)
         self.scraper_rt.save()
         
         self.event_website = EventWebsite(pk=1, name=u'Event Website', scraper_runtime=self.scraper_rt)

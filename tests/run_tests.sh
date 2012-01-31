@@ -23,6 +23,8 @@ ScraperRunTest.test_no_task_run_type
 ScraperRunTest.test_max_items_read
 ScraperRunTest.test_max_items_save
 ScraperRunTest.test_missing_mandatory
+ScraperRunTest.test_scraper_runtime_pause_status
+ScraperRunTest.test_scraper_runtime_inactive_status
 ScraperRunTest.test_processor
 ScraperRunTest.test_reg_exp
 ScraperRunTest.test_with_imgs
