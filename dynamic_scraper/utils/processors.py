@@ -1,19 +1,23 @@
 from datetime import datetime
 from scrapy import log
 
+
 def string_strip(text, loader_context):
     chars = loader_context.get('string_strip', ' \n\t')
     return text.strip(chars)
     
+
 def pre_string(text, loader_context):
     pre_str = loader_context.get('pre_string', '')
     
     return pre_str  + text
 
+
 def post_string(text, loader_context):
     post_str = loader_context.get('post_string', '')
     
     return text + post_str
+
 
 def pre_url(text, loader_context):
     pre_url = loader_context.get('pre_url', '')
@@ -26,23 +30,26 @@ def pre_url(text, loader_context):
     
     return pre_url + text
 
+
 def date(text, loader_context):
     cformat = loader_context.get('date')
     try:
         date = datetime.strptime(text, cformat)
     except ValueError:
-        log.msg(loader_context.get('pre_log_msg') + "Date could not be parsed!", log.ERROR)
+        loader_context.get('spider').log('Date could not be parsed ("%s", Format string: "%s")!' % (text, cformat), log.ERROR)
         return None
     return date.strftime('%Y-%m-%d')
+
 
 def time(text, loader_context):
     cformat = loader_context.get('time')
     try:
         time = datetime.strptime(text, cformat)
     except ValueError:
-        log.msg(loader_context.get('pre_log_msg') + "Time could not be parsed!", log.ERROR)
+        loader_context.get('spider').log('Time could not be parsed ("%s", Format string: "%s")!' % (text, cformat), log.ERROR)
         return None
     return time.strftime('%H:%M')
+
 
 def _breakdown_time_unit_overlap(time_str, limit):
     time_list = time_str.split(':')
@@ -57,12 +64,24 @@ def _breakdown_time_unit_overlap(time_str, limit):
     time_str = ':'.join(time_list)
     return time_str
 
+
 def duration(text, loader_context):
     cformat = loader_context.get('duration')
+    #Value completion in special cases
+    text_int = None
+    try:
+        text_int = int(text)
+    except ValueError:
+        pass
+    if(cformat == '%H:%M'):
+        if text_int:
+            text += ':00'
     if(cformat == '%M'):
         text = _breakdown_time_unit_overlap(text, 60)
         cformat = '%H:%M'
     if(cformat == '%M:%S'):
+        if text_int:
+            text += ':00'
         text = _breakdown_time_unit_overlap(text, 60)
         cformat = '%H:%M:%S'
     if(cformat == '%S'):
@@ -71,6 +90,6 @@ def duration(text, loader_context):
     try:
         duration = datetime.strptime(text, cformat)
     except ValueError:
-        log.msg(loader_context.get('pre_log_msg') + "Duration could not be parsed!", log.ERROR)
+        loader_context.get('spider').log('Duration could not be parsed ("%s", Format string: "%s")!' % (text, cformat), log.ERROR)
         return None
     return duration.strftime('%H:%M:%S')

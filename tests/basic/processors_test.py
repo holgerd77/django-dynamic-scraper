@@ -62,6 +62,9 @@ class ProcessorsTest(TestCase):
 
         result_str = processors.duration('1:25', {'duration': '%H:%M'})
         self.assertEqual(result_str, '01:25:00')
+        
+        result_str = processors.duration('1', {'duration': '%H:%M'})
+        self.assertEqual(result_str, '01:00:00')
 
         result_str = processors.duration('1:25:37', {'duration': '%H:%M:%S'})
         self.assertEqual(result_str, '01:25:37')
@@ -71,6 +74,9 @@ class ProcessorsTest(TestCase):
         
         result_str = processors.duration('77:35', {'duration': '%M:%S'})
         self.assertEqual(result_str, '01:17:35')
+        
+        result_str = processors.duration('1', {'duration': '%M:%S'})
+        self.assertEqual(result_str, '00:01:00')
         
         result_str = processors.duration('47', {'duration': '%M'})
         self.assertEqual(result_str, '00:47:00')
