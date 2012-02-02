@@ -113,11 +113,16 @@ class DjangoSpider(DjangoBaseSpider):
 
 
     def _get_processors(self, procs_str):
-        procs_tmp = list(procs_str.split(','))
         procs = [TakeFirst(), processors.string_strip,]
+        if not procs_str:
+            return procs
+        procs_tmp = list(procs_str.split(','))
         for p in procs_tmp:
-            if(hasattr(processors, p)):
+            p = p.strip()
+            if hasattr(processors, p):
                 procs.append(getattr(processors, p))
+            else:
+                self.log("Processor '%s' is not defined!" % p, log.ERROR)
         procs = tuple(procs)
         return procs
 
@@ -134,7 +139,12 @@ class DjangoSpider(DjangoBaseSpider):
                 self.loader.add_xpath(scraper_elem.scraped_obj_attr.name, scraper_elem.x_path, *procs,  re=scraper_elem.reg_exp)
             else:
                 self.loader.add_xpath(scraper_elem.scraped_obj_attr.name, scraper_elem.x_path, *procs)
-            msg = str(self.loader.get_collected_values(scraper_elem.scraped_obj_attr.name))
+            msg  = '{0: <20}'.format(scraper_elem.scraped_obj_attr.name)
+            c_values = self.loader.get_collected_values(scraper_elem.scraped_obj_attr.name)
+            if len(c_values) > 0:
+                msg += "'" + c_values[0] + "'"
+            else:
+                msg += u'None'
             self.log(msg, log.DEBUG)
 
 
@@ -174,6 +184,8 @@ class DjangoSpider(DjangoBaseSpider):
             base_objects = base_objects[0:items_left]
         
         for obj in base_objects:
+            item_num = self.items_read_count + 1
+            self.log("Starting to crawl item %s." % str(item_num), log.INFO)
             item = self.parse_item(response, obj)
             #print item
             url_name = url_elem.scraped_obj_attr.name
@@ -183,6 +195,7 @@ class DjangoSpider(DjangoBaseSpider):
                 # Check for double items
                 if cnt > 0:
                     item[url_name] = 'DOUBLE'
+                    yield item
                 elif cnt2 == 0:
                     yield item
                 else:

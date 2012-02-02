@@ -209,7 +209,7 @@ is scraping items, the **general workflow of the scraping process** is as follow
   element encapsulating an item summary, e.g. in our open news example an article summary containing the
   title of the article, a screenshot and a short description. The encapsuling html tag often is a ``div``,
   but could also be a ``td`` tag or something else.
-* Then the DDS scrpaer is scraping the url from this item summary block, which leads to the detail page of the item
+* Then the DDS scraper is scraping the url from this item summary block, which leads to the detail page of the item
 * All the real item attributes (like a title, a description, a date or an image) are then scraped either from 
   within the item summary block on the overview page or from the detail page of the item. This can be defined later
   when creating the scraper itself.
@@ -328,6 +328,9 @@ leaving all the values in their default state. Than create a :ref:`scraper_runti
 giving it a meaningful name ('Wikinews Runtime'), assign the created scheduler runtime
 object as well as the created scraper to it and save the scraper runtime object.
 
+.. note::
+   You can also **scrape** attributes of your object **from outside the base element** by using the ``..`` notation
+   in your XPath expressions to get to the parent nodes!
 
 Create the domain entity reference object (NewsWebsite) for our open news example
 ---------------------------------------------------------------------------------

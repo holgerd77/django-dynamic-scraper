@@ -157,6 +157,17 @@ class ScraperRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.all()), 2)
     
     
+    def test_multiple_processors_use(self):
+        self.setUpProcessorTest()
+        self.se_desc.processors = u'pre_string, post_string '
+        self.se_desc.proc_ctxt = u"'pre_string': 'before_', 'post_string': '_after',"
+        self.se_desc.save()
+        
+        self.run_event_spider(1)
+        
+        self.assertEqual(Event.objects.get(id=1).description, 'before_Event 1 description_after')
+    
+    
     def test_replace_processor_wrong_x_path(self):
         self.setUpProcessorTest()
         self.se_title.x_path = u'/div[@class="class_which_is_not_there"]/text()'
