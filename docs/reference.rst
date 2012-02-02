@@ -116,3 +116,34 @@ DjangoChecker
 -------------
 
 TODO
+
+
+Processors
+==========
+
+TODO
+
+replace
+-------
+============================== ===================================================================
+*Description*                  When the scraper succeeds in scraping the attribute value, the text 
+                               scraped is replaced with the replacement given in the processor 
+                               context.
+*Usable with other processors* No
+*Context definition (Example)* ``'replace': 'This is a replacement'``
+*Result (Example)*               "This text was scraped" -> "This is a replacement"
+============================== ===================================================================
+
+static
+------
+============================== ===================================================================
+*Description*                  No matter if the scraper succeeds in scraping the attribute value 
+                               or not, the static value is used as an attribute value. This 
+                               processor is also useful for testing for not relying on too many 
+                               x_path values having to succeed at once.
+*Usable with other processors* No
+*Context definition (Example)* ``'static': 'Static text'``
+*Result (Example)*             "No matter if this text was scraped or not" -> "Static text"
+============================== ===================================================================
+
+TODO

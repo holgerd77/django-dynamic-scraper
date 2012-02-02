@@ -140,16 +140,63 @@ class ScraperRunTest(ScraperTest):
         self.scraper_rt.status = 'I'
         self.scraper_rt.save()
         self.assertRaises(CloseSpider, self.run_event_spider, 1)
-   
-    def test_processor(self):
+    
+    
+    def setUpProcessorTest(self):
         self.se_url.processors = u'pre_url'
         self.se_url.proc_ctxt = u"'pre_url': 'http://localhost:8010/static/site_with_processor/'"
         self.se_url.save()
         self.scraper_rt.url = os.path.join(self.SERVER_URL, 'site_with_processor/event_main.html')
         self.scraper_rt.save()
+
+
+    def test_processor(self):
+        self.setUpProcessorTest()
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 2)
+    
+    
+    def test_replace_processor_wrong_x_path(self):
+        self.setUpProcessorTest()
+        self.se_title.x_path = u'/div[@class="class_which_is_not_there"]/text()'
+        self.se_title.processors = u'replace'
+        self.se_title.proc_ctxt = u"'replace': 'This text is a replacement'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 0)
+
+
+    def test_replace_processor_correct_x_path(self):
+        self.setUpProcessorTest()
+        self.se_title.processors = u'replace'
+        self.se_title.proc_ctxt = u"'replace': 'This text is a replacement'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 2)
+
+
+    def test_static_processor_wrong_x_path(self):
+        self.setUpProcessorTest()
+        self.se_title.x_path = u'/div[@class="class_which_is_not_there"]/text()'
+        self.se_title.processors = u'static'
+        self.se_title.proc_ctxt = u"'static': 'This text should always be there'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 2)
+
+
+    def test_static_processor_correct_x_path(self):
+        self.setUpProcessorTest()
+        self.se_title.processors = u'static'
+        self.se_title.proc_ctxt = u"'static': 'This text should always be there'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 2)  
     
     
     def test_reg_exp(self):

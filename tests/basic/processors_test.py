@@ -38,7 +38,12 @@ class ProcessorsTest(TestCase):
         # Eliminating double slashes
         result_str = processors.pre_url("/path/document.html", {'pre_url': 'http://example.com/'})
         self.assertEqual(result_str, 'http://example.com/path/document.html')
-        
+    
+    
+    def test_replace(self):
+        result_str = processors.replace("Random text", {'replace': 'Something totally different'})
+        self.assertEqual(result_str, 'Something totally different')
+    
     
     def test_date(self):
         result_str = processors.date('2011-12-15', {'date': '%Y-%m-%d'})
@@ -47,6 +52,9 @@ class ProcessorsTest(TestCase):
         result_str = processors.date('15.12.2011', {'date': '%d.%m.%Y'})
         self.assertEqual(result_str, '2011-12-15')
         
+        result_str = processors.date('15 Dec 2011', {'date': '%d %b %Y'})
+        self.assertEqual(result_str, '2011-12-15')
+    
     
     def test_time(self):
         result_str = processors.time('22:15', {'time': '%H:%M'})

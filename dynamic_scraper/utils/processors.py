@@ -31,6 +31,16 @@ def pre_url(text, loader_context):
     return pre_url + text
 
 
+def replace(text, loader_context):
+    replace = loader_context.get('replace', '')
+    return replace
+
+
+def static(text, loader_context):
+    static = loader_context.get('static', '')
+    return static
+
+
 def date(text, loader_context):
     cformat = loader_context.get('date')
     try:

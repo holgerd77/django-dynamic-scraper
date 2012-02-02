@@ -126,10 +126,16 @@ class DjangoSpider(DjangoBaseSpider):
         if(self.from_detail_page == scraper_elem.from_detail_page):
             procs = self._get_processors(scraper_elem.processors)
             self._set_loader_context(scraper_elem.proc_ctxt)
-            if(scraper_elem.reg_exp):
+            
+            static_ctxt = self.loader.context.get('static', '')
+            if processors.static in procs and static_ctxt:
+                self.loader.add_value(scraper_elem.scraped_obj_attr.name, static_ctxt)
+            elif(scraper_elem.reg_exp):
                 self.loader.add_xpath(scraper_elem.scraped_obj_attr.name, scraper_elem.x_path, *procs,  re=scraper_elem.reg_exp)
             else:
                 self.loader.add_xpath(scraper_elem.scraped_obj_attr.name, scraper_elem.x_path, *procs)
+            msg = str(self.loader.get_collected_values(scraper_elem.scraped_obj_attr.name))
+            self.log(msg, log.DEBUG)
 
 
     def _set_loader(self, response, hxs, item):
@@ -181,5 +187,6 @@ class DjangoSpider(DjangoBaseSpider):
                     yield item
                 else:
                     yield Request(item[url_name], callback=self.parse_item, meta={'item':item})
-                    
+            else:
+                self.log("Detail page url elem could not be read!", log.ERROR)
     
