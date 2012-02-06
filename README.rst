@@ -13,8 +13,8 @@ Read more about DDS in the ReadTheDocs documentation:
 * http://django-dynamic-scraper.readthedocs.org/
 
 
-Getting Help/News
-=================
+Getting Help/Updates
+====================
 There is a mailing list on Google Groups, feel free to ask questions or make suggestions:
 
 * https://groups.google.com/group/django-dynamic-scraper
