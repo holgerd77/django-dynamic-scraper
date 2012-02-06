@@ -17,6 +17,7 @@ class ScrapedObjClass(models.Model):
 "INITIAL_NEXT_ACTION_FACTOR": 1,\n\
 "ZERO_ACTIONS_FACTOR_CHANGE": 5,\n\
 "FACTOR_CHANGE_FACTOR": 1.3,\n')
+    comments = models.TextField(blank=True)
     
     def __unicode__(self):
         return self.name
@@ -55,6 +56,7 @@ class Scraper(models.Model):
     checker_x_path = models.CharField(max_length=200, blank=True)
     checker_x_path_result = models.CharField(max_length=200, blank=True)
     checker_x_path_ref_url = models.URLField(blank=True)
+    comments = models.TextField(blank=True)
     
     def get_base_elems(self):
         return self.scraperelem_set.filter(scraped_obj_attr__attr_type='B')
