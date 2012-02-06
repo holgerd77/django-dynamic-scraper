@@ -7,3 +7,7 @@ you create and manage Scrapy spiders via the Django admin interface.
 
 Read more about DDS in the ReadTheDocs documentation:
 http://django-dynamic-scraper.readthedocs.org/
+
+
+Twitter: https://twitter.com/#!/dynamicscraper
+Mailing list: https://groups.google.com/group/django-dynamic-scraper
