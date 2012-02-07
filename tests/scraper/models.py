@@ -1,11 +1,13 @@
 from django.db import models
-from dynamic_scraper.models import ScraperRuntime, SchedulerRuntime
+from dynamic_scraper.models import Scraper, SchedulerRuntime
 from scrapy.contrib_exp.djangoitem import DjangoItem
 
 
 class EventWebsite(models.Model):
     name = models.CharField(max_length=200)
-    scraper_runtime = models.ForeignKey(ScraperRuntime, blank=True, null=True, on_delete=models.SET_NULL)
+    scraper = models.ForeignKey(Scraper, blank=True, null=True, on_delete=models.SET_NULL)
+    url = models.URLField()
+    scraper_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
     
     def __unicode__(self):
         return self.name + " (" + str(self.id) + ")"

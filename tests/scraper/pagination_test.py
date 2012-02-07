@@ -8,8 +8,8 @@ class PaginationTest(ScraperTest):
 
 
     def setUpPaginationRangeFunctTypeScraper(self):
-        self.scraper_rt.url = os.path.join(self.SERVER_URL, 'site_generic/event_main')
-        self.scraper_rt.save()
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_generic/event_main')
+        self.event_website.save()
               
         self.scraper.pagination_type = 'R'
         self.scraper.pagination_append_str = '{page}.html'
@@ -19,8 +19,8 @@ class PaginationTest(ScraperTest):
 
 
     def setUpPaginationFreeListTypeScraper(self):
-        self.scraper_rt.url = os.path.join(self.SERVER_URL, 'site_generic/')
-        self.scraper_rt.save()
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_generic/')
+        self.event_website.save()
               
         self.scraper.pagination_type = 'F'
         self.scraper.pagination_append_str = '{page}.html'

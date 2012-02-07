@@ -1,6 +1,7 @@
 import os
 from scrapy import log, signals
 from scrapy.conf import settings
+from scrapy.exceptions import CloseSpider
 from scrapy.selector import HtmlXPathSelector
 from scrapy.xlib.pydispatch import dispatcher
 
@@ -15,20 +16,19 @@ class DjangoChecker(DjangoBaseSpider):
 
 
     def __init__(self, *args, **kwargs):
-        self._set_conf(**kwargs)
+        super(DjangoChecker, self).__init__(self, *args, **kwargs)
+        self._check_checker_config()
         
-        if self.scraper_runtime:
-            self.scraper = self.scraper_runtime.scraper
-        
-        mandatory_vars = [
-            'check_url',
-        ]
-        self._check_mandatory_vars(mandatory_vars)
-        
-        self.start_urls.append(self.check_url)
+        self.start_urls.append(self.scrape_url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
-        
         dispatcher.connect(self.response_received, signal=signals.response_received)
+
+
+    def _check_checker_config(self):
+        if self.scraper.checker_type == 'N':
+            msg = 'No checker defined for scraper!'
+            log.msg(msg, log.WARNING)
+            raise CloseSpider(msg)
 
 
     def _del_ref_object(self):
@@ -68,7 +68,7 @@ class DjangoChecker(DjangoBaseSpider):
         hxs = HtmlXPathSelector(response)
         
         # x_path test
-        if not self.scraper.checker_x_path:
+        if self.scraper.checker_type == '4':
             self.log("No 404. Item kept.", log.INFO)
             return
         try:

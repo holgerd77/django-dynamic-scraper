@@ -16,21 +16,14 @@ from dynamic_scraper.utils import processors
 class DjangoSpider(DjangoBaseSpider):
 
     def __init__(self, *args, **kwargs):
-        self._set_conf(**kwargs)
-        
-        if self.scraper_runtime:
-            self.scraper = self.scraper_runtime.scraper
-            self.scheduler_runtime = self.scraper_runtime.scheduler_runtime
-        
-        mandatory_vars = [
-            'scraped_obj_class',
-            'scraped_obj_item_class',
-        ]
-        self._check_mandatory_vars(mandatory_vars)
-        
-        self._set_start_urls(self.scraper_runtime.url)
-        self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
+        self.mandatory_vars.append('scraped_obj_class')
+        self.mandatory_vars.append('scraped_obj_item_class')
+
+        super(DjangoSpider, self).__init__(self, *args, **kwargs)
         self._check_scraper_config()
+        
+        self._set_start_urls(self.scrape_url)
+        self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
         self.from_detail_page = False
         self.loader = None
         self.items_read_count = 0
@@ -38,10 +31,6 @@ class DjangoSpider(DjangoBaseSpider):
 
 
     def _check_scraper_config(self):
-        if self.scraper_runtime.status == 'P' or self.scraper_runtime.status == 'I':
-            msg = 'Scraper runtime status set to %s!' % (self.scraper_runtime.get_status_display())
-            self.log(msg, log.WARNING)
-            raise CloseSpider(msg)
         try:
             self.scraper.get_base_elem() 
         except ScraperElem.DoesNotExist:

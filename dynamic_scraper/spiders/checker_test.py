@@ -14,7 +14,12 @@ class CheckerTest(DjangoBaseSpider):
     
     def __init__(self, *args, **kwargs):
         self._set_ref_object(Scraper, **kwargs)
-        self._set_conf(**kwargs)
+        self._set_config(**kwargs)
+        
+        if self.ref_object.checker_type != 'X':
+            msg = "Checker test can only be run with 404_OR_X_PATH checker type!"
+            log.msg(msg, log.ERROR)
+            raise CloseSpider(msg)
         
         if not self.ref_object.checker_x_path or not self.ref_object.checker_x_path_result or not self.ref_object.checker_x_path_ref_url:
             msg = "Please provide the necessary checker fields for your scraper (Command: %s)." % (self.command)

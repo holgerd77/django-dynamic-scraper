@@ -9,7 +9,7 @@ class DjangoWriterPipeline(object):
         try:
             item['news_website'] = spider.ref_object
             
-            checker_rt = SchedulerRuntime()
+            checker_rt = SchedulerRuntime(runtime_type='C')
             checker_rt.save()
             item['checker_runtime'] = checker_rt
             

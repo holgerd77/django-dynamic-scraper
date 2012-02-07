@@ -13,6 +13,7 @@ class CheckerRunTest(ScraperTest):
     def setUp(self):
         super(CheckerRunTest, self).setUp()
         
+        self.scraper.checker_type = 'X'
         self.scraper.checker_x_path = u'//div[@class="event_not_found"]/div/text()'
         self.scraper.checker_x_path_result = u'Event was deleted!'
         self.scraper.checker_x_path_ref_url = u'http://localhost:8010/static/site_for_checker/event_not_found.html'
@@ -28,7 +29,20 @@ class CheckerRunTest(ScraperTest):
         self.event.save()
     
     
-    def test_keep_video(self):
+    def test_checker_test_wrong_checker_config(self):
+        self.scraper.checker_x_path_ref_url = ''
+        self.scraper.save()
+        
+        self.assertRaises(CloseSpider, self.run_checker_test, 1)
+    
+    
+    def test_none_type(self):
+        self.scraper.checker_type = 'N'
+        self.scraper.save()
+        self.assertRaises(CloseSpider, self.run_event_checker, 1)
+    
+    
+    def test_x_path_type_keep_video(self):
         self.event.url = 'http://localhost:8010/static/site_for_checker/event1.html'
         self.event.save()
         
@@ -36,7 +50,7 @@ class CheckerRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.all()), 1)
     
     
-    def test_404_delete(self):
+    def test_x_path_type_404_delete(self):
         self.event.url = 'http://localhost:8010/static/site_for_checker/event_which_is_not_there.html'
         self.event.save()
         
@@ -44,7 +58,7 @@ class CheckerRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.all()), 0)
     
     
-    def test_404_delete_with_zero_actions(self):
+    def test_x_path_type_404_delete_with_zero_actions(self):
         self.event.url = 'http://localhost:8010/static/site_for_checker/event_which_is_not_there.html'
         self.event.save()
         
@@ -63,7 +77,7 @@ class CheckerRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.all()), 1)
         
     
-    def test_x_path_delete(self):
+    def test_x_path_type_x_path_delete(self):
         
         self.event.url = 'http://localhost:8010/static/site_for_checker/event2.html'
         self.event.save()
@@ -72,7 +86,7 @@ class CheckerRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.all()), 0)
         
     
-    def test_404_delete_with_img(self):
+    def test_x_path_type_404_delete_with_img(self):
         path = os.path.join(self.PROJECT_ROOT, 'imgs/event_image.jpg')
         if not os.path.exists(path):
             file = open(path,"w")
@@ -92,13 +106,22 @@ class CheckerRunTest(ScraperTest):
         self.run_event_checker(1)
         self.assertEqual(len(Event.objects.all()), 0)   
         self.assertFalse(os.path.exists(path))
+    
+    
+    def test_404_type_404_delete(self):
+        self.scraper.checker_type = '4'
+        self.scraper.save()
+        self.event.url = 'http://localhost:8010/static/site_for_checker/event_which_is_not_there.html'
+        self.event.save()
         
-         
-    def test_checker_test_wrong_checker_config(self):
-        self.scraper.checker_x_path_ref_url = ''
+        self.run_event_checker(1)
+        self.assertEqual(len(Event.objects.all()), 0)
+    
+    
+    def test_404_type_x_path_delete(self):
+        self.scraper.checker_type = '4'
         self.scraper.save()
         
-        self.assertRaises(CloseSpider, self.run_checker_test, 1)
-        
-        
-        
+        self.run_event_checker(1)
+        self.assertEqual(len(Event.objects.all()), 1)
+     

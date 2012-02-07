@@ -2,13 +2,14 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from scrapy.contrib_exp.djangoitem import DjangoItem
-from dynamic_scraper.models import ScraperRuntime, SchedulerRuntime
+from dynamic_scraper.models import Scraper, SchedulerRuntime
 
 
 class NewsWebsite(models.Model):
     name = models.CharField(max_length=200)
     url = models.URLField()
-    scraper_runtime = models.ForeignKey(ScraperRuntime, blank=True, null=True, on_delete=models.SET_NULL)
+    scraper = models.ForeignKey(Scraper, blank=True, null=True, on_delete=models.SET_NULL)
+    scraper_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
     
     def __unicode__(self):
         return self.name

@@ -14,6 +14,7 @@ class DjangoBaseSpider(BaseSpider):
     
     name = None
     action_successful = False
+    mandatory_vars = ['ref_object', 'scraper', 'scrape_url',]
     allowed_domains = []
     start_urls = []
     conf = {
@@ -26,24 +27,25 @@ class DjangoBaseSpider(BaseSpider):
     command = 'scrapy crawl SPIDERNAME -a id=REF_OBJECT_ID [-a do_action=(yes|no) -a run_type=(TASK|SHELL)]'
     
     
-    def _check_mandatory_vars(self, mandatory_vars):
-        mandatory_vars.append('ref_object')
-        mandatory_vars.append('scraper_runtime')
-        
-        if self.conf['RUN_TYPE'] == 'TASK' and not getattr(self, 'scheduler_runtime', None):
-            msg = "You have to provide a scheduler_runtime when running with run_type TASK."
+    def __init__(self, *args, **kwargs):
+        self._set_config(**kwargs)
+        self._check_mandatory_vars()
+
+
+    def _set_ref_object(self, ref_object_class, **kwargs):
+        if not 'id' in kwargs:
+            msg = "You have to provide an ID (Command: %s)." % self.command
             log.msg(msg, log.ERROR)
             raise CloseSpider(msg)
-        
-        for var in mandatory_vars:
-            attr = getattr(self, var, None)
-            if not attr:
-                msg = "Missing attribute %s (Command: %s)." % (var, self.command)
-                log.msg(msg, log.ERROR)
-                raise CloseSpider(msg)
-    
-    
-    def _set_conf(self, **kwargs):
+        try:
+            self.ref_object = ref_object_class.objects.get(id=kwargs['id'])
+        except ObjectDoesNotExist:
+            msg = "Object with ID " + kwargs['id'] + " not found (Command: %s)." % self.command
+            log.msg(msg, log.ERROR)
+            raise CloseSpider(msg)
+
+
+    def _set_config(self, **kwargs):
         if 'run_type' in kwargs:
             self.conf['RUN_TYPE'] = kwargs['run_type']
         if 'do_action' in kwargs:
@@ -57,18 +59,24 @@ class DjangoBaseSpider(BaseSpider):
         self.conf['LOG_LIMIT'] = settings.get('DSCRAPER_LOG_LIMIT', self.conf['LOG_LIMIT'])
         
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)
-                
-    
-    def _set_ref_object(self, ref_object_class, **kwargs):
-        if not 'id' in kwargs:
-            msg = "You have to provide an ID (Command: %s)." % self.command
+
+
+    def _check_mandatory_vars(self):
+        if self.conf['RUN_TYPE'] == 'TASK' and not getattr(self, 'scheduler_runtime', None):
+            msg = "You have to provide a scheduler_runtime when running with run_type TASK."
             log.msg(msg, log.ERROR)
             raise CloseSpider(msg)
-        try:
-            self.ref_object = ref_object_class.objects.get(id=kwargs['id'])
-        except ObjectDoesNotExist:
-            msg = "Object with ID " + kwargs['id'] + " not found (Command: %s)." % self.command
-            log.msg(msg, log.ERROR)
+        
+        for var in self.mandatory_vars:
+            attr = getattr(self, var, None)
+            if not attr:
+                msg = "Missing attribute %s (Command: %s)." % (var, self.command)
+                log.msg(msg, log.ERROR)
+                raise CloseSpider(msg)
+            
+        if self.scraper.status == 'P' or self.scraper.status == 'I':
+            msg = 'Scraper status set to %s!' % (self.scraper.get_status_display())
+            self.log(msg, log.WARNING)
             raise CloseSpider(msg)
     
     
@@ -88,9 +96,6 @@ class DjangoBaseSpider(BaseSpider):
             msg += "Next action factor: %s, " % str(self.scheduler_runtime.next_action_factor)
             msg += "Zero actions: %s)" % str(self.scheduler_runtime.num_zero_actions)
             self.log(msg, log.INFO)
-            
-        if hasattr(self, 'scraper_runtime'):
-            self.scraper_runtime.save()
     
     
     def log(self, message, level=log.DEBUG):
@@ -102,10 +107,7 @@ class DjangoBaseSpider(BaseSpider):
                 l.ref_object = self.ref_object.__class__.__name__ + " (" + str(self.ref_object.id) + ")"
                 l.level = int(level)
                 l.spider_name = self.name
-                if hasattr(self, 'scraper_runtime'):
-                    l.scraper_runtime = self.scraper_runtime
-                if hasattr(self, 'scraper'):
-                    l.scraper = self.scraper
+                l.scraper = self.scraper
                 l.save()
                 
                 #Delete old logs

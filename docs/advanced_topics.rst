@@ -13,8 +13,8 @@ Django Dynamic Scraper comes with a built-in mechanism to check, if items once s
 or if they could be deleted from the database. The entity providing this mechanism in DDS is called an 
 item checker. An item checker is like a scraper also using the scraping logic from Scrapy. But instead of
 building together a new scraped item, it just checks the detail page referenced by the url of a scraped item.
-If the detail page is either completely gone (so the request returns a 404 response) or if the scraped string 
-is indicating that the item is no longer existing, the item will be deleted from the database.
+Depending on the ``checker_type`` and the result of the detail page check, the scraped item is kept or
+will be deleted from the DB.
 
 Creating a checker class
 ------------------------
@@ -32,37 +32,45 @@ in our ``scraper`` directory::
 	    
 	    def __init__(self, *args, **kwargs):
 	        self._set_ref_object(Article, **kwargs)
-	        self.scraper_runtime = self.ref_object.news_website.scraper_runtime
+	        self.scraper = self.ref_object.news_website.scraper
+	        self.scrape_url = self.ref_object.url
 	        self.scheduler_runtime = self.ref_object.checker_runtime
-	        self.check_url = self.ref_object.url
-	        super(ArticleChecker, self).__init__(self, *args, **kwargs) 
+	        super(ArticleChecker, self).__init__(self, *args, **kwargs)
 
 The checker class inherits from the :ref:`django_checker` class from DDS and mainly gives the checker the
 information what to check and what parameters to use for checking. Be careful that the reference object
 is now the scraped object itself, since the checker is scraping from the item page url of this object. The
-url field to check is set with ``self.check_url = self.ref_object.url``. Furthermore the checker needs some
-configuration data from the scraper runtime of the reference object. The scheduler runtime is used to schedule the
+url field to check is set with ``self.scrape_url = self.ref_object.url``. Furthermore the checker needs its
+configuration data from the scraper of the reference object. The scheduler runtime is used to schedule the
 next check. So if you want to use checkers for your scraped object, you have to provide a foreign key to 
 a :ref:`scheduler_runtime` object in your model class. The scheduler runtime object also has to be saved
 manually in your pipeline class (see: :ref:`adding_pipeline_class`).
 
-Set check parameters for each scraper
--------------------------------------
-The different parameters for a checker to use are defined in the Django admin forms of the different
-scrapers associated with the domain model class to be checked:
+Select checker type/set check parameters
+----------------------------------------
+There are momentarily the following checker types to choose from:
+
+================= =========================================================================
+``404``           Item is deleted after check has returned 404 HTTP status code 2x in a row
+``404_OR_X_PATH`` Same as 404 + check for an x_path value in the result
+================= =========================================================================
+
+The checker type and the x_path parameters when choosing ``404_OR_X_PATH`` as checker type 
+are defined in the Django admin forms of the different scrapers:
 
 .. image:: images/screenshot_django-admin_checker_params.png
 
-For providing the checker parameters for a scraper you have to look for an example item page url from the website
+For selecting a checker type and providing the parameters for an x_path checker 
+you have to look for an example item page url from the website
 to be scraped which references an item not existing any more. If the urls to your scraped items are build
 using an item ID you can e.g. try to lower this ID or increase it to a very large number. Be creative!
 In our Wikinews example it is a bit different, since the news article url there is build using the title of the
 article. So for the checker we take a random article url to a not existing article:
 "http://en.wikinews.org/wiki/Random_article_text".
 
-If your url found is responding with a 404 when invoked, you don't have to provide any parameters for your
-checker, since the checker will delete items checked automatically when their url is returning a 404 response twice.
-Otherwise you have to provide an XPath for your chosen url which will extract a string from that url uniquely
+If your url found is responding with a 404 when invoked, you can simply choose ``404`` as your checker type.
+For a ``404_OR_X_PATH`` checker you have to provide an XPath 
+for your chosen url which will extract a string from that url uniquely
 indicating, that the content originally expected is not there any more. For our Wikinews example and the url
 we choose above there is a text and a url provided suggesting to create the currently not existing wiki page,
 so we can use the XPath ``//a[@href="http://en.wikinews.org/wiki/This_wiki_article_doesnt_exist"]/text()`` 
@@ -138,11 +146,11 @@ Installing/configuring django-celery for DDS
 This paragraph is covering only the specific installation issues with django-celery_ in regard of installing
 it for the use with DDS, so you should be familiar with the basic functionality of Celery and take general
 installation infos from the django-celery_ website. If you have successfully installed and configured 
-django-celery, you should see the additional tables in the Django admin interface:
+django-celery, you should see the ``Djcelery`` tables in the Django admin interface:
 
-.. image:: images/screenshot_django-admin_django-celery_tables.png
+.. image:: images/screenshot_django-admin_overview.png
 
-For django-celery to work, Celery also needs a message broker for the actual message transport. For our
+For ``django-celery`` to work, Celery also needs a message broker for the actual message transport. For our
 relatively simple use case, django-kombu_ is the easiest and recommended choice. So please install django-kombu
 as well, add "djkombu" to your ``INSTALLED_APPS`` and don't forget to sync your DB.
 
@@ -172,7 +180,7 @@ sure, that your tasks are found by django-celery_. The easiest way to do this is
 module called ``tasks.py`` in the main directory of your app. The tasks should then be found automatically.
 The two methods in our open news example look like this::
 
-	from celery.decorators import task
+	from celery.task import task
 	
 	from dynamic_scraper.utils.task_utils import TaskUtils
 	from open_news.models import NewsWebsite, Article
@@ -180,12 +188,12 @@ The two methods in our open news example look like this::
 	@task()
 	def run_spiders():
 	    t = TaskUtils()
-	    t.run_spiders(NewsWebsite, 'scraper_runtime', 'article_spider')
+	    t.run_spiders(NewsWebsite, 'scraper', 'scraper_runtime', 'article_spider')
 	    
 	@task()
 	def run_checkers():
 	    t = TaskUtils()
-	    t.run_checkers(Article, 'checker_runtime', 'article_checker')
+	    t.run_checkers(Article, 'news_website__scraper', 'checker_runtime', 'article_checker')
 
 The two methods are decorated with the Celery task decorator to tell Celery that these methods should be
 regarded as tasks. In each task, a method from the ``TaskUtils`` module from DDS is called to run the
@@ -202,7 +210,7 @@ it just means, that ever two hours, the task method executed is checking for scr
 execution time (defined by the associated ``scheduler_runtime``) lying in the past and run these scrapers.
 The actual time period between two runs is determined by the next execution time itself which is calculated
 dynamically and depending on the scheduling configuration you'll learn more about below. For the scrapers to
-run, remember also that you have to set the scraper active in the associated ``scraper_runtime``.
+run, remember also that you have to set the scraper active in the associated ``scraper`` object.
 
 Run your tasks
 --------------
@@ -305,8 +313,7 @@ on websites not updated in between two runs.
    scraped website, it will probably take some time to get a bit a feeling for how the scheduling is developing
    and to what action factors it tends to, so don't try to find the perfect solution in the first run. Instead,
    start with a (maybe rather too conservatively calculated) start configuration and adjust your parameters over
-   time. You can observe the development of your action factors in the scheduler runtime objects associated
-   with your scraper runtimes.
+   time. You can observe the development of your action factors in the scheduler runtime objects.
          
 .. note::
    Please be aware that scraping is a resource consuming task, for your server but as well for the server of

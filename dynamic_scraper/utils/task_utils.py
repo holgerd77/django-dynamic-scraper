@@ -19,11 +19,11 @@ class TaskUtils():
         conn.getresponse()
     
     
-    def run_spiders(self, ref_obj_class, scraper_runtime_field_name, spider_name):
+    def run_spiders(self, ref_obj_class, scraper_field_name, runtime_field_name, spider_name):
         
         kwargs = {
-            '%s__status' % scraper_runtime_field_name: 'A',
-            '%s__scheduler_runtime__next_action_time__lt' % scraper_runtime_field_name: datetime.datetime.now,
+            '%s__status' % scraper_field_name: 'A',
+            '%s__next_action_time__lt' % runtime_field_name: datetime.datetime.now,
         }
         
         ref_obj_list = ref_obj_class.objects.filter(**kwargs)
@@ -31,13 +31,17 @@ class TaskUtils():
             self._run_spider(id=ref_object.id, spider=spider_name, run_type='TASK', do_action='yes')
         
 
-    def run_checkers(self, ref_obj_class, scheduler_runtime_field_name, checker_name):
+    def run_checkers(self, ref_obj_class, scraper_field_path, runtime_field_name, checker_name):
         
         kwargs = {
-            '%s__next_action_time__lt' % scheduler_runtime_field_name: datetime.datetime.now,
+            '%s__status' % scraper_field_path: 'A',
+            '%s__next_action_time__lt' % runtime_field_name: datetime.datetime.now,
+        }
+        kwargs2 = {
+            '%s__checker_type' % scraper_field_path: 'N',
         }
         
-        ref_obj_list = ref_obj_class.objects.filter(**kwargs)
+        ref_obj_list = ref_obj_class.objects.filter(**kwargs).exclude(**kwargs2)
         for ref_object in ref_obj_list:
             self._run_spider(id=ref_object.id, spider=checker_name, run_type='TASK', do_action='yes')
 

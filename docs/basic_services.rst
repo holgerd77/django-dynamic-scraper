@@ -20,7 +20,7 @@ scraper or cheker runs go wrong.
 
 In the screenshot above you see an overview of the log table in the Django admin 
 in which new log messages are saved. In addition context information like the 
-name of the spider run or the associated reference object or scraper runtime
+name of the spider run or the associated reference object or scraper
 is provided. By using the filtering options it is possible to track down the
 messages targeted to the actual needs, e.g. you can filter all the errors
 occurred while running your checkers.

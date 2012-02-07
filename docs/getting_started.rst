@@ -122,7 +122,9 @@ code for this two model classes::
 	
 	class NewsWebsite(models.Model):
 	    name = models.CharField(max_length=200)
-	    scraper_runtime = models.ForeignKey(ScraperRuntime, blank=True, null=True, on_delete=models.SET_NULL)
+	    url = models.URLField()
+	    scraper = models.ForeignKey(Scraper, blank=True, null=True, on_delete=models.SET_NULL)
+	    scraper_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
 	    
 	    def __unicode__(self):
 	        return self.name
@@ -142,15 +144,22 @@ code for this two model classes::
 	class ArticleItem(DjangoItem):
 	    django_model = Article
 
-As you can see, there is one foreign key field defined in each model referencing DDS models.
-The ``NewsWebsite`` class has a reference to the :ref:`scraper_runtime` DDS model, which saves the runtime
-information about the scraping process, e.g. the url to be scraped or information if the scraper is active 
-or not. 
+As you can see, there are some foreign key fields defined in the models referencing DDS models.
+The ``NewsWebsite`` class has a reference to the :ref:`scraper` DDS model, which contains the main
+scraper with information about how to scrape the attributes of the article objects. The ``scraper_runtime``
+field is a reference to the :ref:`scheduler_runtime` class from the DDS models. An object of this class stores 
+scheduling information, in this case information about when to run a news website scraper for the next time. 
+The ``NewsWebsite`` class also has to provide the url to be used during the scraping process. You can either
+use (if existing) the representative url field of the model class, which is pointing to the nicely-layouted
+overview news page also visited by the user. In this case we are choosing this way with taking the ``url``
+attribute of the model class as the scrape url. However, it often makes sense to provide a dedicated ``scrape_url``
+(you can name the attribute freely) field for cases, when the representative url differs from the scrape url
+(e.g. if list content is loaded via ajax, or if you want to use another format of the content - e.g. the rss
+feed - for scraping).
 
-The ``Article`` class to store scraped news articles also has one extra mandatory field called ``checker_runtime``,
-referencing the :ref:`scheduler_runtime` class from the DDS models. An object of this class stores 
-scheduling information, in this case information about the next existance check (using the ``url`` field from
-``Article``) to evaluate if the news article
+The ``Article`` class to store scraped news articles also has a reference to the :ref:`scheduler_runtime` DDS
+model class called ``checker_runtime``. In this case the scheduling object holds information about the next 
+existance check (using the ``url`` field from ``Article``) to evaluate if the news article
 still exists or if it can be deleted (see :ref:`item_checkers`).
 
 Last but not least: Django Dynamic Scraper uses the (still experimental (!)) DjangoItem_ class from Scrapy for
@@ -160,9 +169,9 @@ associated model class.
 
 .. note::
    For having a loose coupling between your runtime objects and your domain model objects you should declare
-   the foreign keys to the runtime objects with the ``blank=True, null=True, on_delete=models.SET_NULL``
+   the foreign keys to the DDS objects with the ``blank=True, null=True, on_delete=models.SET_NULL``
    field options. This will prevent a cascading delete of your reference object as well as the associated
-   scraped objects when a scraper_runtime object is deleted accidentally.
+   scraped objects when a DDS object is deleted accidentally.
 
 Deletion of objects
 -------------------
@@ -316,17 +325,11 @@ information is provided in a dictionary like form: ``'processor_name': 'context'
 ``'pre_url': 'http://en.wikinews.org'``. Together with our scraped string this will create
 the complete url.
 
-This completes our scraper. The form you have filled out should look similar to this (broken down to
-two rows due to space issues):
-
 .. image:: images/screenshot_django-admin_scraper_1.png
 .. image:: images/screenshot_django-admin_scraper_2.png
 
-In addition to our scraper we also need a :ref:`scraper_runtime` to run our scraper. To create a 
-:ref:`scraper_runtime` object in your django admin, create a :ref:`scheduler_runtime` object first,
-leaving all the values in their default state. Than create a :ref:`scraper_runtime` object, 
-giving it a meaningful name ('Wikinews Runtime'), assign the created scheduler runtime
-object as well as the created scraper to it and save the scraper runtime object.
+This completes our scraper. The form you have filled out should look similar to the screenshot above 
+(which is broken down to two rows due to space issues).
 
 .. note::
    You can also **scrape** attributes of your object **from outside the base element** by using the ``..`` notation
@@ -336,11 +339,12 @@ Create the domain entity reference object (NewsWebsite) for our open news exampl
 ---------------------------------------------------------------------------------
 
 Now - finally - we are just one step away of having all objects created in our Django admin.
-The last dataset we have to add is the reference object of our domain, meaning a NewsWebsite
+The last dataset we have to add is the reference object of our domain, meaning a ``NewsWebsite``
 object for the Wikinews Website.
 
-To do this open the NewsWebsite form in the Django admin, give the object a meaningful name ('Wikinews')
-and assign the scraper runtime created before.    
+To do this open the NewsWebsite form in the Django admin, give the object a meaningful name ('Wikinews'),
+assign the scraper and create an empty :ref:`scheduler_runtime` object with ``SCRAPER`` as your
+``runtime_type``. 
 
 .. image:: images/screenshot_django-admin_add_domain_ref_object.png
 
@@ -436,12 +440,12 @@ in the ``__init__`` function::
 	
 	    def __init__(self, *args, **kwargs):
 	        self._set_ref_object(NewsWebsite, **kwargs)
-	        self.scraper_runtime = self.ref_object.scraper_runtime
+	        self.scraper = self.ref_object.scraper
+	        self.scrape_url = self.ref_object.url
+	        self.scheduler_runtime = self.ref_object.scraper_runtime
 	        self.scraped_obj_class = Article
 	        self.scraped_obj_item_class = ArticleItem
 	        super(ArticleSpider, self).__init__(self, *args, **kwargs)
-
-TODO
 
 .. _adding_pipeline_class:
 
@@ -455,14 +459,14 @@ for you but you have to do it manually in your own item pipeline::
 	from scrapy import log
 	from scrapy.exceptions import DropItem
 	from dynamic_scraper.models import SchedulerRuntime
-
+	
 	class DjangoWriterPipeline(object):
 	    
 	    def process_item(self, item, spider):
 	        try:
 	            item['news_website'] = spider.ref_object
 	            
-	            checker_rt = SchedulerRuntime()
+	            checker_rt = SchedulerRuntime(runtime_type='C')
 	            checker_rt.save()
 	            item['checker_runtime'] = checker_rt
 	            
@@ -476,7 +480,9 @@ for you but you have to do it manually in your own item pipeline::
 	                
 	        return item 
 
-TODO
+The things you always have to do here is adding the reference object to the scraped item class and - if you
+are using checker functionality - create the runtime object for the checker. You also have to set the
+``action_successful`` attribute of the spider, which is used internally by DDS when the spider is closed.
 
 .. _running_scrapers:
 

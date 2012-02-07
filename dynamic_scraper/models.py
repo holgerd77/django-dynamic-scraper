@@ -39,13 +39,25 @@ class ScrapedObjAttr(models.Model):
 
 
 class Scraper(models.Model):
+    STATUS_CHOICES = (
+        ('A', 'ACTIVE'),
+        ('M', 'MANUAL'),
+        ('P', 'PAUSED'),
+        ('I', 'INACTIVE'),
+    )
     PAGINATION_TYPE = (
         ('N', 'NONE'),
         ('R', 'RANGE_FUNCT'),
         ('F', 'FREE_LIST'),
     )
+    CHECKER_TYPE = (
+        ('N', 'NONE'),
+        ('4', '404'),
+        ('X', '404_OR_X_PATH'),
+    )
     name = models.CharField(max_length=200)
     scraped_obj_class = models.ForeignKey(ScrapedObjClass)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
     max_items_read = models.IntegerField(blank=True, null=True, help_text="Max number of items to be read (empty: unlimited).")
     max_items_save = models.IntegerField(blank=True, null=True, help_text="Max number of items to be saved (empty: unlimited).")
     pagination_type = models.CharField(max_length=1, choices=PAGINATION_TYPE, default='N')
@@ -53,6 +65,7 @@ class Scraper(models.Model):
     pagination_append_str = models.CharField(max_length=200, blank=True, help_text="Syntax: /somepartofurl/{page}/moreurlstuff.html")
     pagination_page_replace = models.TextField(blank=True, 
         help_text="RANGE_FUNCT: uses Python range funct., syntax: [start], stop[, step], FREE_LIST: 'Replace text 1', 'Some other text 2', 'Maybe a number 3', ...")
+    checker_type = models.CharField(max_length=1, choices=CHECKER_TYPE, default='N')
     checker_x_path = models.CharField(max_length=200, blank=True)
     checker_x_path_result = models.CharField(max_length=200, blank=True)
     checker_x_path_ref_url = models.URLField(blank=True)
@@ -111,34 +124,17 @@ class ScraperElem(models.Model):
 
 
 class SchedulerRuntime(models.Model):
+    TYPE = (
+        ('S', 'SCRAPER'),
+        ('C', 'CHECKER'),
+    )
+    runtime_type = models.CharField(max_length=1, choices=TYPE, default='P')
     next_action_time = models.DateTimeField(default=datetime.datetime.now)
     next_action_factor = models.FloatField(blank=True, null=True)
     num_zero_actions = models.IntegerField(default=0)
     
     def __unicode__(self):
         return str(self.id)
-
-
-class ScraperRuntime(models.Model):
-    STATUS_CHOICES = (
-        ('A', 'ACTIVE'),
-        ('M', 'MANUAL'),
-        ('P', 'PAUSED'),
-        ('I', 'INACTIVE'),
-    )
-    name = models.CharField(max_length=200)
-    scraper = models.ForeignKey(Scraper)
-    url = models.URLField()
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
-    scheduler_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
-
-    def delete(self, *args, **kwargs):
-        scheduler_runtime = self.scheduler_runtime
-        super(ScraperRuntime, self).delete(*args, **kwargs)
-        scheduler_runtime.delete()
-
-    def __unicode__(self):
-        return self.name + " (" + self.scraper.__unicode__() + ")"
 
 
 class Log(models.Model):
@@ -153,7 +149,6 @@ class Log(models.Model):
     ref_object = models.CharField(max_length=200)
     level = models.IntegerField(choices=LEVEL_CHOICES)
     spider_name = models.CharField(max_length=200)
-    scraper_runtime = models.ForeignKey(ScraperRuntime, blank=True, null=True)
     scraper = models.ForeignKey(Scraper, blank=True, null=True)
     date = models.DateTimeField(default=datetime.datetime.now)
     

@@ -52,9 +52,11 @@
 		"pk": 1,
 		"model": "dynamic_scraper.scraper",
 		"fields": {
+			"checker_type": "4",
 			"checker_x_path_ref_url": "",
 			"checker_x_path_result": "",
 			"name": "Wikinews Scraper",
+			"status": "A",
 			"pagination_page_replace": "",
 			"pagination_append_str": "",
 			"checker_x_path": "",
@@ -134,27 +136,19 @@
 		"pk": 1,
 		"model": "dynamic_scraper.schedulerruntime",
 		"fields": {
+			"runtime_type": "S",
 			"next_action_factor": null,
 			"next_action_time": "2012-01-09T05:28:10.678",
 			"num_zero_actions": 0
 		}
 	}, {
 		"pk": 1,
-		"model": "dynamic_scraper.scraperruntime",
-		"fields": {
-			"status": "P",
-			"scraper": 1,
-			"url": "http://en.wikinews.org/wiki/Main_Page",
-			"name": "Wikinews Runtime",
-			"scheduler_runtime": 1
-		}
-	}, {
-		"pk": 1,
 		"model": "open_news.newswebsite",
 		"fields": {
+			"scraper": 1,
+			"url": "http://en.wikinews.org/wiki/Main_Page",
 			"scraper_runtime": 1,
-			"name": "Wikinews",
-			"url": "http://en.wikinews.org/wiki/Main_Page"
+			"name": "Wikinews"
 		}
 	}
 ]
