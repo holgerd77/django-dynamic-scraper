@@ -16,7 +16,7 @@ class CheckerRunTest(ScraperTest):
         self.scraper.checker_type = 'X'
         self.scraper.checker_x_path = u'//div[@class="event_not_found"]/div/text()'
         self.scraper.checker_x_path_result = u'Event was deleted!'
-        self.scraper.checker_x_path_ref_url = u'http://localhost:8010/static/site_for_checker/event_not_found.html'
+        self.scraper.checker_ref_url = u'http://localhost:8010/static/site_for_checker/event_not_found.html'
         self.scraper.save()
         
         scheduler_rt = SchedulerRuntime()
@@ -30,7 +30,7 @@ class CheckerRunTest(ScraperTest):
     
     
     def test_checker_test_wrong_checker_config(self):
-        self.scraper.checker_x_path_ref_url = ''
+        self.scraper.checker_ref_url = ''
         self.scraper.save()
         
         self.assertRaises(CloseSpider, self.run_checker_test, 1)

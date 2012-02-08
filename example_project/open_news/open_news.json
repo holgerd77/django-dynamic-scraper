@@ -53,7 +53,7 @@
 		"model": "dynamic_scraper.scraper",
 		"fields": {
 			"checker_type": "4",
-			"checker_x_path_ref_url": "",
+			"checker_ref_url": "http://en.wikinews.org/wiki/This_wiki_article_doesnt_exist",
 			"checker_x_path_result": "",
 			"name": "Wikinews Scraper",
 			"status": "A",
