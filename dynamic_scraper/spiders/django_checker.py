@@ -20,7 +20,7 @@ class DjangoChecker(DjangoBaseSpider):
         self._check_checker_config()
         
         self.start_urls.append(self.scrape_url)
-        self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
+        self.scheduler = Scheduler(self.scraper.scraped_obj_class.checker_scheduler_conf)
         dispatcher.connect(self.response_received, signal=signals.response_received)
 
 

@@ -45,7 +45,7 @@ Then you can run the test suite with::
 	./run_tests.sh
 
 
-Release notes
+Release Notes
 =============
 
 **Changes in version 0.1-pre-alpha** (2011-12-20)
