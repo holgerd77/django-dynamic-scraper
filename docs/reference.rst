@@ -33,6 +33,17 @@ Default: ``250``
 
 The number of log entries in the Django database table.
 
+DSCRAPER_MAX_SPIDER_RUNS_PER_TASK
+---------------------------------
+Default: ``10``
+
+Maximum number of spider runs executed per task run.
+
+DSCRAPER_MAX_CHECKER_RUNS_PER_TASK
+----------------------------------
+Default: ``25``
+
+Maximum number of checker runs executed per task run.
 
 Django Model Reference
 ======================

@@ -1,8 +1,14 @@
 import datetime
 import urllib, httplib
+from scrapy.conf import settings
 from dynamic_scraper.models import Scraper
 
 class TaskUtils():
+    
+    conf = {
+        "MAX_SPIDER_RUNS_PER_TASK": 10,
+        "MAX_CHECKER_RUNS_PER_TASK": 25,
+    }
     
     def _run_spider(self, **kwargs):
         param_dict = {
@@ -26,7 +32,8 @@ class TaskUtils():
             '%s__next_action_time__lt' % runtime_field_name: datetime.datetime.now,
         }
         
-        ref_obj_list = ref_obj_class.objects.filter(**kwargs)
+        max = settings.get('DSCRAPER_MAX_SPIDER_RUNS_PER_TASK', self.conf['MAX_SPIDER_RUNS_PER_TASK'])
+        ref_obj_list = ref_obj_class.objects.filter(**kwargs).order_by('%s__next_action_time' % runtime_field_name)[:max]
         for ref_object in ref_obj_list:
             self._run_spider(id=ref_object.id, spider=spider_name, run_type='TASK', do_action='yes')
         
@@ -41,7 +48,8 @@ class TaskUtils():
             '%s__checker_type' % scraper_field_path: 'N',
         }
         
-        ref_obj_list = ref_obj_class.objects.filter(**kwargs).exclude(**kwargs2)
+        max = settings.get('DSCRAPER_MAX_CHECKER_RUNS_PER_TASK', self.conf['MAX_CHECKER_RUNS_PER_TASK'])
+        ref_obj_list = ref_obj_class.objects.filter(**kwargs).exclude(**kwargs2).order_by('%s__next_action_time' % runtime_field_name)[:max]
         for ref_object in ref_obj_list:
             self._run_spider(id=ref_object.id, spider=checker_name, run_type='TASK', do_action='yes')
 

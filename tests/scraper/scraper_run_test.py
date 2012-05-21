@@ -165,7 +165,7 @@ class ScraperRunTest(ScraperTest):
         
         self.run_event_spider(1)
         
-        self.assertEqual(Event.objects.get(id=1).description, 'before_Event 1 description_after')
+        self.assertEqual(Event.objects.get(id=1).description, 'before_Event 2 description_after')
     
     
     def test_replace_processor_wrong_x_path(self):
