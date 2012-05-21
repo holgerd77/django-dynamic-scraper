@@ -58,14 +58,20 @@ class DjangoBaseSpider(BaseSpider):
         self.conf['LOG_LEVEL'] = settings.get('DSCRAPER_LOG_LEVEL', self.conf['LOG_LEVEL'])
         self.conf['LOG_LIMIT'] = settings.get('DSCRAPER_LOG_LIMIT', self.conf['LOG_LIMIT'])
         
+        msg = "Running with run_type " + self.conf['RUN_TYPE'] + ", do_action set to " + str(self.conf['DO_ACTION']) + "."
+        self.log(msg, log.INFO)
+        
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)
 
 
     def _check_mandatory_vars(self):
-        if self.conf['RUN_TYPE'] == 'TASK' and not getattr(self, 'scheduler_runtime', None):
-            msg = "You have to provide a scheduler_runtime when running with run_type TASK."
-            log.msg(msg, log.ERROR)
-            raise CloseSpider(msg)
+        if self.conf['RUN_TYPE'] == 'TASK':
+            if not getattr(self, 'scheduler_runtime', None):
+                msg = "You have to provide a scheduler_runtime when running with run_type TASK."
+                log.msg(msg, log.ERROR)
+                raise CloseSpider(msg)
+            msg = "SchedulerRuntime (" + str(self.scheduler_runtime) + ") found."
+            self.log(msg, log.INFO)
         
         for var in self.mandatory_vars:
             attr = getattr(self, var, None)
