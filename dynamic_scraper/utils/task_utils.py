@@ -29,7 +29,7 @@ class TaskUtils():
         
         kwargs = {
             '%s__status' % scraper_field_name: 'A',
-            '%s__next_action_time__lt' % runtime_field_name: datetime.datetime.now,
+            '%s__next_action_time__lt' % runtime_field_name: datetime.datetime.now(),
         }
         
         max = settings.get('DSCRAPER_MAX_SPIDER_RUNS_PER_TASK', self.conf['MAX_SPIDER_RUNS_PER_TASK'])
@@ -42,7 +42,7 @@ class TaskUtils():
         
         kwargs = {
             '%s__status' % scraper_field_path: 'A',
-            '%s__next_action_time__lt' % runtime_field_name: datetime.datetime.now,
+            '%s__next_action_time__lt' % runtime_field_name: datetime.datetime.now(),
         }
         kwargs2 = {
             '%s__checker_type' % scraper_field_path: 'N',
