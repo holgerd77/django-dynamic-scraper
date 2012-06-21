@@ -5,6 +5,7 @@ when you run "manage.py test".
 Replace this with more appropriate tests for your application.
 """
 
+import datetime
 from django.test import TestCase
 from dynamic_scraper.utils import processors
 
@@ -54,7 +55,25 @@ class ProcessorsTest(TestCase):
         
         result_str = processors.date('15 Dec 2011', {'date': '%d %b %Y'})
         self.assertEqual(result_str, '2011-12-15')
+        
+        result_str = processors.date('gestern', {'date': '%d %b %Y'})
+        self.assertEqual(result_str, (datetime.date.today() - datetime.timedelta(1)).strftime('%Y-%m-%d'))
+        
+        result_str = processors.date('yesterday', {'date': '%d %b %Y'})
+        self.assertEqual(result_str, (datetime.date.today() - datetime.timedelta(1)).strftime('%Y-%m-%d'))
+        
+        result_str = processors.date('heute', {'date': '%d %b %Y'})
+        self.assertEqual(result_str, datetime.date.today().strftime('%Y-%m-%d'))
+        
+        result_str = processors.date('today', {'date': '%d %b %Y'})
+        self.assertEqual(result_str, datetime.date.today().strftime('%Y-%m-%d'))
     
+        result_str = processors.date('morgen', {'date': '%d %b %Y'})
+        self.assertEqual(result_str, (datetime.date.today() + datetime.timedelta(1)).strftime('%Y-%m-%d'))
+        
+        result_str = processors.date('tomorrow', {'date': '%d %b %Y'})
+        self.assertEqual(result_str, (datetime.date.today() + datetime.timedelta(1)).strftime('%Y-%m-%d'))
+        
     
     def test_time(self):
         result_str = processors.time('22:15', {'time': '%H:%M'})

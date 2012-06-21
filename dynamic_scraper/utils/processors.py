@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from scrapy import log
 
 
@@ -44,7 +44,14 @@ def static(text, loader_context):
 def date(text, loader_context):
     cformat = loader_context.get('date')
     try:
-        date = datetime.strptime(text, cformat)
+        if text.lower() in ['gestern', 'yesterday',]:
+            date = datetime.date.today() - datetime.timedelta(1)
+        elif text.lower() in ['heute', 'today',]:
+            date = datetime.date.today()
+        elif text.lower() in ['morgen', 'tomorrow',]:
+            date = datetime.date.today() + datetime.timedelta(1)
+        else:
+            date = datetime.datetime.strptime(text, cformat)
     except ValueError:
         loader_context.get('spider').log('Date could not be parsed ("%s", Format string: "%s")!' % (text, cformat), log.ERROR)
         return None
@@ -54,7 +61,7 @@ def date(text, loader_context):
 def time(text, loader_context):
     cformat = loader_context.get('time')
     try:
-        time = datetime.strptime(text, cformat)
+        time = datetime.datetime.strptime(text, cformat)
     except ValueError:
         loader_context.get('spider').log('Time could not be parsed ("%s", Format string: "%s")!' % (text, cformat), log.ERROR)
         return None
@@ -98,7 +105,7 @@ def duration(text, loader_context):
         text = _breakdown_time_unit_overlap(text, 60)
         cformat = '%M:%S'
     try:
-        duration = datetime.strptime(text, cformat)
+        duration = datetime.datetime.strptime(text, cformat)
     except ValueError:
         loader_context.get('spider').log('Duration could not be parsed ("%s", Format string: "%s")!' % (text, cformat), log.ERROR)
         return None
