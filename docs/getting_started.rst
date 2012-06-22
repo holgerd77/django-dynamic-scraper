@@ -32,10 +32,10 @@ create a scraper for open news content on the web (starting with Wikinews_ from 
 from this example is used in the following guidelines.
 
 .. warning::
-	While there is a testsuite for DDS with tests for most of its' features and the app runs relatively stable,
-	DDS is **pre-alpha** and still in an early development phase. Expect API changes in future releases 
-	which will require manual adaption in your code. During pre-alpha phase, API and/or DB changes can also
-	occur after minor release updates (e.g. from 0.1.0 to 0.1.1).  
+	While there is a testsuite for DDS with tests for most of its' features and the app runs relatively stable
+	and is also used in production, DDS is **alpha** and still in an early development phase. Expect API changes 
+	in future releases which will require manual adaption in your code. During alpha phase, API and/or DB changes 
+	can also occur after minor release updates (e.g. from 0.2.0 to 0.2.1).  
 
 
 .. _Scrapy: http://www.scrapy.org 
@@ -49,28 +49,28 @@ Requirements
 The **basic requirements** for Django Dynamic Scraper are:
 
 * Python 2.7+ (earlier versions untested)
-* `Django <https://www.djangoproject.com/>`_ 1.3+ (earlier versions untested)
+* `Django <https://www.djangoproject.com/>`_ 1.4+ (earlier versions untested)
 * Scrapy_ 0.14+ (necessary)
 
-If you want to use the **scheduling mechanism** of DDS you also have to install ``django-celery`` and 
-``django-kombu``. You should be able to use another messaging framework/store than ``django-kombu``
+If you want to use the **scheduling mechanism** of DDS you also have to install ``django-celery`` (there
+is no separate ``django-kombu`` app in the newer version). 
+You should be able to use another messaging framework/store than ``django-kombu``
 but this is untested and ``django-kombu`` is the easiest choice which normally should be sufficient
 for the simple purpose it is serving here.
 
-* `django-celery <http://ask.github.com/django-celery/>`_ 2.4+ (earlier versions untested)
-* `django-kombu <https://github.com/ask/django-kombu>`_ 0.9+ (earlier versions untested)
+* `django-celery <http://ask.github.com/django-celery/>`_ 2.5.5+ (earlier versions untested)
 
 For **scraping images** you will also need the Python Image Library:
 
 * `Python Image Libray (PIL) 1.1.7+ <http://www.pythonware.com/products/pil/>`_ (earlier versions untested)
 
-..
-	And finally: DDS is using ``South`` for **migrations in the DB schema** between different versions
-	(e.g. if a new attribute is added to a model class). If you don't exactly know what ``South`` is and
-	what it does, it is highly recommended that you take the (relatively short) time to learn how to use it.
-	Since DDS is in an early development stage, it is very likely that the DB schema will change in the
-	future, and using ``South`` instead of ``syncdb`` to create and update your DB schema will make your
-	life a lot easier if you want to keep pace with the latest versions of DDS:
+And finally: **Beginning with v.0.2** DDS is using ``South`` for **migrations in the DB schema** between 
+different versions (e.g. if a new attribute is added to a model class). If you don't exactly know what 
+``South`` is and
+what it does, it is highly recommended that you take the (relatively short) time to learn how to use it.
+Since DDS is in an early development stage, it is very likely that the DB schema will change in the
+future, and using ``South`` instead of ``syncdb`` to create and update your DB schema will make your
+life a lot easier if you want to keep pace with the latest versions of DDS:
 
 	* `South 0.7+ <http://south.aeracode.org/>`_ (earlier versions untested) 
 
@@ -297,6 +297,10 @@ We will use these code snippets in our examples.
 	If you don't want to manually create the necessary DB objects for the example project, you can also run
 	``python manage.py loaddata open_news/open_news.json`` from within the ``example_project`` directory in your 
 	favorite shell to have all the objects necessary for the example created automatically .
+	
+.. note::
+   The WikiNews site changes its code from time to time. I will try to update the example code and text in the
+   docs, but I won't keep pace with the screenshots so they can differ slightly compared to the real world example.
 
 1. First we have to define a base 
 scraper element to get the enclosing DOM elements for news item
@@ -306,7 +310,7 @@ scraper element on default.
 
 2. It is not necessary but just for the purpose of this example let's scrape the title of a news article
 from the article detail page. On an article detail page the headline of the article is enclosed by a
-``<h1>`` tag with an id named 'firstHeading'. So ``//h1[@id="firstHeading"]/text()`` should give us the headline.
+``<h1>`` tag with an id named 'firstHeading'. So ``//h1[@id="firstHeading"]/span/text()`` should give us the headline.
 Since we want to scrape from the detail page, we have to activate the 'from_detail_page' check box.
 
 3. All the standard elements we want to scrape from the overview page are defined relative to the

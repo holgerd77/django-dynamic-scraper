@@ -48,6 +48,12 @@ Then you can run the test suite with::
 Release Notes
 =============
 
+**Changes in version 0.2-alpha** (2012-06-22)
+
+* Substantial API and DB layout changes compared to version 0.1
+* Introduction of South for data migrations
+ 
+
 **Changes in version 0.1-pre-alpha** (2011-12-20)
 
 * Initial version
@@ -58,14 +64,17 @@ Roadmap
 
 **pre-alpha**
 
-Django Dynamic Scraper at the moment is in a very early pre-alpha phase. This stadium is meant to be for
-people interested having a first look at the library and give some feedback if things are making generally 
-sense the way they are worked out/conceptionally designed or if a different approach on implementing 
-some parts of the software would make more sense.
+Django Dynamic Scraper's pre-alpha phase was meant to be for
+people interested having a first look at the library and give some feedback if things were making generally 
+sense the way they were worked out/conceptionally designed or if a different approach on implementing 
+some parts of the software would have made more sense.
 
-**alpha**
+**alpha (current) **
 
-The alpha phase is started when conditions from pre-alpha phase are met. The alpha stadium should mainly
+DDS is currently in alpha stadium, which means that the library has proven itself in (at least) one 
+production environment and can be (cautiously) used for production purposes. However being still very
+early in develpment, there are still API and DB changes for improving the lib in different ways.
+The alpha stadium will
 be used for getting most parts of the API relatively stable and eliminate the most urgent bugs/flaws
 from the software.
 
