@@ -241,5 +241,18 @@ class ScraperRunTest(ScraperTest):
         self.assertEqual(Event.objects.get(title='Event 1').description, '1d7c0c2ea752d7aa951e88f2bc90a3f17058c473.jpg')
         self.assertTrue(os.access(path1, os.F_OK))
         self.assertTrue(os.access(path2, os.F_OK))
+    
+    
+    def test_missing_img_when_img_field_not_mandatory(self):
+        self.se_desc.mandatory = False
+        self.se_desc.save()
+        self.soa_desc.attr_type = 'I'
+        self.soa_desc.save()
+        
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_imgs/event_main2.html')
+        self.event_website.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 1)
 
         

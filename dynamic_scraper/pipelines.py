@@ -24,7 +24,7 @@ class DjangoImagesPipeline(ImagesPipeline):
             img_elem = info.spider.scraper.get_image_elem()
             if img_elem.scraped_obj_attr.name in item:
                 return Request(item[img_elem.scraped_obj_attr.name])
-        except ScraperElem.DoesNotExist:
+        except (ScraperElem.DoesNotExist, TypeError):
             pass
 
     def image_key(self, url):

@@ -1,1 +1,1057 @@
-[{"pk": 25, "model": "contenttypes.contenttype", "fields": {"model": "article", "name": "article", "app_label": "open_news"}}, {"pk": 4, "model": "contenttypes.contenttype", "fields": {"model": "contenttype", "name": "content type", "app_label": "contenttypes"}}, {"pk": 13, "model": "contenttypes.contenttype", "fields": {"model": "crontabschedule", "name": "crontab", "app_label": "djcelery"}}, {"pk": 2, "model": "contenttypes.contenttype", "fields": {"model": "group", "name": "group", "app_label": "auth"}}, {"pk": 12, "model": "contenttypes.contenttype", "fields": {"model": "intervalschedule", "name": "interval", "app_label": "djcelery"}}, {"pk": 23, "model": "contenttypes.contenttype", "fields": {"model": "log", "name": "log", "app_label": "dynamic_scraper"}}, {"pk": 7, "model": "contenttypes.contenttype", "fields": {"model": "logentry", "name": "log entry", "app_label": "admin"}}, {"pk": 9, "model": "contenttypes.contenttype", "fields": {"model": "message", "name": "message", "app_label": "django"}}, {"pk": 24, "model": "contenttypes.contenttype", "fields": {"model": "newswebsite", "name": "news website", "app_label": "open_news"}}, {"pk": 15, "model": "contenttypes.contenttype", "fields": {"model": "periodictask", "name": "periodic task", "app_label": "djcelery"}}, {"pk": 14, "model": "contenttypes.contenttype", "fields": {"model": "periodictasks", "name": "periodic tasks", "app_label": "djcelery"}}, {"pk": 1, "model": "contenttypes.contenttype", "fields": {"model": "permission", "name": "permission", "app_label": "auth"}}, {"pk": 8, "model": "contenttypes.contenttype", "fields": {"model": "queue", "name": "queue", "app_label": "django"}}, {"pk": 22, "model": "contenttypes.contenttype", "fields": {"model": "schedulerruntime", "name": "scheduler runtime", "app_label": "dynamic_scraper"}}, {"pk": 19, "model": "contenttypes.contenttype", "fields": {"model": "scrapedobjattr", "name": "scraped obj attr", "app_label": "dynamic_scraper"}}, {"pk": 18, "model": "contenttypes.contenttype", "fields": {"model": "scrapedobjclass", "name": "scraped obj class", "app_label": "dynamic_scraper"}}, {"pk": 20, "model": "contenttypes.contenttype", "fields": {"model": "scraper", "name": "scraper", "app_label": "dynamic_scraper"}}, {"pk": 21, "model": "contenttypes.contenttype", "fields": {"model": "scraperelem", "name": "scraper elem", "app_label": "dynamic_scraper"}}, {"pk": 5, "model": "contenttypes.contenttype", "fields": {"model": "session", "name": "session", "app_label": "sessions"}}, {"pk": 6, "model": "contenttypes.contenttype", "fields": {"model": "site", "name": "site", "app_label": "sites"}}, {"pk": 17, "model": "contenttypes.contenttype", "fields": {"model": "taskstate", "name": "task", "app_label": "djcelery"}}, {"pk": 10, "model": "contenttypes.contenttype", "fields": {"model": "taskmeta", "name": "task meta", "app_label": "djcelery"}}, {"pk": 11, "model": "contenttypes.contenttype", "fields": {"model": "tasksetmeta", "name": "taskset meta", "app_label": "djcelery"}}, {"pk": 3, "model": "contenttypes.contenttype", "fields": {"model": "user", "name": "user", "app_label": "auth"}}, {"pk": 16, "model": "contenttypes.contenttype", "fields": {"model": "workerstate", "name": "worker", "app_label": "djcelery"}}, {"pk": "313ab18c64d0b87fa67bbb3cb693001f", "model": "sessions.session", "fields": {"expire_date": "2012-07-06T08:24:23.880", "session_data": "MDIwZTZiNjgwYjRhZTBiNjhiYzM0OTI4Mzk2MDQ0ZTY3Zjg5NWI2ODqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQRLAXUu\n"}}, {"pk": 1, "model": "sites.site", "fields": {"domain": "example.com", "name": "example.com"}}, {"pk": 1, "model": "dynamic_scraper.scrapedobjclass", "fields": {"checker_scheduler_conf": "\"MIN_TIME\": 1440,\n\"MAX_TIME\": 10080,\n\"INITIAL_NEXT_ACTION_FACTOR\": 1,\n\"ZERO_ACTIONS_FACTOR_CHANGE\": 5,\n\"FACTOR_CHANGE_FACTOR\": 1.3,\n", "scraper_scheduler_conf": "\"MIN_TIME\": 15,\n\"MAX_TIME\": 10080,\n\"INITIAL_NEXT_ACTION_FACTOR\": 10,\n\"ZERO_ACTIONS_FACTOR_CHANGE\": 20,\n\"FACTOR_CHANGE_FACTOR\": 1.3,\n", "name": "Article", "comments": ""}}, {"pk": 1, "model": "dynamic_scraper.scrapedobjattr", "fields": {"obj_class": 1, "name": "base", "attr_type": "B"}}, {"pk": 2, "model": "dynamic_scraper.scrapedobjattr", "fields": {"obj_class": 1, "name": "description", "attr_type": "S"}}, {"pk": 3, "model": "dynamic_scraper.scrapedobjattr", "fields": {"obj_class": 1, "name": "title", "attr_type": "S"}}, {"pk": 4, "model": "dynamic_scraper.scrapedobjattr", "fields": {"obj_class": 1, "name": "url", "attr_type": "U"}}, {"pk": 5, "model": "dynamic_scraper.scrapedobjattr", "fields": {"obj_class": 1, "name": "thumbnail", "attr_type": "I"}}, {"pk": 1, "model": "dynamic_scraper.scraper", "fields": {"status": "A", "pagination_page_replace": "", "checker_ref_url": "http://en.wikinews.org/wiki/This_wiki_article_doesnt_exist", "checker_x_path_result": "", "name": "Wikinews Scraper", "max_items_save": null, "checker_x_path": "", "pagination_append_str": "", "max_items_read": null, "pagination_on_start": false, "pagination_type": "N", "checker_type": "4", "comments": "", "scraped_obj_class": 1}}, {"pk": 1, "model": "dynamic_scraper.scraperelem", "fields": {"proc_ctxt": "", "x_path": "//td[@class=\"l_box\"]", "processors": "", "scraped_obj_attr": 1, "scraper": 1, "from_detail_page": false, "mandatory": true, "reg_exp": ""}}, {"pk": 2, "model": "dynamic_scraper.scraperelem", "fields": {"proc_ctxt": "", "x_path": "//h1[@id=\"firstHeading\"]/span/text()", "processors": "", "scraped_obj_attr": 3, "scraper": 1, "from_detail_page": true, "mandatory": true, "reg_exp": ""}}, {"pk": 3, "model": "dynamic_scraper.scraperelem", "fields": {"proc_ctxt": "", "x_path": "p/span[@class=\"l_summary\"]/text()", "processors": "", "scraped_obj_attr": 2, "scraper": 1, "from_detail_page": false, "mandatory": true, "reg_exp": ""}}, {"pk": 4, "model": "dynamic_scraper.scraperelem", "fields": {"proc_ctxt": "'pre_url': 'http://en.wikinews.org'", "x_path": "span[@class=\"l_title\"]/a/@href", "processors": "pre_url", "scraped_obj_attr": 4, "scraper": 1, "from_detail_page": false, "mandatory": true, "reg_exp": ""}}, {"pk": 5, "model": "dynamic_scraper.scraperelem", "fields": {"proc_ctxt": "'pre_url': 'http:'", "x_path": "div[@class=\"l_image\"]/a/img/@src", "processors": "pre_url", "scraped_obj_attr": 5, "scraper": 1, "from_detail_page": false, "mandatory": true, "reg_exp": ""}}, {"pk": 1, "model": "dynamic_scraper.schedulerruntime", "fields": {"next_action_factor": null, "next_action_time": "2012-01-09T05:28:10.678", "num_zero_actions": 0, "runtime_type": "S"}}, {"pk": 1, "model": "open_news.newswebsite", "fields": {"url": "http://en.wikinews.org/wiki/Main_Page", "scraper_runtime": 1, "name": "Wikinews", "scraper": 1}}, {"pk": 19, "model": "auth.permission", "fields": {"codename": "add_logentry", "name": "Can add log entry", "content_type": 7}}, {"pk": 20, "model": "auth.permission", "fields": {"codename": "change_logentry", "name": "Can change log entry", "content_type": 7}}, {"pk": 21, "model": "auth.permission", "fields": {"codename": "delete_logentry", "name": "Can delete log entry", "content_type": 7}}, {"pk": 1, "model": "auth.permission", "fields": {"codename": "add_group", "name": "Can add group", "content_type": 2}}, {"pk": 4, "model": "auth.permission", "fields": {"codename": "change_group", "name": "Can change group", "content_type": 2}}, {"pk": 7, "model": "auth.permission", "fields": {"codename": "delete_group", "name": "Can delete group", "content_type": 2}}, {"pk": 2, "model": "auth.permission", "fields": {"codename": "add_permission", "name": "Can add permission", "content_type": 1}}, {"pk": 5, "model": "auth.permission", "fields": {"codename": "change_permission", "name": "Can change permission", "content_type": 1}}, {"pk": 8, "model": "auth.permission", "fields": {"codename": "delete_permission", "name": "Can delete permission", "content_type": 1}}, {"pk": 3, "model": "auth.permission", "fields": {"codename": "add_user", "name": "Can add user", "content_type": 3}}, {"pk": 6, "model": "auth.permission", "fields": {"codename": "change_user", "name": "Can change user", "content_type": 3}}, {"pk": 9, "model": "auth.permission", "fields": {"codename": "delete_user", "name": "Can delete user", "content_type": 3}}, {"pk": 10, "model": "auth.permission", "fields": {"codename": "add_contenttype", "name": "Can add content type", "content_type": 4}}, {"pk": 11, "model": "auth.permission", "fields": {"codename": "change_contenttype", "name": "Can change content type", "content_type": 4}}, {"pk": 12, "model": "auth.permission", "fields": {"codename": "delete_contenttype", "name": "Can delete content type", "content_type": 4}}, {"pk": 22, "model": "auth.permission", "fields": {"codename": "add_message", "name": "Can add message", "content_type": 9}}, {"pk": 24, "model": "auth.permission", "fields": {"codename": "change_message", "name": "Can change message", "content_type": 9}}, {"pk": 26, "model": "auth.permission", "fields": {"codename": "delete_message", "name": "Can delete message", "content_type": 9}}, {"pk": 23, "model": "auth.permission", "fields": {"codename": "add_queue", "name": "Can add queue", "content_type": 8}}, {"pk": 25, "model": "auth.permission", "fields": {"codename": "change_queue", "name": "Can change queue", "content_type": 8}}, {"pk": 27, "model": "auth.permission", "fields": {"codename": "delete_queue", "name": "Can delete queue", "content_type": 8}}, {"pk": 28, "model": "auth.permission", "fields": {"codename": "add_crontabschedule", "name": "Can add crontab", "content_type": 13}}, {"pk": 36, "model": "auth.permission", "fields": {"codename": "change_crontabschedule", "name": "Can change crontab", "content_type": 13}}, {"pk": 44, "model": "auth.permission", "fields": {"codename": "delete_crontabschedule", "name": "Can delete crontab", "content_type": 13}}, {"pk": 29, "model": "auth.permission", "fields": {"codename": "add_intervalschedule", "name": "Can add interval", "content_type": 12}}, {"pk": 37, "model": "auth.permission", "fields": {"codename": "change_intervalschedule", "name": "Can change interval", "content_type": 12}}, {"pk": 45, "model": "auth.permission", "fields": {"codename": "delete_intervalschedule", "name": "Can delete interval", "content_type": 12}}, {"pk": 30, "model": "auth.permission", "fields": {"codename": "add_periodictask", "name": "Can add periodic task", "content_type": 15}}, {"pk": 38, "model": "auth.permission", "fields": {"codename": "change_periodictask", "name": "Can change periodic task", "content_type": 15}}, {"pk": 46, "model": "auth.permission", "fields": {"codename": "delete_periodictask", "name": "Can delete periodic task", "content_type": 15}}, {"pk": 31, "model": "auth.permission", "fields": {"codename": "add_periodictasks", "name": "Can add periodic tasks", "content_type": 14}}, {"pk": 39, "model": "auth.permission", "fields": {"codename": "change_periodictasks", "name": "Can change periodic tasks", "content_type": 14}}, {"pk": 47, "model": "auth.permission", "fields": {"codename": "delete_periodictasks", "name": "Can delete periodic tasks", "content_type": 14}}, {"pk": 33, "model": "auth.permission", "fields": {"codename": "add_taskmeta", "name": "Can add task meta", "content_type": 10}}, {"pk": 41, "model": "auth.permission", "fields": {"codename": "change_taskmeta", "name": "Can change task meta", "content_type": 10}}, {"pk": 49, "model": "auth.permission", "fields": {"codename": "delete_taskmeta", "name": "Can delete task meta", "content_type": 10}}, {"pk": 34, "model": "auth.permission", "fields": {"codename": "add_tasksetmeta", "name": "Can add taskset meta", "content_type": 11}}, {"pk": 42, "model": "auth.permission", "fields": {"codename": "change_tasksetmeta", "name": "Can change taskset meta", "content_type": 11}}, {"pk": 50, "model": "auth.permission", "fields": {"codename": "delete_tasksetmeta", "name": "Can delete taskset meta", "content_type": 11}}, {"pk": 32, "model": "auth.permission", "fields": {"codename": "add_taskstate", "name": "Can add task", "content_type": 17}}, {"pk": 40, "model": "auth.permission", "fields": {"codename": "change_taskstate", "name": "Can change task", "content_type": 17}}, {"pk": 48, "model": "auth.permission", "fields": {"codename": "delete_taskstate", "name": "Can delete task", "content_type": 17}}, {"pk": 35, "model": "auth.permission", "fields": {"codename": "add_workerstate", "name": "Can add worker", "content_type": 16}}, {"pk": 43, "model": "auth.permission", "fields": {"codename": "change_workerstate", "name": "Can change worker", "content_type": 16}}, {"pk": 51, "model": "auth.permission", "fields": {"codename": "delete_workerstate", "name": "Can delete worker", "content_type": 16}}, {"pk": 52, "model": "auth.permission", "fields": {"codename": "add_log", "name": "Can add log", "content_type": 23}}, {"pk": 58, "model": "auth.permission", "fields": {"codename": "change_log", "name": "Can change log", "content_type": 23}}, {"pk": 64, "model": "auth.permission", "fields": {"codename": "delete_log", "name": "Can delete log", "content_type": 23}}, {"pk": 53, "model": "auth.permission", "fields": {"codename": "add_schedulerruntime", "name": "Can add scheduler runtime", "content_type": 22}}, {"pk": 59, "model": "auth.permission", "fields": {"codename": "change_schedulerruntime", "name": "Can change scheduler runtime", "content_type": 22}}, {"pk": 65, "model": "auth.permission", "fields": {"codename": "delete_schedulerruntime", "name": "Can delete scheduler runtime", "content_type": 22}}, {"pk": 54, "model": "auth.permission", "fields": {"codename": "add_scrapedobjattr", "name": "Can add scraped obj attr", "content_type": 19}}, {"pk": 60, "model": "auth.permission", "fields": {"codename": "change_scrapedobjattr", "name": "Can change scraped obj attr", "content_type": 19}}, {"pk": 66, "model": "auth.permission", "fields": {"codename": "delete_scrapedobjattr", "name": "Can delete scraped obj attr", "content_type": 19}}, {"pk": 55, "model": "auth.permission", "fields": {"codename": "add_scrapedobjclass", "name": "Can add scraped obj class", "content_type": 18}}, {"pk": 61, "model": "auth.permission", "fields": {"codename": "change_scrapedobjclass", "name": "Can change scraped obj class", "content_type": 18}}, {"pk": 67, "model": "auth.permission", "fields": {"codename": "delete_scrapedobjclass", "name": "Can delete scraped obj class", "content_type": 18}}, {"pk": 56, "model": "auth.permission", "fields": {"codename": "add_scraper", "name": "Can add scraper", "content_type": 20}}, {"pk": 62, "model": "auth.permission", "fields": {"codename": "change_scraper", "name": "Can change scraper", "content_type": 20}}, {"pk": 68, "model": "auth.permission", "fields": {"codename": "delete_scraper", "name": "Can delete scraper", "content_type": 20}}, {"pk": 57, "model": "auth.permission", "fields": {"codename": "add_scraperelem", "name": "Can add scraper elem", "content_type": 21}}, {"pk": 63, "model": "auth.permission", "fields": {"codename": "change_scraperelem", "name": "Can change scraper elem", "content_type": 21}}, {"pk": 69, "model": "auth.permission", "fields": {"codename": "delete_scraperelem", "name": "Can delete scraper elem", "content_type": 21}}, {"pk": 70, "model": "auth.permission", "fields": {"codename": "add_article", "name": "Can add article", "content_type": 25}}, {"pk": 72, "model": "auth.permission", "fields": {"codename": "change_article", "name": "Can change article", "content_type": 25}}, {"pk": 74, "model": "auth.permission", "fields": {"codename": "delete_article", "name": "Can delete article", "content_type": 25}}, {"pk": 71, "model": "auth.permission", "fields": {"codename": "add_newswebsite", "name": "Can add news website", "content_type": 24}}, {"pk": 73, "model": "auth.permission", "fields": {"codename": "change_newswebsite", "name": "Can change news website", "content_type": 24}}, {"pk": 75, "model": "auth.permission", "fields": {"codename": "delete_newswebsite", "name": "Can delete news website", "content_type": 24}}, {"pk": 13, "model": "auth.permission", "fields": {"codename": "add_session", "name": "Can add session", "content_type": 5}}, {"pk": 14, "model": "auth.permission", "fields": {"codename": "change_session", "name": "Can change session", "content_type": 5}}, {"pk": 15, "model": "auth.permission", "fields": {"codename": "delete_session", "name": "Can delete session", "content_type": 5}}, {"pk": 16, "model": "auth.permission", "fields": {"codename": "add_site", "name": "Can add site", "content_type": 6}}, {"pk": 17, "model": "auth.permission", "fields": {"codename": "change_site", "name": "Can change site", "content_type": 6}}, {"pk": 18, "model": "auth.permission", "fields": {"codename": "delete_site", "name": "Can delete site", "content_type": 6}}, {"pk": 1, "model": "auth.user", "fields": {"username": "admin", "first_name": "", "last_name": "", "is_active": true, "is_superuser": true, "is_staff": true, "last_login": "2012-06-22T08:24:23.875", "groups": [], "user_permissions": [], "password": "pbkdf2_sha256$10000$84WIMtRe6xVB$JOsq9MFCSGAnE6euh3q9TPIgPWzCqv5u6BvX4x9DgTk=", "email": "d@d.de", "date_joined": "2012-06-22T08:22:12.067"}}, {"pk": 6, "model": "admin.logentry", "fields": {"action_flag": 3, "action_time": "2012-06-22T08:43:34.949", "object_repr": "FanFiction.Net adult content purge felt across fandom two weeks on", "object_id": "5", "change_message": "", "user": 1, "content_type": 25}}, {"pk": 5, "model": "admin.logentry", "fields": {"action_flag": 3, "action_time": "2012-06-22T08:43:34.948", "object_repr": "Wikinews interviews 17-year-old author of 'LEGO Heavy Weapons'", "object_id": "4", "change_message": "", "user": 1, "content_type": 25}}, {"pk": 4, "model": "admin.logentry", "fields": {"action_flag": 3, "action_time": "2012-06-22T08:43:34.946", "object_repr": "Assange seeks asylum in Ecuadorian embassy", "object_id": "3", "change_message": "", "user": 1, "content_type": 25}}, {"pk": 3, "model": "admin.logentry", "fields": {"action_flag": 3, "action_time": "2012-06-22T08:43:34.943", "object_repr": "At Australian gymnastic team announcement, media turns out for Tony Abbott", "object_id": "2", "change_message": "", "user": 1, "content_type": 25}}, {"pk": 2, "model": "admin.logentry", "fields": {"action_flag": 3, "action_time": "2012-06-22T08:43:34.940", "object_repr": "Kate Lundy and Tony Abbott assist in Olympic dreams with Gymnastics Australia's artistic gymnastics team announcement", "object_id": "1", "change_message": "", "user": 1, "content_type": 25}}, {"pk": 1, "model": "admin.logentry", "fields": {"action_flag": 2, "action_time": "2012-06-22T08:42:20.518", "object_repr": "Wikinews Scraper (Article)", "object_id": "1", "change_message": "Changed x_path for scraper elem \"ScraperElem object\".", "user": 1, "content_type": 20}}]
+[
+	{
+		"pk": 25,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "article",
+			"name": "article",
+			"app_label": "open_news"
+		}
+	}, {
+		"pk": 4,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "contenttype",
+			"name": "content type",
+			"app_label": "contenttypes"
+		}
+	}, {
+		"pk": 13,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "crontabschedule",
+			"name": "crontab",
+			"app_label": "djcelery"
+		}
+	}, {
+		"pk": 2,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "group",
+			"name": "group",
+			"app_label": "auth"
+		}
+	}, {
+		"pk": 12,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "intervalschedule",
+			"name": "interval",
+			"app_label": "djcelery"
+		}
+	}, {
+		"pk": 23,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "log",
+			"name": "log",
+			"app_label": "dynamic_scraper"
+		}
+	}, {
+		"pk": 7,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "logentry",
+			"name": "log entry",
+			"app_label": "admin"
+		}
+	}, {
+		"pk": 9,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "message",
+			"name": "message",
+			"app_label": "django"
+		}
+	}, {
+		"pk": 24,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "newswebsite",
+			"name": "news website",
+			"app_label": "open_news"
+		}
+	}, {
+		"pk": 15,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "periodictask",
+			"name": "periodic task",
+			"app_label": "djcelery"
+		}
+	}, {
+		"pk": 14,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "periodictasks",
+			"name": "periodic tasks",
+			"app_label": "djcelery"
+		}
+	}, {
+		"pk": 1,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "permission",
+			"name": "permission",
+			"app_label": "auth"
+		}
+	}, {
+		"pk": 8,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "queue",
+			"name": "queue",
+			"app_label": "django"
+		}
+	}, {
+		"pk": 22,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "schedulerruntime",
+			"name": "scheduler runtime",
+			"app_label": "dynamic_scraper"
+		}
+	}, {
+		"pk": 19,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "scrapedobjattr",
+			"name": "scraped obj attr",
+			"app_label": "dynamic_scraper"
+		}
+	}, {
+		"pk": 18,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "scrapedobjclass",
+			"name": "scraped obj class",
+			"app_label": "dynamic_scraper"
+		}
+	}, {
+		"pk": 20,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "scraper",
+			"name": "scraper",
+			"app_label": "dynamic_scraper"
+		}
+	}, {
+		"pk": 21,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "scraperelem",
+			"name": "scraper elem",
+			"app_label": "dynamic_scraper"
+		}
+	}, {
+		"pk": 5,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "session",
+			"name": "session",
+			"app_label": "sessions"
+		}
+	}, {
+		"pk": 6,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "site",
+			"name": "site",
+			"app_label": "sites"
+		}
+	}, {
+		"pk": 17,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "taskstate",
+			"name": "task",
+			"app_label": "djcelery"
+		}
+	}, {
+		"pk": 10,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "taskmeta",
+			"name": "task meta",
+			"app_label": "djcelery"
+		}
+	}, {
+		"pk": 11,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "tasksetmeta",
+			"name": "taskset meta",
+			"app_label": "djcelery"
+		}
+	}, {
+		"pk": 3,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "user",
+			"name": "user",
+			"app_label": "auth"
+		}
+	}, {
+		"pk": 16,
+		"model": "contenttypes.contenttype",
+		"fields": {
+			"model": "workerstate",
+			"name": "worker",
+			"app_label": "djcelery"
+		}
+	}, {
+		"pk": "313ab18c64d0b87fa67bbb3cb693001f",
+		"model": "sessions.session",
+		"fields": {
+			"expire_date": "2012-07-06T08:24:23.880",
+			"session_data": "MDIwZTZiNjgwYjRhZTBiNjhiYzM0OTI4Mzk2MDQ0ZTY3Zjg5NWI2ODqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQRLAXUu\n"
+		}
+	}, {
+		"pk": 1,
+		"model": "sites.site",
+		"fields": {
+			"domain": "example.com",
+			"name": "example.com"
+		}
+	}, {
+		"pk": 1,
+		"model": "dynamic_scraper.scrapedobjclass",
+		"fields": {
+			"checker_scheduler_conf": "\"MIN_TIME\": 1440,\n\"MAX_TIME\": 10080,\n\"INITIAL_NEXT_ACTION_FACTOR\": 1,\n\"ZERO_ACTIONS_FACTOR_CHANGE\": 5,\n\"FACTOR_CHANGE_FACTOR\": 1.3,\n",
+			"scraper_scheduler_conf": "\"MIN_TIME\": 15,\n\"MAX_TIME\": 10080,\n\"INITIAL_NEXT_ACTION_FACTOR\": 10,\n\"ZERO_ACTIONS_FACTOR_CHANGE\": 20,\n\"FACTOR_CHANGE_FACTOR\": 1.3,\n",
+			"name": "Article",
+			"comments": ""
+		}
+	}, {
+		"pk": 1,
+		"model": "dynamic_scraper.scrapedobjattr",
+		"fields": {
+			"obj_class": 1,
+			"name": "base",
+			"attr_type": "B"
+		}
+	}, {
+		"pk": 2,
+		"model": "dynamic_scraper.scrapedobjattr",
+		"fields": {
+			"obj_class": 1,
+			"name": "description",
+			"attr_type": "S"
+		}
+	}, {
+		"pk": 3,
+		"model": "dynamic_scraper.scrapedobjattr",
+		"fields": {
+			"obj_class": 1,
+			"name": "title",
+			"attr_type": "S"
+		}
+	}, {
+		"pk": 4,
+		"model": "dynamic_scraper.scrapedobjattr",
+		"fields": {
+			"obj_class": 1,
+			"name": "url",
+			"attr_type": "U"
+		}
+	}, {
+		"pk": 5,
+		"model": "dynamic_scraper.scrapedobjattr",
+		"fields": {
+			"obj_class": 1,
+			"name": "thumbnail",
+			"attr_type": "I"
+		}
+	}, {
+		"pk": 1,
+		"model": "dynamic_scraper.scraper",
+		"fields": {
+			"status": "A",
+			"pagination_page_replace": "",
+			"checker_ref_url": "http://en.wikinews.org/wiki/This_wiki_article_doesnt_exist",
+			"checker_x_path_result": "",
+			"name": "Wikinews Scraper",
+			"max_items_save": null,
+			"checker_x_path": "",
+			"pagination_append_str": "",
+			"max_items_read": null,
+			"pagination_on_start": false,
+			"pagination_type": "N",
+			"checker_type": "4",
+			"comments": "",
+			"scraped_obj_class": 1
+		}
+	}, {
+		"pk": 1,
+		"model": "dynamic_scraper.scraperelem",
+		"fields": {
+			"proc_ctxt": "",
+			"x_path": "//td[@class=\"l_box\"]",
+			"processors": "",
+			"scraped_obj_attr": 1,
+			"scraper": 1,
+			"from_detail_page": false,
+			"mandatory": true,
+			"reg_exp": ""
+		}
+	}, {
+		"pk": 2,
+		"model": "dynamic_scraper.scraperelem",
+		"fields": {
+			"proc_ctxt": "",
+			"x_path": "//h1[@id=\"firstHeading\"]/span/text()",
+			"processors": "",
+			"scraped_obj_attr": 3,
+			"scraper": 1,
+			"from_detail_page": true,
+			"mandatory": true,
+			"reg_exp": ""
+		}
+	}, {
+		"pk": 3,
+		"model": "dynamic_scraper.scraperelem",
+		"fields": {
+			"proc_ctxt": "",
+			"x_path": "p/span[@class=\"l_summary\"]/text()",
+			"processors": "",
+			"scraped_obj_attr": 2,
+			"scraper": 1,
+			"from_detail_page": false,
+			"mandatory": true,
+			"reg_exp": ""
+		}
+	}, {
+		"pk": 4,
+		"model": "dynamic_scraper.scraperelem",
+		"fields": {
+			"proc_ctxt": "'pre_url': 'http://en.wikinews.org'",
+			"x_path": "span[@class=\"l_title\"]/a/@href",
+			"processors": "pre_url",
+			"scraped_obj_attr": 4,
+			"scraper": 1,
+			"from_detail_page": false,
+			"mandatory": true,
+			"reg_exp": ""
+		}
+	}, {
+		"pk": 5,
+		"model": "dynamic_scraper.scraperelem",
+		"fields": {
+			"proc_ctxt": "'pre_url': 'http:'",
+			"x_path": "div[@class=\"l_image\"]/a/img/@src",
+			"processors": "pre_url",
+			"scraped_obj_attr": 5,
+			"scraper": 1,
+			"from_detail_page": false,
+			"mandatory": true,
+			"reg_exp": ""
+		}
+	}, {
+		"pk": 1,
+		"model": "dynamic_scraper.schedulerruntime",
+		"fields": {
+			"next_action_factor": null,
+			"next_action_time": "2012-01-09T05:28:10.678",
+			"num_zero_actions": 0,
+			"runtime_type": "S"
+		}
+	}, {
+		"pk": 1,
+		"model": "open_news.newswebsite",
+		"fields": {
+			"url": "http://en.wikinews.org/wiki/Main_Page",
+			"scraper_runtime": 1,
+			"name": "Wikinews",
+			"scraper": 1
+		}
+	}, {
+		"pk": 19,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_logentry",
+			"name": "Can add log entry",
+			"content_type": 7
+		}
+	}, {
+		"pk": 20,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_logentry",
+			"name": "Can change log entry",
+			"content_type": 7
+		}
+	}, {
+		"pk": 21,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_logentry",
+			"name": "Can delete log entry",
+			"content_type": 7
+		}
+	}, {
+		"pk": 1,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_group",
+			"name": "Can add group",
+			"content_type": 2
+		}
+	}, {
+		"pk": 4,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_group",
+			"name": "Can change group",
+			"content_type": 2
+		}
+	}, {
+		"pk": 7,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_group",
+			"name": "Can delete group",
+			"content_type": 2
+		}
+	}, {
+		"pk": 2,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_permission",
+			"name": "Can add permission",
+			"content_type": 1
+		}
+	}, {
+		"pk": 5,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_permission",
+			"name": "Can change permission",
+			"content_type": 1
+		}
+	}, {
+		"pk": 8,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_permission",
+			"name": "Can delete permission",
+			"content_type": 1
+		}
+	}, {
+		"pk": 3,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_user",
+			"name": "Can add user",
+			"content_type": 3
+		}
+	}, {
+		"pk": 6,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_user",
+			"name": "Can change user",
+			"content_type": 3
+		}
+	}, {
+		"pk": 9,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_user",
+			"name": "Can delete user",
+			"content_type": 3
+		}
+	}, {
+		"pk": 10,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_contenttype",
+			"name": "Can add content type",
+			"content_type": 4
+		}
+	}, {
+		"pk": 11,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_contenttype",
+			"name": "Can change content type",
+			"content_type": 4
+		}
+	}, {
+		"pk": 12,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_contenttype",
+			"name": "Can delete content type",
+			"content_type": 4
+		}
+	}, {
+		"pk": 22,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_message",
+			"name": "Can add message",
+			"content_type": 9
+		}
+	}, {
+		"pk": 24,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_message",
+			"name": "Can change message",
+			"content_type": 9
+		}
+	}, {
+		"pk": 26,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_message",
+			"name": "Can delete message",
+			"content_type": 9
+		}
+	}, {
+		"pk": 23,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_queue",
+			"name": "Can add queue",
+			"content_type": 8
+		}
+	}, {
+		"pk": 25,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_queue",
+			"name": "Can change queue",
+			"content_type": 8
+		}
+	}, {
+		"pk": 27,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_queue",
+			"name": "Can delete queue",
+			"content_type": 8
+		}
+	}, {
+		"pk": 28,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_crontabschedule",
+			"name": "Can add crontab",
+			"content_type": 13
+		}
+	}, {
+		"pk": 36,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_crontabschedule",
+			"name": "Can change crontab",
+			"content_type": 13
+		}
+	}, {
+		"pk": 44,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_crontabschedule",
+			"name": "Can delete crontab",
+			"content_type": 13
+		}
+	}, {
+		"pk": 29,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_intervalschedule",
+			"name": "Can add interval",
+			"content_type": 12
+		}
+	}, {
+		"pk": 37,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_intervalschedule",
+			"name": "Can change interval",
+			"content_type": 12
+		}
+	}, {
+		"pk": 45,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_intervalschedule",
+			"name": "Can delete interval",
+			"content_type": 12
+		}
+	}, {
+		"pk": 30,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_periodictask",
+			"name": "Can add periodic task",
+			"content_type": 15
+		}
+	}, {
+		"pk": 38,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_periodictask",
+			"name": "Can change periodic task",
+			"content_type": 15
+		}
+	}, {
+		"pk": 46,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_periodictask",
+			"name": "Can delete periodic task",
+			"content_type": 15
+		}
+	}, {
+		"pk": 31,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_periodictasks",
+			"name": "Can add periodic tasks",
+			"content_type": 14
+		}
+	}, {
+		"pk": 39,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_periodictasks",
+			"name": "Can change periodic tasks",
+			"content_type": 14
+		}
+	}, {
+		"pk": 47,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_periodictasks",
+			"name": "Can delete periodic tasks",
+			"content_type": 14
+		}
+	}, {
+		"pk": 33,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_taskmeta",
+			"name": "Can add task meta",
+			"content_type": 10
+		}
+	}, {
+		"pk": 41,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_taskmeta",
+			"name": "Can change task meta",
+			"content_type": 10
+		}
+	}, {
+		"pk": 49,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_taskmeta",
+			"name": "Can delete task meta",
+			"content_type": 10
+		}
+	}, {
+		"pk": 34,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_tasksetmeta",
+			"name": "Can add taskset meta",
+			"content_type": 11
+		}
+	}, {
+		"pk": 42,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_tasksetmeta",
+			"name": "Can change taskset meta",
+			"content_type": 11
+		}
+	}, {
+		"pk": 50,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_tasksetmeta",
+			"name": "Can delete taskset meta",
+			"content_type": 11
+		}
+	}, {
+		"pk": 32,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_taskstate",
+			"name": "Can add task",
+			"content_type": 17
+		}
+	}, {
+		"pk": 40,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_taskstate",
+			"name": "Can change task",
+			"content_type": 17
+		}
+	}, {
+		"pk": 48,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_taskstate",
+			"name": "Can delete task",
+			"content_type": 17
+		}
+	}, {
+		"pk": 35,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_workerstate",
+			"name": "Can add worker",
+			"content_type": 16
+		}
+	}, {
+		"pk": 43,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_workerstate",
+			"name": "Can change worker",
+			"content_type": 16
+		}
+	}, {
+		"pk": 51,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_workerstate",
+			"name": "Can delete worker",
+			"content_type": 16
+		}
+	}, {
+		"pk": 52,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_log",
+			"name": "Can add log",
+			"content_type": 23
+		}
+	}, {
+		"pk": 58,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_log",
+			"name": "Can change log",
+			"content_type": 23
+		}
+	}, {
+		"pk": 64,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_log",
+			"name": "Can delete log",
+			"content_type": 23
+		}
+	}, {
+		"pk": 53,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_schedulerruntime",
+			"name": "Can add scheduler runtime",
+			"content_type": 22
+		}
+	}, {
+		"pk": 59,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_schedulerruntime",
+			"name": "Can change scheduler runtime",
+			"content_type": 22
+		}
+	}, {
+		"pk": 65,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_schedulerruntime",
+			"name": "Can delete scheduler runtime",
+			"content_type": 22
+		}
+	}, {
+		"pk": 54,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_scrapedobjattr",
+			"name": "Can add scraped obj attr",
+			"content_type": 19
+		}
+	}, {
+		"pk": 60,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_scrapedobjattr",
+			"name": "Can change scraped obj attr",
+			"content_type": 19
+		}
+	}, {
+		"pk": 66,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_scrapedobjattr",
+			"name": "Can delete scraped obj attr",
+			"content_type": 19
+		}
+	}, {
+		"pk": 55,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_scrapedobjclass",
+			"name": "Can add scraped obj class",
+			"content_type": 18
+		}
+	}, {
+		"pk": 61,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_scrapedobjclass",
+			"name": "Can change scraped obj class",
+			"content_type": 18
+		}
+	}, {
+		"pk": 67,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_scrapedobjclass",
+			"name": "Can delete scraped obj class",
+			"content_type": 18
+		}
+	}, {
+		"pk": 56,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_scraper",
+			"name": "Can add scraper",
+			"content_type": 20
+		}
+	}, {
+		"pk": 62,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_scraper",
+			"name": "Can change scraper",
+			"content_type": 20
+		}
+	}, {
+		"pk": 68,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_scraper",
+			"name": "Can delete scraper",
+			"content_type": 20
+		}
+	}, {
+		"pk": 57,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_scraperelem",
+			"name": "Can add scraper elem",
+			"content_type": 21
+		}
+	}, {
+		"pk": 63,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_scraperelem",
+			"name": "Can change scraper elem",
+			"content_type": 21
+		}
+	}, {
+		"pk": 69,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_scraperelem",
+			"name": "Can delete scraper elem",
+			"content_type": 21
+		}
+	}, {
+		"pk": 70,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_article",
+			"name": "Can add article",
+			"content_type": 25
+		}
+	}, {
+		"pk": 72,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_article",
+			"name": "Can change article",
+			"content_type": 25
+		}
+	}, {
+		"pk": 74,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_article",
+			"name": "Can delete article",
+			"content_type": 25
+		}
+	}, {
+		"pk": 71,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_newswebsite",
+			"name": "Can add news website",
+			"content_type": 24
+		}
+	}, {
+		"pk": 73,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_newswebsite",
+			"name": "Can change news website",
+			"content_type": 24
+		}
+	}, {
+		"pk": 75,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_newswebsite",
+			"name": "Can delete news website",
+			"content_type": 24
+		}
+	}, {
+		"pk": 13,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_session",
+			"name": "Can add session",
+			"content_type": 5
+		}
+	}, {
+		"pk": 14,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_session",
+			"name": "Can change session",
+			"content_type": 5
+		}
+	}, {
+		"pk": 15,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_session",
+			"name": "Can delete session",
+			"content_type": 5
+		}
+	}, {
+		"pk": 16,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "add_site",
+			"name": "Can add site",
+			"content_type": 6
+		}
+	}, {
+		"pk": 17,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "change_site",
+			"name": "Can change site",
+			"content_type": 6
+		}
+	}, {
+		"pk": 18,
+		"model": "auth.permission",
+		"fields": {
+			"codename": "delete_site",
+			"name": "Can delete site",
+			"content_type": 6
+		}
+	}, {
+		"pk": 1,
+		"model": "auth.user",
+		"fields": {
+			"username": "admin",
+			"first_name": "",
+			"last_name": "",
+			"is_active": true,
+			"is_superuser": true,
+			"is_staff": true,
+			"last_login": "2012-06-22T08:24:23.875",
+			"groups": [],
+			"user_permissions": [],
+			"password": "pbkdf2_sha256$10000$84WIMtRe6xVB$JOsq9MFCSGAnE6euh3q9TPIgPWzCqv5u6BvX4x9DgTk=",
+			"email": "d@d.de",
+			"date_joined": "2012-06-22T08:22:12.067"
+		}
+	}, {
+		"pk": 6,
+		"model": "admin.logentry",
+		"fields": {
+			"action_flag": 3,
+			"action_time": "2012-06-22T08:43:34.949",
+			"object_repr": "FanFiction.Net adult content purge felt across fandom two weeks on",
+			"object_id": "5",
+			"change_message": "",
+			"user": 1,
+			"content_type": 25
+		}
+	}, {
+		"pk": 5,
+		"model": "admin.logentry",
+		"fields": {
+			"action_flag": 3,
+			"action_time": "2012-06-22T08:43:34.948",
+			"object_repr": "Wikinews interviews 17-year-old author of 'LEGO Heavy Weapons'",
+			"object_id": "4",
+			"change_message": "",
+			"user": 1,
+			"content_type": 25
+		}
+	}, {
+		"pk": 4,
+		"model": "admin.logentry",
+		"fields": {
+			"action_flag": 3,
+			"action_time": "2012-06-22T08:43:34.946",
+			"object_repr": "Assange seeks asylum in Ecuadorian embassy",
+			"object_id": "3",
+			"change_message": "",
+			"user": 1,
+			"content_type": 25
+		}
+	}, {
+		"pk": 3,
+		"model": "admin.logentry",
+		"fields": {
+			"action_flag": 3,
+			"action_time": "2012-06-22T08:43:34.943",
+			"object_repr": "At Australian gymnastic team announcement, media turns out for Tony Abbott",
+			"object_id": "2",
+			"change_message": "",
+			"user": 1,
+			"content_type": 25
+		}
+	}, {
+		"pk": 2,
+		"model": "admin.logentry",
+		"fields": {
+			"action_flag": 3,
+			"action_time": "2012-06-22T08:43:34.940",
+			"object_repr": "Kate Lundy and Tony Abbott assist in Olympic dreams with Gymnastics Australia's artistic gymnastics team announcement",
+			"object_id": "1",
+			"change_message": "",
+			"user": 1,
+			"content_type": 25
+		}
+	}, {
+		"pk": 1,
+		"model": "admin.logentry",
+		"fields": {
+			"action_flag": 2,
+			"action_time": "2012-06-22T08:42:20.518",
+			"object_repr": "Wikinews Scraper (Article)",
+			"object_id": "1",
+			"change_message": "Changed x_path for scraper elem \"ScraperElem object\".",
+			"user": 1,
+			"content_type": 20
+		}
+	}
+]

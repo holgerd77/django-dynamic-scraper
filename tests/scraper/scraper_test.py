@@ -40,6 +40,9 @@ class DjangoWriterPipeline(object):
         checker_rt.save()
         item['checker_runtime'] = checker_rt
         
+        if not 'description' in item or item['description'] == None:
+            item['description'] = u''
+        
         item.save()
         return item 
 
@@ -67,10 +70,10 @@ class ScraperTest(TestCase):
         #print kwargs
     
 
-    def run_event_spider(self, id):
+    def run_event_spider(self, id, do_action='yes'):
         kwargs = {
         'id': id,
-        'do_action': 'yes'
+        'do_action': do_action,
         }
         self.spider = EventSpider(**kwargs)
         self.crawler.crawl(self.spider)
