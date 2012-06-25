@@ -120,7 +120,44 @@ TODO
 Processors
 ==========
 
-TODO
+string_strip
+------------
+============================== ================================================================
+*Description*                  Applies the python strip function to remove leading and trailing
+                               characters
+*Usable with other processors* Yes
+*Context definition (Example)* ``'string_strip': ' .!'`` (optional, default: ' \n\t')
+*Result (Example)*             " ... Example Text!!!" -> "Example Text"
+============================== ================================================================
+
+pre_string
+----------
+============================== ===================================================================
+*Description*                  Adds a string before the scraped text
+*Usable with other processors* Yes
+*Context definition (Example)* ``'pre_string': 'BEFORE_'``
+*Result (Example)*               "Example Text" -> "BEFORE_Example Text"
+============================== ===================================================================
+
+post_string
+-----------
+============================== ===================================================================
+*Description*                  Appends a string after the scraped text
+*Usable with other processors* Yes
+*Context definition (Example)* ``'post_string': '_AFTER'``
+*Result (Example)*               "Example Text" -> "Example Text_AFTER"
+============================== ===================================================================
+
+pre_url
+-------
+============================== ===================================================================
+*Description*                  Adding a domain to scraped url paths, works like pre_string with
+                               some url specific enhancements (throwing away defined domain when
+                               scraped text has a leading "http://" e.g.) 
+*Usable with other processors* Yes
+*Context definition (Example)* ``'pre_url': 'http://example.org/'``
+*Result (Example)*               "/path/to/page.html" -> "http://example.org/path/to/page.html"
+============================== ===================================================================
 
 replace
 -------
@@ -145,4 +182,32 @@ static
 *Result (Example)*             "No matter if this text was scraped or not" -> "Static text"
 ============================== ===================================================================
 
-TODO
+date
+----
+============================== ===================================================================
+*Description*                  Tries to parse a date with Python's strptime function
+                               (extra sugar: recognises 'yesterday', 'gestern', 'today', 'heute',
+                               'tomorrow', 'morgen')
+*Usable with other processors* Yes
+*Context definition (Example)* ``'date': '%d.%m.%Y'``
+*Result (Example)*             "04.12.2011" -> "2011-12-04"
+============================== ===================================================================
+
+time
+----
+============================== ===================================================================
+*Description*                  Tries to parse a time with Python's strptime function
+*Usable with other processors* Yes
+*Context definition (Example)* ``'time': '%H hours %M minutes'``
+*Result (Example)*             "22 hours 15 minutes" -> "22:15"
+============================== ===================================================================
+
+duration
+--------
+============================== ===================================================================
+*Description*                  Tries to parse a duration, works like time processor but with
+                               time unit overlap breakdown
+*Usable with other processors* Yes
+*Context definition (Example)* ``'duration': '%M Minutes'``
+*Result (Example)*             "77 Minutes" -> "01:17:00"
+============================== ===================================================================

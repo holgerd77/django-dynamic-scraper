@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+ 
+<rss version="2.0">
+ 
+  <channel>
+  	
+    <item>
+      <title>Event 1</title>
+      <description>Event 1 description</description>
+      <link>http://localhost:8010/static/site_generic/event1.html</link>
+    </item>
+    <item>
+      <title>Event 2</title>
+      <description>Event 2 description</description>
+      <link>http://localhost:8010/static/site_generic/event2.html</link>
+    </item>
+    <item>
+      <title>Event 3</title>
+      <description>Event 3 description</description>
+      <link>http://localhost:8010/static/site_generic/event3.html</link>
+    </item>
+  </channel>
+ 
+</rss>

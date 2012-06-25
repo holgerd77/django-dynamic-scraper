@@ -45,6 +45,10 @@ class Scraper(models.Model):
         ('P', 'PAUSED'),
         ('I', 'INACTIVE'),
     )
+    CONTENT_TYPE_CHOICES = (
+        ('H', 'HTML'),
+        ('X', 'XML'),
+    )
     PAGINATION_TYPE = (
         ('N', 'NONE'),
         ('R', 'RANGE_FUNCT'),
@@ -58,6 +62,7 @@ class Scraper(models.Model):
     name = models.CharField(max_length=200)
     scraped_obj_class = models.ForeignKey(ScrapedObjClass)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
+    content_type = models.CharField(max_length=1, choices=CONTENT_TYPE_CHOICES, default='H')
     max_items_read = models.IntegerField(blank=True, null=True, help_text="Max number of items to be read (empty: unlimited).")
     max_items_save = models.IntegerField(blank=True, null=True, help_text="Max number of items to be saved (empty: unlimited).")
     pagination_type = models.CharField(max_length=1, choices=PAGINATION_TYPE, default='N')

@@ -17,6 +17,7 @@ ScraperRunTest.test_missing_base_elem
 ScraperRunTest.test_missing_url_elem
 ScraperRunTest.test_scraper
 ScraperRunTest.test_standard_field_as_detail_page_url_hack
+ScraperRunTest.test_double
 ScraperRunTest.test_testmode
 ScraperRunTest.test_task_run_type
 ScraperRunTest.test_no_task_run_type

@@ -1,7 +1,7 @@
 import ast
 
 from scrapy import log
-from scrapy.selector import HtmlXPathSelector
+from scrapy.selector import HtmlXPathSelector, XmlXPathSelector
 from scrapy.http import Request
 from scrapy.contrib.loader import XPathItemLoader
 from scrapy.contrib.loader.processor import TakeFirst
@@ -140,20 +140,20 @@ class DjangoSpider(DjangoBaseSpider):
             self.log(msg, log.DEBUG)
 
 
-    def _set_loader(self, response, hxs, item):
-        if not hxs:
+    def _set_loader(self, response, xs, item):
+        if not xs:
             self.from_detail_page = True
             item = response.request.meta['item']
             self.loader = XPathItemLoader(item=item, response=response)
             self.loader.default_output_processor = TakeFirst()
         else:
             self.from_detail_page = False
-            self.loader = XPathItemLoader(item=item, selector=hxs)
+            self.loader = XPathItemLoader(item=item, selector=xs)
             self.loader.default_output_processor = TakeFirst()
 
 
-    def parse_item(self, response, hxs=None):
-        self._set_loader(response, hxs, self.scraped_obj_item_class())
+    def parse_item(self, response, xs=None):
+        self._set_loader(response, xs, self.scraped_obj_item_class())
         if not self.from_detail_page:
             self.items_read_count += 1
             
@@ -165,10 +165,13 @@ class DjangoSpider(DjangoBaseSpider):
 
 
     def parse(self, response):
-        hxs = HtmlXPathSelector(response)
+        if self.scraper.content_type == 'H':
+            xs = HtmlXPathSelector(response)
+        else:
+            xs = XmlXPathSelector(response)
         base_elem = self.scraper.get_base_elem()
         url_elem = self.scraper.get_detail_page_url_elem()
-        base_objects = hxs.select(base_elem.x_path)
+        base_objects = xs.select(base_elem.x_path)
         if(len(base_objects) == 0):
             self.log("No base objects found!", log.ERROR)
         if(self.scraper.max_items_read):

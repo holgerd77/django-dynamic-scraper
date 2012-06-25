@@ -46,7 +46,8 @@ class ScraperRunTest(ScraperTest):
     def test_double(self):
         checker_rt = SchedulerRuntime()
         checker_rt.save()
-        event = Event(title=u'Event 1', url=u'http://localhost:8010/static/site_generic/event1.html',
+        event = Event(title=u'Event 1', event_website=self.event_website, 
+            url=u'http://localhost:8010/static/site_generic/event1.html',
             checker_runtime=checker_rt)
         event.save()
         self.run_event_spider(1)
@@ -102,8 +103,29 @@ class ScraperRunTest(ScraperTest):
         
         spider.log("Test message", log.ERROR)
         self.assertEqual(Log.objects.count(), 0)
+    
+    
+    def test_xml_content_type(self):
+        self.se_base.x_path = u'//item'
+        self.se_base.save()
+        self.se_title.x_path = u'title/text()'
+        self.se_title.save()
+        self.se_url.x_path = u'link/text()'
+        self.se_url.save()
+        self.se_desc.x_path = u'description/text()'
+        self.se_desc.from_detail_page = False
+        self.se_desc.save()
         
+        self.scraper.content_type = 'X'
+        self.scraper.save()
         
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_xml_content_type/event_main.xml')
+        self.event_website.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 3)
+    
+    
     def test_max_items_read(self):
         self.scraper.max_items_read = 3
         self.scraper.save()
