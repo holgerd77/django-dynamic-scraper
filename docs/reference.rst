@@ -126,7 +126,7 @@ string_strip
 *Description*                  Applies the python strip function to remove leading and trailing
                                characters
 *Usable with other processors* Yes
-*Context definition (Example)* ``'string_strip': ' .!'`` (optional, default: ' \n\t')
+*Context definition (Example)* ``'string_strip': ' .!'`` (optional, default: ' \n\t\r')
 *Result (Example)*             " ... Example Text!!!" -> "Example Text"
 ============================== ================================================================
 

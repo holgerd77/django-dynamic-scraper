@@ -3,7 +3,7 @@ from scrapy import log
 
 
 def string_strip(text, loader_context):
-    chars = loader_context.get('string_strip', ' \n\t')
+    chars = loader_context.get('string_strip', ' \n\t\r')
     return text.strip(chars)
     
 
