@@ -125,14 +125,43 @@ class ScraperRunTest(ScraperTest):
         
         self.assertEqual(len(Event.objects.all()), 3)
     
-    
+
+    def test_runtime_config_max_items_read(self):        
+        kwargs = {
+            'id': 1,
+            'do_action': 'yes',
+            'run_type': 'SHELL',
+            'max_items_read': '3',
+        }
+        spider = EventSpider(**kwargs)
+        self.crawler.crawl(spider)
+        self.crawler.start()
+
+        self.assertEqual(len(Event.objects.all()), 3)
+
+
+    def test_runtime_config_max_items_save(self):        
+        kwargs = {
+            'id': 1,
+            'do_action': 'yes',
+            'run_type': 'SHELL',
+            'max_items_save': '3',
+        }
+        spider = EventSpider(**kwargs)
+        self.crawler.crawl(spider)
+        self.crawler.start()
+
+        self.assertEqual(len(Event.objects.all()), 3)
+
+
     def test_max_items_read(self):
         self.scraper.max_items_read = 3
         self.scraper.save()
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 3)
-        
+
+
     def test_max_items_save(self):
         self.scraper.max_items_read = 3
         self.scraper.max_items_save = 2

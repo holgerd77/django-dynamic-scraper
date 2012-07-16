@@ -18,8 +18,9 @@ class DjangoSpider(DjangoBaseSpider):
     def __init__(self, *args, **kwargs):
         self.mandatory_vars.append('scraped_obj_class')
         self.mandatory_vars.append('scraped_obj_item_class')
-
+        
         super(DjangoSpider, self).__init__(self, *args, **kwargs)
+        self._set_config(**kwargs)
         self._check_scraper_config()
         
         self._set_start_urls(self.scrape_url)
@@ -31,6 +32,34 @@ class DjangoSpider(DjangoBaseSpider):
         
         msg = "Spider for " + self.ref_object.__class__.__name__ + " \"" + str(self.ref_object) + "\" (" + str(self.ref_object.id) + ") initialized."
         self.log(msg, log.INFO)
+
+
+    def _set_config(self, **kwargs):
+        log_msg = ""
+        #max_items_read 
+        if 'max_items_read' in kwargs:
+            try:
+                self.conf['MAX_ITEMS_READ'] = int(kwargs['max_items_read'])
+            except ValueError:
+                raise CloseSpider("You have to provide an integer value as max_items_read parameter!")
+            if len(log_msg) > 0:
+                log_msg += ", "
+            log_msg += "max_items_read " + str(self.conf['MAX_ITEMS_READ'])
+        else:
+            self.conf['MAX_ITEMS_READ'] = self.scraper.max_items_read
+        #max_items_save 
+        if 'max_items_save' in kwargs:
+            try:
+                self.conf['MAX_ITEMS_SAVE'] = int(kwargs['max_items_save'])
+            except ValueError:
+                raise CloseSpider("You have to provide an integer value as max_items_save parameter!")
+            if len(log_msg) > 0:
+                log_msg += ", "
+            log_msg += "max_items_save " + str(self.conf['MAX_ITEMS_SAVE'])
+        else:
+            self.conf['MAX_ITEMS_SAVE'] = self.scraper.max_items_save
+            
+        super(DjangoSpider, self)._set_config(log_msg, **kwargs)
 
 
     def _check_scraper_config(self):
@@ -174,8 +203,9 @@ class DjangoSpider(DjangoBaseSpider):
         base_objects = xs.select(base_elem.x_path)
         if(len(base_objects) == 0):
             self.log("No base objects found!", log.ERROR)
-        if(self.scraper.max_items_read):
-            items_left = min(len(base_objects), self.scraper.max_items_read - self.items_read_count)
+        
+        if(self.conf['MAX_ITEMS_READ']):
+            items_left = min(len(base_objects), self.conf['MAX_ITEMS_READ'] - self.items_read_count)
             base_objects = base_objects[0:items_left]
         
         for obj in base_objects:

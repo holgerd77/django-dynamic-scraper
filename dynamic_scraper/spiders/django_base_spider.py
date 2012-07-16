@@ -24,11 +24,12 @@ class DjangoBaseSpider(BaseSpider):
         "LOG_LEVEL": 'ERROR',
         "LOG_LIMIT": 250,
     }
-    command = 'scrapy crawl SPIDERNAME -a id=REF_OBJECT_ID [-a do_action=(yes|no) -a run_type=(TASK|SHELL)]'
+    command  = 'scrapy crawl SPIDERNAME -a id=REF_OBJECT_ID '
+    command += '[-a do_action=(yes|no) -a run_type=(TASK|SHELL)'
+    command += ' -a max_items_read={Int} -a max_items_save={Int}]'
     
     
     def __init__(self, *args, **kwargs):
-        self._set_config(**kwargs)
         self._check_mandatory_vars()
 
 
@@ -45,21 +46,28 @@ class DjangoBaseSpider(BaseSpider):
             raise CloseSpider(msg)
 
 
-    def _set_config(self, **kwargs):
+    def _set_config(self, log_msg, **kwargs):
+        #run_type
         if 'run_type' in kwargs:
             self.conf['RUN_TYPE'] = kwargs['run_type']
+            if len(log_msg) > 0:
+                log_msg += ", "
+            log_msg += "run_type " + self.conf['RUN_TYPE']
+        #do_action
         if 'do_action' in kwargs:
             if kwargs['do_action'] == 'yes':
                 self.conf['DO_ACTION'] = True
             else:
                 self.conf['DO_ACTION'] = False
+            if len(log_msg) > 0:
+                log_msg += ", "
+            log_msg += "do_action " + str(self.conf['DO_ACTION'])
         
         self.conf['LOG_ENABLED'] = settings.get('DSCRAPER_LOG_ENABLED', self.conf['LOG_ENABLED'])
         self.conf['LOG_LEVEL'] = settings.get('DSCRAPER_LOG_LEVEL', self.conf['LOG_LEVEL'])
         self.conf['LOG_LIMIT'] = settings.get('DSCRAPER_LOG_LIMIT', self.conf['LOG_LIMIT'])
         
-        msg = "Running with run_type " + self.conf['RUN_TYPE'] + ", do_action set to " + str(self.conf['DO_ACTION']) + "."
-        self.log(msg, log.INFO)
+        self.log("Runtime config: " + log_msg, log.INFO)
         
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)
 

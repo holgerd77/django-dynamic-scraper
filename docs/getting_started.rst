@@ -497,7 +497,7 @@ You can run/test spiders created with Django Dynamic Scraper from the command li
 normal Scrapy spiders, but with some additional arguments given. The syntax of the DDS spider run command is
 as following::
 
-	scrapy crawl SPIDERNAME -a id=REF_OBJECT_ID [-a do_action=(yes|no) -a run_type=(TASK|SHELL)]
+	scrapy crawl SPIDERNAME -a id=REF_OBJECT_ID [-a do_action=(yes|no) -a run_type=(TASK|SHELL) -a max_items_read={Int} -a max_items_save={Int}]
 	
 * With ``-a id=REF_OBJECT_ID`` you provide the ID of the reference object items should be scraped for,
   in our example case that would be the Wikinews ``NewsWebsite`` object, probably with ID 1 if you haven't
@@ -506,9 +506,12 @@ as following::
 * By default, items scraped from the command line are not saved in the DB. If you want this to happen,
   you have to provide ``-a do_action=yes``.
   
-* And with the ``-a run_type=(TASK|SHELL)`` you can simulate task based scraper runs invoked from the 
+* With ``-a run_type=(TASK|SHELL)`` you can simulate task based scraper runs invoked from the 
   command line. This can be useful for testing, just leave this argument for now.
-  
+
+* With ``-a max_items_read={Int}`` and ``-a max_items_save={Int}`` you can override the scraper settings for these
+  params.
+
 So, to invoke our Wikinews scraper, we have the following command::
 
 	scrapy crawl article_spider -a id=1 -a do_action=yes

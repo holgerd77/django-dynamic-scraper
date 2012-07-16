@@ -21,6 +21,8 @@ ScraperRunTest.test_double
 ScraperRunTest.test_testmode
 ScraperRunTest.test_task_run_type
 ScraperRunTest.test_no_task_run_type
+ScraperRunTest.test_runtime_config_max_items_read
+ScraperRunTest.test_runtime_config_max_items_save
 ScraperRunTest.test_max_items_read
 ScraperRunTest.test_max_items_save
 ScraperRunTest.test_missing_mandatory

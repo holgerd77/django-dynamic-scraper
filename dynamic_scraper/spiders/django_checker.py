@@ -17,6 +17,7 @@ class DjangoChecker(DjangoBaseSpider):
 
     def __init__(self, *args, **kwargs):
         super(DjangoChecker, self).__init__(self, *args, **kwargs)
+        self._set_config(**kwargs)
         self._check_checker_config()
         
         self.start_urls.append(self.scrape_url)
@@ -25,6 +26,11 @@ class DjangoChecker(DjangoBaseSpider):
         
         msg = "Checker for " + self.ref_object.__class__.__name__ + " \"" + str(self.ref_object) + "\" (" + str(self.ref_object.id) + ") initialized."
         self.log(msg, log.INFO)
+
+    
+    def _set_config(self, **kwargs):
+        log_msg = ""
+        super(DjangoChecker, self)._set_config(log_msg, **kwargs)
 
 
     def _check_checker_config(self):

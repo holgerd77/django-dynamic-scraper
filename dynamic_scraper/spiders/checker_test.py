@@ -35,7 +35,12 @@ class CheckerTest(DjangoBaseSpider):
         
         self.start_urls.append(self.ref_object.checker_ref_url)
         dispatcher.connect(self.response_received, signal=signals.response_received)
-        
+    
+    
+    def _set_config(self, **kwargs):
+        log_msg = ""
+        super(CheckerTest, self)._set_config(log_msg, **kwargs)
+    
     
     def spider_closed(self):
         pass
