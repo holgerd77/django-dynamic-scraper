@@ -65,7 +65,7 @@ def time(text, loader_context):
     except ValueError:
         loader_context.get('spider').log('Time could not be parsed ("%s", Format string: "%s")!' % (text, cformat), log.ERROR)
         return None
-    return time.strftime('%H:%M')
+    return time.strftime('%H:%M:%S')
 
 
 def _breakdown_time_unit_overlap(time_str, limit):

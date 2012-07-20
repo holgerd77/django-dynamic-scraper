@@ -81,13 +81,14 @@ class ValidationPipeline(object):
             updated_attribute_list = ''
             if len(standard_update_elems) > 0:
                 exist_objects = spider.scraped_obj_class.objects.filter(url=item[url_name])
-                print item[url_name]
                 if len(exist_objects) == 1:
                     exist_object = exist_objects[0]
+                    dummy_object = spider.scraped_obj_class()
                     for elem in standard_update_elems:
                         attr_name = elem.scraped_obj_attr.name
                         if attr_name in item and hasattr(exist_object, attr_name):
-                            if item[attr_name] != unicode(getattr(exist_object, attr_name)):
+                            setattr(dummy_object, attr_name, item[attr_name])
+                            if unicode(getattr(dummy_object, attr_name)) != unicode(getattr(exist_object, attr_name)):
                                 setattr(exist_object, attr_name, item[attr_name])
                                 if len(updated_attribute_list) > 0:
                                     updated_attribute_list += ', '
