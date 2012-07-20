@@ -230,18 +230,27 @@ types (taken from ``dynamic_scraper.models.ScrapedObjAttr``)::
 
 	ATTR_TYPE_CHOICES = (
 	    ('S', 'STANDARD'),
+	    ('T', 'STANDARD (UPDATE)'),
 	    ('B', 'BASE'),
 	    ('U', 'DETAIL_PAGE_URL'),
 	    ('I', 'IMAGE'),
 	)
 
-``STANDARD``, ``BASE`` and ``DETAIL_PAGE_URL`` should be clear by now, ``IMAGE`` represents attributes which will 
+``STANDARD``, ``BASE`` and ``DETAIL_PAGE_URL`` should be clear by now, ``STANDARD (UPDATE)`` behaves like ``STANDARD``, 
+but these attributes are updated with the new values if the item is already in the DB. ``IMAGE`` represents attributes which will 
 hold images or screenshots. So for our open news example we define a base attribute called 'base' with 
 type ``BASE``, two standard elements 'title' and 'description' with type ``STANDARD`` 
 and a url field called 'url' with type ``DETAIL_PAGE_URL``. Your definition form for your scraped obj class 
 should look similar to the screenshot below:
 
 .. image:: images/screenshot_django-admin_add_scraped_obj_class.png
+
+.. note::
+   If you define an attribute as ``STANDARD (UPDATE)`` attribute and your scraper reads the value for this attribute from the detail page
+   of the item, your scraping process requires **much more page requests**, because the scraper has to look at all the detail pages
+   even for items already in the DB to compare the values. If you don't use the update functionality, use the simple ``STANDARD``
+   attribute instead!
+
 
 .. note::
 	Though it is a bit of a hack: if you want to **scrape items on a website not leading to detail pages** you can do
@@ -497,7 +506,9 @@ You can run/test spiders created with Django Dynamic Scraper from the command li
 normal Scrapy spiders, but with some additional arguments given. The syntax of the DDS spider run command is
 as following::
 
-	scrapy crawl SPIDERNAME -a id=REF_OBJECT_ID [-a do_action=(yes|no) -a run_type=(TASK|SHELL) -a max_items_read={Int} -a max_items_save={Int}]
+	scrapy crawl SPIDERNAME -a id=REF_OBJECT_ID 
+	                        [-a do_action=(yes|no) -a run_type=(TASK|SHELL) 
+	                        -a max_items_read={Int} -a max_items_save={Int}]
 	
 * With ``-a id=REF_OBJECT_ID`` you provide the ID of the reference object items should be scraped for,
   in our example case that would be the Wikinews ``NewsWebsite`` object, probably with ID 1 if you haven't

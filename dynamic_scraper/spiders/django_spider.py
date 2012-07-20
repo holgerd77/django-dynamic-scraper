@@ -215,16 +215,19 @@ class DjangoSpider(DjangoBaseSpider):
             #print item
             url_name = url_elem.scraped_obj_attr.name
             if(item and url_name in item):
+                url = item[url_name]
                 cnt = self.scraped_obj_class.objects.filter(url=item[url_name]).count()
+                cnt1 = self.scraper.get_standard_update_elems_from_detail_page().count()
                 cnt2 = self.scraper.get_from_detail_page_scrape_elems().count()
-                # Check for double items
+                # Mark item as DOUBLE item
                 if cnt > 0:
-                    item[url_name] = 'DOUBLE'
-                    yield item
-                elif cnt2 == 0:
+                    item[url_name] = 'DOUBLE' + item[url_name]
+                # (DOUBLE item with no standard update elements to be scraped from detail page) or 
+                # generally no attributes scraped from detail page
+                if (cnt > 0 and cnt1 == 0) or cnt2 == 0:
                     yield item
                 else:
-                    yield Request(item[url_name], callback=self.parse_item, meta={'item':item})
+                    yield Request(url, callback=self.parse_item, meta={'item':item})
             else:
                 self.log("Detail page url elem could not be read!", log.ERROR)
     

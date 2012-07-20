@@ -1,4 +1,3 @@
-import datetime
 import os.path
 
 from scrapy import log
@@ -54,7 +53,32 @@ class ScraperRunTest(ScraperTest):
         
         self.assertEqual(len(Event.objects.all()), 4)
         self.assertEqual(len(Event.objects.filter(title='Event 1')), 1)
+    
+    
+    def test_standard_update_field(self):
+        self.soa_title.attr_type = 'T'
+        self.soa_title.save()
         
+        self.run_event_spider(1)
+        self.assertEqual(len(Event.objects.all()), 4)
+    
+    
+    def test_standard_update_field_update(self):
+        checker_rt = SchedulerRuntime()
+        checker_rt.save()
+        event = Event(title=u'Event 1 - Old Title', event_website=self.event_website, 
+            url=u'http://localhost:8010/static/site_generic/event1.html',
+            checker_runtime=checker_rt)
+        event.save()
+        self.soa_title.attr_type = 'T'
+        self.soa_title.save()
+        
+        self.run_event_spider(1)
+        
+        event_updated = Event.objects.get(pk=event.id)
+        self.assertEqual(event_updated.title, 'Event 1')
+        self.assertEqual(len(Event.objects.filter(title='Event 1 - Old Title')), 0)
+    
     
     def test_testmode(self):
         kwargs = {

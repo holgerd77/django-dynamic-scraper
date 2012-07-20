@@ -26,6 +26,7 @@ class ScrapedObjClass(models.Model):
 class ScrapedObjAttr(models.Model):
     ATTR_TYPE_CHOICES = (
         ('S', 'STANDARD'),
+        ('T', 'STANDARD (UPDATE)'),
         ('B', 'BASE'),
         ('U', 'DETAIL_PAGE_URL'),
         ('I', 'IMAGE'),
@@ -89,8 +90,19 @@ class Scraper(models.Model):
         return self.scraperelem_set.get(scraped_obj_attr__attr_type='U')
 
     def get_standard_elems(self):
+        q1 = Q(scraped_obj_attr__attr_type='S')
+        q2 = Q(scraped_obj_attr__attr_type='T')
+        return self.scraperelem_set.filter(q1 | q2)
+
+    def get_standard_fixed_elems(self):
         return self.scraperelem_set.filter(scraped_obj_attr__attr_type='S')
 
+    def get_standard_update_elems(self):
+        return self.scraperelem_set.filter(scraped_obj_attr__attr_type='T')
+
+    def get_standard_update_elems_from_detail_page(self):
+        return self.scraperelem_set.filter(scraped_obj_attr__attr_type='T').filter(from_detail_page=True)
+    
     def get_image_elems(self):
         return self.scraperelem_set.filter(scraped_obj_attr__attr_type='I')
     
@@ -99,15 +111,17 @@ class Scraper(models.Model):
     
     def get_scrape_elems(self):
         q1 = Q(scraped_obj_attr__attr_type='S')
-        q2 = Q(scraped_obj_attr__attr_type='U')
-        q3 = Q(scraped_obj_attr__attr_type='I')
-        return self.scraperelem_set.filter(q1 | q2 | q3)
+        q2 = Q(scraped_obj_attr__attr_type='T')
+        q3 = Q(scraped_obj_attr__attr_type='U')
+        q4 = Q(scraped_obj_attr__attr_type='I')
+        return self.scraperelem_set.filter(q1 | q2 | q3 | q4)
     
     def get_mandatory_scrape_elems(self):
         q1 = Q(scraped_obj_attr__attr_type='S')
-        q2 = Q(scraped_obj_attr__attr_type='U')
-        q3 = Q(scraped_obj_attr__attr_type='I')
-        return self.scraperelem_set.filter(q1 | q2 | q3).filter(mandatory=True)
+        q2 = Q(scraped_obj_attr__attr_type='T')
+        q3 = Q(scraped_obj_attr__attr_type='U')
+        q4 = Q(scraped_obj_attr__attr_type='I')
+        return self.scraperelem_set.filter(q1 | q2 | q3 | q4).filter(mandatory=True)
     
     def get_from_detail_page_scrape_elems(self):
         q1 = Q(from_detail_page=True)
