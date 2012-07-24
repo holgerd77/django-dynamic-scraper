@@ -187,10 +187,18 @@ class DjangoSpider(DjangoBaseSpider):
             self.items_read_count += 1
             
         elems = self.scraper.get_scrape_elems()
+        
         for elem in elems:
             self._scrape_item_attr(elem)
+        # Dealing with Django Char- and TextFields defining blank field as null
+        item = self.loader.load_item()
+        for key, value in item.items():
+            if value == None and \
+               self.scraped_obj_class()._meta.get_field(key).blank and \
+               not self.scraped_obj_class()._meta.get_field(key).null:
+                item[key] = ''
         
-        return self.loader.load_item()
+        return item
 
 
     def parse(self, response):

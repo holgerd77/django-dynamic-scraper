@@ -77,10 +77,10 @@ class ProcessorsTest(TestCase):
     
     def test_time(self):
         result_str = processors.time('22:15', {'time': '%H:%M'})
-        self.assertEqual(result_str, '22:15')
+        self.assertEqual(result_str, '22:15:00')
         
         result_str = processors.time('22 Uhr 15', {'time': '%H Uhr %M'})
-        self.assertEqual(result_str, '22:15')
+        self.assertEqual(result_str, '22:15:00')
     
     
     def test_duration(self):
