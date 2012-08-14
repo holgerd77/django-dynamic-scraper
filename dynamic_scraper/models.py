@@ -22,6 +22,9 @@ class ScrapedObjClass(models.Model):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name',]
+
 
 class ScrapedObjAttr(models.Model):
     ATTR_TYPE_CHOICES = (
@@ -129,6 +132,9 @@ class Scraper(models.Model):
     
     def __unicode__(self):
         return self.name + " (" + self.scraped_obj_class.name + ")"
+    
+    class Meta:
+        ordering = ['name',]
 
 
 class ScraperElem(models.Model):
@@ -154,6 +160,9 @@ class SchedulerRuntime(models.Model):
     
     def __unicode__(self):
         return str(self.id)
+    
+    class Meta:
+        ordering = ['next_action_time',]
 
 
 class Log(models.Model):
