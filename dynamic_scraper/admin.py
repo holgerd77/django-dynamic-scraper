@@ -46,6 +46,7 @@ class LogDateFilter(SimpleListFilter):
             ('today', _('today')),
             ('yesterday', _('yesterday')),
             ('last_hour', _('last hour')),
+            ('last_6_hours', _('last 6 hours')),
             ('last_24_hours', _('last 24 hours')),
             ('last_week', _('last_week')),
         )
@@ -67,6 +68,11 @@ class LogDateFilter(SimpleListFilter):
             )
         if self.value() == 'last_hour':
             comp_date = datetime.datetime.now() - datetime.timedelta(0, 0, 0, 0, 0, 1)
+            return queryset.filter(
+                date__gt=comp_date
+            )
+        if self.value() == 'last_6_hours':
+            comp_date = datetime.datetime.now() - datetime.timedelta(0, 0, 0, 0, 0, 6)
             return queryset.filter(
                 date__gt=comp_date
             )

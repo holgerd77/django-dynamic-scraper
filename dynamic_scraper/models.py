@@ -134,7 +134,7 @@ class Scraper(models.Model):
         return self.name + " (" + self.scraped_obj_class.name + ")"
     
     class Meta:
-        ordering = ['name',]
+        ordering = ['name', 'scraped_obj_class',]
 
 
 class ScraperElem(models.Model):
