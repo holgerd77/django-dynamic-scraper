@@ -58,7 +58,7 @@ You should be able to use another messaging framework/store than ``django-kombu`
 but this is untested and ``django-kombu`` is the easiest choice which normally should be sufficient
 for the simple purpose it is serving here.
 
-* `django-celery <http://ask.github.com/django-celery/>`_ 2.5.5+ (earlier versions untested)
+* `django-celery <http://ask.github.com/django-celery/>`_ 2.5.5+ (earlier versions untested), Attention: Celery 3.x not yet supported!
 
 For **scraping images** you will also need the Python Image Library:
 
@@ -116,7 +116,7 @@ category, a topic or something similar. In our news example we call the class ``
 code for this two model classes::
 
 	from django.db import models
-	from dynamic_scraper.models import Scraper, ScraperRuntime, SchedulerRuntime
+	from dynamic_scraper.models import Scraper, SchedulerRuntime
 	from scrapy.contrib_exp.djangoitem import DjangoItem
 	
 	
@@ -192,7 +192,7 @@ in your ``models.py`` to delete e.g. the ``checker_runtime`` when deleting an ar
 	pre_delete.connect(pre_delete_handler)
 
 
-.. _DjangoItem: http://readthedocs.org/docs/scrapy/en/latest/experimental/djangoitems.html
+.. _DjangoItem: https://scrapy.readthedocs.org/en/latest/topics/djangoitem.html
 
 Defining the object to be scraped
 =================================

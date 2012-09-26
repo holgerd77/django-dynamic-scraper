@@ -155,10 +155,10 @@ django-celery, you should see the ``Djcelery`` tables in the Django admin interf
 .. image:: images/screenshot_django-admin_overview.png
 
 For ``django-celery`` to work, Celery also needs a message broker for the actual message transport. For our
-relatively simple use case, django-kombu_ is the easiest and recommended choice. So please install django-kombu
-as well, add "djkombu" to your ``INSTALLED_APPS`` and don't forget to sync your DB.
+relatively simple use case, kombu_ is the easiest and recommended choice. So please install kombu
+as well.
 
-Then we can configure django-celery_ in combination with django-kombu_ in our ``settings.py`` file. A starter
+Then we can configure django-celery_ in combination with kombu_ in our ``settings.py`` file. A starter
 configuration could look similar to this::
 
 	# django-celery settings
@@ -174,7 +174,20 @@ configuration could look similar to this::
 
 
 .. _django-celery: http://ask.github.com/django-celery/
-.. _django-kombu: http://pypi.python.org/pypi/django-kombu
+.. _kombu: http://pypi.python.org/pypi/kombu
+
+.. note::
+   I had a lot of problems getting **Celery** to work properly, especially with **conflicting library versions**
+   when updating some parts of Celery. The following combination finally worked for me:
+   `kombu 2.1.8`, `celery 2.5.3`, `django-celery 2.5.5`. If you have problems with Celery, I would recommend
+   installing
+   exactly these library versions with e.g. `pip install kombu==2.1.8`. These problems are also the reason
+   I'm a bit cautious with supporting Celery 3.x, since I tend to wait a bit longer till all problems are
+   worked out. So there is **no support for Celery 3.x yet**!
+
+.. note::
+   The usage of kombu in Django changed during the ``django-celery 2.x`` trunk, there is no package
+   ``django-kombu`` any more and the configuration in ``settings.py`` changed.
 
 Defining your tasks
 -------------------
@@ -223,7 +236,7 @@ daemon processes. The first one is the ``celeryd`` daemon from django-celery_ wh
 and executing tasks. We have to run ``celeryd`` with the -B option to also run the celerybeat
 task scheduler which executes periodical tasks defined in Celery. Start the daemon with::
 
-	python manage.py celeryd -l info -B --settings=settings
+	python manage.py celeryd -l info -B --settings=example_project.settings
 
 If everything works well, you should now see the following line in your command line output::
 
