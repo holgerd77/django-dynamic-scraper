@@ -1,7 +1,7 @@
 Django>=1.2
-Scrapy>=0.14
-django-celery
-django-kombu
+Scrapy==0.14.4
+celery==2.5.5
+django-celery==2.5.5
 PIL
 South
 
