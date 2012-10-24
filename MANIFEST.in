@@ -2,3 +2,9 @@ include LICENSE
 include MANIFEST.in
 include README.rst
 include requirements.txt
+recursive-include docs *
+recursive-include example_project *
+recursive-include tests *
+prune docs/.build
+prune example_project/open_news/thumbnails
+exclude *.pyc
