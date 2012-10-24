@@ -4,6 +4,7 @@
 dbs
 example_project/open_news/thumbnails/*.jpg
 tests/scraper/imgs/*.jpg
+MANIFEST
 .DS_Store
 .project
 .pydevproject

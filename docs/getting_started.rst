@@ -77,9 +77,16 @@ life a lot easier if you want to keep pace with the latest versions of DDS:
 .. note::
    Please drop a note if you have tested DDS with older versions of the libraries above!
 
-Installation/Configuration
---------------------------
-For installing Django Dynamic Scraper download the DDS source code from GitHub or clone the project with
+Installation with Pip
+---------------------
+Django Dynamic Scraper can be found on the PyPI Package Index. For the installation with Pip, first install
+the requirements above. Then install DDS with::
+
+	pip install django-dynamic-scraper
+
+Manual Installation
+-------------------
+For manually installing Django Dynamic Scraper download the DDS source code from GitHub or clone the project with
 git into a folder of your choice::
 
 	git clone https://github.com/holgerd77/django-dynamic-scraper.git .
