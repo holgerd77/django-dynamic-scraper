@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 import os
 
@@ -12,6 +12,7 @@ setup(
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
     license='BSD License',
     platforms=['OS Independent'],
+    include_package_data=True,
     packages=[
         'dynamic_scraper',
         'dynamic_scraper.spiders',
