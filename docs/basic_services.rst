@@ -4,8 +4,8 @@ Basic services
 
 .. _logging:
 
-Logging
-=======
+Logging / Log Markers
+=====================
 
 Introduction
 ------------
@@ -36,6 +36,30 @@ and ``do_action=yes``. This is configuration used when running scrapers or
 checkers via the scheduler. When you run your scraper via the command line you
 have to provide these options manually to have your DDS log messages saved in the DB
 (see :ref:`running_scrapers`) in addition to be displayed on the screen.
+
+Log Markers: Meaning to your logs
+---------------------------------
+Going through log entries and finding out what's wrong with your scrapers can be relatively tricky.
+One reason for that is that not all log entries are equally meaningful. Sometimes scraping errors could
+just be planned when creating the scraper, e.g. when using pagination for pages from 1 to 100, knowing
+that there are no items on some pages in between, leading to "No base objects" log entries.
+Or the data being scraped is a bit dirty, occasionally missing a mandatory field.
+
+.. image:: images/screenshot_django-admin_add_log_marker.png
+
+To get more meaning from your logs log markers come into play. Log markers are rules to mark all new log
+entries with a special type while the log marker exists. For the pagination above you can
+e.g. create a log marker, which marks all log entries as "Planned Error" type which contain the message
+"No base objects" and are coming from the corresponding scraper. With creating rules for the most common
+types of errors like these it becomes easier to concentrate on the potentially more severe errors by
+filtering down to the "None" type entries in your logs.
+
+.. note:: Attention! Keep in mind that log markers can only be hints to a certain source of an error.
+          When looking at the pagination example above it can also be the case that a "No base objects"
+          error occur on a page where there should be some items and the scraper really not working any more. 
+          So be cautious!
+          Log markers can only give a better orientation with your log entries and don't necessarily are
+          telling the truth in all situations.
 
 Configuration
 -------------

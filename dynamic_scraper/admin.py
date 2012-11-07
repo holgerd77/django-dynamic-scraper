@@ -37,6 +37,12 @@ class SchedulerRuntimeAdmin(admin.ModelAdmin):
     search_fields = ['id']
 
 
+class LogMarkerAdmin(admin.ModelAdmin):
+    list_display = ('message_contains', 'ref_object', 'mark_with_type', 'custom_type', 'spider_name', 'scraper',)
+    list_filter = ('mark_with_type', 'custom_type', 'spider_name', 'scraper',)
+    search_fields = ('message_contains',)
+
+
 class LogDateFilter(SimpleListFilter):    
     title = _('date')
     parameter_name = 'date'
@@ -88,8 +94,8 @@ class LogDateFilter(SimpleListFilter):
             )
 
 class LogAdmin(admin.ModelAdmin):
-    list_display = ('message', 'ref_object', 'level', 'spider_name', 'scraper_', 'date_',)
-    list_filter = (LogDateFilter, 'level', 'spider_name', 'scraper',)
+    list_display = ('message', 'ref_object', 'type', 'level', 'spider_name', 'scraper_', 'date_',)
+    list_filter = (LogDateFilter, 'type', 'level', 'spider_name', 'scraper',)
     search_fields = ['ref_object',]
 
     def scraper_(self, instance):
@@ -102,4 +108,5 @@ class LogAdmin(admin.ModelAdmin):
 admin.site.register(ScrapedObjClass, ScrapedObjClassAdmin)
 admin.site.register(Scraper, ScraperAdmin)
 admin.site.register(SchedulerRuntime, SchedulerRuntimeAdmin)
+admin.site.register(LogMarker, LogMarkerAdmin)
 admin.site.register(Log, LogAdmin)

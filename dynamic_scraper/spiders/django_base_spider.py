@@ -6,8 +6,9 @@ from scrapy.xlib.pydispatch import dispatcher
 from scrapy.exceptions import CloseSpider
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
-from dynamic_scraper.models import Log
+from dynamic_scraper.models import Log, LogMarker
 
 
 class DjangoBaseSpider(BaseSpider):
@@ -119,9 +120,23 @@ class DjangoBaseSpider(BaseSpider):
                 l = Log()
                 l.message = message
                 l.ref_object = self.ref_object.__class__.__name__ + " (" + str(self.ref_object.id) + ")"
+                l.type = 'None'
                 l.level = int(level)
                 l.spider_name = self.name
                 l.scraper = self.scraper
+                
+                # Look for corresponding log markers
+                lms = LogMarker.objects.filter(
+                    Q(ref_object=l.ref_object) | Q(ref_object=''),
+                    Q(spider_name=l.spider_name) | Q(spider_name=''),
+                    Q(scraper=l.scraper) | Q(scraper__isnull=True),
+                )
+                for lm in lms:
+                    if lm.message_contains in l.message:
+                        if lm.custom_type:
+                            l.type = lm.custom_type
+                        else:
+                            l.type = lm.get_mark_with_type_display()
                 l.save()
                 
                 #Delete old logs

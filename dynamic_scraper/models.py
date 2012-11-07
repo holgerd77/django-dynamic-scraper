@@ -165,6 +165,25 @@ class SchedulerRuntime(models.Model):
         ordering = ['next_action_time',]
 
 
+class LogMarker(models.Model):
+    TYPE_CHOICES = (
+        ('PE', 'Planned Error'),
+        ('DD', 'Dirty Data'),
+        ('IM', 'Important'),
+        ('IG', 'Ignore'),
+        ('MI', 'Miscellaneous'),
+        ('CU', 'Custom'),            
+    )
+    message_contains = models.CharField(max_length=255)
+    help_text = "Use the string format from the log messages"
+    ref_object = models.CharField(max_length=200, blank=True)
+    help_text = 'Choose "Custom" and enter your own type in the next field for a custom type'
+    mark_with_type = models.CharField(max_length=2, choices=TYPE_CHOICES, help_text=help_text)
+    custom_type = models.CharField(max_length=25, blank=True)
+    spider_name = models.CharField(max_length=200, blank=True)
+    scraper = models.ForeignKey(Scraper, blank=True, null=True)
+
+
 class Log(models.Model):
     LEVEL_CHOICES = (
         (50, 'CRITICAL'),
@@ -175,6 +194,7 @@ class Log(models.Model):
     )
     message = models.CharField(max_length=255)
     ref_object = models.CharField(max_length=200)
+    type = models.CharField(max_length=25, blank=True)
     level = models.IntegerField(choices=LEVEL_CHOICES)
     spider_name = models.CharField(max_length=200)
     scraper = models.ForeignKey(Scraper, blank=True, null=True)
