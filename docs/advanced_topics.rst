@@ -155,8 +155,14 @@ django-celery, you should see the ``Djcelery`` tables in the Django admin interf
 .. image:: images/screenshot_django-admin_overview.png
 
 For ``django-celery`` to work, Celery also needs a message broker for the actual message transport. For our
-relatively simple use case, kombu_ is the easiest and recommended choice. So please install kombu
-as well.
+relatively simple use case, kombu_ is the easiest and recommended choice. Kombu is automatically installed
+as a dependency when you install ``django-celery`` and you can add it to your ``INSTALLED_APPS``::
+
+	INSTALLED_APPS = (
+   	...
+   	'kombu.transport.django',
+   	'djcelery',
+   )
 
 Then we can configure django-celery_ in combination with kombu_ in our ``settings.py`` file. A starter
 configuration could look similar to this::
@@ -166,7 +172,7 @@ configuration could look similar to this::
 	djcelery.setup_loader()
 	BROKER_HOST = "localhost"
 	BROKER_PORT = 5672
-	BROKER_BACKEND = "djkombu.transport.DatabaseTransport"
+	BROKER_BACKEND = "django"
 	BROKER_USER = "guest"
 	BROKER_PASSWORD = "guest"
 	BROKER_VHOST = "/"
@@ -176,18 +182,6 @@ configuration could look similar to this::
 .. _django-celery: http://ask.github.com/django-celery/
 .. _kombu: http://pypi.python.org/pypi/kombu
 
-.. note::
-   I had a lot of problems getting **Celery** to work properly, especially with **conflicting library versions**
-   when updating some parts of Celery. The following combination finally worked for me:
-   `kombu 2.1.8`, `celery 2.5.3`, `django-celery 2.5.5`. If you have problems with Celery, I would recommend
-   installing
-   exactly these library versions with e.g. `pip install kombu==2.1.8`. These problems are also the reason
-   I'm a bit cautious with supporting Celery 3.x, since I tend to wait a bit longer till all problems are
-   worked out. So there is **no support for Celery 3.x yet**!
-
-.. note::
-   The usage of kombu in Django changed during the ``django-celery 2.x`` trunk, there is no package
-   ``django-kombu`` any more and the configuration in ``settings.py`` changed.
 
 Defining your tasks
 -------------------

@@ -1,7 +1,6 @@
-Django>=1.2
+Django>=1.4
 Scrapy==0.14.4
-celery==2.5.5
-django-celery==2.5.5
+django-celery>=3.0.0
 PIL
 South
 

@@ -52,35 +52,26 @@ The **basic requirements** for Django Dynamic Scraper are:
 * `Django <https://www.djangoproject.com/>`_ 1.4+ (earlier versions untested)
 * Scrapy_ 0.14+ (necessary, Scrapy 0.16 not yet supported!)
 
-If you want to use the **scheduling mechanism** of DDS you also have to install ``django-celery`` (there
-is no separate ``django-kombu`` app in the newer version). 
-You should be able to use another messaging framework/store than ``django-kombu``
-but this is untested and ``django-kombu`` is the easiest choice which normally should be sufficient
-for the simple purpose it is serving here.
+If you want to use the **scheduling mechanism** of DDS you also have to install ``django-celery``:
 
-* `django-celery <http://ask.github.com/django-celery/>`_ 2.5.5+ (earlier versions untested), Attention: Celery 3.x not yet supported!
+* `django-celery <http://ask.github.com/django-celery/>`_ 3.0+
 
-For **scraping images** you will also need the Python Image Library:
+For **scraping images** you will need the Python Image Library:
 
 * `Python Image Libray (PIL) 1.1.7+ <http://www.pythonware.com/products/pil/>`_ (earlier versions untested)
 
-And finally: **Beginning with v.0.2** DDS is using ``South`` for **migrations in the DB schema** between 
-different versions (e.g. if a new attribute is added to a model class). If you don't exactly know what 
-``South`` is and
-what it does, it is highly recommended that you take the (relatively short) time to learn how to use it.
-Since DDS is in an early development stage, it is very likely that the DB schema will change in the
-future, and using ``South`` instead of ``syncdb`` to create and update your DB schema will make your
-life a lot easier if you want to keep pace with the latest versions of DDS:
+And finally: DDS is using ``South`` for **database migrations** so that it's easier to keep up with 
+future DB changes:
 
-	* `South 0.7+ <http://south.aeracode.org/>`_ (earlier versions untested) 
+* `South 0.7+ <http://south.aeracode.org/>`_ (earlier versions untested) 
 
 .. note::
    Please drop a note if you have tested DDS with older versions of the libraries above!
 
 Installation with Pip
 ---------------------
-Django Dynamic Scraper can be found on the PyPI Package Index. For the installation with Pip, first install
-the requirements above. Then install DDS with::
+Django Dynamic Scraper can be found on the PyPI Package Index `(see package description) <http://pypi.python.org/pypi/django-dynamic-scraper>`_. 
+For the installation with Pip, first install the requirements above. Then install DDS with::
 
 	pip install django-dynamic-scraper
 
