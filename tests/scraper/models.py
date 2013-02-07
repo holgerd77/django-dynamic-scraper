@@ -1,6 +1,6 @@
 from django.db import models
 from dynamic_scraper.models import Scraper, SchedulerRuntime
-from scrapy.contrib_exp.djangoitem import DjangoItem
+from scrapy.contrib.djangoitem import DjangoItem
 
 
 class EventWebsite(models.Model):

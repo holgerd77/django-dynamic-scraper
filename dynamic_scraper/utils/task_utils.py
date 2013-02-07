@@ -1,6 +1,7 @@
 import datetime
 import urllib, httplib
-from scrapy.conf import settings
+from scrapy.utils.project import get_project_settings
+settings = get_project_settings()
 from dynamic_scraper.models import Scraper
 
 class TaskUtils():

@@ -18,10 +18,9 @@ setup_environ(example_project.settings)
 
 
 BOT_NAME = 'open_news'
-BOT_VERSION = '1.0'
 
 SPIDER_MODULES = ['dynamic_scraper.spiders', 'open_news.scraper',]
-USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
+USER_AGENT = '%s/%s' % (BOT_NAME, '1.0')
 
 ITEM_PIPELINES = [
     'dynamic_scraper.pipelines.DjangoImagesPipeline',

@@ -1,6 +1,7 @@
 import datetime
 from scrapy import log, signals
-from scrapy.conf import settings
+from scrapy.utils.project import get_project_settings
+settings = get_project_settings()
 from scrapy.spider import BaseSpider
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy.exceptions import CloseSpider

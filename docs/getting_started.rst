@@ -50,7 +50,12 @@ The **basic requirements** for Django Dynamic Scraper are:
 
 * Python 2.7+ (earlier versions untested)
 * `Django <https://www.djangoproject.com/>`_ 1.4+ (earlier versions untested)
-* Scrapy_ 0.14+ (necessary, Scrapy 0.16 not yet supported!)
+* Scrapy_ 0.16+
+
+.. note::
+   DDS is now based on Scrapy 0.16+, where the ``DjangoItem`` class used by DDS moved from
+   ``scrapy.contrib_exp.djangoitem`` to ``scrapy.contrib.djangoitem``. Please update your
+   model class accordingly.
 
 If you want to use the **scheduling mechanism** of DDS you also have to install ``django-celery``:
 
@@ -120,7 +125,7 @@ code for this two model classes::
 
 	from django.db import models
 	from dynamic_scraper.models import Scraper, SchedulerRuntime
-	from scrapy.contrib_exp.djangoitem import DjangoItem
+	from scrapy.contrib.djangoitem import DjangoItem
 	
 	
 	class NewsWebsite(models.Model):
@@ -165,7 +170,7 @@ model class called ``checker_runtime``. In this case the scheduling object holds
 existance check (using the ``url`` field from ``Article``) to evaluate if the news article
 still exists or if it can be deleted (see :ref:`item_checkers`).
 
-Last but not least: Django Dynamic Scraper uses the (still experimental (!)) DjangoItem_ class from Scrapy for
+Last but not least: Django Dynamic Scraper uses the DjangoItem_ class from Scrapy for
 being able to directly store the scraped data into the Django DB. You can store the item class 
 (here: ``ArticleItem``) telling Scrapy which model class to use for storing the data directly underneath the
 associated model class.
@@ -423,10 +428,9 @@ And this is your ``settings.py`` file::
 	setup_environ(example_project.settings)
 
 	BOT_NAME = 'open_news'
-	BOT_VERSION = '1.0'
 	
 	SPIDER_MODULES = ['dynamic_scraper.spiders', 'open_news.scraper',]
-	USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
+	USER_AGENT = '%s/%s' % (BOT_NAME, '1.0')
 	
 	ITEM_PIPELINES = [
 	    'dynamic_scraper.pipelines.ValidationPipeline',

@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
-from scrapy.contrib_exp.djangoitem import DjangoItem
+from scrapy.contrib.djangoitem import DjangoItem
 from dynamic_scraper.models import Scraper, SchedulerRuntime
 
 

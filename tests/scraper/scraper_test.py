@@ -3,7 +3,10 @@ import os.path
 from django.test import TestCase
 
 from scrapy import signals
-from scrapy.conf import settings
+
+from scrapy.utils.project import get_project_settings
+settings = get_project_settings()
+
 from scrapy.crawler import CrawlerProcess
 from scrapy.xlib.pydispatch import dispatcher
 
