@@ -49,7 +49,7 @@ Requirements
 The **basic requirements** for Django Dynamic Scraper are:
 
 * Python 2.7+ (earlier versions untested)
-* `Django <https://www.djangoproject.com/>`_ 1.4+ (earlier versions untested)
+* `Django <https://www.djangoproject.com/>`_ 1.4+ (also tested against Django 1.5)
 * Scrapy_ 0.16+
 
 .. note::
@@ -69,9 +69,6 @@ And finally: DDS is using ``South`` for **database migrations** so that it's eas
 future DB changes:
 
 * `South 0.7+ <http://south.aeracode.org/>`_ (earlier versions untested) 
-
-.. note::
-   Please drop a note if you have tested DDS with older versions of the libraries above!
 
 Installation with Pip
 ---------------------
