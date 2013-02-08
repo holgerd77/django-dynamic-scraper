@@ -1,4 +1,4 @@
-import datetime
+import datetime, os
 from scrapy import log, signals
 from scrapy.utils.project import get_project_settings
 settings = get_project_settings()
@@ -32,6 +32,9 @@ class DjangoBaseSpider(BaseSpider):
     
     
     def __init__(self, *args, **kwargs):
+        msg = "Django settings used: %s" % os.environ.get("DJANGO_SETTINGS_MODULE")
+        log.msg(msg, log.INFO)
+        
         self._check_mandatory_vars()
 
 

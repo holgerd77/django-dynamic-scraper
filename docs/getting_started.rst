@@ -52,11 +52,6 @@ The **basic requirements** for Django Dynamic Scraper are:
 * `Django <https://www.djangoproject.com/>`_ 1.4+ (also tested against Django 1.5)
 * Scrapy_ 0.16+
 
-.. note::
-   DDS is now based on Scrapy 0.16+, where the ``DjangoItem`` class used by DDS moved from
-   ``scrapy.contrib_exp.djangoitem`` to ``scrapy.contrib.djangoitem``. Please update your
-   model class accordingly.
-
 If you want to use the **scheduling mechanism** of DDS you also have to install ``django-celery``:
 
 * `django-celery <http://ask.github.com/django-celery/>`_ 3.0+
@@ -69,6 +64,11 @@ And finally: DDS is using ``South`` for **database migrations** so that it's eas
 future DB changes:
 
 * `South 0.7+ <http://south.aeracode.org/>`_ (earlier versions untested) 
+
+.. note::
+   ``DDS v.0.3`` is updating main library dependencies (Django, Scrapy, django-celery) to newer versions
+   and you have to change some stuff in your code if you are upgrading from ``DDS v.0.2.x``, 
+   see :ref:`releasenotes` for details.
 
 Installation with Pip
 ---------------------
@@ -105,6 +105,7 @@ more stable.
 Now, to use DDS in your Django project add ``'dynamic_scraper'`` to your ``INSTALLED_APPS`` in your
 project settings.
 
+.. _creatingdjangomodels:
 
 Creating your Django models
 ===========================
@@ -366,6 +367,7 @@ assign the scraper and create an empty :ref:`scheduler_runtime` object with ``SC
 
 .. image:: images/screenshot_django-admin_add_domain_ref_object.png
 
+.. _settingupscrapypython:
 
 Setting up Scrapy/Create necessary python modules for your app
 ==============================================================
@@ -414,15 +416,10 @@ settings file and the project name::
 
 And this is your ``settings.py`` file::
 
-	import sys
-	import os.path
+	import os
 	
 	PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-	sys.path = sys.path + [os.path.join(PROJECT_ROOT, '../../..'), os.path.join(PROJECT_ROOT, '../..')]
-	
-	from django.core.management import setup_environ
-	import example_project.settings
-	setup_environ(example_project.settings)
+	os.environ.setdefault("DJANGO_SETTINGS_MODULE", "example_project.settings") #Changed in DDS v.0.3
 
 	BOT_NAME = 'open_news'
 	

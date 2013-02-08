@@ -6,15 +6,10 @@
 #     http://doc.scrapy.org/topics/settings.html
 #
 
-import sys
-import os.path
+import os
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-sys.path = sys.path + [os.path.join(PROJECT_ROOT, '../../..'), os.path.join(PROJECT_ROOT, '../..')]
-
-from django.core.management import setup_environ
-import example_project.settings
-setup_environ(example_project.settings)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "example_project.settings")
 
 
 BOT_NAME = 'open_news'

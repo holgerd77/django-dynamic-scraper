@@ -45,8 +45,21 @@ Then you can run the test suite with::
 	./run_tests.sh
 
 
+.. _releasenotes:
+
 Release Notes
 =============
+
+**Changes in version 0.3-alpha** (2013-01-15)
+
+* Main purpose of release is to upgrade to new libraries (Attention: some code changes necessary!)
+* ``Scrapy 0.16``: The ``DjangoItem`` class used by DDS moved from ``scrapy.contrib_exp.djangoitem``
+  to ``scrapy.contrib.djangoitem``. Please update your Django model class accordingly (see: :ref:`creatingdjangomodels`).
+* ``Scrapy 0.16``: ``BOT_VERSION`` setting no longer used in Scrapy/DDS ``settings.py`` file (see: :ref:`settingupscrapypython`)
+* ``Scrapy 0.16``: Some minor import changes for DDS to get rid of deprecated settings import
+* ``Django 1.5``: Changed Django settings configuration, please update your Scrapy/DDS ``settings.py`` file (see: :ref:`settingupscrapypython`)
+* ``django-celery 3.x``: Simpler installation, updated docs accordingly (see: :ref:`installingcelery`)
+* New log output about which Django settings used when running a scraper
 
 **Changes in version 0.2-alpha** (2012-06-22)
 
@@ -69,7 +82,7 @@ people interested having a first look at the library and give some feedback if t
 sense the way they were worked out/conceptionally designed or if a different approach on implementing 
 some parts of the software would have made more sense.
 
-**alpha (current) **
+**alpha (current)**
 
 DDS is currently in alpha stadium, which means that the library has proven itself in (at least) one 
 production environment and can be (cautiously) used for production purposes. However being still very

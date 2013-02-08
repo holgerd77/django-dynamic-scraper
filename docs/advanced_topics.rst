@@ -145,6 +145,8 @@ the scraper is run again.
    The number of spiders/checkers run at each task run is limited by the ``DSCRAPER_MAX_SPIDER_RUNS_PER_TASK``
    and ``DSCRAPER_MAX_CHECKER_RUNS_PER_TASK`` settings which can be adopted in your custom settings file (see: :ref:`settings`).
 
+.. _installingcelery:
+
 Installing/configuring django-celery for DDS
 --------------------------------------------
 This paragraph is covering only the specific installation issues with django-celery_ in regard of installing
