@@ -19,6 +19,9 @@ Features
 * Dynamic scheduling depending on crawling success via Django Celery
 * Checkers to check if items once scraped are still existing
 
+.. note::
+   DDS v.0.3 now officially supports Scrapy v.0.16+!
+
 .. _Scrapy: http://www.scrapy.org 
 .. _`Scrapy Docs`: http://doc.scrapy.org
 
