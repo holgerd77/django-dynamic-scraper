@@ -1,5 +1,5 @@
-import datetime
-import urllib, httplib
+import datetime, json
+import urllib, urllib2, httplib
 from scrapy.utils.project import get_project_settings
 settings = get_project_settings()
 from dynamic_scraper.models import Scraper
@@ -12,6 +12,14 @@ class TaskUtils():
     }
     
     def _run_spider(self, **kwargs):
+        # Ommit scheduling new jobs if there are still pending jobs for same spider
+        resp = urllib2.urlopen('http://localhost:6800/listjobs.json?project=default')
+        data = json.load(resp)
+        if 'pending' in data:
+            for item in data['pending']:
+                if item['spider'] == kwargs['spider']:
+                    return False
+        
         param_dict = {
             'project': 'default',
             'spider': kwargs['spider'],
