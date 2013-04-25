@@ -12,14 +12,6 @@ class TaskUtils():
     }
     
     def _run_spider(self, **kwargs):
-        # Ommit scheduling new jobs if there are still pending jobs for same spider
-        resp = urllib2.urlopen('http://localhost:6800/listjobs.json?project=default')
-        data = json.load(resp)
-        if 'pending' in data:
-            for item in data['pending']:
-                if item['spider'] == kwargs['spider']:
-                    return False
-        
         param_dict = {
             'project': 'default',
             'spider': kwargs['spider'],
@@ -34,6 +26,17 @@ class TaskUtils():
         conn.getresponse()
     
     
+    def _pending_jobs(self, spider):
+        # Ommit scheduling new jobs if there are still pending jobs for same spider
+        resp = urllib2.urlopen('http://localhost:6800/listjobs.json?project=default')
+        data = json.load(resp)
+        if 'pending' in data:
+            for item in data['pending']:
+                if item['spider'] == spider:
+                    return True
+        return False
+    
+    
     def run_spiders(self, ref_obj_class, scraper_field_name, runtime_field_name, spider_name):
         
         kwargs = {
@@ -43,8 +46,9 @@ class TaskUtils():
         
         max = settings.get('DSCRAPER_MAX_SPIDER_RUNS_PER_TASK', self.conf['MAX_SPIDER_RUNS_PER_TASK'])
         ref_obj_list = ref_obj_class.objects.filter(**kwargs).order_by('%s__next_action_time' % runtime_field_name)[:max]
-        for ref_object in ref_obj_list:
-            self._run_spider(id=ref_object.id, spider=spider_name, run_type='TASK', do_action='yes')
+        if not self._pending_jobs(spider_name):
+            for ref_object in ref_obj_list:
+                self._run_spider(id=ref_object.id, spider=spider_name, run_type='TASK', do_action='yes')
         
 
     def run_checkers(self, ref_obj_class, scraper_field_path, runtime_field_name, checker_name):
@@ -59,8 +63,9 @@ class TaskUtils():
         
         max = settings.get('DSCRAPER_MAX_CHECKER_RUNS_PER_TASK', self.conf['MAX_CHECKER_RUNS_PER_TASK'])
         ref_obj_list = ref_obj_class.objects.filter(**kwargs).exclude(**kwargs2).order_by('%s__next_action_time' % runtime_field_name)[:max]
-        for ref_object in ref_obj_list:
-            self._run_spider(id=ref_object.id, spider=checker_name, run_type='TASK', do_action='yes')
+        if not self._pending_jobs(checker_name):
+            for ref_object in ref_obj_list:
+                self._run_spider(id=ref_object.id, spider=checker_name, run_type='TASK', do_action='yes')
 
 
     def run_checker_tests(self):
