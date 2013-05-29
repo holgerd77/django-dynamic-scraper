@@ -3,6 +3,8 @@ import urllib, urllib2, httplib
 from scrapy.utils.project import get_project_settings
 settings = get_project_settings()
 from dynamic_scraper.models import Scraper
+from scrapyd.config import Config
+from ConfigParser import NoOptionError
 
 class TaskUtils():
     
@@ -19,9 +21,19 @@ class TaskUtils():
             'run_type': kwargs['run_type'],
             'do_action': kwargs['do_action']
         }
+        scrapyd_config = Config()
+        try:
+            scrapyd_url = scrapyd_config.get('bind_address')
+        except NoOptionError:
+            scrapyd_url = "localhost"
+        try:
+            scrapyd_port = scrapyd_config.get('http_port')
+        except NoOptionError:
+            scrapyd_port = "6800"
+
         params = urllib.urlencode(param_dict)
         headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-        conn = httplib.HTTPConnection("localhost:6800")
+        conn = httplib.HTTPConnection(scrapyd_url + ":" + scrapy_port)
         conn.request("POST", "/schedule.json", params, headers)
         conn.getresponse()
     
