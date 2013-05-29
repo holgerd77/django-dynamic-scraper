@@ -23,17 +23,13 @@ class TaskUtils():
         }
         scrapyd_config = Config()
         try:
-            scrapyd_url = scrapyd_config.get('bind_address')
+            scrapyd_url = scrapyd_config.get('url')
         except NoOptionError:
-            scrapyd_url = "localhost"
-        try:
-            scrapyd_port = scrapyd_config.get('http_port')
-        except NoOptionError:
-            scrapyd_port = "6800"
+            scrapyd_url = "localhost:6800"
 
         params = urllib.urlencode(param_dict)
         headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-        conn = httplib.HTTPConnection(scrapyd_url + ":" + scrapyd_port)
+        conn = httplib.HTTPConnection(scrapyd_url)
         conn.request("POST", "/schedule.json", params, headers)
         conn.getresponse()
     
