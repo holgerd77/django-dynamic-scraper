@@ -33,7 +33,7 @@ class TaskUtils():
 
         params = urllib.urlencode(param_dict)
         headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-        conn = httplib.HTTPConnection(scrapyd_url + ":" + scrapy_port)
+        conn = httplib.HTTPConnection(scrapyd_url + ":" + scrapyd_port)
         conn.request("POST", "/schedule.json", params, headers)
         conn.getresponse()
     
