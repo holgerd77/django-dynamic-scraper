@@ -114,3 +114,12 @@ class ProcessorsTest(TestCase):
         result_str = processors.duration('2 hours 17 minutes 15 seconds', {'duration': '%H hours %M minutes %S seconds'})
         self.assertEqual(result_str, '02:17:15')
 
+
+    def test_dynamic(self):
+        loader_context = {'func': 'basic.processors_test._dynamic_test', 'additional_text': 'Foo'}
+        result_tuple = processors.dynamic('test', loader_context)
+        self.assertEqual(result_tuple[0], 'test')
+
+
+def _dynamic_test(text, loader_context):
+    return text, loader_context
