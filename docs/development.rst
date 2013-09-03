@@ -50,6 +50,11 @@ Then you can run the test suite with::
 Release Notes
 =============
 
+**Changes in version 0.3.1-alpha** (2013-09-03)
+
+* Possibility to add keyword arguments to spider and checker task method to specify which reference objects
+  to use for spider/checker runs (see: :ref:`definetasks`)
+
 **Changes in version 0.3-alpha** (2013-01-15)
 
 * Main purpose of release is to upgrade to new libraries (Attention: some code changes necessary!)

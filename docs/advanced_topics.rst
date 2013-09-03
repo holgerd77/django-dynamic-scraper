@@ -184,6 +184,7 @@ configuration could look similar to this::
 .. _django-celery: http://ask.github.com/django-celery/
 .. _kombu: http://pypi.python.org/pypi/kombu
 
+.. _definetasks:
 
 Defining your tasks
 -------------------
@@ -201,11 +202,21 @@ The two methods in our open news example look like this::
 	@task()
 	def run_spiders():
 	    t = TaskUtils()
-	    t.run_spiders(NewsWebsite, 'scraper', 'scraper_runtime', 'article_spider')
+	    #Optional: Django field lookup keyword arguments to specify which reference objects (NewsWebsite)
+	    #to use for spider runs, e.g.:
+	    kwargs = {
+	        'scrape_me': True, #imaginary, model NewsWebsite hat no attribute 'scrape_me' in example 
+	    }
+	    t.run_spiders(NewsWebsite, 'scraper', 'scraper_runtime', 'article_spider', **kwargs)
 	    
 	@task()
 	def run_checkers():
 	    t = TaskUtils()
+	    #Optional: Django field lookup keyword arguments to specify which reference objects (Article)
+	    #to use for checker runs, e.g.:
+	    kwargs = {
+	        'check_me': True, #imaginary, model Article hat no attribute 'check_me' in example 
+	    }
 	    t.run_checkers(Article, 'news_website__scraper', 'checker_runtime', 'article_checker')
 
 The two methods are decorated with the Celery task decorator to tell Celery that these methods should be
