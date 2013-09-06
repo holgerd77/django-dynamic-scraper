@@ -195,7 +195,7 @@ module called ``tasks.py`` in the main directory of your app. The tasks should t
 The two methods in our open news example look like this::
 
 	from celery.task import task
-	
+	from django.db.models import Q
 	from dynamic_scraper.utils.task_utils import TaskUtils
 	from open_news.models import NewsWebsite, Article
 	
@@ -207,7 +207,9 @@ The two methods in our open news example look like this::
 	    kwargs = {
 	        'scrape_me': True, #imaginary, model NewsWebsite hat no attribute 'scrape_me' in example 
 	    }
-	    t.run_spiders(NewsWebsite, 'scraper', 'scraper_runtime', 'article_spider', **kwargs)
+	    #Optional as well: For more complex lookups you can pass Q objects vi args argument
+	    args = (Q(name='Wikinews'),)
+	    t.run_spiders(NewsWebsite, 'scraper', 'scraper_runtime', 'article_spider', *args, **kwargs)
 	    
 	@task()
 	def run_checkers():
@@ -217,7 +219,9 @@ The two methods in our open news example look like this::
 	    kwargs = {
 	        'check_me': True, #imaginary, model Article hat no attribute 'check_me' in example 
 	    }
-	    t.run_checkers(Article, 'news_website__scraper', 'checker_runtime', 'article_checker')
+	    #Optional as well: For more complex lookups you can pass Q objects vi args argument
+	    args = (Q(id__gt=100),)
+	    t.run_checkers(Article, 'news_website__scraper', 'checker_runtime', 'article_checker', *args, **kwargs)
 
 The two methods are decorated with the Celery task decorator to tell Celery that these methods should be
 regarded as tasks. In each task, a method from the ``TaskUtils`` module from DDS is called to run the
