@@ -7,6 +7,8 @@ from scrapy.contrib.loader import XPathItemLoader
 from scrapy.contrib.loader.processor import TakeFirst
 from scrapy.exceptions import CloseSpider
 
+from django.utils import importlib
+
 from dynamic_scraper.spiders.django_base_spider import DjangoBaseSpider
 from dynamic_scraper.models import ScraperElem
 from dynamic_scraper.utils.scheduler import Scheduler
@@ -132,16 +134,33 @@ class DjangoSpider(DjangoBaseSpider):
         except SyntaxError:
             self.log("Wrong context definition format: " + context_str, log.ERROR)
 
+    def _exit_get_processor(self, p):
+        if hasattr(processors, p) :
+            return getattr(processors, p)
+        try:
+            if hasattr(self.crawler.settings.settings_module,'PROCESSORS_MODULE'):
+                for m in self.crawler.settings.settings_module.PROCESSORS_MODULE:
+                    mod = importlib.import_module(m)
+                    if hasattr(mod, p):
+                        return getattr(mod, p)
+            return None
+                        
+        except ImportError, e:
+            self.log("load module {0} failed and the processor was not been used ".format(name, p), log.WARNING)
+        return None
 
     def _get_processors(self, procs_str):
         procs = [TakeFirst(), processors.string_strip,]
         if not procs_str:
             return procs
+        else:
+            procs = []
         procs_tmp = list(procs_str.split(','))
         for p in procs_tmp:
-            p = p.strip()
-            if hasattr(processors, p):
-                procs.append(getattr(processors, p))
+            p = self._exit_get_processor(p.strip())
+            if p:
+                procs.insert(0, p)
+                self.log('the processors is '+str(procs), log.DEBUG)
             else:
                 self.log("Processor '%s' is not defined!" % p, log.ERROR)
         procs = tuple(procs)
@@ -238,4 +257,3 @@ class DjangoSpider(DjangoBaseSpider):
                     yield Request(url, callback=self.parse_item, meta={'item':item})
             else:
                 self.log("Detail page url elem could not be read!", log.ERROR)
-    
