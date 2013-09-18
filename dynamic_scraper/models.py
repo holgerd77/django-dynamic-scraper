@@ -77,7 +77,7 @@ class Scraper(models.Model):
     checker_type = models.CharField(max_length=1, choices=CHECKER_TYPE, default='N')
     checker_x_path = models.CharField(max_length=200, blank=True)
     checker_x_path_result = models.CharField(max_length=200, blank=True)
-    checker_ref_url = models.URLField(blank=True)
+    checker_ref_url = models.URLField(max_length=500, blank=True)
     comments = models.TextField(blank=True)
     
     def get_base_elems(self):
