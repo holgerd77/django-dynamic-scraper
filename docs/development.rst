@@ -50,6 +50,10 @@ Then you can run the test suite with::
 Release Notes
 =============
 
+**Changes in version 0.3.2-alpha** (2013-09-28)
+
+* Not yet released
+
 **Changes in version 0.3.1-alpha** (2013-09-03)
 
 * Possibility to add keyword arguments to spider and checker task method to specify which reference objects

@@ -20,7 +20,7 @@ Features
 * Checkers to check if items once scraped are still existing
 
 .. note::
-   DDS v.0.3 now officially supports Scrapy v.0.16.x!
+   DDS v.0.3 now officially supports ``Scrapy v.0.16.x`` (``Scrapy v.0.18.x`` is not working yet)!
 
 .. _Scrapy: http://www.scrapy.org 
 .. _`Scrapy Docs`: http://doc.scrapy.org
