@@ -20,6 +20,7 @@ class Scheduler():
     def _parse_conf_dict_str(self, conf_dict_str):
         try:
             conf = conf_dict_str.strip(', ')
+            conf = conf.replace('\r\n','')
             conf = ast.literal_eval("{" + conf + "}")
         except SyntaxError:
             raise ImproperlyConfigured("Wrong context definition format: %s" % conf_dict_str)
