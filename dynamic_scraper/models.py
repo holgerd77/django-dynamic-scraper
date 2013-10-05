@@ -159,7 +159,7 @@ class SchedulerRuntime(models.Model):
     num_zero_actions = models.IntegerField(default=0)
     
     def __unicode__(self):
-        return str(self.id)
+        return unicode(self.id)
     
     class Meta:
         ordering = ['next_action_time',]
