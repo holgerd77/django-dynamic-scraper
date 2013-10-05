@@ -55,7 +55,8 @@ Release Notes
 * Not yet released
 * Fixed the exception when scheduler string was processed (see `Pull Request #27 <https://github.com/holgerd77/django-dynamic-scraper/pull/27>`_)
 * Allowed Checker Reference URLs to be longer than the the default 200 characters (DB Migration ``0004``, see `Pull Request #29 <https://github.com/holgerd77/django-dynamic-scraper/pull/29>`_)
-* Changed ``__unicode__`` method for ``SchedulerRuntime`` to prevent ``TypeError`` (see `Google Groups Discussion <https://groups.google.com/forum/#!topic/django-dynamic-scraper/FSNUGhFY7YY>`_) 
+* Changed ``__unicode__`` method for ``SchedulerRuntime`` to prevent ``TypeError`` (see `Google Groups Discussion <https://groups.google.com/forum/#!topic/django-dynamic-scraper/FSNUGhFY7YY>`_)
+* Refer to ``ID`` instead of ``PK`` (see `commit in nextlanding repo <https://github.com/nextlanding/django-dynamic-scraper/commit/c4dfaa6e167293c7d35188c8f94f08974a32f310>`_) 
 
 **Changes in version 0.3.1-alpha** (2013-09-03)
 
