@@ -25,7 +25,7 @@ class DjangoChecker(DjangoBaseSpider):
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.checker_scheduler_conf)
         dispatcher.connect(self.response_received, signal=signals.response_received)
         
-        msg = "Checker for " + self.ref_object.__class__.__name__ + " \"" + str(self.ref_object) + "\" (" + str(self.ref_object.id) + ") initialized."
+        msg = "Checker for " + self.ref_object.__class__.__name__ + " \"" + str(self.ref_object) + "\" (" + str(self.ref_object.pk) + ") initialized."
         self.log(msg, log.INFO)
 
     

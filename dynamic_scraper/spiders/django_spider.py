@@ -30,7 +30,7 @@ class DjangoSpider(DjangoBaseSpider):
         self.items_read_count = 0
         self.items_save_count = 0
         
-        msg = "Spider for " + self.ref_object.__class__.__name__ + " \"" + str(self.ref_object) + "\" (" + str(self.ref_object.id) + ") initialized."
+        msg = "Spider for " + self.ref_object.__class__.__name__ + " \"" + str(self.ref_object) + "\" (" + str(self.ref_object.pk) + ") initialized."
         self.log(msg, log.INFO)
 
 

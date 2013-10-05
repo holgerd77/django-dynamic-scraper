@@ -44,7 +44,7 @@ class DjangoBaseSpider(BaseSpider):
             log.msg(msg, log.ERROR)
             raise CloseSpider(msg)
         try:
-            self.ref_object = ref_object_class.objects.get(id=kwargs['id'])
+            self.ref_object = ref_object_class.objects.get(pk=kwargs['id'])
         except ObjectDoesNotExist:
             msg = "Object with ID " + kwargs['id'] + " not found (Command: %s)." % self.command
             log.msg(msg, log.ERROR)
@@ -123,7 +123,7 @@ class DjangoBaseSpider(BaseSpider):
             if self.conf['LOG_ENABLED'] and level >= Log.numeric_level(self.conf['LOG_LEVEL']):
                 l = Log()
                 l.message = message
-                l.ref_object = self.ref_object.__class__.__name__ + " (" + str(self.ref_object.id) + ")"
+                l.ref_object = self.ref_object.__class__.__name__ + " (" + str(self.ref_object.pk) + ")"
                 l.type = 'None'
                 l.level = int(level)
                 l.spider_name = self.name
