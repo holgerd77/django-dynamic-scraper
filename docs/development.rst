@@ -50,6 +50,12 @@ Then you can run the test suite with::
 Release Notes
 =============
 
+**Changes in version 0.3.3-alpha** (2013-10-16)
+
+* Making status list editable in Scraper admin overview page for easier status change for many scrapers at once
+* Possibility to define ``x_path`` checkers with blank ``checker_x_path_result``, the checker is then succeeding if
+  elements are found on page (before this lead to an error message)   
+
 **Changes in version 0.3.2-alpha** (2013-09-28)
 
 * Fixed the exception when scheduler string was processed (see `Pull Request #27 <https://github.com/holgerd77/django-dynamic-scraper/pull/27>`_)

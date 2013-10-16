@@ -28,7 +28,7 @@ class CheckerTest(DjangoBaseSpider):
                 raise CloseSpider(msg)
         
         if self.ref_object.checker_type == 'X':
-            if not self.ref_object.checker_x_path or not self.ref_object.checker_x_path_result or not self.ref_object.checker_ref_url:
+            if not self.ref_object.checker_x_path or not self.ref_object.checker_ref_url:
                 msg = "Please provide the necessary x_path fields for your 404_OR_X_PATH checker (Command: %s)." % (self.command)
                 log.msg(msg, log.ERROR)
                 raise CloseSpider(msg)
@@ -67,8 +67,10 @@ class CheckerTest(DjangoBaseSpider):
         except ValueError:
             self.log('Invalid checker x_path!', log.ERROR)
             return
-        if len(test_select) == 0 or (len(test_select) > 0 and test_select[0] != self.ref_object.checker_x_path_result):
+        if len(test_select) == 0:
+            self.log("Checker configuration not working (no elements found for xpath on reference url page)!", log.ERROR)
+        elif len(test_select) > 0 and self.ref_object.checker_x_path_result != '' and test_select[0] != self.ref_object.checker_x_path_result:
             self.log("Checker configuration not working (expected x_path result not found on reference url page)!", log.ERROR)
         else:
-            self.log("Checker configuration working (expected x_path found on reference url page).", log.INFO)
+            self.log("Checker configuration working (elements for x_path found on reference url page (no x_path result defined)).", log.INFO)
         

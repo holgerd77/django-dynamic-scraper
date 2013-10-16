@@ -50,6 +50,15 @@ class CheckerRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.all()), 1)
     
     
+    def test_x_path_type_blank_result_field_keep_video(self):
+        self.scraper.checker_x_path_result = ''
+        self.event.url = 'http://localhost:8010/static/site_for_checker/event1.html'
+        self.event.save()
+        
+        self.run_event_checker(1)
+        self.assertEqual(len(Event.objects.all()), 1)
+    
+    
     def test_x_path_type_404_delete(self):
         self.event.url = 'http://localhost:8010/static/site_for_checker/event_which_is_not_there.html'
         self.event.save()
@@ -84,7 +93,16 @@ class CheckerRunTest(ScraperTest):
         
         self.run_event_checker(1)
         self.assertEqual(len(Event.objects.all()), 0)
+    
+    
+    def test_x_path_type_blank_result_field_x_path_delete(self):
+        self.scraper.checker_x_path_result = ''
+        self.event.url = 'http://localhost:8010/static/site_for_checker/event2.html'
+        self.event.save()
         
+        self.run_event_checker(1)
+        self.assertEqual(len(Event.objects.all()), 0)
+    
     
     @unittest.skip("Skipped due to unresolved problem with IMAGES_STORE setting not used from scraper_test.py.")
     def test_x_path_type_404_delete_with_img(self):

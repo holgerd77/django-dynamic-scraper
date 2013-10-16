@@ -86,7 +86,12 @@ class DjangoChecker(DjangoBaseSpider):
         except ValueError:
             self.log('Invalid checker x_path!', log.ERROR)
             return
-        if len(test_select) > 0 and test_select[0] == self.scraper.checker_x_path_result:
+        if len(test_select) > 0 and self.scraper.checker_x_path_result == '':
+            self.log("Elements for XPath found on page (no result string defined).", log.INFO)
+            if self.conf['DO_ACTION']:
+                self._del_ref_object()
+            return
+        elif len(test_select) > 0 and test_select[0] == self.scraper.checker_x_path_result:
             self.log("XPath result string '" + self.scraper.checker_x_path_result + "' found on page.", log.INFO)
             if self.conf['DO_ACTION']:
                 self._del_ref_object()

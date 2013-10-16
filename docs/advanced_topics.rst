@@ -75,6 +75,8 @@ indicating, that the content originally expected is not there any more. For our 
 we choose above there is a text and a url provided suggesting to create the currently not existing wiki page,
 so we can use the XPath ``//a[@href="http://en.wikinews.org/wiki/This_wiki_article_doesnt_exist"]/text()`` 
 and the result string "create this page" to uniquely identifying a scraped item not existing any more.
+It is also possible to leave out the result string. Then the checker already succeeds when the
+given xpath is finding elements on the page. 
 
 .. note:: Attention! Make sure that the XPath/result string combination you choose is NOT succeeding on normal
           item pages, otherwise the checker will delete all your items!
