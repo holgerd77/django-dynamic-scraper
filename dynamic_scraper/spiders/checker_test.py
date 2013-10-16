@@ -69,8 +69,13 @@ class CheckerTest(DjangoBaseSpider):
             return
         if len(test_select) == 0:
             self.log("Checker configuration not working (no elements found for xpath on reference url page)!", log.ERROR)
-        elif len(test_select) > 0 and self.ref_object.checker_x_path_result != '' and test_select[0] != self.ref_object.checker_x_path_result:
-            self.log("Checker configuration not working (expected x_path result not found on reference url page)!", log.ERROR)
         else:
-            self.log("Checker configuration working (elements for x_path found on reference url page (no x_path result defined)).", log.INFO)
+            if self.ref_object.checker_x_path_result == '':
+                self.log("Checker configuration working (elements for x_path found on reference url page (no x_path result defined)).", log.INFO)
+            else:
+                if test_select[0] != self.ref_object.checker_x_path_result:
+                    self.log("Checker configuration not working (expected x_path result not found on reference url page)!", log.ERROR)
+                else:
+                    self.log("Checker configuration working (expected x_path result found on reference url page).", log.INFO)
+                
         
