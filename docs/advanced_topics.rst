@@ -110,10 +110,11 @@ against the defined reference url. You can run this checker on the command line 
 	scrapy crawl checker_test -a id=SCRAPER_ID
 	
 This scraper is useful both to look, if you have chosen a valid ``checker_x_path_ref_url`` and corresponding ``checker_x_path`` 
-and ``checker_x_path_result`` values as well as to see over time if your reference urls stay valid. For this use case
-there exists a pre-defined celery task called ``run_checker_tests`` which can be used to run the checker test
-for all the scrapers having a valid checker configuration. If a checker breaks over time (e.g. through a 
-renewed "Item not found" page) an error message will occur in the log table in the Django admin. 
+and ``checker_x_path_result`` values as well as to see over time if your reference urls stay valid.
+
+For running all checker tests at once there exists a simple Django management command called ``run_checker_tests``,
+which executes the ``checker_test`` scraper for all of your defined scrapers and outputs Scrapy log messages 
+on ``WARNING`` level and above. 
 
 
 Scheduling scrapers/checkers

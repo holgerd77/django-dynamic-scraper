@@ -50,9 +50,12 @@ Then you can run the test suite with::
 Release Notes
 =============
 
-**Changes in version 0.3.4-alpha** (not yet released)
+**Changes in version 0.3.4-alpha** (2013-10-18)
 
 * Fixed bug displaying wrong message in checker tests
+* Removed ``run_checker_tests`` celery task (which wasn't working anyway) and replaced it with
+  a simple Django management command ``run_checker_tests`` to run checker tests for all scrapers
+
 
 **Changes in version 0.3.3-alpha** (2013-10-16)
 
