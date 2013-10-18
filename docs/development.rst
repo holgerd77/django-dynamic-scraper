@@ -50,6 +50,10 @@ Then you can run the test suite with::
 Release Notes
 =============
 
+**Changes in version 0.3.4-alpha** (not yet released)
+
+* Fixed bug displaying wrong message in checker tests
+
 **Changes in version 0.3.3-alpha** (2013-10-16)
 
 * Making status list editable in Scraper admin overview page for easier status change for many scrapers at once
