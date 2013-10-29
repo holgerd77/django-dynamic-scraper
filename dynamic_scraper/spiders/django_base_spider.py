@@ -35,6 +35,8 @@ class DjangoBaseSpider(BaseSpider):
         msg = "Django settings used: %s" % os.environ.get("DJANGO_SETTINGS_MODULE")
         log.msg(msg, log.INFO)
         
+        super(DjangoBaseSpider,  self).__init__(None, **kwargs)
+        
         self._check_mandatory_vars()
 
 
