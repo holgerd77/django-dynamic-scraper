@@ -114,7 +114,9 @@ and ``checker_x_path_result`` values as well as to see over time if your referen
 
 For running all checker tests at once there exists a simple Django management command called ``run_checker_tests``,
 which executes the ``checker_test`` scraper for all of your defined scrapers and outputs Scrapy log messages 
-on ``WARNING`` level and above. 
+on ``WARNING`` level and above::
+
+	python manage.py run_checker_tests 
 
 
 Scheduling scrapers/checkers
