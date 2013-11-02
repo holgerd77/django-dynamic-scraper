@@ -50,6 +50,10 @@ Then you can run the test suite with::
 Release Notes
 =============
 
+**Changes in version 0.3.5-alpha** (2013-11-02)
+
+* Add super init method to call init method in Scrapy BaseSpider class to DjangoBaseSpider init method (see `Pull Request #32 <https://github.com/holgerd77/django-dynamic-scraper/pull/32>`_)
+
 **Changes in version 0.3.4-alpha** (2013-10-18)
 
 * Fixed bug displaying wrong message in checker tests
