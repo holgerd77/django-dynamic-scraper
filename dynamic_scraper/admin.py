@@ -30,6 +30,28 @@ class ScraperAdmin(admin.ModelAdmin):
     inlines = [
         ScraperElemInline
     ]
+    actions = ['clone_scrapers',]
+    
+    def clone_scrapers(self, request, queryset):
+        for scraper in queryset:
+            scraper_elems = scraper.scraperelem_set.all()
+            scraper.pk = None
+            scraper.name = scraper.name + " (COPY)"
+            scraper.status = 'P'
+            scraper.save()
+            for se in scraper_elems:
+                se.pk = None
+                se.scraper = scraper
+                se.save()
+        
+        rows_updated = queryset.count()
+        if rows_updated == 1:
+            message_bit = "1 scraper was"
+        else:
+            message_bit = "%s scrapers were" % rows_updated
+        self.message_user(request, "%s successfully cloned." % message_bit)
+    
+    clone_scrapers.short_description = "Clone selected scrapers"
 
 
 class SchedulerRuntimeAdmin(admin.ModelAdmin):
