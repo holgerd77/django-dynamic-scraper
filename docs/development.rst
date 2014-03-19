@@ -50,6 +50,10 @@ Then you can run the test suite with::
 Release Notes
 =============
 
+**Changes in version 0.3.6-alpha** (2014-03-19)
+
+* Added new admin action clone_scrapers to get a functional copy of scrapers easily
+
 **Changes in version 0.3.5-alpha** (2013-11-02)
 
 * Add super init method to call init method in Scrapy BaseSpider class to DjangoBaseSpider init method (see `Pull Request #32 <https://github.com/holgerd77/django-dynamic-scraper/pull/32>`_)
