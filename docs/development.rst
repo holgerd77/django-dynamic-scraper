@@ -50,7 +50,7 @@ Then you can run the test suite with::
 Release Notes
 =============
 
-**Changes in version 0.3.7-alpha** (NOT YET RELEASED)
+**Changes in version 0.3.7-alpha** (2014-03-20)
 
 * Improved ``run_checker_tests`` management command with ``--send-admin-mail`` flag for usage of command in
   cronjob (see: :ref:`run_checker_tests`) 
