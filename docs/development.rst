@@ -50,6 +50,11 @@ Then you can run the test suite with::
 Release Notes
 =============
 
+**Changes in version 0.3.7-alpha** (NOT YET RELEASED)
+
+* Improved ``run_checker_tests`` management command with ``--send-admin-mail`` flag for usage of command in
+  cronjob (see: :ref:`run_checker_tests`) 
+
 **Changes in version 0.3.6-alpha** (2014-03-19)
 
 * Added new admin action clone_scrapers to get a functional copy of scrapers easily

@@ -102,6 +102,8 @@ the DB to the checker reference url, look for the item ID and then run::
 
 If everything works well, your item should have been deleted.
 
+.. _run_checker_tests:
+
 Run checker tests
 -----------------
 Django Dynamic Scraper comes with a build-in scraper called ``checker_test`` which can be used to test your checkers
@@ -116,7 +118,10 @@ For running all checker tests at once there exists a simple Django management co
 which executes the ``checker_test`` scraper for all of your defined scrapers and outputs Scrapy log messages 
 on ``WARNING`` level and above::
 
-	python manage.py run_checker_tests 
+	python manage.py run_checker_tests [--send-admin-mail]
+
+Executing the command with the ``--send-admin-mail`` flag will send an email to Django admins if checker 
+configurations are not working which can be useful if you want to run this command as a cronjob.
 
 
 Scheduling scrapers/checkers
