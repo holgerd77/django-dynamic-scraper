@@ -4,6 +4,10 @@ from django.db.models import Q
 
 
 class ScrapedObjClass(models.Model):
+    class Meta:
+        verbose_name = "Scraped object class"
+        verbose_name_plural = "Scraped object classes"
+        
     name = models.CharField(max_length=200)
     scraper_scheduler_conf = models.TextField(default='\
 "MIN_TIME": 15,\n\
