@@ -16,7 +16,7 @@ Read more about DDS in the ReadTheDocs documentation:
 Donations/Support this Project
 ==============================
 I would really like to spent more time for DDS but I am often hold back due to lack of resources
-and time. If you want support development please consider a donation to one of the following
+and time. If you want to support development please consider a donation to one of the following
 *cryptocurrency accounts*:
 
 ======= ==================================
