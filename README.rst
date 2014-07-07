@@ -24,9 +24,6 @@ Bitcoin 1P5sLQe4b8ZNCi7AheKL6d1CyzVE3reQUJ
 NXT     NXT-M8QX-BWFY-JAGR-44S3P          
 ------- ----------------------------------
 
-![Bitcoin QR-Code](https://raw.githubusercontent.com/holgerd77/django-dynamic-scraper/master/btc_donations.png "Bitcoin QR-Code")
-
-
 Your donation will be used to further improve the software and keep the software up-to-date.
 I will use an hourly rate of 20€ (~25$) as a basis and publish the work I did for the donation in
 the following Google Docs spreadsheet:
