@@ -29,8 +29,7 @@ Bitcoin QR-Code:
 .. image:: btc_donations.png
 
 Your donation will be used to further improve the software and keep the software up-to-date.
-I will use an hourly rate of 20€ (~25$) as a basis and publish the work I did for the donation in
-the following Google Docs spreadsheet:
+I will use an hourly rate of 20€ (~25$) as a basis and publish the work I did in the following Google Docs spreadsheet:
 https://docs.google.com/spreadsheets/d/1LKvLFW786pFdL6AbBlMPu5TnExZooRQ0_naP3TnbGWw/edit?usp=sharing
 
 
