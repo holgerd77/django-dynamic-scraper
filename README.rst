@@ -19,8 +19,10 @@ I would really like to spent more time DDS but I am often hold back due to lack 
 and time. If you want support development please consider a donation to one of the following
 cryptocurrency accounts:
 
-| Bitcoin | 1P5sLQe4b8ZNCi7AheKL6d1CyzVE3reQUJ |
-| NXT     | NXT-M8QX-BWFY-JAGR-44S3P           |
+------- ----------------------------------
+Bitcoin 1P5sLQe4b8ZNCi7AheKL6d1CyzVE3reQUJ
+NXT     NXT-M8QX-BWFY-JAGR-44S3P          
+------- ----------------------------------
 
 ![Bitcoin QR-Code](https://raw.githubusercontent.com/holgerd77/django-dynamic-scraper/master/btc_donations.png "Bitcoin QR-Code")
 
