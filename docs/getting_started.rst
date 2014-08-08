@@ -291,6 +291,7 @@ scraped by the scraper element is a necessary field. If you define a scraper ele
 data could be scraped for this element the item will be dropped. Note, that you always have to keep attributes
 mandatory, if the corresponding attributes of your domain model class is a mandatory field, otherwise the 
 scraped item can't be saved in the DB.
+For the moment, keep the 'status' to 'MANUAL' to run the spider via the command line during this tutorial. Later you will change it to 'ACTIVE'. 
 
 
 Creating the scraper of our open news example
