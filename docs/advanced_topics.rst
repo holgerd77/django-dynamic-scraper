@@ -259,6 +259,10 @@ task scheduler which executes periodical tasks defined in Celery. Start the daem
 
 	python manage.py celeryd -l info -B --settings=example_project.settings
 
+.. note::
+   If you are using Django > 1.7 you should instead run :
+   ``python manage.py celery worker``
+   
 If everything works well, you should now see the following line in your command line output::
 
 	[2011-12-12 10:20:01,535: INFO/MainProcess] Celerybeat: Starting...
@@ -269,6 +273,18 @@ within the main directory of your project::
 
 	scrapy server
 	
+.. note::
+    If you are using Django > 1.7 you should instead add the following lines in your scrapy.cfg :
+    ```
+    [deploy:scrapyd1]
+    url = http://localhost:6800/
+    project = open_news
+    ```
+    Then, open two shells and run :
+   ``scrapyd``
+   ``scrapy deploy scrapyd1``
+   
+   
 You should get an output similar to the following:
 
 .. image:: images/screenshot_shell_scrapy_server.png 
