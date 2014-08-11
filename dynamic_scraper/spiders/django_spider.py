@@ -3,7 +3,7 @@ import ast
 from scrapy import log
 from scrapy.selector import Selector
 from scrapy.http import Request
-from scrapy.contrib.loader import XPathItemLoader
+from scrapy.contrib.loader import ItemLoader
 from scrapy.contrib.loader.processor import TakeFirst
 from scrapy.exceptions import CloseSpider
 
@@ -173,11 +173,11 @@ class DjangoSpider(DjangoBaseSpider):
         if not xs:
             self.from_detail_page = True
             item = response.request.meta['item']
-            self.loader = XPathItemLoader(item=item, response=response)
+            self.loader = ItemLoader(item=item, response=response)
             self.loader.default_output_processor = TakeFirst()
         else:
             self.from_detail_page = False
-            self.loader = XPathItemLoader(item=item, selector=xs)
+            self.loader = ItemLoader(item=item, selector=xs)
             self.loader.default_output_processor = TakeFirst()
 
 

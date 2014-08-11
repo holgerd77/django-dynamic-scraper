@@ -454,7 +454,7 @@ And this is your ``settings.py`` file::
 	USER_AGENT = '%s/%s' % (BOT_NAME, '1.0')
 	
 	ITEM_PIPELINES = {
-	    'dynamic_scraper.pipelines.ValidationPipeline': 800,
+	    'dynamic_scraper.pipelines.ValidationPipeline': 100,
 	    'open_news.scraper.pipelines.DjangoWriterPipeline': 400,
 	}
 
