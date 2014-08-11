@@ -261,6 +261,7 @@ task scheduler which executes periodical tasks defined in Celery. Start the daem
 
 .. note::
    If you are using Django > 1.7 you should instead run::
+   
    python manage.py celery worker -B --loglevel=info
    
 If everything works well, you should now see the following line in your command line output::
@@ -276,13 +277,15 @@ within the main directory of your project::
 .. note::
     If you are using Django > 1.7 you should instead add the following lines in your scrapy.cfg::
 
+    ```
     [deploy:scrapyd1]
     url = http://localhost:6800/
     project = open_news
+    ```
 
     Then, open two different shells and run::
-    scrapyd
-    scrapy deploy scrapyd1
+    `scrapyd`
+    `scrapy deploy scrapyd1`
    
    
 You should get an output similar to the following:
