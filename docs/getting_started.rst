@@ -453,10 +453,10 @@ And this is your ``settings.py`` file::
 	SPIDER_MODULES = ['dynamic_scraper.spiders', 'open_news.scraper',]
 	USER_AGENT = '%s/%s' % (BOT_NAME, '1.0')
 	
-	ITEM_PIPELINES = [
-	    'dynamic_scraper.pipelines.ValidationPipeline',
-	    'open_news.scraper.pipelines.DjangoWriterPipeline',
-	]
+	ITEM_PIPELINES = {
+	    'dynamic_scraper.pipelines.ValidationPipeline': 800,
+	    'open_news.scraper.pipelines.DjangoWriterPipeline': 400,
+	}
 
 The ``SPIDER_MODULES`` setting is referencing the basic spiders of DDS and our ``scraper`` package where
 Scrapy will find the (yet to be written) spider module. For the ``ITEM_PIPELINES`` setting we have to
