@@ -1,7 +1,7 @@
 import ast
 
 from scrapy import log
-from scrapy.selector import HtmlXPathSelector, XmlXPathSelector
+from scrapy.selector import Selector
 from scrapy.http import Request
 from scrapy.contrib.loader import XPathItemLoader
 from scrapy.contrib.loader.processor import TakeFirst
@@ -202,13 +202,10 @@ class DjangoSpider(DjangoBaseSpider):
 
 
     def parse(self, response):
-        if self.scraper.content_type == 'H':
-            xs = HtmlXPathSelector(response)
-        else:
-            xs = XmlXPathSelector(response)
+        xs = Selector(response)
         base_elem = self.scraper.get_base_elem()
         url_elem = self.scraper.get_detail_page_url_elem()
-        base_objects = xs.select(base_elem.x_path)
+        base_objects = xs.xpath(base_elem.x_path)
         if(len(base_objects) == 0):
             self.log("No base objects found!", log.ERROR)
         
