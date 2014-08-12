@@ -1,4 +1,5 @@
 import ast
+import urlparse 
 
 from scrapy import log
 from scrapy.selector import Selector
@@ -202,10 +203,14 @@ class DjangoSpider(DjangoBaseSpider):
 
 
     def parse(self, response):
-        xs = Selector(response)
+        """
+        Parsing the page and performing other actions
+        """
+        #xs = Selector(response) #deprecated, use response.xpath
         base_elem = self.scraper.get_base_elem()
         url_elem = self.scraper.get_detail_page_url_elem()
-        base_objects = xs.xpath(base_elem.x_path)
+        base_objects = response.xpath(base_elem.x_path)
+        
         if(len(base_objects) == 0):
             self.log("No base objects found!", log.ERROR)
         
@@ -217,7 +222,6 @@ class DjangoSpider(DjangoBaseSpider):
             item_num = self.items_read_count + 1
             self.log("Starting to crawl item %s." % str(item_num), log.INFO)
             item = self.parse_item(response, obj)
-            #print item
             url_name = url_elem.scraped_obj_attr.name
             if(item and url_name in item):
                 url = item[url_name]
@@ -232,7 +236,7 @@ class DjangoSpider(DjangoBaseSpider):
                 if (cnt > 0 and cnt1 == 0) or cnt2 == 0:
                     yield item
                 else:
-                    yield Request(url, callback=self.parse_item, meta={'item':item})
+                    yield Request(urlparse.urljoin(response.url,url), callback=self.parse_item, meta={'item':item})
             else:
                 self.log("Detail page url elem could not be read!", log.ERROR)
     
