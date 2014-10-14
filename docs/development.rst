@@ -49,6 +49,11 @@ Then you can run the test suite with::
 
 Release Notes
 =============
+**Changes in version 0.3.8-alpha** (2014-10-14)
+
+* Added ability for ``duration`` processor to break down and parse second values greater than one hour in total
+  (>= 3600 seconds) (see: :ref:`processors`)
+
 
 **Changes in version 0.3.7-alpha** (2014-03-20)
 

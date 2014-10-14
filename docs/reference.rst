@@ -116,6 +116,7 @@ DjangoChecker
 
 TODO
 
+.. _processors:
 
 Processors
 ==========
