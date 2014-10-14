@@ -102,8 +102,15 @@ def duration(text, loader_context):
         text = _breakdown_time_unit_overlap(text, 60)
         cformat = '%H:%M:%S'
     if(cformat == '%S'):
-        text = _breakdown_time_unit_overlap(text, 60)
-        cformat = '%M:%S'
+        if text_int:
+            if text_int >= 3600:
+                hours_str = str(text_int / 3600) + ':'
+                secs_under_hour_str = str(text_int % 3600)
+                text = hours_str + _breakdown_time_unit_overlap(secs_under_hour_str, 60)
+                cformat = '%H:%M:%S'
+            else:
+                text = _breakdown_time_unit_overlap(text, 60)
+                cformat = '%M:%S'
     try:
         duration = datetime.datetime.strptime(text, cformat)
     except ValueError:
