@@ -15,6 +15,12 @@ configuration file. At the moment this is the only way to define DDS settings an
 change DDS settings via command line parameters.
 
 
+DSCRAPER_FLAT_IMAGES_STORE
+--------------------------
+Default: ``True``
+
+Use flat image store format for image saving (see :ref:`scraping_images` for more info).
+
 DSCRAPER_LOG_ENABLED
 --------------------
 Default: ``True``

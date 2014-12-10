@@ -419,6 +419,7 @@ So if you define a list as follows: ``'a-d', 'e-h', 'i-n', 'o-z'``, you get the 
 3. http://www.urltoscrape.org/articles/i-n
 4. http://www.urltoscrape.org/articles/o-z
 
+.. _scraping_images:
 
 Scraping images/screenshots
 ===========================
@@ -448,15 +449,26 @@ For using image scraping in DDS you have to provide some additional parameters i
 	    'small': (170, 170),
 	}
 
-In your settings file you have to add the `DjangoImagesPipeline` from DDS to your `ITEM_PIPELINES` and define
+In your settings file you have to add the ``DjangoImagesPipeline`` from DDS to your ``ITEM_PIPELINES`` and define
 a folder to store images scraped. Don't forget to create this folder in your file system and give it adequate
 permissions. You can also use the thumbnail creation capabilities already build in Scrapy
-by defining the thumbnail size via the `IMAGE_THUMBS` parameter. The semantics here is a bit different from
-what you would expect from Scrapy: thumbnail images in DDS are not stored in addition to the original images
-but are replacing them completely and there is also no extra folder created for them. So when you use  the
-`IMAGE_THUMBS` parameter in DDS the image scraping and storing process stays exacly the same but instead with
-the original images you are ending up with images scaled down to the defined size. Due to this simplification
-you can only use one entry in your `IMAGES_THUMBS` dictionary and the name of the key there doesn't matter.
+by defining the thumbnail size via the ``IMAGES_THUMBS`` parameter.
+
+Choosing store format for images
+--------------------------------
+Different from Scrapy behaviour DDS is by default storing only one image in a flat store format directly under
+the ``IMAGES_STORE`` directory, not creating a ``full`` subdirectory for the original image. If you use the
+``IMAGES_THUMBS`` setting, the scaled down thumbnail image will replace the image with the original size.
+Due to this simplification you can only use one entry in your ``IMAGES_THUMBS`` dictionary and the name of the 
+key there doesn't matter. 
+
+You can change back storage behaviour to the original Scrapy behaviour (since ``DDS v.0.3.9``) creating a sub
+directory for the original images (``full``) and separate sub directories for different thumbnail sizes 
+(e.g. ``thumbs/small``) with the following setting::
+
+	DSCRAPER_FLAT_IMAGES_STORE = False
+
+With this setting you can also use different sizes for thumbnail creation.
 
 .. note:: 
    For image scraping to work you need the `Python Image Library (PIL) <http://www.pythonware.com/products/pil/>`_.
