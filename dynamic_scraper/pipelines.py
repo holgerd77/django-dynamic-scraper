@@ -4,7 +4,8 @@ from scrapy import log
 from scrapy.contrib.pipeline.images import ImagesPipeline
 from scrapy.exceptions import DropItem
 from scrapy.http import Request
-
+from scrapy.utils.project import get_project_settings
+settings = get_project_settings()
 
 '''
 Getting PIL to work on Mac OS under virtualenv:
@@ -18,6 +19,15 @@ http://ubuntuforums.org/showthread.php?p=10811107
 http://stackoverflow.com/questions/4435016/install-pil-on-virtualenv-with-libjpeg
 '''
 class DjangoImagesPipeline(ImagesPipeline):
+    
+    def __init__(self, *args, **kwargs):
+        self.flat = settings.get('DSCRAPER_FLAT_IMAGES_STORE', True)
+        if self.flat:
+            msg = "Use simplified flat image store format for image/thumbnail saving"
+        else:
+            msg = "Use original image store format with sub directories for image thumbnail saving"
+        log.msg(msg, log.INFO)
+        super(DjangoImagesPipeline,  self).__init__(*args, **kwargs)
     
     def get_media_requests(self, item, info):
         try:
