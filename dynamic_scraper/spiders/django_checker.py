@@ -4,6 +4,7 @@ from scrapy.utils.project import get_project_settings
 settings = get_project_settings()
 from scrapy.exceptions import CloseSpider
 from scrapy.selector import HtmlXPathSelector
+from scrapy.http import Request, FormRequest
 from scrapy.xlib.pydispatch import dispatcher
 
 from dynamic_scraper.spiders.django_base_spider import DjangoBaseSpider
@@ -99,3 +100,25 @@ class DjangoChecker(DjangoBaseSpider):
         else:
             self.log("XPath result string not found. Item kept.", log.INFO)
             return
+
+class FormRequestDjangoChecker(DjangoChecker):
+
+    def __init__(self, *args, **kwargs):
+        super(FormRequestDjangoChecker, self).__init__(self, *args, **kwargs)
+
+        assert 'username' in kwargs
+        assert 'password' in kwargs
+        assert 'username_form' in kwargs
+        assert 'password_form' in kwargs
+
+        self.username, self.password, self.username_form, self.password_form \
+            = kwargs['username'], kwargs['password'], \
+              kwargs['username_form'], kwargs['password_form']
+    
+    def parse(self, response):
+        return FormRequest.from_response(
+            response,
+            formdata={self.username_form: self.username,
+	              self.password_form: self.password},
+            callback=super(FormRequestDjangoChecker, self).parse
+        )
