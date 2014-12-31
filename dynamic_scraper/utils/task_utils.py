@@ -1,8 +1,12 @@
+from twisted.internet import reactor
 import datetime, json
+from django.utils import timezone
 import urllib, urllib2, httplib
 from scrapy.utils.project import get_project_settings
-settings = get_project_settings()
 from dynamic_scraper.models import Scraper
+from scrapy import log, signals
+settings = get_project_settings()
+
 
 class TaskUtils():
     
@@ -10,6 +14,7 @@ class TaskUtils():
         "MAX_SPIDER_RUNS_PER_TASK": 10,
         "MAX_CHECKER_RUNS_PER_TASK": 25,
     }
+
     
     def _run_spider(self, **kwargs):
         param_dict = {
@@ -35,12 +40,12 @@ class TaskUtils():
                 if item['spider'] == spider:
                     return True
         return False
-    
+
     
     def run_spiders(self, ref_obj_class, scraper_field_name, runtime_field_name, spider_name, *args, **kwargs):
         filter_kwargs = {
             '%s__status' % scraper_field_name: 'A',
-            '%s__next_action_time__lt' % runtime_field_name: datetime.datetime.now(),
+            '%s__next_action_time__lt' % runtime_field_name: timezone.now(),
         }
         for key in kwargs:
             filter_kwargs[key] = kwargs[key]
@@ -55,7 +60,7 @@ class TaskUtils():
     def run_checkers(self, ref_obj_class, scraper_field_path, runtime_field_name, checker_name, *args, **kwargs):
         filter_kwargs = {
             '%s__status' % scraper_field_path: 'A',
-            '%s__next_action_time__lt' % runtime_field_name: datetime.datetime.now(),
+            '%s__next_action_time__lt' % runtime_field_name: timezone.now(),
         }
         for key in kwargs:
             filter_kwargs[key] = kwargs[key]
@@ -72,4 +77,3 @@ class TaskUtils():
         if not self._pending_jobs(checker_name):
             for ref_object in ref_obj_list:
                 self._run_spider(id=ref_object.pk, spider=checker_name, run_type='TASK', do_action='yes')
-

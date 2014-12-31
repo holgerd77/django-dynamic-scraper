@@ -1,6 +1,5 @@
 Django>=1.4
 Scrapy>=0.16.0
 django-celery>=3.0.0
-PIL
-South
-
+Pillow>=2.5.1
+scrapyd==1.0.1

@@ -291,6 +291,7 @@ scraped by the scraper element is a necessary field. If you define a scraper ele
 data could be scraped for this element the item will be dropped. Note, that you always have to keep attributes
 mandatory, if the corresponding attributes of your domain model class is a mandatory field, otherwise the 
 scraped item can't be saved in the DB.
+For the moment, keep the 'status' to 'MANUAL' to run the spider via the command line during this tutorial. Later you will change it to 'ACTIVE'. 
 
 
 Creating the scraper of our open news example
@@ -386,13 +387,15 @@ and template file structure with the ``scrapy startproject myscrapyproject`` com
 However, there is (initially) not so much code to be written left and the directory structure
 created by the ``startproject`` command cannot really be used when connecting Scrapy to the Django Dynamic Scraper
 library. So the easiest way to start a new scrapy project is to just manually add the ``scrapy.cfg`` 
-project configuration file as well as the Scrapy ``settings.py`` file and adjust these files to your needs.
-It is recommended to just create the Scrapy project in the same Django app you used to create the models you
-want to scrape and then place the modules needed for scrapy in a sub package called ``scraper`` or something
+project configuration file in the same level as your Django `manage.py` file, as well as the Scrapy ``settings.py`` 
+file and adjust these files to your needs.
+For Django <= 1.6 it is recommended to just create the Scrapy project in the same Django app you used to create the 
+models you want to scrape and then place the modules needed for scrapy in a sub package called ``scraper`` or something
 similar. After finishing this chapter you should end up with a directory structure similar to the following
 (again illustrated using the open news example)::
 
 	example_project/
+        manage.py
 		scrapy.cfg
 		open_news/
 			models.py # Your models.py file
@@ -402,12 +405,36 @@ similar. After finishing this chapter you should end up with a directory structu
 				(checkers.py)
 				pipelines.py
 				(tasks.py)
+
+For Django 1.7 however, scrapy and scrapyd (Scrapy's daemon) can't easily interact with a similar structure. Therefore, 
+if you are using Django 1.7 you need to put your spiders directly in the main project folder::
+
+	example_project/
+        manage.py
+		scrapy.cfg
+		open_news/
+			models.py # Your models.py file
+        scraper/
+            settings.py
+            spiders.py
+            (checkers.py)
+            pipelines.py
+            (tasks.py)
 			
-Your ``scrapy.cfg`` file should look similar to the following, just having adjusted the reference to the
+For Django <= 1.6  your ``scrapy.cfg`` file should look similar to the following, just having adjusted the reference to the
 settings file and the project name::
 	
 	[settings]
 	default = open_news.scraper.settings
+	
+	[deploy]
+	#url = http://localhost:6800/
+	project = open_news
+
+For Django 1.7 your ``scrapy.cfg`` file should look similar to the following::
+	
+	[settings]
+	default = scraper.settings
 	
 	[deploy]
 	#url = http://localhost:6800/
@@ -426,10 +453,10 @@ And this is your ``settings.py`` file::
 	SPIDER_MODULES = ['dynamic_scraper.spiders', 'open_news.scraper',]
 	USER_AGENT = '%s/%s' % (BOT_NAME, '1.0')
 	
-	ITEM_PIPELINES = [
-	    'dynamic_scraper.pipelines.ValidationPipeline',
-	    'open_news.scraper.pipelines.DjangoWriterPipeline',
-	]
+	ITEM_PIPELINES = {
+	    'dynamic_scraper.pipelines.ValidationPipeline': 100,
+	    'open_news.scraper.pipelines.DjangoWriterPipeline': 400,
+	}
 
 The ``SPIDER_MODULES`` setting is referencing the basic spiders of DDS and our ``scraper`` package where
 Scrapy will find the (yet to be written) spider module. For the ``ITEM_PIPELINES`` setting we have to
