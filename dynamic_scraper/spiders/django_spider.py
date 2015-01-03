@@ -4,11 +4,11 @@ from scrapy import log
 from scrapy.selector import HtmlXPathSelector, XmlXPathSelector
 from scrapy.http import Request
 from scrapy.contrib.loader import XPathItemLoader
-from scrapy.contrib.loader.processor import TakeFirst
 from scrapy.exceptions import CloseSpider
 
 from dynamic_scraper.spiders.django_base_spider import DjangoBaseSpider
 from dynamic_scraper.models import ScraperElem
+from dynamic_scraper.utils.processors import TakeAll
 from dynamic_scraper.utils.scheduler import Scheduler
 from dynamic_scraper.utils import processors
 
@@ -134,7 +134,7 @@ class DjangoSpider(DjangoBaseSpider):
 
 
     def _get_processors(self, procs_str):
-        procs = [TakeFirst(), processors.string_strip,]
+        procs = [TakeAll(), processors.string_strip,]
         if not procs_str:
             return procs
         procs_tmp = list(procs_str.split(','))
@@ -174,11 +174,11 @@ class DjangoSpider(DjangoBaseSpider):
             self.from_detail_page = True
             item = response.request.meta['item']
             self.loader = XPathItemLoader(item=item, response=response)
-            self.loader.default_output_processor = TakeFirst()
+            self.loader.default_output_processor = TakeAll()
         else:
             self.from_detail_page = False
             self.loader = XPathItemLoader(item=item, selector=xs)
-            self.loader.default_output_processor = TakeFirst()
+            self.loader.default_output_processor = TakeAll()
 
 
     def parse_item(self, response, xs=None):

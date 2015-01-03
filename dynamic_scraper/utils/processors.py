@@ -2,6 +2,13 @@ import datetime
 from scrapy import log
 
 
+class TakeAll(object):
+
+    def __call__(self, values):
+        values = map(lambda value: value.strip(), values)
+        return [value for value in values if value]
+
+
 def string_strip(text, loader_context):
     chars = loader_context.get('string_strip', ' \n\t\r')
     return text.strip(chars)
