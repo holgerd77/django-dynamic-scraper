@@ -6,7 +6,10 @@ class TakeAll(object):
 
     def __call__(self, values):
         values = map(lambda value: value.strip(), values)
-        return [value for value in values if value]
+        result = [value for value in values if value]
+        if len(result) == 1:
+            return result[0]
+        return result
 
 
 def string_strip(text, loader_context):

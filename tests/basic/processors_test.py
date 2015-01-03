@@ -135,3 +135,6 @@ class ProcessorsTest(TestCase):
         result_str = take_all(['This', 'text', '', 'makes', '\n', '\t', 'no', 'sense'])
         self.assertEquals(result_str, ['This', 'text', 'makes', 'no', 'sense'])
 
+        result_str = take_all(['', '\t', 'This text makes no sense', '\n'])
+        self.assertEquals(result_str, 'This text makes no sense')
+
