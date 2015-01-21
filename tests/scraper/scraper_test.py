@@ -1,4 +1,4 @@
-import os.path
+import os, os.path
 
 from django.test import TestCase
 
@@ -67,6 +67,22 @@ class ScraperTest(TestCase):
     SERVER_URL = 'http://localhost:8010/static/'
     PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
     
+    def __init__(self, *args, **kwargs):
+        if args[0] == 'test_img_sub_directory_storage':
+            os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.sd_images_store';
+            from settings import sd_images_store as file_settings
+        else:
+            os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.base_settings';
+            from settings import base_settings as file_settings
+        
+        self.dds_settings = {}
+        self.dds_settings['ITEM_PIPELINES'] = file_settings.ITEM_PIPELINES
+        self.dds_settings['IMAGES_STORE'] = file_settings.IMAGES_STORE
+        self.dds_settings['IMAGES_THUMBS'] = file_settings.IMAGES_THUMBS
+        self.dds_settings['DSCRAPER_FLAT_IMAGES_STORE'] = file_settings.DSCRAPER_FLAT_IMAGES_STORE
+
+        super(ScraperTest, self).__init__(*args, **kwargs)
+
 
     def record_signal(self, *args, **kwargs):
         pass
@@ -106,7 +122,7 @@ class ScraperTest(TestCase):
         self.crawler.start()
     
     
-    def setUp(self):        
+    def setUp(self):      
         self.sc = ScrapedObjClass(name='Event')
         self.sc.save()
         self.soa_base = ScrapedObjAttr(name=u'base', attr_type='B', obj_class=self.sc)
@@ -141,19 +157,15 @@ class ScraperTest(TestCase):
             url=os.path.join(self.SERVER_URL, 'site_generic/event_main.html'), scraper_runtime=self.sched_rt,)
         self.event_website.save()
         
-        
-        settings.overrides['ITEM_PIPELINES'] = [
-            'dynamic_scraper.pipelines.DjangoImagesPipeline',
-            'dynamic_scraper.pipelines.ValidationPipeline',
-            'scraper.scraper_test.DjangoWriterPipeline',
-        ]
-        
-        settings.overrides['IMAGES_STORE'] = os.path.join(self.PROJECT_ROOT, 'imgs')
-        settings.overrides['IMAGES_THUMBS'] = { 'small': (170, 170), }
-        
+        settings.overrides['ITEM_PIPELINES'] = self.dds_settings['ITEM_PIPELINES']
+        settings.overrides['IMAGES_STORE'] = self.dds_settings['IMAGES_STORE']
+        settings.overrides['IMAGES_THUMBS'] = self.dds_settings['IMAGES_THUMBS']
+        settings.overrides['DSCRAPER_FLAT_IMAGES_STORE'] = self.dds_settings['DSCRAPER_FLAT_IMAGES_STORE']
+
         self.crawler = CrawlerProcess(settings)
         self.crawler.install()
         self.crawler.configure()
+
         
         for name, signal in vars(signals).items():
             if not name.startswith('_'):

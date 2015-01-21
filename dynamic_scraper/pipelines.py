@@ -30,6 +30,7 @@ class DjangoImagesPipeline(ImagesPipeline):
         super(DjangoImagesPipeline,  self).__init__(*args, **kwargs)
     
     def get_media_requests(self, item, info):
+
         try:
             img_elem = info.spider.scraper.get_image_elem()
             if img_elem.scraped_obj_attr.name in item and item[img_elem.scraped_obj_attr.name]:

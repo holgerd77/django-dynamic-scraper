@@ -457,14 +457,14 @@ by defining the thumbnail size via the ``IMAGES_THUMBS`` parameter.
 Choosing store format for images
 --------------------------------
 Different from Scrapy behaviour DDS is by default storing only one image in a flat store format directly under
-the ``IMAGES_STORE`` directory, not creating a ``full`` subdirectory for the original image. If you use the
+the ``IMAGES_STORE`` directory, not creating a ``full/`` subdirectory for the original image. If you use the
 ``IMAGES_THUMBS`` setting, the scaled down thumbnail image will replace the image with the original size.
 Due to this simplification you can only use one entry in your ``IMAGES_THUMBS`` dictionary and the name of the 
 key there doesn't matter. 
 
 You can change back storage behaviour to the original Scrapy behaviour (since ``DDS v.0.3.9``) creating a sub
-directory for the original images (``full``) and separate sub directories for different thumbnail sizes 
-(e.g. ``thumbs/small``) with the following setting::
+directory for the original images (``full/``) and separate sub directories for different thumbnail sizes 
+(e.g. ``thumbs/small/``) with the following setting::
 
 	DSCRAPER_FLAT_IMAGES_STORE = False
 

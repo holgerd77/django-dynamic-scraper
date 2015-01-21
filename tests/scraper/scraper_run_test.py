@@ -346,5 +346,6 @@ class ScraperRunTest(ScraperTest):
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 1)
+    
 
         
