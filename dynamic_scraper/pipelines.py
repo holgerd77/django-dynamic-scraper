@@ -1,4 +1,4 @@
-import hashlib
+import hashlib, ntpath
 from dynamic_scraper.models import ScraperElem
 from scrapy import log
 from scrapy.contrib.pipeline.images import ImagesPipeline
@@ -21,16 +21,17 @@ http://stackoverflow.com/questions/4435016/install-pil-on-virtualenv-with-libjpe
 class DjangoImagesPipeline(ImagesPipeline):
     
     def __init__(self, *args, **kwargs):
-        self.flat = settings.get('DSCRAPER_FLAT_IMAGES_STORE', True)
-        if self.flat:
-            msg = "Use simplified flat image store format for image/thumbnail saving"
+        self.store_format = settings.get('DSCRAPER_IMAGES_STORE_FORMAT', 'FLAT')
+        if self.store_format == 'FLAT':
+            msg = "Use simplified FLAT images store format (save the original or one thumbnail image)"
+        elif self.store_format == 'ALL':
+            msg = "Use ALL images store format (Scrapy behaviour, save both original and thumbnail images)"
         else:
-            msg = "Use original image store format with sub directories for image thumbnail saving"
+            msg = "Use THUMBS images store format (save only thumbnail images)"
         log.msg(msg, log.INFO)
         super(DjangoImagesPipeline,  self).__init__(*args, **kwargs)
     
     def get_media_requests(self, item, info):
-
         try:
             img_elem = info.spider.scraper.get_image_elem()
             if img_elem.scraped_obj_attr.name in item and item[img_elem.scraped_obj_attr.name]:
@@ -40,11 +41,19 @@ class DjangoImagesPipeline(ImagesPipeline):
 
     def image_key(self, url):
         image_guid = hashlib.sha1(url).hexdigest()
-        return '%s.jpg' % (image_guid)
+        if self.store_format == 'FLAT':
+            return '%s.jpg' % (image_guid)
+        elif self.store_format == 'THUMBS':
+            return 'thumbs/%s/%s.jpg' % (self.THUMBS.iterkeys().next(), image_guid)
+        else:
+            return 'full/%s.jpg' % (image_guid)
 
     def thumb_key(self, url, thumb_id):
         image_guid = hashlib.sha1(url).hexdigest()
-        return '%s.jpg' % (image_guid)
+        if self.store_format == 'FLAT':
+            return '%s.jpg' % (image_guid)
+        else:
+            return 'thumbs/%s/%s.jpg' % (thumb_id, image_guid)
 
     def item_completed(self, results, item, info):
         try:
@@ -54,7 +63,7 @@ class DjangoImagesPipeline(ImagesPipeline):
         
         results_list = [x for ok, x in results if ok]
         if len(results_list) > 0:
-            item[img_elem.scraped_obj_attr.name] = results_list[0]['path']
+            item[img_elem.scraped_obj_attr.name] = ntpath.basename(results_list[0]['path'])
         else:
             item[img_elem.scraped_obj_attr.name] = None
         return item

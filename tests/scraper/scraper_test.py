@@ -1,4 +1,4 @@
-import os, os.path
+import os, os.path, shutil
 
 from django.test import TestCase
 
@@ -66,11 +66,21 @@ class ScraperTest(TestCase):
 
     SERVER_URL = 'http://localhost:8010/static/'
     PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-    
+    IMG_DIR = './scraper/imgs/'
+
     def __init__(self, *args, **kwargs):
-        if args[0] == 'test_img_sub_directory_storage':
-            os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.sd_images_store';
-            from settings import sd_images_store as file_settings
+        if args[0] == 'test_img_store_format_flat_with_thumbs':
+            os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.images_store_format_flat_with_thumbs';
+            from settings import images_store_format_flat_with_thumbs as file_settings
+        elif args[0] == 'test_img_store_format_all_no_thumbs':
+            os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.images_store_format_all_no_thumbs';
+            from settings import images_store_format_all_no_thumbs as file_settings
+        elif args[0] == 'test_img_store_format_all_with_thumbs':
+            os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.images_store_format_all_with_thumbs';
+            from settings import images_store_format_all_with_thumbs as file_settings
+        elif args[0] == 'test_img_store_format_thumbs_with_thumbs':
+            os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.images_store_format_thumbs_with_thumbs';
+            from settings import images_store_format_thumbs_with_thumbs as file_settings
         else:
             os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.base_settings';
             from settings import base_settings as file_settings
@@ -78,8 +88,10 @@ class ScraperTest(TestCase):
         self.dds_settings = {}
         self.dds_settings['ITEM_PIPELINES'] = file_settings.ITEM_PIPELINES
         self.dds_settings['IMAGES_STORE'] = file_settings.IMAGES_STORE
-        self.dds_settings['IMAGES_THUMBS'] = file_settings.IMAGES_THUMBS
-        self.dds_settings['DSCRAPER_FLAT_IMAGES_STORE'] = file_settings.DSCRAPER_FLAT_IMAGES_STORE
+        if 'IMAGES_THUMBS' in file_settings.__dict__:
+            self.dds_settings['IMAGES_THUMBS'] = file_settings.IMAGES_THUMBS
+        if 'DSCRAPER_IMAGES_STORE_FORMAT' in file_settings.__dict__:
+            self.dds_settings['DSCRAPER_IMAGES_STORE_FORMAT'] = file_settings.DSCRAPER_IMAGES_STORE_FORMAT
 
         super(ScraperTest, self).__init__(*args, **kwargs)
 
@@ -122,7 +134,11 @@ class ScraperTest(TestCase):
         self.crawler.start()
     
     
-    def setUp(self):      
+    def setUp(self):
+        if os.path.exists(self.IMG_DIR):
+            shutil.rmtree(self.IMG_DIR)
+        os.mkdir(self.IMG_DIR)
+
         self.sc = ScrapedObjClass(name='Event')
         self.sc.save()
         self.soa_base = ScrapedObjAttr(name=u'base', attr_type='B', obj_class=self.sc)
@@ -159,13 +175,14 @@ class ScraperTest(TestCase):
         
         settings.overrides['ITEM_PIPELINES'] = self.dds_settings['ITEM_PIPELINES']
         settings.overrides['IMAGES_STORE'] = self.dds_settings['IMAGES_STORE']
-        settings.overrides['IMAGES_THUMBS'] = self.dds_settings['IMAGES_THUMBS']
-        settings.overrides['DSCRAPER_FLAT_IMAGES_STORE'] = self.dds_settings['DSCRAPER_FLAT_IMAGES_STORE']
+        if 'IMAGES_THUMBS' in self.dds_settings:
+            settings.overrides['IMAGES_THUMBS'] = self.dds_settings['IMAGES_THUMBS']
+        if 'DSCRAPER_IMAGES_STORE_FORMAT' in self.dds_settings:
+            settings.overrides['DSCRAPER_IMAGES_STORE_FORMAT'] = self.dds_settings['DSCRAPER_IMAGES_STORE_FORMAT']
 
         self.crawler = CrawlerProcess(settings)
         self.crawler.install()
         self.crawler.configure()
-
         
         for name, signal in vars(signals).items():
             if not name.startswith('_'):

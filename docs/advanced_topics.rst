@@ -457,18 +457,27 @@ by defining the thumbnail size via the ``IMAGES_THUMBS`` parameter.
 Choosing store format for images
 --------------------------------
 Different from Scrapy behaviour DDS is by default storing only one image in a flat store format directly under
-the ``IMAGES_STORE`` directory, not creating a ``full/`` subdirectory for the original image. If you use the
+the ``IMAGES_STORE`` directory (Scrapy is creating a ``full/`` subdirectory for the original image). If you use the
 ``IMAGES_THUMBS`` setting, the scaled down thumbnail image will replace the image with the original size.
 Due to this simplification you can only use one entry in your ``IMAGES_THUMBS`` dictionary and the name of the 
 key there doesn't matter. 
 
-You can change back storage behaviour to the original Scrapy behaviour (since ``DDS v.0.3.9``) creating a sub
-directory for the original images (``full/``) and separate sub directories for different thumbnail sizes 
-(e.g. ``thumbs/small/``) with the following setting::
+Starting with ``DDS v.0.3.9`` you can change this behaviour with the ``DSCRAPER_IMAGES_STORE_FORMAT`` setting::
 
-	DSCRAPER_FLAT_IMAGES_STORE = False
+	DSCRAPER_IMAGES_STORE_FORMAT = 'FLAT'   # The original image or - if available - one thumbnail image
+	DSCRAPER_IMAGES_STORE_FORMAT = 'ALL'    # Both the original image and all given thumbnail sizes
+	DSCRAPER_IMAGES_STORE_FORMAT = 'THUMBS' # Only the thumbnails
 
-With this setting you can also use different sizes for thumbnail creation.
+``FLAT`` is the default setting with the behaviour described above. The ``ALL`` setting restores the Scrapy behaviour,
+the original images are stored in a ``full/`` directory under ``IMAGES_STORE``, thumbnail files - if available - in separate 
+sub directories for different thumbnail sizes (e.g. ``thumbs/small/``).
+
+Setting ``DSCRAPER_IMAGES_STORE_FORMAT`` to ``THUMBS``, keeps only the thumbnail files, this setting makes only sense 
+with setting the ``IMAGES_THUMBS`` setting as well. With ``ALL`` or ``THUMBS`` you can also use different sizes for 
+thumbnail creation.
+
+.. note::
+   Differing from Scrapy an image is stored in the DB just by name, omitting path information like ``full/``
 
 .. note:: 
    For image scraping to work you need the `Python Image Library (PIL) <http://www.pythonware.com/products/pil/>`_.

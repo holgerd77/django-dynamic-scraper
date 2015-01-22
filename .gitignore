@@ -3,7 +3,7 @@
 .scrapy
 dbs
 example_project/open_news/thumbnails/*.jpg
-tests/scraper/imgs/*.jpg
+tests/scraper/imgs/*
 MANIFEST
 .DS_Store
 .project

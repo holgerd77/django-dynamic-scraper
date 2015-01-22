@@ -10,6 +10,9 @@ ITEM_PIPELINES = [
 ]
 
 IMAGES_STORE = os.path.join(PROJECT_ROOT, '../scraper/imgs')
+IMAGES_THUMBS = {
+    'small': (170, 170),
+}
 
-DSCRAPER_IMAGES_STORE_FORMAT = 'FLAT'
+DSCRAPER_FLAT_IMAGES_STORE = True
 

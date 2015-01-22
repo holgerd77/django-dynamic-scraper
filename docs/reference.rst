@@ -15,11 +15,17 @@ configuration file. At the moment this is the only way to define DDS settings an
 change DDS settings via command line parameters.
 
 
-DSCRAPER_FLAT_IMAGES_STORE
---------------------------
-Default: ``True``
+DSCRAPER_IMAGES_STORE_FORMAT
+----------------------------
+Default: ``FLAT``
 
-Use flat image store format for image saving (see :ref:`scraping_images` for more info).
+Store format for images (see :ref:`scraping_images` for more info).
+
+====== ================================================================================
+FLAT   Storing only either original or one thumbnail image, no sub folders
+ALL    Storing original (in ``full/``) and thumbnail images (e.g. in ``thumbs/small/``)
+THUMBS Storing only the thumbnail images (e.g. in ``thumbs/small/``)
+====== ================================================================================
 
 DSCRAPER_LOG_ENABLED
 --------------------
