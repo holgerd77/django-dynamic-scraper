@@ -19,12 +19,11 @@ setup(
         'dynamic_scraper.migrations',
     ],
     #install_requires=[
-    #    'Django>=1.3.1',
-    #    'Scrapy>=0.14.0,<0.16.0',
+    #    'Django>=1.4,<=1.5',
+    #    'Scrapy>=0.16.0,<0.17.0',
     #    
-    #    'celery>=2.5.0,<3.0', # Scheduling
-    #    'django-celery>=2.5.0,<3.0',
-    #    'PIL',
+    #    'django-celery>=3.0.0', # Scheduling
+    #    'pillow',
     #    'South',
     #],
     classifiers=[

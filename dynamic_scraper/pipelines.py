@@ -7,17 +7,8 @@ from scrapy.http import Request
 from scrapy.utils.project import get_project_settings
 settings = get_project_settings()
 
-'''
-Getting PIL to work on Mac OS under virtualenv:
-Download combo installer or libjpeg installer from http://ethan.tira-thompson.com/Mac_OS_X_Ports.html
-pip install -I pil --no-install
-Uncomment JPEG_ROOT and change to JPEG_ROOT = libinclude("/usr/local") in setup.py
-pip install -I pil --no-download
 
-from:
-http://ubuntuforums.org/showthread.php?p=10811107
-http://stackoverflow.com/questions/4435016/install-pil-on-virtualenv-with-libjpeg
-'''
+
 class DjangoImagesPipeline(ImagesPipeline):
     
     def __init__(self, *args, **kwargs):

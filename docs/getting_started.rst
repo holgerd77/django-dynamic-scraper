@@ -56,14 +56,14 @@ If you want to use the **scheduling mechanism** of DDS you also have to install 
 
 * `django-celery <http://ask.github.com/django-celery/>`_ 3.0+ (Celery 3.1+ not yet tested)
 
-For **scraping images** you will need the Python Image Library:
+For **scraping images** you will need the Pillow Library:
 
-* `Python Image Libray (PIL) 1.1.7+ <http://www.pythonware.com/products/pil/>`_ (earlier versions untested)
+* `Pillow Libray (PIL fork) 2.5+ <https://python-pillow.github.io/>`_
 
 And finally: DDS is using ``South`` for **database migrations** so that it's easier to keep up with 
 future DB changes:
 
-* `South 0.7+ <http://south.aeracode.org/>`_ (earlier versions untested) 
+* `South 0.7+ <http://south.aeracode.org/>`_
 
 .. note::
    ``DDS v.0.3`` is updating main library dependencies (Django, Scrapy, django-celery) to newer versions

@@ -480,7 +480,7 @@ thumbnail creation.
    Differing from the Scrapy output, an image is stored in the DB just by name, omitting path information like ``full/``
 
 .. note:: 
-   For image scraping to work you need the `Python Image Library (PIL) <http://www.pythonware.com/products/pil/>`_.
+   For image scraping to work you need the `Pillow Library (PIL fork) <https://python-pillow.github.io/>`_.
 
 Updating domain model class/scraped obj class definition
 --------------------------------------------------------
