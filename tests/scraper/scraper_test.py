@@ -69,16 +69,16 @@ class ScraperTest(TestCase):
     IMG_DIR = './scraper/imgs/'
 
     def __init__(self, *args, **kwargs):
-        if args[0] == 'test_img_store_format_flat_with_thumbs':
+        if args[0] == 'test_img_store_format_flat_with_thumbs' or args[0] == 'test_delete_with_img_flat_with_thumbs':
             os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.images_store_format_flat_with_thumbs';
             from settings import images_store_format_flat_with_thumbs as file_settings
-        elif args[0] == 'test_img_store_format_all_no_thumbs':
+        elif args[0] == 'test_img_store_format_all_no_thumbs' or args[0] == 'test_delete_with_img_all_no_thumbs':
             os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.images_store_format_all_no_thumbs';
             from settings import images_store_format_all_no_thumbs as file_settings
-        elif args[0] == 'test_img_store_format_all_with_thumbs':
+        elif args[0] == 'test_img_store_format_all_with_thumbs' or args[0] == 'test_delete_with_img_all_with_thumbs':
             os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.images_store_format_all_with_thumbs';
             from settings import images_store_format_all_with_thumbs as file_settings
-        elif args[0] == 'test_img_store_format_thumbs_with_thumbs':
+        elif args[0] == 'test_img_store_format_thumbs_with_thumbs' or args[0] == 'test_delete_with_img_thumbs_with_thumbs':
             os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.images_store_format_thumbs_with_thumbs';
             from settings import images_store_format_thumbs_with_thumbs as file_settings
         else:
