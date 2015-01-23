@@ -49,11 +49,9 @@ Then you can run the test suite with::
 
 Release Notes
 =============
-**Changes in version 0.3.9-alpha** (2014-12-11)
+**Changes in version 0.3.9-alpha** (2015-01-23)
 
-* Added new setting ``DSCRAPER_FLAT_IMAGES_STORE`` along with the possibility to switch back to the Scrapy behaviour 
-  for storing images by creating separate sub directories for original and thumbnail images (enabling diffferent
-  thumbnail sizes) (see :ref:`scraping_images`)
+* Added new setting ``DSCRAPER_IMAGES_STORE_FORMAT`` for more flexibility with storing original and/or thumbnail images (see :ref:`scraping_images`)
 
 **Changes in version 0.3.8-alpha** (2014-10-14)
 

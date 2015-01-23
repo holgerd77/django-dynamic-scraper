@@ -1,7 +1,5 @@
 import os
 from scrapy import log, signals
-from scrapy.utils.project import get_project_settings
-settings = get_project_settings()
 from scrapy.exceptions import CloseSpider
 from scrapy.selector import HtmlXPathSelector
 from scrapy.xlib.pydispatch import dispatcher
@@ -42,19 +40,37 @@ class DjangoChecker(DjangoBaseSpider):
 
 
     def _del_ref_object(self):
+        from scrapy.utils.project import get_project_settings
+        settings = get_project_settings()
+        
         try:
             img_elem = self.scraper.get_image_elem()
             if hasattr(self.ref_object, img_elem.scraped_obj_attr.name):
                 img_name = getattr(self.ref_object, img_elem.scraped_obj_attr.name)
-                path = os.path.join(settings.get('IMAGES_STORE'), img_name)
-                if os.access(path, os.F_OK):
-                    try:
-                        os.unlink(path)
-                        self.log("Associated image deleted.", log.INFO)
-                    except Exception:
-                        self.log("Associated image could not be deleted!", log.ERROR)
-                else:
-                    self.log("Associated image could not be found!", log.WARNING)
+
+                thumb_paths = []
+                if settings.get('IMAGES_THUMBS') and len(settings.get('IMAGES_THUMBS')) > 0:
+                    for key in settings.get('IMAGES_THUMBS').iterkeys():
+                        thumb_paths.append(('thumbnail, %s' % key, os.path.join(settings.get('IMAGES_STORE'), 'thumbs', key, img_name),))
+
+                del_paths = []
+                if self.conf['IMAGES_STORE_FORMAT'] == 'FLAT':
+                    del_paths.append(('original, flat path', os.path.join(settings.get('IMAGES_STORE'), img_name),))
+                if self.conf['IMAGES_STORE_FORMAT'] == 'ALL':
+                    del_paths.append(('original, full/ path', os.path.join(settings.get('IMAGES_STORE'), 'full' , img_name),))
+                    del_paths += thumb_paths
+                if self.conf['IMAGES_STORE_FORMAT'] == 'THUMBS':
+                    del_paths += thumb_paths
+
+                for path in del_paths:
+                    if os.access(path[1], os.F_OK):
+                        try:
+                            os.unlink(path[1])
+                            self.log("Associated image (%s, %s) deleted." % (img_name, path[0]), log.INFO)
+                        except Exception:
+                            self.log("Associated image (%s, %s) could not be deleted!" % (img_name, path[0]), log.ERROR)
+                    else:
+                        self.log("Associated image (%s, %s) could not be found!" % (img_name, path[0]), log.WARNING)
         except ScraperElem.DoesNotExist:
             pass
         

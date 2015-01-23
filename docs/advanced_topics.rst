@@ -477,7 +477,7 @@ with setting the ``IMAGES_THUMBS`` setting as well. With ``ALL`` or ``THUMBS`` y
 thumbnail creation.
 
 .. note::
-   Differing from Scrapy an image is stored in the DB just by name, omitting path information like ``full/``
+   Differing from the Scrapy output, an image is stored in the DB just by name, omitting path information like ``full/``
 
 .. note:: 
    For image scraping to work you need the `Python Image Library (PIL) <http://www.pythonware.com/products/pil/>`_.
