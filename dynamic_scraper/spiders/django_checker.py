@@ -53,6 +53,8 @@ class DjangoChecker(DjangoBaseSpider):
                         self.log("Associated image deleted.", log.INFO)
                     except Exception:
                         self.log("Associated image could not be deleted!", log.ERROR)
+                else:
+                    self.log("Associated image could not be found!", log.WARNING)
         except ScraperElem.DoesNotExist:
             pass
         

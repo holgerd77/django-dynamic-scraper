@@ -2,7 +2,7 @@
 *.db
 .scrapy
 dbs
-example_project/open_news/thumbnails/*.jpg
+example_project/open_news/thumbnails/*
 tests/scraper/imgs/*
 MANIFEST
 .DS_Store

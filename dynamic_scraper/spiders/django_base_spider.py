@@ -1,7 +1,5 @@
 import datetime, os
 from scrapy import log, signals
-from scrapy.utils.project import get_project_settings
-settings = get_project_settings()
 from scrapy.spider import BaseSpider
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy.exceptions import CloseSpider
@@ -22,6 +20,7 @@ class DjangoBaseSpider(BaseSpider):
     conf = {
         "DO_ACTION": False,
         "RUN_TYPE": 'SHELL',
+        "IMAGES_STORE_FORMAT": 'FLAT',
         "LOG_ENABLED": True,
         "LOG_LEVEL": 'ERROR',
         "LOG_LIMIT": 250,
@@ -54,6 +53,9 @@ class DjangoBaseSpider(BaseSpider):
 
 
     def _set_config(self, log_msg, **kwargs):
+        from scrapy.utils.project import get_project_settings
+        settings = get_project_settings()
+
         #run_type
         if 'run_type' in kwargs:
             self.conf['RUN_TYPE'] = kwargs['run_type']
@@ -70,10 +72,25 @@ class DjangoBaseSpider(BaseSpider):
                 log_msg += ", "
             log_msg += "do_action " + str(self.conf['DO_ACTION'])
         
+        self.conf['IMAGES_STORE_FORMAT'] = settings.get('DSCRAPER_IMAGES_STORE_FORMAT', self.conf['IMAGES_STORE_FORMAT'])
+        if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
+            msg = "Use simplified FLAT images store format (save the original or one thumbnail image)"
+            log.msg(msg, log.INFO)
+            if settings.get('IMAGES_THUMBS') and len(settings.get('IMAGES_THUMBS')) > 0:
+                msg = "IMAGES_THUMBS setting found, saving images as thumbnail images with size %s (first entry)" % settings.get('IMAGES_THUMBS').iterkeys().next()
+            else:
+                msg = "IMAGES_THUMBS setting not found, saving images with original size"
+            log.msg(msg, log.INFO)
+        elif self.conf["IMAGES_STORE_FORMAT"] == 'ALL':
+            msg = "Use ALL images store format (Scrapy behaviour, save both original and thumbnail images)"
+            log.msg(msg, log.INFO)
+        else:
+            msg = "Use THUMBS images store format (save only the thumbnail images)"
+            log.msg(msg, log.INFO)
+
         self.conf['LOG_ENABLED'] = settings.get('DSCRAPER_LOG_ENABLED', self.conf['LOG_ENABLED'])
         self.conf['LOG_LEVEL'] = settings.get('DSCRAPER_LOG_LEVEL', self.conf['LOG_LEVEL'])
         self.conf['LOG_LIMIT'] = settings.get('DSCRAPER_LOG_LIMIT', self.conf['LOG_LIMIT'])
-        
         self.log("Runtime config: " + log_msg, log.INFO)
         
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)

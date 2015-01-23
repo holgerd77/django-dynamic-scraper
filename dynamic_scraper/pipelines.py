@@ -21,36 +21,30 @@ http://stackoverflow.com/questions/4435016/install-pil-on-virtualenv-with-libjpe
 class DjangoImagesPipeline(ImagesPipeline):
     
     def __init__(self, *args, **kwargs):
-        self.store_format = settings.get('DSCRAPER_IMAGES_STORE_FORMAT', 'FLAT')
-        if self.store_format == 'FLAT':
-            msg = "Use simplified FLAT images store format (save the original or one thumbnail image)"
-        elif self.store_format == 'ALL':
-            msg = "Use ALL images store format (Scrapy behaviour, save both original and thumbnail images)"
-        else:
-            msg = "Use THUMBS images store format (save only thumbnail images)"
-        log.msg(msg, log.INFO)
         super(DjangoImagesPipeline,  self).__init__(*args, **kwargs)
     
     def get_media_requests(self, item, info):
         try:
             img_elem = info.spider.scraper.get_image_elem()
             if img_elem.scraped_obj_attr.name in item and item[img_elem.scraped_obj_attr.name]:
+                if not hasattr(self, 'conf'):
+                    self.conf = info.spider.conf
                 return Request(item[img_elem.scraped_obj_attr.name])
         except (ScraperElem.DoesNotExist, TypeError):
             pass
 
     def image_key(self, url):
         image_guid = hashlib.sha1(url).hexdigest()
-        if self.store_format == 'FLAT':
+        if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             return '%s.jpg' % (image_guid)
-        elif self.store_format == 'THUMBS':
+        elif self.conf["IMAGES_STORE_FORMAT"] == 'THUMBS':
             return 'thumbs/%s/%s.jpg' % (self.THUMBS.iterkeys().next(), image_guid)
         else:
             return 'full/%s.jpg' % (image_guid)
 
     def thumb_key(self, url, thumb_id):
         image_guid = hashlib.sha1(url).hexdigest()
-        if self.store_format == 'FLAT':
+        if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             return '%s.jpg' % (image_guid)
         else:
             return 'thumbs/%s/%s.jpg' % (thumb_id, image_guid)

@@ -139,6 +139,17 @@ class ScraperTest(TestCase):
             shutil.rmtree(self.IMG_DIR)
         os.mkdir(self.IMG_DIR)
 
+        settings.overrides['ITEM_PIPELINES'] = self.dds_settings['ITEM_PIPELINES']
+        settings.overrides['IMAGES_STORE'] = self.dds_settings['IMAGES_STORE']
+        if 'IMAGES_THUMBS' in self.dds_settings:
+            settings.overrides['IMAGES_THUMBS'] = self.dds_settings['IMAGES_THUMBS']
+        if 'DSCRAPER_IMAGES_STORE_FORMAT' in self.dds_settings:
+            settings.overrides['DSCRAPER_IMAGES_STORE_FORMAT'] = self.dds_settings['DSCRAPER_IMAGES_STORE_FORMAT']
+
+        self.crawler = CrawlerProcess(settings)
+        self.crawler.install()
+        self.crawler.configure()
+
         self.sc = ScrapedObjClass(name='Event')
         self.sc.save()
         self.soa_base = ScrapedObjAttr(name=u'base', attr_type='B', obj_class=self.sc)
@@ -172,17 +183,6 @@ class ScraperTest(TestCase):
         self.event_website = EventWebsite(pk=1, name=u'Event Website', scraper=self.scraper,
             url=os.path.join(self.SERVER_URL, 'site_generic/event_main.html'), scraper_runtime=self.sched_rt,)
         self.event_website.save()
-        
-        settings.overrides['ITEM_PIPELINES'] = self.dds_settings['ITEM_PIPELINES']
-        settings.overrides['IMAGES_STORE'] = self.dds_settings['IMAGES_STORE']
-        if 'IMAGES_THUMBS' in self.dds_settings:
-            settings.overrides['IMAGES_THUMBS'] = self.dds_settings['IMAGES_THUMBS']
-        if 'DSCRAPER_IMAGES_STORE_FORMAT' in self.dds_settings:
-            settings.overrides['DSCRAPER_IMAGES_STORE_FORMAT'] = self.dds_settings['DSCRAPER_IMAGES_STORE_FORMAT']
-
-        self.crawler = CrawlerProcess(settings)
-        self.crawler.install()
-        self.crawler.configure()
         
         for name, signal in vars(signals).items():
             if not name.startswith('_'):
