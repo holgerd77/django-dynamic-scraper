@@ -4,7 +4,7 @@ import os
 
 setup(
     name='django-dynamic-scraper',
-    version='0.3.9',
+    version='0.3.10',
     description='Creating Scrapy scrapers via the Django admin interface',
     author='Holger Drewes',
     author_email='Holger.Drewes@gmail.com',
@@ -17,6 +17,8 @@ setup(
         'dynamic_scraper.spiders',
         'dynamic_scraper.utils',
         'dynamic_scraper.migrations',
+        'dynamic_scraper.management',
+        'dynamic_scraper.management.commands',
     ],
     #install_requires=[
     #    'Django>=1.4,<=1.5',

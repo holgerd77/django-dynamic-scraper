@@ -49,6 +49,10 @@ Then you can run the test suite with::
 
 Release Notes
 =============
+**Changes in version 0.3.10-alpha** (2015-03-17)
+
+* Added missing management command for checker functionality tests to distribution (see: :ref:`run_checker_tests`)
+
 **Changes in version 0.3.9-alpha** (2015-01-23)
 
 * Added new setting ``DSCRAPER_IMAGES_STORE_FORMAT`` for more flexibility with storing original and/or thumbnail images (see :ref:`scraping_images`)
