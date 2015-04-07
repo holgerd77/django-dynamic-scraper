@@ -63,15 +63,23 @@ class DjangoChecker(DjangoBaseSpider):
 
     def response_received(self, **kwargs):
         # 404 test
-        if kwargs['response'].status == 404:
-            
-            if self.scheduler_runtime.num_zero_actions == 0:
-                self.log("Checker test returned second 404.", log.INFO)
-                if self.conf['DO_ACTION']:
-                    self._del_ref_object()
-            else:
-                self.log("Checker test returned first 404.", log.INFO)
-                self.action_successful = True
+
+        # When requesting a URL, Scrapy might use the robots.txt first (if the corresponding middleware is enabled)
+        # If robots.txt is not there, it will return a 404
+        # To further process the request, the checker should not check for robots.txt 404
+        scraped_url = kwargs['spider'].scrape_url
+        requested_url = kwargs['request'].url
+        if scraped_url == requested_url:
+            if kwargs['response'].status == 404:
+                self.log(str(kwargs['response']), log.INFO)
+                self.log(kwargs['response'], log.INFO)
+                if self.scheduler_runtime.num_zero_actions == 0:
+                    self.log("Checker test returned second 404 Jice 2.", log.INFO)
+                    if self.conf['DO_ACTION']:
+                        self._del_ref_object()
+                else:
+                    self.log("Checker test returned first 404.", log.INFO)
+                    self.action_successful = True
 
 
     def parse(self, response):
