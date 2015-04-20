@@ -39,7 +39,8 @@ class Command(BaseCommand):
         mail_to_admins = False
         msg = ''
         for scraper in scraper_list:
-            scraper_str = unicode(scraper) + " (" + unicode(scraper.pk) + ")"
+            scraper_str  = unicode(scraper) + " "
+            scraper_str += "(ID:" + unicode(scraper.pk) + ", Status: " + scraper.get_status_display() + ")"
             print "Run checker test for scraper %s..." % scraper_str
             
             cmd  = 'scrapy crawl checker_test -L WARNING -a id=' + str(scraper.pk)
