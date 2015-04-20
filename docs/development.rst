@@ -49,6 +49,10 @@ Then you can run the test suite with::
 
 Release Notes
 =============
+**Changes in version 0.3.11-alpha** (2015-04-20)
+
+* Added ``only-active`` and ``--report-only-erros`` options to ``run_checker_tests`` management command (see: :ref:`run_checker_tests`)
+
 **Changes in version 0.3.10-alpha** (2015-03-17)
 
 * Added missing management command for checker functionality tests to distribution (see: :ref:`run_checker_tests`)

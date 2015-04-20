@@ -118,8 +118,11 @@ For running all checker tests at once there exists a simple Django management co
 which executes the ``checker_test`` scraper for all of your defined scrapers and outputs Scrapy log messages 
 on ``WARNING`` level and above::
 
-	python manage.py run_checker_tests [--send-admin-mail]
+	python manage.py run_checker_tests [--only-active --report-only-errors --send-admin-mail]
 
+The option ``only-active`` will limit execution to active scrapers, ``--report-only-errors`` will more
+generously pass the test on some not so severe cases (e.g. a checker ref url returning ``404`` for a 
+``404_OR_X_PATH`` checker type).
 Executing the command with the ``--send-admin-mail`` flag will send an email to Django admins if checker 
 configurations are not working which can be useful if you want to run this command as a cronjob.
 
