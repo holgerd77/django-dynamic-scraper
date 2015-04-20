@@ -10,11 +10,17 @@ class Command(BaseCommand):
     
     option_list = BaseCommand.option_list + (
         make_option(
-            '--only-active-scrapers',
+            '--only-active',
             action="store_true",
-            dest="only_active_scrapers",
+            dest="only_active",
             default=False,
             help="Run checker tests only for active scrapers"),
+        make_option(
+            '--report-only-errors',
+            action="store_true",
+            dest="report_only_errors",
+            default=False,
+            help="Report only if checker is returning ERROR (default: WARNING/ERROR)"),
         make_option(
             '--send-admin-mail',
             action="store_true",
@@ -25,7 +31,7 @@ class Command(BaseCommand):
     
     
     def handle(self, *args, **options):
-        if options.get('only_active_scrapers'):
+        if options.get('only_active'):
             scraper_list = Scraper.objects.filter(
                 checker_x_path__isnull=False, 
                 checker_ref_url__isnull=False,
@@ -43,7 +49,13 @@ class Command(BaseCommand):
             scraper_str += "(ID:" + unicode(scraper.pk) + ", Status: " + scraper.get_status_display() + ")"
             print "Run checker test for scraper %s..." % scraper_str
             
-            cmd  = 'scrapy crawl checker_test -L WARNING -a id=' + str(scraper.pk)
+            cmd  = 'scrapy crawl checker_test '
+            if options.get('report_only_errors'):
+                cmd += '-L ERROR '
+            else:
+                cmd += '-L WARNING '
+            cmd += '-a id=' + str(scraper.pk)
+            
             p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
             stderr = p.communicate()[1]
             
