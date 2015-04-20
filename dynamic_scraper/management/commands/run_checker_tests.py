@@ -10,6 +10,12 @@ class Command(BaseCommand):
     
     option_list = BaseCommand.option_list + (
         make_option(
+            '--only-active-scrapers',
+            action="store_true",
+            dest="only_active_scrapers",
+            default=False,
+            help="Run checker tests only for active scrapers"),
+        make_option(
             '--send-admin-mail',
             action="store_true",
             dest="send_admin_mail",
@@ -19,8 +25,17 @@ class Command(BaseCommand):
     
     
     def handle(self, *args, **options):
-        scraper_list = Scraper.objects.filter(checker_x_path__isnull=False, checker_ref_url__isnull=False)
-
+        if options.get('only_active_scrapers'):
+            scraper_list = Scraper.objects.filter(
+                checker_x_path__isnull=False, 
+                checker_ref_url__isnull=False,
+                status='A'
+            )
+        else:
+            scraper_list = Scraper.objects.filter(
+                checker_x_path__isnull=False, 
+                checker_ref_url__isnull=False
+            )
         mail_to_admins = False
         msg = ''
         for scraper in scraper_list:
