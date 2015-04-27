@@ -126,3 +126,15 @@ class ProcessorsTest(TestCase):
         result_str = processors.duration('2 hours 17 minutes 15 seconds', {'duration': '%H hours %M minutes %S seconds'})
         self.assertEqual(result_str, '02:17:15')
 
+
+    def test_take_all(self):
+        take_all = processors.TakeAll()
+        result_str = take_all(['This', 'text', 'makes', 'no', 'sense'])
+        self.assertEquals(result_str, ['This', 'text', 'makes', 'no', 'sense'])
+
+        result_str = take_all(['This', 'text', '', 'makes', '\n', '\t', 'no', 'sense'])
+        self.assertEquals(result_str, ['This', 'text', 'makes', 'no', 'sense'])
+
+        result_str = take_all(['', '\t', 'This text makes no sense', '\n'])
+        self.assertEquals(result_str, 'This text makes no sense')
+
