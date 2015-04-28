@@ -1,4 +1,5 @@
 import ast
+from urlparse import urljoin
 
 from scrapy import log
 from scrapy.selector import HtmlXPathSelector, XmlXPathSelector
@@ -79,7 +80,7 @@ class DjangoSpider(DjangoBaseSpider):
 
     def _set_start_urls(self, scrape_url):
         
-        if self.scraper.pagination_type != 'N':
+        if self.scraper.pagination_type not in ('N','O'):
             if not self.scraper.pagination_append_str:
                 raise CloseSpider('Please provide a pagination_append_str for pagination (e.g. "/archive/{page}/")!')
             if self.scraper.pagination_append_str.find('{page}') == -1:
@@ -106,9 +107,13 @@ class DjangoSpider(DjangoBaseSpider):
                 pages = ast.literal_eval("[" + pages + ",]")
             except SyntaxError:
                 raise CloseSpider('Wrong pagination_page_replace format for pagination_type "FREE_LIST", ' +\
-                                  "Syntax: 'Replace string 1', 'Another replace string 2', 'A number 3', ...")   
+                                  "Syntax: 'Replace string 1', 'Another replace string 2', 'A number 3', ...")
+
+        if self.scraper.pagination_type == 'O':
+            if not self.scraper.pagination_page_replace:
+                raise CloseSpider('Please provide the XPath selector for the next page!')
         
-        if self.scraper.pagination_type != 'N':
+        if self.scraper.pagination_type not in ('N','O'):
             append_str = self.scraper.pagination_append_str
             if scrape_url[-1:] == '/' and append_str[0:1] == '/':
                 append_str = append_str[1:]
@@ -119,7 +124,7 @@ class DjangoSpider(DjangoBaseSpider):
             if not self.scraper.pagination_on_start:
                 self.start_urls.append(scrape_url)
         
-        if self.scraper.pagination_type == 'N':
+        if self.scraper.pagination_type in ('N','O'):
             self.start_urls.append(scrape_url)
 
 
@@ -230,7 +235,7 @@ class DjangoSpider(DjangoBaseSpider):
                 # Mark item as DOUBLE item
                 if cnt > 0:
                     item[url_name] = 'DOUBLE' + item[url_name]
-                # (DOUBLE item with no standard update elements to be scraped from detail page) or 
+                # (DOUBLE item with no standard update elements to be scraped from detail page) or
                 # generally no attributes scraped from detail page
                 if (cnt > 0 and cnt1 == 0) or cnt2 == 0:
                     yield item
@@ -239,3 +244,10 @@ class DjangoSpider(DjangoBaseSpider):
             else:
                 self.log("Detail page url elem could not be read!", log.ERROR)
     
+        if base_objects and self.scraper.pagination_type == 'O':
+            try:
+                url = xs.select(self.scraper.pagination_page_replace).extract()[0]
+                url = urljoin(response.url, url)
+                yield Request(url)
+            except:
+                self.log("{0} was not found in {1}".format(self.scraper.pagination_page_replace,response.url),log.ERROR)
