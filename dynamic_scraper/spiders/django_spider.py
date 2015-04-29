@@ -2,7 +2,7 @@ import ast
 
 from scrapy import log
 from scrapy.selector import HtmlXPathSelector, XmlXPathSelector
-from scrapy.http import Request
+from scrapy.http import Request, FormRequest
 from scrapy.contrib.loader import XPathItemLoader
 from scrapy.contrib.loader.processor import TakeFirst
 from scrapy.exceptions import CloseSpider
@@ -239,3 +239,24 @@ class DjangoSpider(DjangoBaseSpider):
             else:
                 self.log("Detail page url elem could not be read!", log.ERROR)
     
+class FormRequestDjangoSpider(DjangoSpider):
+
+    def __init__(self, *args, **kwargs):
+        super(FormRequestDjangoSpider, self).__init__(self, *args, **kwargs)
+
+        assert 'username' in kwargs
+        assert 'password' in kwargs
+        assert 'username_form' in kwargs
+        assert 'password_form' in kwargs
+
+        self.username, self.password, self.username_form, self.password_form \
+            = kwargs['username'], kwargs['password'], \
+              kwargs['username_form'], kwargs['password_form']
+    
+    def parse(self, response):
+        return FormRequest.from_response(
+            response,
+            formdata={self.username_form: self.username,
+	              self.password_form: self.password},
+            callback=super(FormRequestDjangoSpider, self).parse
+        )
