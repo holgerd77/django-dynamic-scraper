@@ -31,11 +31,12 @@ And finally: please let me know about how you are using Django Dynamic Scraper!
 
 Running the test suite
 ======================
-Testing Django Dynamic Scraper - especially the scraper runs - is a bit tricky since Scrapy uses the 
-networking engine `Twisted <http://twistedmatrix.com/>`_ for running scrapers, which can't be restarted
-in the same process. So running most of the test classes as Django tests via `python manage.py test` will
-fail. The easiest way I found to work around this was to create a shell script `run_tests.sh` which invokes
-single test methods where scrapers are involved separately so that a new process for every test run is started.
+
+Overview
+--------
+Tests for ``DDS`` are organized in a separate ``tests`` Django project in the root folder of the repository.
+Due to restrictions of Scrapy's networking engine `Twisted <http://twistedmatrix.com/>`_, ``DDS`` test cases directly
+testing scrapers have to be run as new processes and can't be executed sequentially via `python manage.py test`.
 
 For running the tests first go to the `tests` directory and start a test server with::
 
@@ -48,6 +49,20 @@ Then you can run the test suite with::
 .. note::
    If you are testing for DDS Django/Scrapy version compatibility: there might be 2-3 tests generally not working
    properly, so if just a handful of tests don't pass have a closer look at the test output.
+
+Django test apps
+----------------
+There are currently two Django apps containing tests. The ``basic`` app testing scraper unrelated functionality
+like correct processor output or scheduling time calculations. These tests can be run on a per-file-level::
+
+  python manage.py test basic.ProcessorsTest
+
+The ``scraper`` app is testing scraper related functionality. Tests can either be run via shell script (see above)
+or on a per-test-case level like this::
+
+  python manage.py test scraper.ScraperRunTest.test_scraper
+
+Have a look at the ``run_tests.sh`` shell script for more examples!
 
 .. _releasenotes:
 
