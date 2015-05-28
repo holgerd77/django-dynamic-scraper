@@ -49,7 +49,7 @@ Requirements
 The **basic requirements** for Django Dynamic Scraper are:
 
 * Python 2.7+ (earlier versions untested, Python 3.x not yet supported)
-* `Django <https://www.djangoproject.com/>`_ 1.4+ (also tested against Django 1.5, Django 1.6+ not yet supported)
+* `Django <https://www.djangoproject.com/>`_ 1.4+ (also tested against Django 1.5/1.6, 1.7+ untested)
 * Scrapy_ 0.16 (Scrapy 0.18+ not yet supported)
 
 If you want to use the **scheduling mechanism** of DDS you also have to install ``django-celery``:
@@ -74,7 +74,7 @@ by which ``DDS`` version. Due to dev resource constraints backwards compatibilit
 =========== ========================== ======================== ====================
 DDS Version Django                     Scrapy                   django-celery
 =========== ========================== ======================== ====================
-0.3         1.4-1.5 (1.6+ unsupported) 0.16 (0.18+ unsupported) 3.0+ (3.1+ untested)
+0.3         1.4-1.6 (1.7+ untested)    0.16 (0.18+ unsupported) 3.0+ (3.1+ untested)
 0.2         1.4 (1.5+ unsupported)     0.14 (0.16+ unsupported) 2.x (3.0 untested)
 =========== ========================== ======================== ====================
 
