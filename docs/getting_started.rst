@@ -65,6 +65,8 @@ future DB changes:
 
 * `South 0.7+ <http://south.aeracode.org/>`_
 
+.. _release_compatibility:
+
 Release Compatibility Table
 ---------------------------
 Have a look at the following table for an overview which ``Django``, ``Scrapy`` and ``django-celery`` versions are supported
@@ -74,7 +76,7 @@ by which ``DDS`` version. Due to dev resource constraints backwards compatibilit
 =========== ========================== ======================== ====================
 DDS Version Django                     Scrapy                   django-celery
 =========== ========================== ======================== ====================
-0.3         1.4-1.6 (1.7+ untested)    0.16 (0.18+ unsupported) 3.0+ (3.1+ untested)
+0.3         1.4-1.6 (1.7+ unsupported) 0.16 (0.18+ unsupported) 3.0+ (3.1+ untested)
 0.2         1.4 (1.5+ unsupported)     0.14 (0.16+ unsupported) 2.x (3.0 untested)
 =========== ========================== ======================== ====================
 

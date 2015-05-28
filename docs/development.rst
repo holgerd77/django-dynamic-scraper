@@ -68,6 +68,13 @@ Have a look at the ``run_tests.sh`` shell script for more examples!
 
 Release Notes
 =============
+**Changes in version 0.3.12-alpha** (2015-05-28)
+
+* Added new release compatibility overview table to docs (see: :ref:`release_compatibility`)
+* Adopted ``run_tests.sh`` script to run with ``Django 1.6``
+* Tested ``Django 1.5``, ``Django 1.6`` for compatibility with ``DDS v.0.3.x``
+* Updated title xpath in fixture for Wikinews example scraper
+
 **Changes in version 0.3.11-alpha** (2015-04-20)
 
 * Added ``only-active`` and ``--report-only-erros`` options to ``run_checker_tests`` management command (see: :ref:`run_checker_tests`)
