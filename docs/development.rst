@@ -55,7 +55,7 @@ Django test apps
 There are currently two Django apps containing tests. The ``basic`` app testing scraper unrelated functionality
 like correct processor output or scheduling time calculations. These tests can be run on a per-file-level::
 
-  python manage.py test basic.ProcessorsTest
+  python manage.py test basic.processors_test.ProcessorsTest
 
 The ``scraper`` app is testing scraper related functionality. Tests can either be run via shell script (see above)
 or on a per-test-case level like this::

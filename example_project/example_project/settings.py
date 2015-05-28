@@ -1,10 +1,11 @@
 # Django settings for example_project project.
-import os
+import os, sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(PROJECT_ROOT, "../.."))
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),

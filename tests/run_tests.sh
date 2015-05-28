@@ -2,8 +2,8 @@
 
 app='basic'
 tests="
-ProcessorsTest 
-SchedulerTest
+processors_test.ProcessorsTest 
+scheduler_test.SchedulerTest
 "
 
 for test in `echo $tests`
