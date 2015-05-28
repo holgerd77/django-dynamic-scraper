@@ -65,10 +65,14 @@ future DB changes:
 
 * `South 0.7+ <http://south.aeracode.org/>`_
 
-.. note::
-   ``DDS v.0.3`` is updating main library dependencies (Django, Scrapy, django-celery) to newer versions
-   and you have to change some stuff in your code if you are upgrading from ``DDS v.0.2.x``, 
-   see :ref:`releasenotes` for details.
+Release Compatibility Table
+---------------------------
+
+=========== ====== ====== =============
+DDS Version Django Scrapy django-celery
+=========== ====== ====== =============
+test        test   test   test
+=========== ====== ====== =============
 
 Installation with Pip
 ---------------------
