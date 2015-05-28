@@ -85,7 +85,7 @@
 		"model": "dynamic_scraper.scraperelem",
 		"fields": {
 			"proc_ctxt": "",
-			"x_path": "//h1[@id=\"firstHeading\"]/span/text()",
+			"x_path": "//h1[@id=\"firstHeading\"]/text()",
 			"processors": "",
 			"scraped_obj_attr": 3,
 			"scraper": 1,
