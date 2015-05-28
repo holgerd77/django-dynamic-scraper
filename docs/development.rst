@@ -27,6 +27,7 @@ Here are some topics for which suggestions would be especially interesting:
 
 And finally: please let me know about how you are using Django Dynamic Scraper!
 
+.. _test_suite:
 
 Running the test suite
 ======================
@@ -44,6 +45,9 @@ Then you can run the test suite with::
 
 	./run_tests.sh
 
+.. note::
+   If you are testing for DDS Django/Scrapy version compatibility: there might be 2-3 tests generally not working
+   properly, so if just a handful of tests don't pass have a closer look at the test output.
 
 .. _releasenotes:
 

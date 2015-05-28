@@ -67,12 +67,20 @@ future DB changes:
 
 Release Compatibility Table
 ---------------------------
+Have a look at the following table for an overview which ``Django``, ``Scrapy`` and ``django-celery`` versions are supported
+by which ``DDS`` version. Due to dev resource constraints backwards compatibility for older ``Django`` or ``Scrapy`` releases for new
+``DDS`` releases normally can not be granted.
 
-=========== ====== ====== =============
-DDS Version Django Scrapy django-celery
-=========== ====== ====== =============
-test        test   test   test
-=========== ====== ====== =============
+=========== ========================== ======================== ====================
+DDS Version Django                     Scrapy                   django-celery
+=========== ========================== ======================== ====================
+0.3         1.4-1.5 (1.6+ unsupported) 0.16 (0.18+ unsupported) 3.0+ (3.1+ untested)
+0.2         1.4 (1.5+ unsupported)     0.14 (0.16+ unsupported) 2.x (3.0 untested)
+=========== ========================== ======================== ====================
+
+.. note::
+   Please get in touch (GitHub) if you have any additions to this table. A library version is counted as supported if the
+   DDS testsuite is running through (see: :ref:`test_suite`).
 
 Installation with Pip
 ---------------------
