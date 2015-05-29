@@ -2,12 +2,13 @@ import os, os.path, shutil
 
 from django.test import TestCase
 
-from scrapy import signals
+from scrapy import log, signals
 
 from scrapy.utils.project import get_project_settings
 settings = get_project_settings()
 
-from scrapy.crawler import CrawlerProcess
+from twisted.internet import reactor
+from scrapy.crawler import Crawler
 from scrapy.xlib.pydispatch import dispatcher
 
 from dynamic_scraper.spiders.django_spider import DjangoSpider
@@ -109,6 +110,8 @@ class ScraperTest(TestCase):
         self.spider = EventSpider(**kwargs)
         self.crawler.crawl(self.spider)
         self.crawler.start()
+        #log.start()
+        reactor.run()
         
     
     def run_event_checker(self, id):
@@ -119,6 +122,8 @@ class ScraperTest(TestCase):
         self.checker = EventChecker(**kwargs)
         self.crawler.crawl(self.checker)
         self.crawler.start()
+        #log.start()
+        reactor.run()
     
     
     def run_checker_test(self, id):
@@ -132,6 +137,7 @@ class ScraperTest(TestCase):
         self.checker_test.conf['LOG_LEVEL'] = 'DEBUG' 
         self.crawler.crawl(self.checker_test)
         self.crawler.start()
+        reactor.run()
     
     
     def setUp(self):
@@ -146,8 +152,8 @@ class ScraperTest(TestCase):
         if 'DSCRAPER_IMAGES_STORE_FORMAT' in self.dds_settings:
             settings.overrides['DSCRAPER_IMAGES_STORE_FORMAT'] = self.dds_settings['DSCRAPER_IMAGES_STORE_FORMAT']
 
-        self.crawler = CrawlerProcess(settings)
-        self.crawler.install()
+        self.crawler = Crawler(settings)
+        self.crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
         self.crawler.configure()
 
         self.sc = ScrapedObjClass(name='Event')

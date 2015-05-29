@@ -1,5 +1,6 @@
 import os.path, unittest
 
+from twisted.internet import reactor
 from scrapy import log
 from scrapy.exceptions import CloseSpider 
 
@@ -103,6 +104,8 @@ class ScraperRunTest(ScraperTest):
         spider = EventSpider(**kwargs)
         self.crawler.crawl(spider)
         self.crawler.start()
+        #log.start()
+        reactor.run()
         
         self.assertEqual(spider.scheduler_runtime.num_zero_actions, 1)
         
@@ -160,6 +163,8 @@ class ScraperRunTest(ScraperTest):
         spider = EventSpider(**kwargs)
         self.crawler.crawl(spider)
         self.crawler.start()
+        #log.start()
+        reactor.run()
 
         self.assertEqual(len(Event.objects.all()), 3)
 
@@ -174,6 +179,8 @@ class ScraperRunTest(ScraperTest):
         spider = EventSpider(**kwargs)
         self.crawler.crawl(spider)
         self.crawler.start()
+        #log.start()
+        reactor.run()
 
         self.assertEqual(len(Event.objects.all()), 3)
 
