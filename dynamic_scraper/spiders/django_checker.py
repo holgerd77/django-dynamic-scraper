@@ -1,7 +1,7 @@
 import os
 from scrapy import log, signals
 from scrapy.exceptions import CloseSpider
-from scrapy.selector import HtmlXPathSelector
+from scrapy.selector import Selector
 from scrapy.xlib.pydispatch import dispatcher
 
 from dynamic_scraper.spiders.django_base_spider import DjangoBaseSpider
@@ -93,7 +93,7 @@ class DjangoChecker(DjangoBaseSpider):
 
 
     def parse(self, response):
-        hxs = HtmlXPathSelector(response)
+        hxs = Selector(response)
         
         # x_path test
         if self.scraper.checker_type == '4':
