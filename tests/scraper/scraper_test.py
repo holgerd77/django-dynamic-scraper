@@ -145,12 +145,12 @@ class ScraperTest(TestCase):
             shutil.rmtree(self.IMG_DIR)
         os.mkdir(self.IMG_DIR)
 
-        settings.overrides['ITEM_PIPELINES'] = self.dds_settings['ITEM_PIPELINES']
-        settings.overrides['IMAGES_STORE'] = self.dds_settings['IMAGES_STORE']
+        settings.set('ITEM_PIPELINES', self.dds_settings['ITEM_PIPELINES'], priority='cmdline')
+        settings.set('IMAGES_STORE', self.dds_settings['IMAGES_STORE'], priority='cmdline')
         if 'IMAGES_THUMBS' in self.dds_settings:
-            settings.overrides['IMAGES_THUMBS'] = self.dds_settings['IMAGES_THUMBS']
+            settings.set('IMAGES_THUMBS', self.dds_settings['IMAGES_THUMBS'], priority='cmdline')
         if 'DSCRAPER_IMAGES_STORE_FORMAT' in self.dds_settings:
-            settings.overrides['DSCRAPER_IMAGES_STORE_FORMAT'] = self.dds_settings['DSCRAPER_IMAGES_STORE_FORMAT']
+            settings.set('DSCRAPER_IMAGES_STORE_FORMAT', self.dds_settings['DSCRAPER_IMAGES_STORE_FORMAT'], priority='cmdline')
 
         self.crawler = Crawler(settings)
         self.crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
