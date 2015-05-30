@@ -18,11 +18,11 @@ BOT_NAME = 'open_news'
 SPIDER_MODULES = ['dynamic_scraper.spiders', 'open_news.scraper',]
 USER_AGENT = '%s/%s' % (BOT_NAME, '1.0')
 
-ITEM_PIPELINES = [
-    'dynamic_scraper.pipelines.DjangoImagesPipeline',
-    'dynamic_scraper.pipelines.ValidationPipeline',
-    'open_news.scraper.pipelines.DjangoWriterPipeline',
-]
+ITEM_PIPELINES = {
+    'dynamic_scraper.pipelines.DjangoImagesPipeline': 200,
+    'dynamic_scraper.pipelines.ValidationPipeline': 400,
+    'open_news.scraper.pipelines.DjangoWriterPipeline': 800,
+}
 
 IMAGES_STORE = os.path.join(PROJECT_ROOT, '../thumbnails')
 
