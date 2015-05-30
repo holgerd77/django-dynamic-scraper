@@ -1,6 +1,5 @@
 from scrapy import log, signals
 from scrapy.exceptions import CloseSpider
-from scrapy.selector import Selector
 from scrapy.xlib.pydispatch import dispatcher
 from dynamic_scraper.spiders.django_base_spider import DjangoBaseSpider
 from dynamic_scraper.models import Scraper
@@ -59,11 +58,9 @@ class CheckerTest(DjangoBaseSpider):
     def parse(self, response):        
         if self.ref_object.checker_type == '4':
             return
-        
-        hxs = Selector(response)
-        
+
         try:
-            test_select = hxs.select(self.ref_object.checker_x_path).extract()
+            test_select = response.xpath(self.ref_object.checker_x_path).extract()
         except ValueError:
             self.log('Invalid checker x_path!', log.ERROR)
             return

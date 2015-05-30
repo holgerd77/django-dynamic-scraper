@@ -1,7 +1,6 @@
 import os
 from scrapy import log, signals
 from scrapy.exceptions import CloseSpider
-from scrapy.selector import Selector
 from scrapy.xlib.pydispatch import dispatcher
 
 from dynamic_scraper.spiders.django_base_spider import DjangoBaseSpider
@@ -93,14 +92,12 @@ class DjangoChecker(DjangoBaseSpider):
 
 
     def parse(self, response):
-        hxs = Selector(response)
-        
         # x_path test
         if self.scraper.checker_type == '4':
             self.log("No 404. Item kept.", log.INFO)
             return
         try:
-            test_select = hxs.select(self.scraper.checker_x_path).extract()
+            test_select = response.xpath(self.scraper.checker_x_path).extract()
         except ValueError:
             self.log('Invalid checker x_path!', log.ERROR)
             return
