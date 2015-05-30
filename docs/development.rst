@@ -60,7 +60,8 @@ like correct processor output or scheduling time calculations. These tests can b
 The ``scraper`` app is testing scraper related functionality. Tests can either be run via shell script (see above)
 or on a per-test-case level like this::
 
-  python manage.py test scraper.ScraperRunTest.test_scraper
+  python manage.py test scraper.scraper_run_test.ScraperRunTest.test_scraper #Django 1.6+
+  python manage.py test scraper.ScraperRunTest.test_scraper #Django up to 1.5
 
 Have a look at the ``run_tests.sh`` shell script for more examples!
 
@@ -68,7 +69,7 @@ Have a look at the ``run_tests.sh`` shell script for more examples!
 
 Release Notes
 =============
-**Changes in version 0.3.14-alpha (2015-05-30)
+**Changes in version 0.3.14-alpha** (2015-05-30)
 
 * Pure documentation update release to get updated ``Scrapy 0.20/0.22/.24`` compatibility info in the
   docs (see: :ref:`release_compatibility`)
