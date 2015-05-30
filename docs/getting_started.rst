@@ -31,13 +31,6 @@ The DDS repository on GitHub contains an example project in the ``example_projec
 create a scraper for open news content on the web (starting with Wikinews_ from Wikipedia). The source code
 from this example is used in the following guidelines.
 
-.. warning::
-	While there is a testsuite for DDS with tests for most of its' features and the app runs relatively stable
-	and is also used in production, DDS is **alpha** and still in an early development phase. Expect API changes 
-	in future releases which will require manual adaption in your code. During alpha phase, API and/or DB changes 
-	can also occur after minor release updates (e.g. from 0.2.0 to 0.2.1).  
-
-
 .. _Scrapy: http://www.scrapy.org 
 .. _Wikinews: http://en.wikinews.org/wiki/Main_Page
 
@@ -49,8 +42,8 @@ Requirements
 The **basic requirements** for Django Dynamic Scraper are:
 
 * Python 2.7+ (earlier versions untested, Python 3.x not yet supported)
-* `Django <https://www.djangoproject.com/>`_ 1.4+ (also tested against Django 1.5/1.6, 1.7+ untested)
-* Scrapy_ 0.16 (Scrapy 0.18+ not yet supported)
+* `Django <https://www.djangoproject.com/>`_ 1.4-1.6 (1.7+ unsupported)
+* Scrapy_ 0.20-0.24 (newer versions untested)
 
 If you want to use the **scheduling mechanism** of DDS you also have to install ``django-celery``:
 
@@ -76,6 +69,8 @@ by which ``DDS`` version. Due to dev resource constraints backwards compatibilit
 +-------------+-------------------------------+---------------------------------------+-------------------------+
 | DDS Version | Django                        | Scrapy                                | django-celery           |
 +=============+===============================+=======================================+=========================+
+| 0.4         | ?                             | 0.20 (?)                              | 3.0+ (3.1+ untested)    |
++-------------+-------------------------------+---------------------------------------+-------------------------+
 | 0.3         | 1.4-1.6                       | 0.16/0.18 (recommended)               | 3.0+ (3.1+ untested)    |
 +-------------+-------------------------------+---------------------------------------+-------------------------+
 |             | (1.7+ unsupported)            | 0.20/0.22/0.24 (dep. warnings)        |                         |

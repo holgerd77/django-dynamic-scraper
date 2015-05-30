@@ -69,6 +69,10 @@ Have a look at the ``run_tests.sh`` shell script for more examples!
 
 Release Notes
 =============
+**Changes in version 0.4.0-beta** (Not yet released!)
+
+* TODO
+
 **Changes in version 0.3.14-alpha** (2015-05-30)
 
 * Pure documentation update release to get updated ``Scrapy 0.20/0.22/.24`` compatibility info in the
