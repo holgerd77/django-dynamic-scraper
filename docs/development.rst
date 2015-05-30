@@ -68,6 +68,11 @@ Have a look at the ``run_tests.sh`` shell script for more examples!
 
 Release Notes
 =============
+**Changes in version 0.3.14-alpha (2015-05-30)
+
+* Pure documentation update release to get updated ``Scrapy 0.20/0.22/.24`` compatibility info in the
+  docs (see: :ref:`release_compatibility`)
+
 **Changes in version 0.3.13-alpha** (2015-05-29)
 
 * Adopted test suite to pass through under ``Scrapy 0.18`` (Tests don't work with ``Scrapy 0.16`` any more)
