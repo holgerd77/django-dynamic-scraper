@@ -4,7 +4,7 @@ import os
 
 setup(
     name='django-dynamic-scraper',
-    version='0.3.14',
+    version='0.4.0',
     description='Creating Scrapy scrapers via the Django admin interface',
     author='Holger Drewes',
     author_email='Holger.Drewes@gmail.com',
@@ -22,14 +22,14 @@ setup(
     ],
     #install_requires=[
     #    'Django>=1.4,<=1.6',
-    #    'Scrapy>=0.16.0,<=0.18.0',
+    #    'Scrapy>=0.20.0,<=0.24.0',
     #    
     #    'django-celery>=3.0.0', # Scheduling
     #    'pillow',
     #    'South',
     #],
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',

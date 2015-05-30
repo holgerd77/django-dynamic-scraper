@@ -1,5 +1,5 @@
 Django>=1.4,<=1.6
-Scrapy>=0.16.0,<=0.18.0
+Scrapy>=0.20.0,<=0.24.0
 django-celery>=3.0.0
 pillow
 South
