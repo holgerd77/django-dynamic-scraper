@@ -267,14 +267,21 @@ If everything works well, you should now see the following line in your command 
 	[2011-12-12 10:20:01,535: INFO/MainProcess] Celerybeat: Starting...
 
 As a second daemon process we need the server coming along with Scrapy to actually crawl the different
-websites targeted with our scrapers. You can start the `Scrapy Server`_ with the following command from
-within the main directory of your project::
+websites targeted with our scrapers. For ``Scrapy`` up to version ``0.16`` you can use the build-in `Scrapy Server`_
+started with the following command from within the main directory of your project::
 
 	scrapy server
 	
 You should get an output similar to the following:
 
 .. image:: images/screenshot_shell_scrapy_server.png 
+
+Starting with ``Scrapy 0.18`` is not shipped bundled with ``scrapyd`` any more, being now a separate project,
+so you have to make sure you have deployed your Scrapy project (see: :ref:`setting_up_scrapy`) and run the
+server with::
+
+	scrapyd
+
 
 For testing your scheduling system, you can temporarily set your time interval of your periodic task to
 a lower interval, e.g. 1 minute. Now you should see a new task coming in and being executed every minute::

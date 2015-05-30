@@ -392,6 +392,8 @@ To get this going, we have to create a new Scrapy project, adjust some settings 
 two short python module files, one with a spider class, inheriting from :ref:`django_spider`, and a finalising
 pipeline for saving our scraped objects.
 
+.. _setting_up_scrapy:
+
 Setting up Scrapy
 -----------------
 
@@ -423,9 +425,15 @@ settings file and the project name::
 	[settings]
 	default = open_news.scraper.settings
 	
+	#Scrapy till 0.16
 	[deploy]
 	#url = http://localhost:6800/
 	project = open_news
+
+	#Scrapy with separate scrapyd (0.18+)
+	[deploy:scrapyd1]
+	url = http://localhost:6800/
+	project = open_news	
 
 
 And this is your ``settings.py`` file::
