@@ -55,9 +55,9 @@ For **scraping images** you will need the Pillow Library:
 
 .. note::
    ``DDS 0.4`` version and upwards have dropped ``South`` support and using the internal migration system
-   from ``Django 1.7+``. If you are upgrading from a DDS version older than ``0.3.2`` you have to upgrade to
-   the latest ``DDS 0.3.x`` version first and apply all the ``South`` migrations before you can move on
-   to a version ``DDS 0.4`` or newer!
+   from ``Django 1.7+``, south migrations can still be found in ``dynamic_scraper/south_migrations`` folder though. If you are upgrading from a DDS version older than ``0.3.2`` make sure to apply all the ``South`` migrations first
+   and the do an initial fake migration for switching to the Django migration system (see also Django docs on
+   migrations)!
 
 .. _release_compatibility:
 
@@ -70,7 +70,7 @@ by which ``DDS`` version. Due to dev resource constraints backwards compatibilit
 +-------------+-------------------------------+---------------------------------------+-------------------------+
 | DDS Version | Django                        | Scrapy                                | django-celery           |
 +=============+===============================+=======================================+=========================+
-| 0.4         | 1.7 (1.8+ untested)           | 0.22/0.24 (newer versions untested)   | 3.1.16 (newer untested) |
+| 0.4         | 1.7 (1.8+ untested)           | 0.22/0.24 (newer untested)            | 3.1.16 (newer untested) |
 +-------------+-------------------------------+---------------------------------------+-------------------------+
 | 0.3         | 1.4-1.6                       | 0.16/0.18 (recommended)               | 3.0+ (3.1+ untested)    |
 +-------------+-------------------------------+---------------------------------------+-------------------------+
