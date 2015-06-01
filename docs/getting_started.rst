@@ -42,7 +42,7 @@ Requirements
 The **basic requirements** for Django Dynamic Scraper are:
 
 * Python 2.7+ (earlier versions untested, Python 3.x not yet supported)
-* `Django <https://www.djangoproject.com/>`_ 1.4-1.6 (1.7+ unsupported)
+* `Django <https://www.djangoproject.com/>`_ 1.7 (1.8+ untested)
 * Scrapy_ 0.20-0.24 (newer versions untested)
 
 If you want to use the **scheduling mechanism** of DDS you also have to install ``django-celery``:
@@ -53,10 +53,11 @@ For **scraping images** you will need the Pillow Library:
 
 * `Pillow Libray (PIL fork) 2.5+ <https://python-pillow.github.io/>`_
 
-And finally: DDS is using ``South`` for **database migrations** so that it's easier to keep up with 
-future DB changes:
-
-* `South 0.7+ <http://south.aeracode.org/>`_
+.. note::
+   ``DDS 0.4`` version and upwards have dropped ``South`` support and using the internal migration system
+   from ``Django 1.7+``. If you are upgrading from a DDS version older than ``0.3.2`` you have to upgrade to
+   the latest ``DDS 0.3.x`` version first and apply all the ``South`` migrations before you can move on
+   to a version ``DDS 0.4`` or newer!
 
 .. _release_compatibility:
 
@@ -69,7 +70,7 @@ by which ``DDS`` version. Due to dev resource constraints backwards compatibilit
 +-------------+-------------------------------+---------------------------------------+-------------------------+
 | DDS Version | Django                        | Scrapy                                | django-celery           |
 +=============+===============================+=======================================+=========================+
-| 0.4         | ?                             | 0.22 (?)                              | 3.0+ (3.1+ untested)    |
+| 0.4         | 1.7 (1.8+ untested)           | 0.22/0.24 (newer versions untested)   | 3.0+ (3.1+ untested)    |
 +-------------+-------------------------------+---------------------------------------+-------------------------+
 | 0.3         | 1.4-1.6                       | 0.16/0.18 (recommended)               | 3.0+ (3.1+ untested)    |
 +-------------+-------------------------------+---------------------------------------+-------------------------+
