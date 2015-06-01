@@ -47,7 +47,7 @@ The **basic requirements** for Django Dynamic Scraper are:
 
 If you want to use the **scheduling mechanism** of DDS you also have to install ``django-celery``:
 
-* `django-celery <http://ask.github.com/django-celery/>`_ 3.0+ (Celery 3.1+ not yet tested)
+* `django-celery <http://ask.github.com/django-celery/>`_ 3.1.16 (newer untested)
 
 For **scraping images** you will need the Pillow Library:
 
@@ -70,7 +70,7 @@ by which ``DDS`` version. Due to dev resource constraints backwards compatibilit
 +-------------+-------------------------------+---------------------------------------+-------------------------+
 | DDS Version | Django                        | Scrapy                                | django-celery           |
 +=============+===============================+=======================================+=========================+
-| 0.4         | 1.7 (1.8+ untested)           | 0.22/0.24 (newer versions untested)   | 3.0+ (3.1+ untested)    |
+| 0.4         | 1.7 (1.8+ untested)           | 0.22/0.24 (newer versions untested)   | 3.1.16 (newer untested) |
 +-------------+-------------------------------+---------------------------------------+-------------------------+
 | 0.3         | 1.4-1.6                       | 0.16/0.18 (recommended)               | 3.0+ (3.1+ untested)    |
 +-------------+-------------------------------+---------------------------------------+-------------------------+
