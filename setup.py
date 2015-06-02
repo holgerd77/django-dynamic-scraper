@@ -21,8 +21,8 @@ setup(
         'dynamic_scraper.management.commands',
     ],
     #install_requires=[
-    #    'Django>=1.7,<=1.8',
-    #    'Scrapy>=0.22.0,<=0.24.0',
+    #    'Django>=1.7,<1.9',
+    #    'Scrapy>=0.22.0,<0.25',
     #    'scrapyd',
     #    'django-celery==3.1.16', # Scheduling
     #    'pillow',
