@@ -71,7 +71,17 @@ Release Notes
 =============
 **Changes in version 0.4.0-beta** (2015-06-02)
 
-* TODO
+* Support for ``Django 1.7`` and ``Scrapy 0.22/0.24``, earlier versions not supported any more from this release on,
+  if you need another configuration have a look at the ``DDS 0.3.x`` branch (new features won't be back-ported though)
+  (see :ref:`release_compatibility`)
+* Switched to Django migrations, removed ``South`` dependency
+* Updated core library to work with ``Django 1.7`` (``Django 1.6`` and older not working any more)
+* Replaced deprecated calls logged when run under ``Scrapy 0.24`` (``Scrapy 0.20`` and older not working any more)
+* Things to consider when updating Scrapy: new ``ITEM_PIPELINES`` dict format, standalone ``scrapyd`` with changed 
+  ``scrapy.cfg`` settings and new deployment procedure (see: :ref:`setting_up_scrapy`)
+* Adopted ``example_project`` and ``tests`` Django projects to work with the updated dependecies
+* Updated ``open_news.json`` example project fixture
+* Changed ``DDS`` status to ``Beta``
 
 **Changes in version 0.3.14-alpha** (2015-05-30)
 
