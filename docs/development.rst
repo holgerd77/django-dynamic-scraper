@@ -71,7 +71,7 @@ Release Notes
 =============
 **Changes in version 0.4.0-beta** (2015-06-02)
 
-* Support for ``Django 1.7/1.8`` and ``Scrapy 0.22/0.24``, earlier versions not supported any more from this release on,
+* Support for ``Django 1.7/1.8`` and ``Scrapy 0.22/0.24``. Earlier versions not supported any more from this release on,
   if you need another configuration have a look at the ``DDS 0.3.x`` branch (new features won't be back-ported though)
   (see :ref:`release_compatibility`)
 * Switched to Django migrations, removed ``South`` dependency
