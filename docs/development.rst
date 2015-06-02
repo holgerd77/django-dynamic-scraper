@@ -69,7 +69,7 @@ Have a look at the ``run_tests.sh`` shell script for more examples!
 
 Release Notes
 =============
-**Changes in version 0.4.0-beta** (Not yet released!)
+**Changes in version 0.4.0-beta** (2015-06-02)
 
 * TODO
 

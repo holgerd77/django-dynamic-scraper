@@ -41,7 +41,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'django-dynamic-scraper'
-copyright = u'2011, Holger Drewes'
+copyright = u'2015, Holger Drewes'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

@@ -21,12 +21,11 @@ setup(
         'dynamic_scraper.management.commands',
     ],
     #install_requires=[
-    #    'Django>=1.4,<=1.6',
+    #    'Django>=1.7,<=1.7',
     #    'Scrapy>=0.20.0,<=0.24.0',
-    #    
-    #    'django-celery>=3.0.0', # Scheduling
+    #    'scrapyd',
+    #    'django-celery==3.1.16', # Scheduling
     #    'pillow',
-    #    'South',
     #],
     classifiers=[
         'Development Status :: 4 - Beta',
