@@ -4,6 +4,9 @@ from scrapy.spider import Spider
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy.exceptions import CloseSpider
 
+import django
+django.setup()
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
