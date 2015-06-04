@@ -67,6 +67,29 @@ Have a look at the ``run_tests.sh`` shell script for more examples!
 
 .. _releasenotes:
 
+Running ScrapyJS/Splash JS rendering tests
+------------------------------------------
+Unit tests testing ``ScrapyJS/Splash`` Javascript rendering functionality need a working ``ScrapyJS/Splash`` (docker)
+installation and are therefor run separately with::
+
+  ./run_js_tests.sh
+
+Test cases are located in ``scraper.scraper_js_run_test.ScraperJSRunTest``. Some links:
+
+* `Splash Documentation <http://splash.readthedocs.org/en/latest/>`_
+* `ScrapyJS GitHub <https://github.com/scrapinghub/scrapyjs>`_
+* `Installation of Docker on OS X with Homebrew <http://blog.javabien.net/2014/03/03/setup-docker-on-osx-the-no-brainer-way/>`_
+
+``SPLASH_URL`` in ``scraper.settings.base_settings.py`` has to be adopted to your local installation to get this running!
+
+Docker container can be run with::
+
+  docker run -p 5023:5023 -p 8050:8050 -p 8051:8051 -d scrapinghub/splash
+
+.. note::
+   For rendering websites served on ``localhost`` form within ``Docker/Splash``, you can connect to ``localhost`` outside the ``Docker container`` via ``http://10.0.2.2`` 
+   (see e.g. `Stackoverflow <http://stackoverflow.com/questions/1261975/addressing-localhost-from-a-virtualbox-virtual-machine>`_).
+
 Release Notes
 =============
 **Changes in version 0.4.1-beta** (Not yet released)

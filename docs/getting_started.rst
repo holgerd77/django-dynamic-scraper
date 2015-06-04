@@ -491,11 +491,6 @@ Afterwards follow the configuration instructions on the `ScrapyJS GitHub page <h
 ScrapyJS can later be used via activating it for certain scrapers in the corresponding ``Django Admin`` form.
 
 .. note::
-   If you want to render websites on your local computer served on ``localhost`` and you are using ``Docker`` as
-   a container for ``Splash``, you can connect to ``localhost`` outside the ``Docker container`` via ``http://10.0.2.2`` 
-   (see e.g. `Stackoverflow <http://stackoverflow.com/questions/1261975/addressing-localhost-from-a-virtualbox-virtual-machine>`_).
-
-.. note::
    Resources needed for completely rendering a website on your scraping machine are vastly larger then for just
    requesting/working on the plain HTML text without further processing, so make use of ``ScrapyJS/Splash`` capability
    on when needed!
