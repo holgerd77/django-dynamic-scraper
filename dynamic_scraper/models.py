@@ -71,6 +71,7 @@ class Scraper(models.Model):
     scraped_obj_class = models.ForeignKey(ScrapedObjClass)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
     content_type = models.CharField(max_length=1, choices=CONTENT_TYPE_CHOICES, default='H')
+    render_javascript = models.BooleanField(default=False, help_text="Render Javascript on pages (ScrapyJS/Splash deployment needed, careful: resource intense)")
     max_items_read = models.IntegerField(blank=True, null=True, help_text="Max number of items to be read (empty: unlimited).")
     max_items_save = models.IntegerField(blank=True, null=True, help_text="Max number of items to be saved (empty: unlimited).")
     pagination_type = models.CharField(max_length=1, choices=PAGINATION_TYPE, default='N')
