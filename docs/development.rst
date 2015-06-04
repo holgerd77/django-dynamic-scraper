@@ -69,6 +69,10 @@ Have a look at the ``run_tests.sh`` shell script for more examples!
 
 Release Notes
 =============
+**Changes in version 0.4.1-beta** (Not yet released)
+
+* TODO
+
 **Changes in version 0.4.0-beta** (2015-06-02)
 
 * Support for ``Django 1.7/1.8`` and ``Scrapy 0.22/0.24``. Earlier versions not supported any more from this release on,
