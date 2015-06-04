@@ -53,6 +53,11 @@ For **scraping images** you will need the Pillow Library:
 
 * `Pillow Libray (PIL fork) 2.5+ <https://python-pillow.github.io/>`_
 
+Since ``v.0.4.1`` ``DDS`` has basic ``ScrapyJS/Splash`` support for rendering/processing ``Javascript`` before
+scraping the page. For this to work you have to install and configure (see: :ref:`setting_up_scrapyjs_splash`) ``ScrapyJS``:
+
+* `ScrapyJS 0.1+ <https://github.com/scrapinghub/scrapyjs>`_ 
+
 .. note::
    ``DDS 0.4`` version and upwards have dropped ``South`` support and using the internal migration system
    from ``Django 1.7+``, south migrations can still be found in ``dynamic_scraper/south_migrations`` folder though. If you are upgrading from a DDS version older than ``0.3.2`` make sure to apply all the ``South`` migrations first
@@ -466,6 +471,34 @@ Scrapy will find the (yet to be written) spider module. For the ``ITEM_PIPELINES
 add (at least) two pipelines. The first one is the mandatory pipeline from DDS, doing stuff like checking
 for the mandatory attributes we have defined in our scraper in the DB or preventing double entries already
 existing in the DB (identified by the url attribute of your scraped items) to be saved a second time.  
+
+.. _setting_up_scrapyjs_splash:
+
+Setting up ScrapyJS/Splash (Optional)
+-------------------------------------
+
+More and more webpages only show their full information load after various ``Ajax`` calls and/or ``Javascript`` 
+function processing. For being able to scrape those websites ``DDS`` supports ``ScrapyJS/Spash`` starting with 
+``v.0.4.1`` for basic JS rendering/processing.
+
+For this to work you have to install ``Splash`` (the Javascript rendering service) installed - probably via ``Docker``- 
+(see `installation instructions <https://splash.readthedocs.org/en/latest/install.html>`_), and then ``ScrapyJS`` with::
+
+    pip install scrapyjs
+
+Afterwards follow the configuration instructions on the `ScrapyJS GitHub page <https://github.com/scrapinghub/scrapyjs#configuration>`_.
+
+ScrapyJS can later be used via activating it for certain scrapers in the corresponding ``Django Admin`` form.
+
+.. note::
+   If you want to render websites on your local computer served on ``localhost`` and you are using ``Docker`` as
+   a container for ``Splash``, you can connect to ``localhost`` outside the ``Docker container`` via ``http://10.0.2.2`` 
+   (see e.g. `Stackoverflow <http://stackoverflow.com/questions/1261975/addressing-localhost-from-a-virtualbox-virtual-machine>`_).
+
+.. note::
+   Resources needed for completely rendering a website on your scraping machine are vastly larger then for just
+   requesting/working on the plain HTML text without further processing, so make use of ``ScrapyJS/Splash`` capability
+   on when needed!
 
 Adding the spider class
 -----------------------
