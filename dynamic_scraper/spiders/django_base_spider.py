@@ -1,5 +1,6 @@
 import datetime, os
 from scrapy import log, signals
+from scrapy.http import Request
 from scrapy.spider import Spider
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy.exceptions import CloseSpider
@@ -40,6 +41,17 @@ class DjangoBaseSpider(Spider):
         super(DjangoBaseSpider,  self).__init__(None, **kwargs)
         
         self._check_mandatory_vars()
+
+
+    def start_requests(self):
+        for url in self.start_urls:
+            meta = {}
+            if self.scraper.render_javascript:
+                meta['splash'] = {
+                    'endpoint': 'render.html',
+                    'args': {'wait': 0.5}
+                }
+            yield Request(url, self.parse, meta=meta)
 
 
     def _set_ref_object(self, ref_object_class, **kwargs):

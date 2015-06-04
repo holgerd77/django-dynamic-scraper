@@ -14,6 +14,8 @@ class ScraperJSRunTest(ScraperTest):
 
     def setUpScraperJSDockerScraper(self):
         self.event_website.url = os.path.join('http://10.0.2.2:8010/static/', 'site_with_js/event_main_docker.html')
+        self.scraper.render_javascript = True
+        self.scraper.save()
         self.event_website.save()
 
 

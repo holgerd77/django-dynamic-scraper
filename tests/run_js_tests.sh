@@ -2,11 +2,11 @@
 
 suite='scraper.scraper_js_run_test.ScraperJSRunTest'
 tests="
+test_default_no_scrapyjs_main_page
+test_default_no_scrapyjs_detail_page
 test_activated_scrapyjs_main_page
 test_activated_scrapyjs_detail_page
 "
-#test_default_no_scrapyjs_main_page
-#test_default_no_scrapyjs_detail_page
 
 for test in `echo $tests`
 do
