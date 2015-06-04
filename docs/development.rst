@@ -87,7 +87,7 @@ Docker container can be run with::
   docker run -p 5023:5023 -p 8050:8050 -p 8051:8051 -d scrapinghub/splash
 
 .. note::
-   For rendering websites served on ``localhost`` form within ``Docker/Splash``, you can connect to ``localhost`` outside the ``Docker container`` via ``http://10.0.2.2`` 
+   For rendering websites served on ``localhost`` from within ``Docker/Splash``, you can connect to ``localhost`` outside the ``Docker container`` via ``http://10.0.2.2`` 
    (see e.g. `Stackoverflow <http://stackoverflow.com/questions/1261975/addressing-localhost-from-a-virtualbox-virtual-machine>`_).
 
 Release Notes

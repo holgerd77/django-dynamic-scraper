@@ -34,6 +34,16 @@ class DjangoSpider(DjangoBaseSpider):
         self.log(msg, log.INFO)
 
 
+    def start_requests(self):
+        for url in self.start_urls:
+            yield Request(url, self.parse, meta={
+                'splash': {
+                    'endpoint': 'render.html',
+                    'args': {'wait': 0.5}
+                }
+            })
+
+
     def _set_config(self, **kwargs):
         log_msg = ""
         #max_items_read 
@@ -232,10 +242,17 @@ class DjangoSpider(DjangoBaseSpider):
                     item[url_name] = 'DOUBLE' + item[url_name]
                 # (DOUBLE item with no standard update elements to be scraped from detail page) or 
                 # generally no attributes scraped from detail page
+                meta = {}
+                meta['item'] = item
+
+                meta['splash'] = {
+                    'endpoint': 'render.html',
+                    'args': { 'wait': 0.5 }
+                }
                 if (cnt > 0 and cnt1 == 0) or cnt2 == 0:
                     yield item
                 else:
-                    yield Request(url, callback=self.parse_item, meta={'item':item})
+                    yield Request(url, callback=self.parse_item, meta=meta)
             else:
                 self.log("Detail page url elem could not be read!", log.ERROR)
     

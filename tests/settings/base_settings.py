@@ -10,6 +10,15 @@ ITEM_PIPELINES = {
     'scraper.scraper_test.DjangoWriterPipeline': 800,
 }
 
+#ScrapyJS/Splash
+SPLASH_URL = 'http://192.168.59.103:8050'
+DUPEFILTER_CLASS = 'scrapyjs.SplashAwareDupeFilter'
+
+DOWNLOADER_MIDDLEWARES = {
+    'scrapyjs.SplashMiddleware': 725,
+}
+#END
+
 IMAGES_STORE = os.path.join(PROJECT_ROOT, '../scraper/imgs')
 
 DSCRAPER_IMAGES_STORE_FORMAT = 'FLAT'

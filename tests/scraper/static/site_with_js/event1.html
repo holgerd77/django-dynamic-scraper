@@ -1,11 +1,16 @@
 <html>
+<body>
+<script src="/static/jquery.min.js"></script>
 
-    <body>
-    
-        <div class="event_detail">
-        	<div class="title">Event 1</div>
-        	<div class="description"></div>
-        </div>
+<div class="event_detail">
+    <div class="title">Event 1</div>
+    <div class="description">Event 1 description</div>  
+</div>
 
-    </body>
+<script>
+    $(document).ready(function() {
+        $('div.description').text("Event 1 JS description");
+    });
+</script>
+</body>
 </html>

@@ -88,6 +88,9 @@ class ScraperTest(TestCase):
         
         self.dds_settings = {}
         self.dds_settings['ITEM_PIPELINES'] = file_settings.ITEM_PIPELINES
+        self.dds_settings['SPLASH_URL'] = file_settings.SPLASH_URL
+        self.dds_settings['DUPEFILTER_CLASS'] = file_settings.DUPEFILTER_CLASS
+        self.dds_settings['DOWNLOADER_MIDDLEWARES'] = file_settings.DOWNLOADER_MIDDLEWARES
         self.dds_settings['IMAGES_STORE'] = file_settings.IMAGES_STORE
         if 'IMAGES_THUMBS' in file_settings.__dict__:
             self.dds_settings['IMAGES_THUMBS'] = file_settings.IMAGES_THUMBS
@@ -146,6 +149,9 @@ class ScraperTest(TestCase):
         os.mkdir(self.IMG_DIR)
 
         settings.set('ITEM_PIPELINES', self.dds_settings['ITEM_PIPELINES'], priority='cmdline')
+        settings.set('SPLASH_URL', self.dds_settings['SPLASH_URL'], priority='cmdline')
+        settings.set('DUPEFILTER_CLASS', self.dds_settings['DUPEFILTER_CLASS'], priority='cmdline')
+        settings.set('DOWNLOADER_MIDDLEWARES', self.dds_settings['DOWNLOADER_MIDDLEWARES'], priority='cmdline')
         settings.set('IMAGES_STORE', self.dds_settings['IMAGES_STORE'], priority='cmdline')
         if 'IMAGES_THUMBS' in self.dds_settings:
             settings.set('IMAGES_THUMBS', self.dds_settings['IMAGES_THUMBS'], priority='cmdline')
