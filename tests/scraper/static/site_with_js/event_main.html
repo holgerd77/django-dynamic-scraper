@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DDS JS Test</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<script src="/static/jquery.min.js"></script>
+
+<ul>
+	<li><a href="http://localhost:8010/static/site_with_js/event1.html">Event 1</a></li>	
+</ul>
+
+<script>
+    $(document).ready(function() {
+        $('ul').append('<li><a href="http://localhost:8010/static/site_with_js/event2.html">Event 2 JS</a></li>');
+    });
+</script>
+</body>
+</html>
