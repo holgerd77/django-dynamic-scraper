@@ -65,7 +65,7 @@ or on a per-test-case level like this::
 
 Have a look at the ``run_tests.sh`` shell script for more examples!
 
-.. _releasenotes:
+.. _scraper_js_tests:
 
 Running ScrapyJS/Splash JS rendering tests
 ------------------------------------------
@@ -90,11 +90,18 @@ Docker container can be run with::
    For rendering websites served on ``localhost`` from within ``Docker/Splash``, you can connect to ``localhost`` outside the ``Docker container`` via ``http://10.0.2.2`` 
    (see e.g. `Stackoverflow <http://stackoverflow.com/questions/1261975/addressing-localhost-from-a-virtualbox-virtual-machine>`_).
 
+.. _releasenotes:
+
 Release Notes
 =============
-**Changes in version 0.4.1-beta** (Not yet released)
+**Changes in version 0.4.1-beta** (2015-06-04)
 
-* TODO
+* Support for ``Javascript`` rendering of scraped pages via ``ScrapyJS/Splash``
+* Feature is optional and needs a working ScrapyJS/Splash deployment, see :ref:`requirements` and 
+  :ref:`setting_up_scrapyjs_splash`
+* New attribute ``render_javascript`` for ``Scraper`` model, run ``python manage.py migrate dynamic_scraper`` to
+  apply (migration ``0002``)
+* New unit tests for Javascript rendering (see: :ref:`scraper_js_tests`)
 
 **Changes in version 0.4.0-beta** (2015-06-02)
 

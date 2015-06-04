@@ -46,7 +46,7 @@ class DjangoBaseSpider(Spider):
     def start_requests(self):
         for url in self.start_urls:
             meta = {}
-            if self.scraper.render_javascript:
+            if hasattr(self, 'scraper') and self.scraper.render_javascript:
                 meta['splash'] = {
                     'endpoint': 'render.html',
                     'args': {'wait': 0.5}

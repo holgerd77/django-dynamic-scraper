@@ -37,6 +37,8 @@ from this example is used in the following guidelines.
 Installation
 ============
 
+.. _requirements:
+
 Requirements
 ------------
 The **basic requirements** for Django Dynamic Scraper are:
