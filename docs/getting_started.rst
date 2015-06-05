@@ -490,6 +490,8 @@ For this to work you have to install ``Splash`` (the Javascript rendering servic
 
 Afterwards follow the configuration instructions on the `ScrapyJS GitHub page <https://github.com/scrapinghub/scrapyjs#configuration>`_.
 
+For customization of ``Splash`` args ``DSCRAPER_SPLASH_ARGS`` setting can be used (see: :ref:`settings`).
+
 ScrapyJS can later be used via activating it for certain scrapers in the corresponding ``Django Admin`` form.
 
 .. note::

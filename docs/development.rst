@@ -94,6 +94,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.4.2-alpha** (2015-06-05)
+
+* Possibility to customize ``Splash`` args with new setting ``DSCRAPER_SPLASH_ARGS`` (see: :ref:`setting_up_scrapyjs_splash`)
+
 **Changes in version 0.4.1-beta** (2015-06-04)
 
 * Support for ``Javascript`` rendering of scraped pages via ``ScrapyJS/Splash``

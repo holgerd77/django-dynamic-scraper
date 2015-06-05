@@ -27,6 +27,12 @@ ALL    Storing original (in ``full/``) and thumbnail images (e.g. in ``thumbs/sm
 THUMBS Storing only the thumbnail images (e.g. in ``thumbs/small/``)
 ====== ================================================================================
 
+DSCRAPER_SPLASH_ARGS
+--------------------
+Default: ``{ 'wait': 0.5 }``
+
+Customize ``Splash`` args when ``ScrapyJS/Splash`` is used for Javascript rendering.
+
 DSCRAPER_LOG_ENABLED
 --------------------
 Default: ``True``
