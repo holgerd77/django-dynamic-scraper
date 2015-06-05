@@ -24,6 +24,7 @@ class DjangoBaseSpider(Spider):
     conf = {
         "DO_ACTION": False,
         "RUN_TYPE": 'SHELL',
+        "SPLASH_ARGS": {},
         "IMAGES_STORE_FORMAT": 'FLAT',
         "LOG_ENABLED": True,
         "LOG_LEVEL": 'ERROR',
@@ -49,7 +50,7 @@ class DjangoBaseSpider(Spider):
             if hasattr(self, 'scraper') and self.scraper.render_javascript:
                 meta['splash'] = {
                     'endpoint': 'render.html',
-                    'args': {'wait': 0.5}
+                    'args': self.conf['SPLASH_ARGS'].copy()
                 }
             yield Request(url, self.parse, meta=meta)
 
@@ -87,6 +88,10 @@ class DjangoBaseSpider(Spider):
                 log_msg += ", "
             log_msg += "do_action " + str(self.conf['DO_ACTION'])
         
+        self.conf['SPLASH_ARGS'] = settings.get('DSCRAPER_SPLASH_ARGS', self.conf['SPLASH_ARGS'])  
+        if 'wait' not in self.conf['SPLASH_ARGS']:
+            self.conf['SPLASH_ARGS']['wait'] = 0.5
+
         self.conf['IMAGES_STORE_FORMAT'] = settings.get('DSCRAPER_IMAGES_STORE_FORMAT', self.conf['IMAGES_STORE_FORMAT'])
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             msg = "Use simplified FLAT images store format (save the original or one thumbnail image)"

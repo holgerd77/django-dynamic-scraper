@@ -17,6 +17,10 @@ DUPEFILTER_CLASS = 'scrapyjs.SplashAwareDupeFilter'
 DOWNLOADER_MIDDLEWARES = {
     'scrapyjs.SplashMiddleware': 725,
 }
+
+DSCRAPER_SPLASH_ARGS = {
+    'wait': 0.3
+}
 #END
 
 IMAGES_STORE = os.path.join(PROJECT_ROOT, '../scraper/imgs')

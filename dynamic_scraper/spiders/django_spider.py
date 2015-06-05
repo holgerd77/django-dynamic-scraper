@@ -238,7 +238,7 @@ class DjangoSpider(DjangoBaseSpider):
                 if self.scraper.render_javascript:
                     meta['splash'] = {
                         'endpoint': 'render.html',
-                        'args': { 'wait': 0.5 }
+                        'args': self.conf['SPLASH_ARGS'].copy()
                     }
                 if (cnt > 0 and cnt1 == 0) or cnt2 == 0:
                     yield item

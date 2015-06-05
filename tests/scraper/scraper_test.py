@@ -91,6 +91,7 @@ class ScraperTest(TestCase):
         self.dds_settings['SPLASH_URL'] = file_settings.SPLASH_URL
         self.dds_settings['DUPEFILTER_CLASS'] = file_settings.DUPEFILTER_CLASS
         self.dds_settings['DOWNLOADER_MIDDLEWARES'] = file_settings.DOWNLOADER_MIDDLEWARES
+        self.dds_settings['DSCRAPER_SPLASH_ARGS'] = file_settings.DSCRAPER_SPLASH_ARGS
         self.dds_settings['IMAGES_STORE'] = file_settings.IMAGES_STORE
         if 'IMAGES_THUMBS' in file_settings.__dict__:
             self.dds_settings['IMAGES_THUMBS'] = file_settings.IMAGES_THUMBS
