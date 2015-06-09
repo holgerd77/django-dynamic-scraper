@@ -1,0 +1,22 @@
+{
+  "response": {
+    "num_results": 3,
+    "events": [
+      {
+        "title": "Event 1",
+        "description": "Event 1 Description",
+        "url": "http://localhost:8010/static/site_with_imgs/event1.html" 
+      },
+      {
+        "title": "Event 2",
+        "description": "Event 2 Description",
+        "url": "http://localhost:8010/static/site_with_imgs/event2.html" 
+      },
+      {
+        "title": "Event 3",
+        "description": "Event 3 Description",
+        "url": "http://localhost:8010/static/site_with_imgs/event3.html" 
+      }
+    ]
+  }
+}
