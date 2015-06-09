@@ -151,6 +151,15 @@ class ScraperRunTest(ScraperTest):
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 3)
+
+
+    @unittest.skip("Skipped, not implemented yet")
+    def test_json_content_type(self):
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_json_content_type/event_main.json')
+        self.event_website.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 3)
     
 
     def test_runtime_config_max_items_read(self):        
