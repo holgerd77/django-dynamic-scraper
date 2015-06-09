@@ -56,6 +56,7 @@ class Scraper(models.Model):
     CONTENT_TYPE_CHOICES = (
         ('H', 'HTML'),
         ('X', 'XML'),
+        ('J', 'JSON'),
     )
     PAGINATION_TYPE = (
         ('N', 'NONE'),
