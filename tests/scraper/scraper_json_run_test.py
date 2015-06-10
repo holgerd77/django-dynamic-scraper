@@ -25,7 +25,7 @@ class ScraperJSONRunTest(ScraperTest):
         self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_json_content_type/event_main.json')
         self.event_website.save()
 
-    def extraSetUpChecker(self):
+    def extraSetUpHTMLChecker(self):
         self.scraper.checker_type = 'X'
         self.scraper.checker_x_path = u'//div[@class="event_not_found"]/div/text()'
         self.scraper.checker_x_path_result = u'Event not found!'
@@ -38,6 +38,23 @@ class ScraperJSONRunTest(ScraperTest):
         self.event = Event(title='Event 1', event_website=self.event_website,
             description='Event 1 description', 
             url='http://localhost:8010/static/site_with_json_content_type/event_not_found.html',
+            checker_runtime=scheduler_rt)
+        self.event.save()
+
+    def extraSetUpJSONChecker(self):
+        self.scraper.detail_page_content_type = 'J'
+        self.scraper.checker_type = 'X'
+        self.scraper.checker_x_path = u'event_not_found'
+        self.scraper.checker_x_path_result = u'Event not found!'
+        self.scraper.checker_ref_url = u'http://localhost:8010/static/site_with_json_content_type/event_not_found.json'
+        self.scraper.save()
+        
+        scheduler_rt = SchedulerRuntime()
+        scheduler_rt.save()
+        
+        self.event = Event(title='Event 1', event_website=self.event_website,
+            description='Event 1 description', 
+            url='http://localhost:8010/static/site_with_json_content_type/event_not_found.json',
             checker_runtime=scheduler_rt)
         self.event.save()
 
@@ -64,6 +81,18 @@ class ScraperJSONRunTest(ScraperTest):
 
     def test_detail_page(self):
         self.setUpScraperJSONDefaultScraper()
+        self.se_desc.x_path = u'//div/div[@class="description"]/text()'
+        self.se_desc.from_detail_page = True
+        self.se_desc.save()
+        self.run_event_spider(1)
+        #log.msg(unicode(Event.objects.all()), level=log.INFO)
+        self.assertEqual(len(Event.objects.filter(description='Event Detail Page 1 Description')), 1)
+
+
+    def test_detail_page_json(self):
+        self.setUpScraperJSONDefaultScraper()
+        self.scraper.detail_page_content_type = 'J'
+        self.scraper.save()
         self.se_url.x_path = u'json_url'
         self.se_url.save()
         self.se_desc.x_path = u'event_details.description'
@@ -76,10 +105,38 @@ class ScraperJSONRunTest(ScraperTest):
 
     def test_checker_x_path_type_x_path_delete(self):
         self.setUpScraperJSONDefaultScraper()
-        self.extraSetUpChecker()
+        self.extraSetUpHTMLChecker()
         self.assertEqual(len(Event.objects.all()), 1)
         self.run_event_checker(1)
         self.assertEqual(len(Event.objects.all()), 0)
+
+
+    def test_checker_x_path_type_x_path_no_delete(self):
+        self.setUpScraperJSONDefaultScraper()
+        self.extraSetUpHTMLChecker()
+        self.scraper.checker_x_path = u'//div[@class="this_is_the_wrong_xpath"]/div/text()'
+        self.scraper.save()
+        self.assertEqual(len(Event.objects.all()), 1)
+        self.run_event_checker(1)
+        self.assertEqual(len(Event.objects.all()), 1)
+
+
+    def test_json_checker_x_path_type_x_path_delete(self):
+        self.setUpScraperJSONDefaultScraper()
+        self.extraSetUpJSONChecker()
+        self.assertEqual(len(Event.objects.all()), 1)
+        self.run_event_checker(1)
+        self.assertEqual(len(Event.objects.all()), 0)
+
+
+    def test_json_checker_x_path_type_x_path_no_delete(self):
+        self.setUpScraperJSONDefaultScraper()
+        self.extraSetUpJSONChecker()
+        self.scraper.checker_x_path = u'this_is_the_wrong_xpath'
+        self.scraper.save()
+        self.assertEqual(len(Event.objects.all()), 1)
+        self.run_event_checker(1)
+        self.assertEqual(len(Event.objects.all()), 1)
 
 
 
