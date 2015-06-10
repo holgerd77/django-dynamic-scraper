@@ -3,7 +3,7 @@ import os.path, sys
 from scrapy import log
 from scraper.models import Event
 from scraper.scraper_test import EventSpider, ScraperTest
-
+from dynamic_scraper.models import SchedulerRuntime
 
 
 class ScraperJSONRunTest(ScraperTest):
@@ -24,6 +24,22 @@ class ScraperJSONRunTest(ScraperTest):
 
         self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_json_content_type/event_main.json')
         self.event_website.save()
+
+    def extraSetUpChecker(self):
+        self.scraper.checker_type = 'X'
+        self.scraper.checker_x_path = u'//div[@class="event_not_found"]/div/text()'
+        self.scraper.checker_x_path_result = u'Event not found!'
+        self.scraper.checker_ref_url = u'http://localhost:8010/static/site_with_json_content_type/event_not_found.html'
+        self.scraper.save()
+        
+        scheduler_rt = SchedulerRuntime()
+        scheduler_rt.save()
+        
+        self.event = Event(title='Event 1', event_website=self.event_website,
+            description='Event 1 description', 
+            url='http://localhost:8010/static/site_with_json_content_type/event_not_found.html',
+            checker_runtime=scheduler_rt)
+        self.event.save()
 
 
     def test_num_scraped_objects(self):
@@ -56,6 +72,14 @@ class ScraperJSONRunTest(ScraperTest):
         self.run_event_spider(1)
         #log.msg(unicode(Event.objects.all()), level=log.INFO)
         self.assertEqual(len(Event.objects.filter(description='Event Detail Page 1 Description')), 1)
+
+
+    def test_checker_x_path_type_x_path_delete(self):
+        self.setUpScraperJSONDefaultScraper()
+        self.extraSetUpChecker()
+        self.assertEqual(len(Event.objects.all()), 1)
+        self.run_event_checker(1)
+        self.assertEqual(len(Event.objects.all()), 0)
 
 
 

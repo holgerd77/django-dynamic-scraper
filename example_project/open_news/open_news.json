@@ -71,6 +71,7 @@
         "checker_type": "4",
         "comments": "",
         "content_type": "H",
+        "detail_page_content_type": "H",
         "scraped_obj_class": 1
     },
     "model": "dynamic_scraper.scraper",
@@ -93,6 +94,7 @@
         "checker_type": "N",
         "comments": "",
         "content_type": "J",
+        "detail_page_content_type": "H",
         "scraped_obj_class": 1
     },
     "model": "dynamic_scraper.scraper",
