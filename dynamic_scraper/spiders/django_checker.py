@@ -1,4 +1,8 @@
-import os
+import json, os
+
+from jsonpath_rw import jsonpath, parse
+from jsonpath_rw.lexer import JsonPathLexerError
+
 from scrapy import log, signals
 from scrapy.exceptions import CloseSpider
 from scrapy.xlib.pydispatch import dispatcher
@@ -96,11 +100,21 @@ class DjangoChecker(DjangoBaseSpider):
         if self.scraper.checker_type == '4':
             self.log("No 404. Item kept.", log.INFO)
             return
-        try:
-            test_select = response.xpath(self.scraper.checker_x_path).extract()
-        except ValueError:
-            self.log('Invalid checker x_path!', log.ERROR)
-            return
+        if self.scraper.detail_page_content_type == 'J':
+            json_resp = json.loads(response.body_as_unicode())
+            try:
+                jsonpath_expr = parse(self.scraper.checker_x_path)
+            except JsonPathLexerError:
+                raise CloseSpider("Invalid checker JSONPath!")
+            test_select = [match.value for match in jsonpath_expr.find(json_resp)]
+            #self.log(unicode(test_select), log.INFO)
+        else:
+            try:
+                test_select = response.xpath(self.scraper.checker_x_path).extract()
+            except ValueError:
+                self.log('Invalid checker XPath!', log.ERROR)
+                return
+        
         if len(test_select) > 0 and self.scraper.checker_x_path_result == '':
             self.log("Elements for XPath found on page (no result string defined).", log.INFO)
             if self.conf['DO_ACTION']:

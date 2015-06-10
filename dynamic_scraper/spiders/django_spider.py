@@ -177,7 +177,7 @@ class DjangoSpider(DjangoBaseSpider):
         if not xs:
             self.from_detail_page = True
             item = response.request.meta['item']
-            if self.scraper.content_type == 'J':
+            if self.scraper.detail_page_content_type == 'J':
                 json_resp = json.loads(response.body_as_unicode())
                 self.loader = JsonItemLoader(item=item, selector=json_resp)
             else:
