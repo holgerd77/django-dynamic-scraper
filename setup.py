@@ -24,6 +24,7 @@ setup(
     #    'Django>=1.7,<1.9',
     #    'Scrapy>=0.22.0,<0.25',
     #    'scrapyd',
+    #    'jsonpath-rw>=1.4',
     #    'django-celery==3.1.16', # Scheduling
     #    'pillow',
     #],

@@ -46,6 +46,7 @@ The **basic requirements** for Django Dynamic Scraper are:
 * Python 2.7+ (earlier versions untested, Python 3.x not yet supported)
 * `Django <https://www.djangoproject.com/>`_ 1.7/1.8 (newer versions untested)
 * Scrapy_ 0.20-0.24 (newer versions untested)
+* `Python JSONPath RW 1.4+ <https://github.com/kennknowles/python-jsonpath-rw>`_
 
 If you want to use the **scheduling mechanism** of DDS you also have to install ``django-celery``:
 
@@ -77,7 +78,7 @@ by which ``DDS`` version. Due to dev resource constraints backwards compatibilit
 +-------------+-------------------------------+---------------------------------------+-------------------------+
 | DDS Version | Django                        | Scrapy                                | django-celery           |
 +=============+===============================+=======================================+=========================+
-| 0.4         | 1.7/1.8 (newer untested)      | 0.22/0.24 (newer untested)            | 3.1.16 (newer untested) |
+| 0.4/0.5     | 1.7/1.8 (newer untested)      | 0.22/0.24 (newer untested)            | 3.1.16 (newer untested) |
 +-------------+-------------------------------+---------------------------------------+-------------------------+
 | 0.3         | 1.4-1.6                       | 0.16/0.18 (recommended)               | 3.0+ (3.1+ untested)    |
 +-------------+-------------------------------+---------------------------------------+-------------------------+
