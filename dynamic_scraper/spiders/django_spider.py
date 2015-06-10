@@ -178,7 +178,8 @@ class DjangoSpider(DjangoBaseSpider):
             self.from_detail_page = True
             item = response.request.meta['item']
             if self.scraper.content_type == 'J':
-                self.loader = JsonItemLoader(item=item, response=response)
+                json_resp = json.loads(response.body_as_unicode())
+                self.loader = JsonItemLoader(item=item, selector=json_resp)
             else:
                 self.loader = ItemLoader(item=item, response=response)
         else:

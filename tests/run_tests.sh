@@ -52,6 +52,16 @@ do
     python manage.py test $suite.$test
 done
 
+suite='scraper.scraper_json_run_test.ScraperJSONRunTest'
+tests="
+"
+
+for test in `echo $tests`
+do
+    echo $suite.$test
+    python manage.py test $suite.$test
+done
+
 suite='scraper.checker_run_test.CheckerRunTest'
 tests="
 test_checker_test_wrong_checker_config
