@@ -94,7 +94,13 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.4.2-alpha** (2015-06-05)
+**Changes in version 0.5.0-beta** (2015-06-10)
+
+* Support for creating ``JSON/JSONPath`` scrapers for scraping ``JSON`` encoded pages (see: :ref:`json_jsonpath_scrapers`)
+* New library dependency ``python-jsonpath-rw 1.4+`` (see :ref:`requirements`)
+* Updated unit tests to support/test ``JSON`` scraping
+
+**Changes in version 0.4.2-beta** (2015-06-05)
 
 * Possibility to customize ``Splash`` args with new setting ``DSCRAPER_SPLASH_ARGS`` (see: :ref:`setting_up_scrapyjs_splash`)
 

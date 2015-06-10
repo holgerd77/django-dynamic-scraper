@@ -33,6 +33,7 @@ from this example is used in the following guidelines.
 
 .. _Scrapy: http://www.scrapy.org 
 .. _Wikinews: http://en.wikinews.org/wiki/Main_Page
+.. _GitHub: https://github.com/holgerd77/django-dynamic-scraper
 
 Installation
 ============
@@ -88,7 +89,7 @@ by which ``DDS`` version. Due to dev resource constraints backwards compatibilit
 +-------------+-------------------------------+---------------------------------------+-------------------------+
 
 .. note::
-   Please get in touch (GitHub) if you have any additions to this table. A library version is counted as supported if the
+   Please get in touch (GitHub_) if you have any additions to this table. A library version is counted as supported if the
    DDS testsuite is running through (see: :ref:`test_suite`).
 
 Installation with Pip
@@ -376,6 +377,24 @@ This completes our scraper. The form you have filled out should look similar to 
 .. note::
    You can also **scrape** attributes of your object **from outside the base element** by using the ``..`` notation
    in your XPath expressions to get to the parent nodes!
+
+.. _json_jsonpath_scrapers:
+
+Creating scrapers for JSON/Usage of JSONPath
+--------------------------------------------
+
+Beside creating ``HTML`` or ``XML`` scrapers where you can use classic ``XPath`` notation, ``DDS`` supports also scraping pages encoded in ``JSON`` (``v.0.5.0`` and above), e.g. for crawling web APIs or ajax call result pages.
+
+For scraping ``JSON``, ``JSONPath`` is used, an ``XPath``-like expression language for digging into ``JSON``.
+For reference see expressions as defined here:
+
+* `GitHub - python-jsonpath-rw Library <https://github.com/kennknowles/python-jsonpath-rw>`_
+* `JSONPath - XPath for JSON <http://goessner.net/articles/JsonPath/>`_
+
+.. note::
+   Using ``JSONPath`` in ``DDS`` works for standard ``JSON`` page results, but is not as heavily tested as using
+   ``XPath`` for data extraction. If you are working with more complex ``JSONPath`` queries and run into problems,
+   please report them on GitHub_!
 
 Create the domain entity reference object (NewsWebsite) for our open news example
 ---------------------------------------------------------------------------------
