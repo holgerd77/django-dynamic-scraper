@@ -153,8 +153,20 @@ class ScraperRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.all()), 3)
 
 
-    @unittest.skip("Skipped, not implemented yet")
     def test_json_content_type(self):
+        self.se_base.x_path = u'response.events'
+        self.se_base.save()
+        self.se_title.x_path = u'title'
+        self.se_title.save()
+        self.se_url.x_path = u'url'
+        self.se_url.save()
+        self.se_desc.x_path = u'description'
+        self.se_desc.from_detail_page = False
+        self.se_desc.save()
+
+        self.scraper.content_type = 'J'
+        self.scraper.save()
+
         self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_json_content_type/event_main.json')
         self.event_website.save()
         self.run_event_spider(1)

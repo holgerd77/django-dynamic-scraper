@@ -1,4 +1,7 @@
-import ast
+import ast, json
+
+from jsonpath_rw import jsonpath, parse
+from jsonpath_rw.lexer import JsonPathLexerError
 
 from scrapy import log
 from scrapy.selector import Selector
@@ -9,6 +12,7 @@ from scrapy.exceptions import CloseSpider
 
 from dynamic_scraper.spiders.django_base_spider import DjangoBaseSpider
 from dynamic_scraper.models import ScraperElem
+from dynamic_scraper.utils.loader import JsonItemLoader
 from dynamic_scraper.utils.scheduler import Scheduler
 from dynamic_scraper.utils import processors
 
@@ -173,12 +177,18 @@ class DjangoSpider(DjangoBaseSpider):
         if not xs:
             self.from_detail_page = True
             item = response.request.meta['item']
-            self.loader = ItemLoader(item=item, response=response)
-            self.loader.default_output_processor = TakeFirst()
+            if self.scraper.content_type == 'J':
+                self.loader = JsonItemLoader(item=item, response=response)
+            else:
+                self.loader = ItemLoader(item=item, response=response)
         else:
             self.from_detail_page = False
-            self.loader = ItemLoader(item=item, selector=xs)
-            self.loader.default_output_processor = TakeFirst()
+            if self.scraper.content_type == 'J':
+                self.loader = JsonItemLoader(item=item, selector=xs)
+            else:
+                self.loader = ItemLoader(item=item, selector=xs)
+        self.loader.default_output_processor = TakeFirst()
+        self.loader.log = self.log
 
 
     def parse_item(self, response, xs=None):
@@ -202,13 +212,22 @@ class DjangoSpider(DjangoBaseSpider):
 
 
     def parse(self, response):
-        if self.scraper.content_type == 'H':
-            xs = Selector(response)
-        else:
-            xs = Selector(response)
+        xs = Selector(response)
         base_elem = self.scraper.get_base_elem()
         url_elem = self.scraper.get_detail_page_url_elem()
-        base_objects = response.xpath(base_elem.x_path)
+
+        if self.scraper.content_type == 'J':
+            json_resp = json.loads(response.body_as_unicode())
+            try:
+                jsonpath_expr = parse(base_elem.x_path)
+            except JsonPathLexerError:
+                raise CloseSpider("JsonPath for base elem could not be processed!")
+            base_objects = [match.value for match in jsonpath_expr.find(json_resp)]
+            if len(base_objects) > 0:
+                base_objects = base_objects[0]
+        else:
+            base_objects = response.xpath(base_elem.x_path)
+
         if(len(base_objects) == 0):
             self.log("No base objects found!", log.ERROR)
         
