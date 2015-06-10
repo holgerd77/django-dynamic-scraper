@@ -97,6 +97,8 @@ Release Notes
 **Changes in version 0.5.0-beta** (2015-06-10)
 
 * Support for creating ``JSON/JSONPath`` scrapers for scraping ``JSON`` encoded pages (see: :ref:`json_jsonpath_scrapers`)
+* Added new separate content type choice for detail pages and checkers (e.g. main page in ``HTML``, detail page in ``JSON``)
+* New Scraper model attribute ``detail_page_content_type``, please run Django ``migration`` command (migration ``0003``)
 * New library dependency ``python-jsonpath-rw 1.4+`` (see :ref:`requirements`)
 * Updated unit tests to support/test ``JSON`` scraping
 
