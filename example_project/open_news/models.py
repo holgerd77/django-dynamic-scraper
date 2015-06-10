@@ -20,7 +20,7 @@ class Article(models.Model):
     news_website = models.ForeignKey(NewsWebsite) 
     description = models.TextField(blank=True)
     url = models.URLField()
-    thumbnail = models.CharField(max_length=200)
+    thumbnail = models.CharField(max_length=200, blank=True)
     checker_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
     
     def __unicode__(self):
