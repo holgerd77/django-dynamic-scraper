@@ -1,0 +1,26 @@
+#!/bin/bash
+
+
+suite='scraper.checker_run_test.CheckerRunTest'
+tests="
+test_checker_test_wrong_checker_config
+test_none_type
+test_x_path_type_keep_video
+test_x_path_type_blank_result_field_keep_video
+test_x_path_type_404_delete
+test_x_path_type_404_delete_with_zero_actions
+test_x_path_type_x_path_delete
+test_x_path_type_blank_result_field_x_path_delete
+test_delete_with_img_flat_no_thumbs
+test_delete_with_img_flat_with_thumbs
+test_delete_with_img_all_no_thumbs
+test_delete_with_img_all_with_thumbs
+test_delete_with_img_thumbs_with_thumbs
+test_404_type_404_delete
+"
+
+for test in `echo $tests`
+do
+    echo $suite.$test
+    python manage.py test $suite.$test
+done
