@@ -86,7 +86,7 @@ class DjangoChecker(DjangoBaseSpider):
     def start_requests(self):
         for url in self.start_urls:
             meta = {}
-            if hasattr(self, 'scraper') and self.scraper.render_javascript:
+            if self.scraper.detail_page_content_type == 'H' and self.scraper.render_javascript:
                 meta['splash'] = {
                     'endpoint': 'render.html',
                     'args': self.conf['SPLASH_ARGS'].copy()
