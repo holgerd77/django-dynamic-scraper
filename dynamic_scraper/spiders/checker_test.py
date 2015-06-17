@@ -1,5 +1,6 @@
 from scrapy import log, signals
 from scrapy.exceptions import CloseSpider
+from scrapy.http import Request
 from scrapy.xlib.pydispatch import dispatcher
 from dynamic_scraper.spiders.django_base_spider import DjangoBaseSpider
 from dynamic_scraper.models import Scraper
@@ -45,6 +46,17 @@ class CheckerTest(DjangoBaseSpider):
         pass
     
     
+    def start_requests(self):
+        for url in self.start_urls:
+            meta = {}
+            if hasattr(self, 'scraper') and self.scraper.render_javascript:
+                meta['splash'] = {
+                    'endpoint': 'render.html',
+                    'args': self.conf['SPLASH_ARGS'].copy()
+                }
+            yield Request(url, self.parse, meta=meta)
+
+
     def response_received(self, **kwargs):
         if kwargs['response'].status == 404:
             if self.ref_object.checker_type == '4':

@@ -192,6 +192,17 @@ class DjangoSpider(DjangoBaseSpider):
         self.loader.log = self.log
 
 
+    def start_requests(self):
+        for url in self.start_urls:
+            meta = {}
+            if hasattr(self, 'scraper') and self.scraper.render_javascript:
+                meta['splash'] = {
+                    'endpoint': 'render.html',
+                    'args': self.conf['SPLASH_ARGS'].copy()
+                }
+            yield Request(url, self.parse, meta=meta)
+
+    
     def parse_item(self, response, xs=None):
         self._set_loader(response, xs, self.scraped_obj_item_class())
         if not self.from_detail_page:
