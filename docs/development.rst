@@ -94,6 +94,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.5.1-beta** (2015-06-17)
+
+* Make sure that ``Javascript`` rendering is only activated for pages with ``HTML`` content type
+
 **Changes in version 0.5.0-beta** (2015-06-10)
 
 * Support for creating ``JSON/JSONPath`` scrapers for scraping ``JSON`` encoded pages (see: :ref:`json_jsonpath_scrapers`)
