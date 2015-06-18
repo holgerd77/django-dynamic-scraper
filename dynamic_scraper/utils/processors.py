@@ -68,6 +68,24 @@ def time(text, loader_context):
     return time.strftime('%H:%M:%S')
 
 
+def ts_to_date(ts_str, loader_context):
+    try:
+        ts_int = int(ts_str)
+        return datetime.datetime.fromtimestamp(ts_int).strftime('%Y-%m-%d')
+    except ValueError:
+        loader_context.get('spider').log('Timestamp could not be parsed ("%s")!' % ts_str, log.ERROR)
+        return None
+
+
+def ts_to_time(ts_str, loader_context):
+    try:
+        ts_int = int(ts_str)
+        return datetime.datetime.fromtimestamp(ts_int).strftime('%H:%M:%S')
+    except ValueError:
+        loader_context.get('spider').log('Timestamp could not be parsed ("%s")!' % ts_str, log.ERROR)
+        return None
+
+
 def _breakdown_time_unit_overlap(time_str, limit):
     time_list = time_str.split(':')
     first = int(time_list[0])

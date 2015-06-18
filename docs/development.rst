@@ -94,6 +94,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.5.2-beta** (2015-06-18)
+
+* Two new processors ``ts_to_date`` and ``ts_to_time`` to extract local date/time from unix timestamp string (see: :ref:`processors`)
+
 **Changes in version 0.5.1-beta** (2015-06-17)
 
 * Make sure that ``Javascript`` rendering is only activated for pages with ``HTML`` content type

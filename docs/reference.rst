@@ -221,6 +221,24 @@ time
 *Result (Example)*             "22 hours 15 minutes" -> "22:15"
 ============================== ===================================================================
 
+ts_to_date
+----------
+============================== ===================================================================
+*Description*                  Tries to extract the local date of a unix timestamp
+*Usable with other processors* Yes
+*Context definition (Example)* No context definition
+*Result (Example)*             "1434560700" -> "2015-06-17"
+============================== ===================================================================
+
+ts_to_time
+----------
+============================== ===================================================================
+*Description*                  Tries to extract the local time of a unix timestamp
+*Usable with other processors* Yes
+*Context definition (Example)* No context definition
+*Result (Example)*             "1434560700" -> "19:05:00"
+============================== ===================================================================
+
 duration
 --------
 ============================== ===================================================================
