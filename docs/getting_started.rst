@@ -246,13 +246,14 @@ is scraping items, the **general workflow of the scraping process** is as follow
   element encapsulating an item summary, e.g. in our open news example an article summary containing the
   title of the article, a screenshot and a short description. The encapsuling html tag often is a ``div``,
   but could also be a ``td`` tag or something else.
-* Then the DDS scraper is scraping the url from this item summary block, which leads to the detail page of the item
+* If provided the DDS scraper is then scraping the url from this item summary block leading to a detail page of the
+  item providing more information to scrape
 * All the real item attributes (like a title, a description, a date or an image) are then scraped either from 
   within the item summary block on the overview page or from the detail page of the item. This can be defined later
   when creating the scraper itself.
 
 To define which of the scraped obj attributes are just simple standard attributes to be scraped, which one
-is the base attribute (this is a bit of an artificial construct) and which one is the url to be followed
+is the base attribute (this is a bit of an artificial construct) and which one eventually is a url to be followed
 later, we have to choose an attribute type for each attribute defined. There is a choice between the following
 types (taken from ``dynamic_scraper.models.ScrapedObjAttr``)::
 
@@ -273,19 +274,21 @@ should look similar to the screenshot below:
 
 .. image:: images/screenshot_django-admin_add_scraped_obj_class.png
 
+To prevent double entries in the DB you also have to set one or more object attributes of type ``STANDARD`` or 
+``DETAIL_PAGE_URL`` as ``ID Fields``. If you provide a ``DETAIL_PAGE_URL`` for your object scraping, it often is
+sufficient to use this also as an ``ID Field``, since the different URLs for different objects should be unique by
+definition in most cases.
+
+Also note that these ``ID Fields`` just provide unique identification of an object for within the scraping process. In your
+model class defined in the chapter above you can use other ID fields or simply use a classic numerical auto-incremented
+ID provided by your database.
+
 .. note::
    If you define an attribute as ``STANDARD (UPDATE)`` attribute and your scraper reads the value for this attribute from the detail page
    of the item, your scraping process requires **much more page requests**, because the scraper has to look at all the detail pages
    even for items already in the DB to compare the values. If you don't use the update functionality, use the simple ``STANDARD``
    attribute instead!
 
-
-.. note::
-	Though it is a bit of a hack: if you want to **scrape items on a website not leading to detail pages** you can do
-	this by defining another (non url) field as the ``DETAIL_PAGE_URL`` field, e.g. a title or an id. Make sure that this
-	field is unique since the ``DETAIL_PAGE_URL`` field is also used as an identifier for preventing double
-	entries in the DB and don't use the ``from_detail_page`` option in your scraper definitions. It is also not possible
-	to use checkers with this workaround. However: it works, I even wrote a unit test for this hack! :-)
 
 Defining your scrapers
 ======================
