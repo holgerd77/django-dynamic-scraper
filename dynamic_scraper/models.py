@@ -41,6 +41,7 @@ class ScrapedObjAttr(models.Model):
     name = models.CharField(max_length=200)
     obj_class = models.ForeignKey(ScrapedObjClass)
     attr_type = models.CharField(max_length=1, choices=ATTR_TYPE_CHOICES)
+    id_field = models.BooleanField(default=False)
     
     def __unicode__(self):
         return self.name + " (" + self.obj_class.__unicode__() + ")"

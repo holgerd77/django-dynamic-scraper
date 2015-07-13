@@ -96,7 +96,7 @@ Release Notes
 =============
 **Changes in version 0.6.0-beta** (Not yet released)
 
-* TODO
+* Additional form checks for ``ScrapedObjClass`` definition in ``Django`` admin
 
 **Changes in version 0.5.2-beta** (2015-06-18)
 
