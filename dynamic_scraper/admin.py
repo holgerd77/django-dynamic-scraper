@@ -15,20 +15,30 @@ class ScrapedObjAttrFormSet(BaseInlineFormSet):
         cnt_type_b = 0
         cnt_type_u = 0
         cnt_type_i = 0
+        cnt_id = 0
+        cnt_wrong_id_type = 0
+
         for form in self.forms:
             if not hasattr(form, 'cleaned_data'):
                 continue
             data = form.cleaned_data
             if 'DELETE' in data and data['DELETE']:
                 continue
-            if 'attr_type' in data:
-                at = data['attr_type']
-                if at == 'B':
-                    cnt_type_b += 1
-                if at == 'U':
-                    cnt_type_u += 1
-                if at == 'I':
-                    cnt_type_i += 1
+            if not 'attr_type' in data or not 'id_field' in data:
+                continue
+            at = data['attr_type']
+            if at == 'B':
+                cnt_type_b += 1
+            if at == 'U':
+                cnt_type_u += 1
+            if at == 'I':
+                cnt_type_i += 1
+            id_field = data['id_field']
+            if id_field:
+                cnt_id += 1
+                if (at != 'S' and at != 'U'):
+                    cnt_wrong_id_type += 1
+
         if cnt_type_b == 0:
             raise ValidationError("For the scraped object class definition one object attribute of type BASE is required!")
         if cnt_type_b > 1:
@@ -37,6 +47,12 @@ class ScrapedObjAttrFormSet(BaseInlineFormSet):
             raise ValidationError("Currently only one detail page URL is supported!")
         if cnt_type_i > 1:
             raise ValidationError("Currently only one image per object supported!")
+
+        if cnt_id == 0:
+            raise ValidationError("At least one object attribute has to be an ID field!")
+
+        if cnt_wrong_id_type > 0:
+            raise ValidationError("Only STANDARD or DETAIL_PAGE_URL attributes can be defined as ID fields!")
 
 
 
