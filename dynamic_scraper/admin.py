@@ -1,12 +1,48 @@
 from datetime import date
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
+from django.core.exceptions import ValidationError
+from django.forms.models import BaseInlineFormSet
 from django.utils.translation import ugettext_lazy as _
 from dynamic_scraper.models import *
 
 
+class ScrapedObjAttrFormSet(BaseInlineFormSet):
+    
+    def clean(self):
+        super(ScrapedObjAttrFormSet, self).clean()
+
+        cnt_type_b = 0
+        cnt_type_u = 0
+        cnt_type_i = 0
+        for form in self.forms:
+            if not hasattr(form, 'cleaned_data'):
+                continue
+            data = form.cleaned_data
+            if 'DELETE' in data and data['DELETE']:
+                continue
+            if 'attr_type' in data:
+                at = data['attr_type']
+                if at == 'B':
+                    cnt_type_b += 1
+                if at == 'U':
+                    cnt_type_u += 1
+                if at == 'I':
+                    cnt_type_i += 1
+        if cnt_type_b == 0:
+            raise ValidationError("For the scraped object class definition one object attribute of type BASE is required!")
+        if cnt_type_b > 1:
+            raise ValidationError("Only one object attribute of type BASE allowed!")
+        if cnt_type_u > 1:
+            raise ValidationError("Currently only one detail page URL is supported!")
+        if cnt_type_i > 1:
+            raise ValidationError("Currently only one image per object supported!")
+
+
+
 class ScrapedObjAttrInline(admin.TabularInline):
     model = ScrapedObjAttr
+    formset = ScrapedObjAttrFormSet
     extra = 3
 
 
