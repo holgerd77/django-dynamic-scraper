@@ -20,27 +20,13 @@ class ScraperRunTest(ScraperTest):
     def test_missing_url_elem(self):
         self.se_url.delete()
         self.assertRaises(CloseSpider, self.run_event_spider, 1)
-        
+    
 
     def test_scraper(self):
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 4)
         self.assertEqual(Event.objects.get(title='Event 1').description, u'Event 1 description')
-    
-    
-    def test_standard_field_as_detail_page_url_hack(self):
-        self.se_desc.x_path = u'a/text()'
-        self.se_desc.from_detail_page = False
-        self.se_desc.save()
-        self.soa_title.attr_type = 'U'
-        self.soa_title.save()
-        self.soa_url.attr_type = 'S'
-        self.soa_url.save()
-        
-        self.run_event_spider(1)
-        
-        self.assertEqual(len(Event.objects.all()), 4)
         
     
     def test_double(self):
@@ -55,6 +41,43 @@ class ScraperRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.all()), 4)
         self.assertEqual(len(Event.objects.filter(title='Event 1')), 1)
     
+
+    def test_detail_page_url_id_field(self):
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_generic/event_main_mixed_ids.html')
+        self.event_website.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 2)
+        self.assertEqual(Event.objects.get(title='Event 1').description, u'Event 1 description')
+
+
+    def test_single_standard_id_field(self):
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_generic/event_main_mixed_ids.html')
+        self.event_website.save()
+        self.soa_url.id_field = False
+        self.soa_url.save()
+        self.soa_title.id_field = True
+        self.soa_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 3)
+        self.assertEqual(Event.objects.get(title='Event 1').description, u'Event 1 description')
+
+
+    def test_double_standard_id_field(self):
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_generic/event_main_mixed_ids.html')
+        self.event_website.save()
+        self.soa_url.id_field = False
+        self.soa_url.save()
+        self.soa_title.id_field = True
+        self.soa_title.save()
+        self.soa_desc.id_field = True
+        self.soa_desc.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 4)
+        self.assertEqual(Event.objects.get(title='Event 1').description, u'Event 1 description')
+
     
     def test_standard_update_field(self):
         self.soa_title.attr_type = 'T'
@@ -222,160 +245,4 @@ class ScraperRunTest(ScraperTest):
         self.scraper.status = 'I'
         self.scraper.save()
         self.assertRaises(CloseSpider, self.run_event_spider, 1)
-    
-    
-    def setUpProcessorTest(self):
-        self.se_url.processors = u'pre_url'
-        self.se_url.proc_ctxt = u"'pre_url': 'http://localhost:8010/static/site_with_processor/'"
-        self.se_url.save()
-        self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_processor/event_main.html')
-        self.event_website.save()
 
-
-    def test_processor(self):
-        self.setUpProcessorTest()
-        self.run_event_spider(1)
-        
-        self.assertEqual(len(Event.objects.all()), 2)
-    
-    
-    @unittest.skip("Skipped due to unresolved problem that order of processor execution can not clearly determined.")
-    def test_multiple_processors_use(self):
-        self.setUpProcessorTest()
-        self.se_desc.processors = u'pre_string, post_string '
-        self.se_desc.proc_ctxt = u"'pre_string': 'before_', 'post_string': '_after',"
-        self.se_desc.save()
-        
-        self.run_event_spider(1)
-        
-        self.assertEqual(Event.objects.get(id=1).description, 'before_Event 2 description_after')
-    
-    
-    def test_replace_processor_wrong_x_path(self):
-        self.setUpProcessorTest()
-        self.se_title.x_path = u'/div[@class="class_which_is_not_there"]/text()'
-        self.se_title.processors = u'replace'
-        self.se_title.proc_ctxt = u"'replace': 'This text is a replacement'"
-        self.se_title.save()
-        self.run_event_spider(1)
-        
-        self.assertEqual(len(Event.objects.all()), 0)
-
-
-    def test_replace_processor_correct_x_path(self):
-        self.setUpProcessorTest()
-        self.se_title.processors = u'replace'
-        self.se_title.proc_ctxt = u"'replace': 'This text is a replacement'"
-        self.se_title.save()
-        self.run_event_spider(1)
-        
-        self.assertEqual(len(Event.objects.all()), 2)
-
-
-    def test_static_processor_wrong_x_path(self):
-        self.setUpProcessorTest()
-        self.se_title.x_path = u'/div[@class="class_which_is_not_there"]/text()'
-        self.se_title.processors = u'static'
-        self.se_title.proc_ctxt = u"'static': 'This text should always be there'"
-        self.se_title.save()
-        self.run_event_spider(1)
-        
-        self.assertEqual(len(Event.objects.all()), 2)
-
-
-    def test_static_processor_correct_x_path(self):
-        self.setUpProcessorTest()
-        self.se_title.processors = u'static'
-        self.se_title.proc_ctxt = u"'static': 'This text should always be there'"
-        self.se_title.save()
-        self.run_event_spider(1)
-        
-        self.assertEqual(len(Event.objects.all()), 2)  
-    
-    
-    def test_reg_exp(self):
-        self.se_desc.reg_exp = u'(\d{6})'
-        self.se_desc.save()
-        self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_reg_exp/event_main.html')
-        self.event_website.save()
-        self.run_event_spider(1)
-        
-        self.assertEqual(len(Event.objects.all()), 2)
-        self.assertEqual(Event.objects.get(title='Event 1').description, '563423')
-    
-    
-    def process_image_test(self, expected_dirs, non_expected_dirs):
-        imgs = [
-            '1d7c0c2ea752d7aa951e88f2bc90a3f17058c473.jpg',
-            '3cfa4d48e423c5eb3d4f6e9b5e5d373036ac5192.jpg',
-        ]
-        
-        expected_paths = []
-        for expected_dir in expected_dirs:
-            for img in imgs:
-                expected_paths.append(os.path.join(self.PROJECT_ROOT, expected_dir, img))
-        non_expected_paths = []
-        for non_expected_dir in non_expected_dirs:
-            for img in imgs:
-                non_expected_paths.append(os.path.join(self.PROJECT_ROOT, non_expected_dir, img))
-        self.se_desc.mandatory = True
-        self.se_desc.save()
-        self.soa_desc.attr_type = 'I'
-        self.soa_desc.save()
-        
-        self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_imgs/event_main.html')
-        self.event_website.save()
-        self.run_event_spider(1)
-        
-        self.assertEqual(len(Event.objects.all()), 2)
-        self.assertEqual(Event.objects.get(title='Event 1').description, imgs[0])
-        for path in expected_paths:
-            self.assertTrue(os.access(path, os.F_OK), "Expected image path %s not found!" % path)
-        for path in non_expected_paths:
-            self.assertFalse(os.access(path, os.F_OK), "Not expected image path %s found!" % path)
-    
-    
-    def test_img_store_format_flat_no_thumbs(self):
-        expected_dirs = ['imgs/',]
-        non_expected_dirs = ['imgs/full/', 'imgs/thumbs/medium/', 'imgs/thumbs/small/',]
-        self.process_image_test(expected_dirs, non_expected_dirs)
-
-
-    def test_img_store_format_flat_with_thumbs(self):
-        expected_dirs = ['imgs/',]
-        non_expected_dirs = ['imgs/full/', 'imgs/thumbs/medium/', 'imgs/thumbs/small/',]
-        self.process_image_test(expected_dirs, non_expected_dirs)
-    
-
-    def test_img_store_format_all_no_thumbs(self):
-        expected_dirs = ['imgs/full/',]
-        non_expected_dirs = ['imgs/', 'imgs/thumbs/medium/', 'imgs/thumbs/small/',]
-        self.process_image_test(expected_dirs, non_expected_dirs)
-    
-
-    def test_img_store_format_all_with_thumbs(self):
-        expected_dirs = ['imgs/full/', 'imgs/thumbs/medium/', 'imgs/thumbs/small/',]
-        non_expected_dirs = ['imgs/',]
-        self.process_image_test(expected_dirs, non_expected_dirs)
-    
-
-    def test_img_store_format_thumbs_with_thumbs(self):
-        expected_dirs = ['imgs/thumbs/medium/', 'imgs/thumbs/small/',]
-        non_expected_dirs = ['imgs/full/', 'imgs/',]
-        self.process_image_test(expected_dirs, non_expected_dirs)
-
-
-    def test_missing_img_when_img_field_not_mandatory(self):
-        self.se_desc.mandatory = False
-        self.se_desc.save()
-        self.soa_desc.attr_type = 'I'
-        self.soa_desc.save()
-        
-        self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_imgs/event_main2.html')
-        self.event_website.save()
-        self.run_event_spider(1)
-        
-        self.assertEqual(len(Event.objects.all()), 1)
-
-
-        

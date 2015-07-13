@@ -17,7 +17,7 @@ class Event(models.Model):
     title = models.CharField(max_length=200)
     event_website = models.ForeignKey(EventWebsite) 
     description = models.TextField(blank=True)
-    url = models.URLField()
+    url = models.URLField(blank=True)
     checker_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
     
     def __unicode__(self):

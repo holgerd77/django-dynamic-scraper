@@ -169,7 +169,7 @@ class ScraperTest(TestCase):
         self.soa_base.save()
         self.soa_title = ScrapedObjAttr(name=u'title', attr_type='S', obj_class=self.sc)
         self.soa_title.save()
-        self.soa_url = ScrapedObjAttr(name=u'url', attr_type='U', obj_class=self.sc)
+        self.soa_url = ScrapedObjAttr(name=u'url', attr_type='U', obj_class=self.sc, id_field=True)
         self.soa_url.save()
         self.soa_desc = ScrapedObjAttr(name=u'description', attr_type='S', obj_class=self.sc)
         self.soa_desc.save()
