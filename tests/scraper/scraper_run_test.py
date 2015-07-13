@@ -12,14 +12,10 @@ from dynamic_scraper.models import SchedulerRuntime, Log
 class ScraperRunTest(ScraperTest):
     
     
-    def test_missing_base_elem(self):
-        self.se_base.delete()
-        self.assertRaises(CloseSpider, self.run_event_spider, 1)
-
-
     def test_missing_url_elem(self):
         self.se_url.delete()
-        self.assertRaises(CloseSpider, self.run_event_spider, 1)
+        self.run_event_spider(1)
+        self.assertEqual(len(Event.objects.all()), 4)
     
 
     def test_scraper(self):
@@ -43,30 +39,53 @@ class ScraperRunTest(ScraperTest):
     
 
     def test_detail_page_url_id_field(self):
-        self.event_website.url = os.path.join(self.SERVER_URL, 'site_generic/event_main_mixed_ids.html')
-        self.event_website.save()
+        checker_rt = SchedulerRuntime()
+        checker_rt.save()
+        event = Event(title=u'Event 1', event_website=self.event_website, 
+            url=u'http://localhost:8010/static/site_generic/event5.html',
+            checker_runtime=checker_rt)
+        event.save()
         self.run_event_spider(1)
         
-        self.assertEqual(len(Event.objects.all()), 2)
-        self.assertEqual(Event.objects.get(title='Event 1').description, u'Event 1 description')
+        self.assertEqual(len(Event.objects.all()), 5)
+        self.assertEqual(Event.objects.filter(title='Event 1').count(), 2)
 
 
     def test_single_standard_id_field(self):
-        self.event_website.url = os.path.join(self.SERVER_URL, 'site_generic/event_main_mixed_ids.html')
-        self.event_website.save()
+        checker_rt = SchedulerRuntime()
+        checker_rt.save()
+        event = Event(title=u'Event 1', event_website=self.event_website, 
+            url=u'http://localhost:8010/static/site_generic/event5.html',
+            checker_runtime=checker_rt)
+        event.save()
         self.soa_url.id_field = False
         self.soa_url.save()
         self.soa_title.id_field = True
         self.soa_title.save()
         self.run_event_spider(1)
         
-        self.assertEqual(len(Event.objects.all()), 3)
-        self.assertEqual(Event.objects.get(title='Event 1').description, u'Event 1 description')
+        self.assertEqual(len(Event.objects.all()), 4)
+        self.assertEqual(Event.objects.filter(title='Event 1').count(), 1)
 
 
     def test_double_standard_id_field(self):
-        self.event_website.url = os.path.join(self.SERVER_URL, 'site_generic/event_main_mixed_ids.html')
-        self.event_website.save()
+        checker_rt = SchedulerRuntime()
+        checker_rt.save()
+        event = Event(title=u'Event 1', event_website=self.event_website,
+            description=u'Event 1 description',
+            url=u'http://localhost:8010/static/site_generic/event5.html',
+            checker_runtime=checker_rt)
+        event.save()
+        event = Event(title=u'Event 2', event_website=self.event_website,
+            description=u'Event 1 description',
+            url=u'http://localhost:8010/static/site_generic/event6.html',
+            checker_runtime=checker_rt)
+        event.save()
+        event = Event(title=u'Event 1', event_website=self.event_website,
+            description=u'Event 2 description',
+            url=u'http://localhost:8010/static/site_generic/event7.html',
+            checker_runtime=checker_rt)
+        event.save()
         self.soa_url.id_field = False
         self.soa_url.save()
         self.soa_title.id_field = True
@@ -75,8 +94,8 @@ class ScraperRunTest(ScraperTest):
         self.soa_desc.save()
         self.run_event_spider(1)
         
-        self.assertEqual(len(Event.objects.all()), 4)
-        self.assertEqual(Event.objects.get(title='Event 1').description, u'Event 1 description')
+        self.assertEqual(len(Event.objects.all()), 6)
+        self.assertEqual(Event.objects.filter(description='Event 1 description').count(), 2)
 
     
     def test_standard_update_field(self):

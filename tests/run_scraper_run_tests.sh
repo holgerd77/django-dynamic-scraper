@@ -2,10 +2,12 @@
 
 suite='scraper.scraper_run_test.ScraperRunTest'
 tests="
-test_missing_base_elem
 test_missing_url_elem
 test_scraper
 test_double
+test_detail_page_url_id_field
+test_single_standard_id_field
+test_double_standard_id_field
 test_standard_update_field
 test_standard_update_field_update
 test_testmode

@@ -25,7 +25,6 @@ class DjangoSpider(DjangoBaseSpider):
         
         super(DjangoSpider, self).__init__(self, *args, **kwargs)
         self._set_config(**kwargs)
-        self._check_scraper_config()
         
         self._set_start_urls(self.scrape_url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
@@ -64,21 +63,6 @@ class DjangoSpider(DjangoBaseSpider):
             self.conf['MAX_ITEMS_SAVE'] = self.scraper.max_items_save
             
         super(DjangoSpider, self)._set_config(log_msg, **kwargs)
-
-
-    def _check_scraper_config(self):
-        try:
-            self.scraper.get_base_elem() 
-        except ScraperElem.DoesNotExist:
-            raise CloseSpider('Please define a base scraper elem in your database!')
-        try:
-            self.scraper.get_detail_page_url_elem()
-        except ScraperElem.DoesNotExist:
-            raise CloseSpider('Please define a detail page url scraper elem in your database!')
-        if(len(self.scraper.get_base_elems()) > 1):
-            raise CloseSpider('A scraper can\'t have more than one base scraper elem!')
-        if(len(self.scraper.get_detail_page_url_elems()) > 1):
-            raise CloseSpider('A scraper can\'t have more than one detail page url scraper elem!')
 
 
     def _set_start_urls(self, scrape_url):
@@ -226,7 +210,6 @@ class DjangoSpider(DjangoBaseSpider):
     def parse(self, response):
         xs = Selector(response)
         base_elem = self.scraper.get_base_elem()
-        url_elem = self.scraper.get_detail_page_url_elem()
 
         if self.scraper.content_type == 'J':
             json_resp = json.loads(response.body_as_unicode())
@@ -247,22 +230,32 @@ class DjangoSpider(DjangoBaseSpider):
             items_left = min(len(base_objects), self.conf['MAX_ITEMS_READ'] - self.items_read_count)
             base_objects = base_objects[0:items_left]
         
+        idf_elems = self.scraper.get_id_field_elems()
+
         for obj in base_objects:
             item_num = self.items_read_count + 1
             self.log("Starting to crawl item %s." % str(item_num), log.INFO)
             item = self.parse_item(response, obj)
             #print item
-            url_name = url_elem.scraped_obj_attr.name
-            if(item and url_name in item):
-                url = item[url_name]
-                cnt = self.scraped_obj_class.objects.filter(url=item[url_name]).count()
-                cnt1 = self.scraper.get_standard_update_elems_from_detail_page().count()
-                cnt2 = self.scraper.get_from_detail_page_scrape_elems().count()
+
+            num_item_idfs = 0
+            for idf_elem in idf_elems:
+                idf_name = idf_elem.scraped_obj_attr.name
+                if idf_name in item:
+                    num_item_idfs += 1
+            
+            if item and num_item_idfs == len(idf_elems):
+                qs = self.scraped_obj_class.objects
+                for idf_elem in idf_elems:
+                    idf_name = idf_elem.scraped_obj_attr.name
+                    qs = qs.filter(**{idf_name:item[idf_name]})
+                cnt = qs.count()
                 # Mark item as DOUBLE item
+
                 if cnt > 0:
-                    item[url_name] = 'DOUBLE' + item[url_name]
-                # (DOUBLE item with no standard update elements to be scraped from detail page) or 
-                # generally no attributes scraped from detail page
+                    for idf_elem in idf_elems:
+                        idf_name = idf_elem.scraped_obj_attr.name
+                        item[idf_name] = 'DOUBLE' + item[idf_name]
                 meta = {}
                 meta['item'] = item
                 
@@ -271,10 +264,17 @@ class DjangoSpider(DjangoBaseSpider):
                         'endpoint': 'render.html',
                         'args': self.conf['SPLASH_ARGS'].copy()
                     }
-                if (cnt > 0 and cnt1 == 0) or cnt2 == 0:
+                # No detail page URL defined or
+                # DOUBLE item with no standard update elements to be scraped from detail page or 
+                # generally no attributes scraped from detail page
+                cnt1 = self.scraper.get_standard_update_elems_from_detail_page().count()
+                cnt2 = self.scraper.get_from_detail_page_scrape_elems().count()
+                if self.scraper.get_detail_page_url_elems().count() == 0 or (cnt > 0 and cnt1 == 0) or cnt2 == 0:
                     yield item
                 else:
+                    url_elem = self.scraper.get_detail_page_url_elems()[0]
+                    url = item[url_elem.scraped_obj_attr.name]
                     yield Request(url, callback=self.parse_item, meta=meta)
             else:
-                self.log("Detail page url elem could not be read!", log.ERROR)
+                self.log("ID field(s) could not be read!", log.ERROR)
     

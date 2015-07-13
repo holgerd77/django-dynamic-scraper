@@ -58,9 +58,17 @@ class ValidationPipeline(object):
 
     def process_item(self, item, spider):
         
-        url_elem = spider.scraper.get_detail_page_url_elem()
-        url_name = url_elem.scraped_obj_attr.name
-        if url_name in item and item[url_name][0:6] == 'DOUBLE':
+        idf_elems = spider.scraper.get_id_field_elems()
+        is_double = False
+        exist_objects = spider.scraped_obj_class.objects
+        for idf_elem in idf_elems:
+            idf_name = idf_elem.scraped_obj_attr.name
+            if idf_name in item and item[idf_name][0:6] == 'DOUBLE':
+                is_double = True
+                item[idf_name] = item[idf_name][6:]
+                exist_objects = exist_objects.filter(**{idf_name:item[idf_name]})
+        
+        if is_double:
             mandatory_elems = spider.scraper.get_standard_update_elems()
         else:
             mandatory_elems = spider.scraper.get_mandatory_scrape_elems()
@@ -77,27 +85,22 @@ class ValidationPipeline(object):
         if not spider.conf['DO_ACTION']:
             spider.log("TESTMODE: Item not saved.", log.INFO)
             raise DropItem()
-        
-        url_elem = spider.scraper.get_detail_page_url_elem()
-        url_name = url_elem.scraped_obj_attr.name
-        if url_name in item and item[url_name][0:6] == 'DOUBLE':
-            item[url_name] = item[url_name][6:]
+
+        if is_double:
             standard_update_elems = spider.scraper.get_standard_update_elems()
             updated_attribute_list = ''
-            if len(standard_update_elems) > 0:
-                exist_objects = spider.scraped_obj_class.objects.filter(url=item[url_name])
-                if len(exist_objects) == 1:
-                    exist_object = exist_objects[0]
-                    dummy_object = spider.scraped_obj_class()
-                    for elem in standard_update_elems:
-                        attr_name = elem.scraped_obj_attr.name
-                        if attr_name in item and hasattr(exist_object, attr_name):
-                            setattr(dummy_object, attr_name, item[attr_name])
-                            if unicode(getattr(dummy_object, attr_name)) != unicode(getattr(exist_object, attr_name)):
-                                setattr(exist_object, attr_name, item[attr_name])
-                                if len(updated_attribute_list) > 0:
-                                    updated_attribute_list += ', '
-                                updated_attribute_list += attr_name
+            if len(standard_update_elems) > 0 and len(exist_objects) == 1:
+                exist_object = exist_objects[0]
+                dummy_object = spider.scraped_obj_class()
+                for elem in standard_update_elems:
+                    attr_name = elem.scraped_obj_attr.name
+                    if attr_name in item and hasattr(exist_object, attr_name):
+                        setattr(dummy_object, attr_name, item[attr_name])
+                        if unicode(getattr(dummy_object, attr_name)) != unicode(getattr(exist_object, attr_name)):
+                            setattr(exist_object, attr_name, item[attr_name])
+                            if len(updated_attribute_list) > 0:
+                                updated_attribute_list += ', '
+                            updated_attribute_list += attr_name
             if len(updated_attribute_list) > 0:
                 exist_object.save()
                 raise DropItem("Item already in DB, attributes updated: " + updated_attribute_list)
