@@ -20,6 +20,12 @@ class CheckerTest(DjangoBaseSpider):
             msg = "No checker defined for scraper!"
             log.msg(msg, log.ERROR)
             raise CloseSpider(msg)
+
+        idf_elems = self.ref_object.get_id_field_elems()
+        if not (len(idf_elems) == 1 and idf_elems[0].scraped_obj_attr.attr_type == 'U'):
+            msg = 'Checkers can only be used for scraped object classed defined with a single DETAIL_PAGE_URL type id field!'
+            log.msg(msg, log.ERROR)
+            raise CloseSpider(msg)
         
         if self.ref_object.checker_type == '4':
             if not self.ref_object.checker_ref_url:

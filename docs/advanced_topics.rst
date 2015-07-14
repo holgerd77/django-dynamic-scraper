@@ -16,6 +16,10 @@ building together a new scraped item, it just checks the detail page referenced 
 Depending on the ``checker_type`` and the result of the detail page check, the scraped item is kept or
 will be deleted from the DB.
 
+.. note::
+   Checker functionality of DDS only works for scraped object classes with a single ``DETAIL_PAGE_URL`` type
+   ``ID field`` (see: :ref:`defining_scraped_object_class`).
+
 Creating a checker class
 ------------------------
 To get a checker up and running you first have to create a checker class for each of your scraped object domain

@@ -222,6 +222,8 @@ in your ``models.py`` to delete e.g. the ``checker_runtime`` when deleting an ar
 
 .. _DjangoItem: https://scrapy.readthedocs.org/en/latest/topics/djangoitem.html
 
+.. _defining_scraped_object_class:
+
 Defining the object to be scraped
 =================================
 
@@ -275,9 +277,11 @@ should look similar to the screenshot below:
 .. image:: images/screenshot_django-admin_add_scraped_obj_class.png
 
 To prevent double entries in the DB you also have to set one or more object attributes of type ``STANDARD`` or 
-``DETAIL_PAGE_URL`` as ``ID Fields``. If you provide a ``DETAIL_PAGE_URL`` for your object scraping, it often is
-sufficient to use this also as an ``ID Field``, since the different URLs for different objects should be unique by
-definition in most cases.
+``DETAIL_PAGE_URL`` as ``ID Fields``. If you provide a ``DETAIL_PAGE_URL`` for your object scraping, it is often a
+good idea to use this also as an ``ID Field``, since the different URLs for different objects should be unique by
+definition in most cases. Using a single ``DETAIL_PAGE_URL`` ID field is also prerequisite if you want to use the
+checker functionality (see: :ref:`item_checkers`) of DDS for dynamically detecting and deleting items not existing
+any more.
 
 Also note that these ``ID Fields`` just provide unique identification of an object for within the scraping process. In your
 model class defined in the chapter above you can use other ID fields or simply use a classic numerical auto-incremented

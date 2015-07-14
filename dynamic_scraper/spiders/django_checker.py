@@ -42,6 +42,12 @@ class DjangoChecker(DjangoBaseSpider):
             log.msg(msg, log.WARNING)
             raise CloseSpider(msg)
 
+        idf_elems = self.scraper.get_id_field_elems()
+        if not (len(idf_elems) == 1 and idf_elems[0].scraped_obj_attr.attr_type == 'U'):
+            msg = 'Checkers can only be used for scraped object classed defined with a single DETAIL_PAGE_URL type id field!'
+            log.msg(msg, log.ERROR)
+            raise CloseSpider(msg)
+
 
     def _del_ref_object(self):
         from scrapy.utils.project import get_project_settings
