@@ -94,8 +94,12 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.6.0-beta** (Not yet released)
+**Changes in version 0.6.0-beta** (2015-07-14)
 
+* Replaced implicit and static ID concept of mandatory ``DETAIL_PAGE_URL`` type attribute serving as ID with a more
+  flexible concept of explicitly setting ``ID Fields`` for ``ScrapedObjClass`` in ``Django`` admin 
+  (see: :ref:`defining_scraped_object_class`)
+* New attribute ``id_field`` for ``ScrapedObjClass``, please run Django ``migration`` command (migration ``0004``)
 * Additional form checks for ``ScrapedObjClass`` definition in ``Django`` admin
 
 **Changes in version 0.5.2-beta** (2015-06-18)
