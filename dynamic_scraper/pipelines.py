@@ -58,6 +58,8 @@ class ValidationPipeline(object):
 
     def process_item(self, item, spider):
         
+        #Check if item is double and remove DOUBLE string from ID fields
+        #(no good way found to pass meta data to this point...)
         idf_elems = spider.scraper.get_id_field_elems()
         is_double = False
         exist_objects = spider.scraped_obj_class.objects

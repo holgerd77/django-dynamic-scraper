@@ -114,7 +114,7 @@ class ScraperTest(TestCase):
         self.spider = EventSpider(**kwargs)
         self.crawler.crawl(self.spider)
         self.crawler.start()
-        log.start()
+        #log.start()
         reactor.run()
         
     

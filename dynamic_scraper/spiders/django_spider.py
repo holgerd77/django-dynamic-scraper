@@ -186,6 +186,33 @@ class DjangoSpider(DjangoBaseSpider):
                 }
             yield Request(url, self.parse, meta=meta)
 
+
+    def _check_for_double_item(self, item):
+        idf_elems = self.scraper.get_id_field_elems()
+        num_item_idfs = 0
+        for idf_elem in idf_elems:
+            idf_name = idf_elem.scraped_obj_attr.name
+            if idf_name in item:
+                num_item_idfs += 1
+
+        cnt_double = 0
+        if num_item_idfs == len(idf_elems):
+            qs = self.scraped_obj_class.objects
+            for idf_elem in idf_elems:
+                idf_name = idf_elem.scraped_obj_attr.name
+                qs = qs.filter(**{idf_name:item[idf_name]})
+            cnt_double = qs.count()
+
+        # Mark item as DOUBLE item
+        if cnt_double > 0:
+            for idf_elem in idf_elems:
+                idf_name = idf_elem.scraped_obj_attr.name
+                if item[idf_name][0:6] != 'DOUBLE':
+                    item[idf_name] = 'DOUBLE' + item[idf_name]
+            return item, True
+        else:
+            return item, False
+    
     
     def parse_item(self, response, xs=None):
         self._set_loader(response, xs, self.scraped_obj_item_class())
@@ -203,6 +230,8 @@ class DjangoSpider(DjangoBaseSpider):
                self.scraped_obj_class()._meta.get_field(key).blank and \
                not self.scraped_obj_class()._meta.get_field(key).null:
                 item[key] = ''
+        if self.from_detail_page:
+            item, is_double = self._check_for_double_item(item)
         
         return item
 
@@ -230,32 +259,24 @@ class DjangoSpider(DjangoBaseSpider):
             items_left = min(len(base_objects), self.conf['MAX_ITEMS_READ'] - self.items_read_count)
             base_objects = base_objects[0:items_left]
         
-        idf_elems = self.scraper.get_id_field_elems()
 
         for obj in base_objects:
             item_num = self.items_read_count + 1
             self.log("Starting to crawl item %s." % str(item_num), log.INFO)
             item = self.parse_item(response, obj)
             #print item
-
-            num_item_idfs = 0
-            for idf_elem in idf_elems:
-                idf_name = idf_elem.scraped_obj_attr.name
-                if idf_name in item:
-                    num_item_idfs += 1
             
-            if item and num_item_idfs == len(idf_elems):
-                qs = self.scraped_obj_class.objects
+            if item:
+                only_main_page_idfs = True
+                idf_elems = self.scraper.get_id_field_elems()
                 for idf_elem in idf_elems:
-                    idf_name = idf_elem.scraped_obj_attr.name
-                    qs = qs.filter(**{idf_name:item[idf_name]})
-                cnt = qs.count()
-                # Mark item as DOUBLE item
+                    if idf_elem.from_detail_page:
+                        only_main_page_idfs = False
 
-                if cnt > 0:
-                    for idf_elem in idf_elems:
-                        idf_name = idf_elem.scraped_obj_attr.name
-                        item[idf_name] = 'DOUBLE' + item[idf_name]
+                is_double = False
+                if only_main_page_idfs:
+                    item, is_double = self._check_for_double_item(item)
+                
                 meta = {}
                 meta['item'] = item
                 
@@ -264,17 +285,20 @@ class DjangoSpider(DjangoBaseSpider):
                         'endpoint': 'render.html',
                         'args': self.conf['SPLASH_ARGS'].copy()
                     }
+                # Don't go on reading detail page when...
                 # No detail page URL defined or
-                # DOUBLE item with no standard update elements to be scraped from detail page or 
+                # DOUBLE item with only main page IDFs and no standard update elements to be scraped from detail page or 
                 # generally no attributes scraped from detail page
-                cnt1 = self.scraper.get_standard_update_elems_from_detail_page().count()
-                cnt2 = self.scraper.get_from_detail_page_scrape_elems().count()
-                if self.scraper.get_detail_page_url_elems().count() == 0 or (cnt > 0 and cnt1 == 0) or cnt2 == 0:
+                cnt_sue_detail = self.scraper.get_standard_update_elems_from_detail_page().count()
+                cnt_detail_scrape = self.scraper.get_from_detail_page_scrape_elems().count()
+
+                if self.scraper.get_detail_page_url_elems().count() == 0 or \
+                    (is_double and cnt_sue_detail == 0) or cnt_detail_scrape == 0:
                     yield item
                 else:
                     url_elem = self.scraper.get_detail_page_url_elems()[0]
                     url = item[url_elem.scraped_obj_attr.name]
                     yield Request(url, callback=self.parse_item, meta=meta)
             else:
-                self.log("ID field(s) could not be read!", log.ERROR)
+                self.log("Item could not be read!", log.ERROR)
     
