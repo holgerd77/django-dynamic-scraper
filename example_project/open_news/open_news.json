@@ -13,6 +13,7 @@
     "fields": {
         "obj_class": 1,
         "name": "base",
+        "id_field": false,
         "attr_type": "B"
     },
     "model": "dynamic_scraper.scrapedobjattr",
@@ -22,6 +23,7 @@
     "fields": {
         "obj_class": 1,
         "name": "description",
+        "id_field": false,
         "attr_type": "S"
     },
     "model": "dynamic_scraper.scrapedobjattr",
@@ -31,6 +33,7 @@
     "fields": {
         "obj_class": 1,
         "name": "title",
+        "id_field": false,
         "attr_type": "S"
     },
     "model": "dynamic_scraper.scrapedobjattr",
@@ -40,6 +43,7 @@
     "fields": {
         "obj_class": 1,
         "name": "url",
+        "id_field": true,
         "attr_type": "U"
     },
     "model": "dynamic_scraper.scrapedobjattr",
@@ -49,6 +53,7 @@
     "fields": {
         "obj_class": 1,
         "name": "thumbnail",
+        "id_field": false,
         "attr_type": "I"
     },
     "model": "dynamic_scraper.scrapedobjattr",
