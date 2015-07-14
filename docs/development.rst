@@ -100,6 +100,10 @@ Release Notes
   flexible concept of explicitly setting ``ID Fields`` for ``ScrapedObjClass`` in ``Django`` admin 
   (see: :ref:`defining_scraped_object_class`)
 * New attribute ``id_field`` for ``ScrapedObjClass``, please run Django ``migration`` command (migration ``0004``)
+* ``DETAIL_PAGE_URL`` type attribute not necessary any more when defining the scraped object class allowing for more
+  scraping use cases (classic and simple/flat datasets not referencing a certain detail page)
+* Single ``DETAIL_PAGE_URL`` type ``ID Field`` still necessary for using ``DDS`` checker functionality
+  (see: :ref:`item_checkers`)
 * Additional form checks for ``ScrapedObjClass`` definition in ``Django`` admin
 
 **Changes in version 0.5.2-beta** (2015-06-18)
