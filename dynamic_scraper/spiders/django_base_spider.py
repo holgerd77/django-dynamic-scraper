@@ -29,6 +29,9 @@ class DjangoBaseSpider(Spider):
         "LOG_LEVEL": 'ERROR',
         "LOG_LIMIT": 250,
     }
+
+    request_kwargs = {}
+
     command  = 'scrapy crawl SPIDERNAME -a id=REF_OBJECT_ID '
     command += '[-a do_action=(yes|no) -a run_type=(TASK|SHELL)'
     command += ' -a max_items_read={Int} -a max_items_save={Int}]'
@@ -124,6 +127,17 @@ class DjangoBaseSpider(Spider):
             msg = 'Scraper status set to %s!' % (self.scraper.get_status_display())
             self.log(msg, log.WARNING)
             raise CloseSpider(msg)
+
+
+    def _set_request_kwargs(self):
+        if self.scraper.detail_page_content_type == 'H' and self.scraper.render_javascript:
+            if 'meta' not in self.request_kwargs:
+                self.request_kwargs['meta'] = {}
+            self.request_kwargs['meta']['splash'] = {
+                'endpoint': 'render.html',
+                'args': self.conf['SPLASH_ARGS'].copy()
+            }
+            print self.request_kwargs
     
     
     def spider_closed(self):

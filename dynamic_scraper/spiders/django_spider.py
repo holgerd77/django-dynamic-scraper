@@ -25,6 +25,7 @@ class DjangoSpider(DjangoBaseSpider):
         
         super(DjangoSpider, self).__init__(self, *args, **kwargs)
         self._set_config(**kwargs)
+        self._set_request_kwargs()
         
         self._set_start_urls(self.scrape_url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
@@ -178,13 +179,7 @@ class DjangoSpider(DjangoBaseSpider):
 
     def start_requests(self):
         for url in self.start_urls:
-            meta = {}
-            if self.scraper.content_type == 'H' and self.scraper.render_javascript:
-                meta['splash'] = {
-                    'endpoint': 'render.html',
-                    'args': self.conf['SPLASH_ARGS'].copy()
-                }
-            yield Request(url, self.parse, meta=meta)
+            yield Request(url, callback=self.parse, **self.request_kwargs)
 
 
     def _check_for_double_item(self, item):
@@ -277,14 +272,10 @@ class DjangoSpider(DjangoBaseSpider):
                 if only_main_page_idfs:
                     item, is_double = self._check_for_double_item(item)
                 
-                meta = {}
-                meta['item'] = item
+                if 'meta' not in self.request_kwargs:
+                    self.request_kwargs['meta'] = {}
+                self.request_kwargs['meta']['item'] = item
                 
-                if self.scraper.detail_page_content_type == 'H' and self.scraper.render_javascript:
-                    meta['splash'] = {
-                        'endpoint': 'render.html',
-                        'args': self.conf['SPLASH_ARGS'].copy()
-                    }
                 # Don't go on reading detail page when...
                 # No detail page URL defined or
                 # DOUBLE item with only main page IDFs and no standard update elements to be scraped from detail page or 
@@ -298,7 +289,7 @@ class DjangoSpider(DjangoBaseSpider):
                 else:
                     url_elem = self.scraper.get_detail_page_url_elems()[0]
                     url = item[url_elem.scraped_obj_attr.name]
-                    yield Request(url, callback=self.parse_item, meta=meta)
+                    yield Request(url, callback=self.parse_item, **self.request_kwargs)
             else:
                 self.log("Item could not be read!", log.ERROR)
     

@@ -22,6 +22,7 @@ class DjangoChecker(DjangoBaseSpider):
         super(DjangoChecker, self).__init__(self, *args, **kwargs)
         self._set_config(**kwargs)
         self._check_checker_config()
+        self._set_request_kwargs()
         
         self.start_urls.append(self.scrape_url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.checker_scheduler_conf)
@@ -91,13 +92,7 @@ class DjangoChecker(DjangoBaseSpider):
 
     def start_requests(self):
         for url in self.start_urls:
-            meta = {}
-            if self.scraper.detail_page_content_type == 'H' and self.scraper.render_javascript:
-                meta['splash'] = {
-                    'endpoint': 'render.html',
-                    'args': self.conf['SPLASH_ARGS'].copy()
-                }
-            yield Request(url, self.parse, meta=meta)
+            yield Request(url, callback=self.parse, **self.request_kwargs)
 
 
     def response_received(self, **kwargs):
