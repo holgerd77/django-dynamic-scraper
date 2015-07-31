@@ -94,6 +94,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.7.0-beta** (Not yet released)
+
+* TODO
+
 **Changes in version 0.6.0-beta** (2015-07-14)
 
 * Replaced implicit and static ID concept of mandatory ``DETAIL_PAGE_URL`` type attribute serving as ID with a more
