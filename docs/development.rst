@@ -94,9 +94,20 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.7.0-beta** (Not yet released)
+**Changes in version 0.7.0-beta** (2015-07-31)
 
-* TODO
+* Adding additional HTTP header attributes to scrapers in Django admin
+* Cookie support for scrapers
+* Passing Scraper specific Scrapy meta data
+* Support for form requests, passing form data within requests
+* Pagination support for cookies, form data
+* New migration ``0005``, run Django ``migration`` command
+* All changes visible in Scraper form of Django admin
+* ATTENTION! While unit tests for existing functionality all passing through, new functionality is not heavily
+  tested yet due to problems in creating test scenarios. If you want to use the new functionality in a production 
+  environment please test with extra care. You also might want to wait for 2-3 weeks after release
+  and/or for a following 0.7.1 release (not sure if necessary yet)
+* Please report problems/bugs on `GitHub <https://github.com/holgerd77/django-dynamic-scraper>`_.
 
 **Changes in version 0.6.0-beta** (2015-07-14)
 
