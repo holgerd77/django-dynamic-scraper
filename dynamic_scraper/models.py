@@ -59,6 +59,10 @@ class Scraper(models.Model):
         ('X', 'XML'),
         ('J', 'JSON'),
     )
+    REQUEST_TYPE_CHOICES = (
+        ('R', 'Request (GET)'),
+        ('F', 'FormRequest (POST)'),
+    )
     PAGINATION_TYPE = (
         ('N', 'NONE'),
         ('R', 'RANGE_FUNCT'),
@@ -77,6 +81,11 @@ class Scraper(models.Model):
     render_javascript = models.BooleanField(default=False, help_text="Render Javascript on pages (ScrapyJS/Splash deployment needed, careful: resource intense)")
     max_items_read = models.IntegerField(blank=True, null=True, help_text="Max number of items to be read (empty: unlimited).")
     max_items_save = models.IntegerField(blank=True, null=True, help_text="Max number of items to be saved (empty: unlimited).")
+    request_type = models.CharField(max_length=1, choices=REQUEST_TYPE_CHOICES, default='R', help_text="Normal GET request (default) or form request via POST, using Scrapys corresponding request classes (not used for checker).")
+    headers = models.TextField(blank=True, help_text="Optional HTTP headers sent with each request, provided as a JSON dict (e.g. {'Referer':'http://referer_url'})).")
+    cookies = models.TextField(blank=True, help_text="Optional cookies as JSON dict, can use {page} placeholder of pagination.")
+    meta = models.TextField(blank=True, help_text="Optional Scrapy meta attributes as JSON dict, see Scrapy docs for reference.")
+    form_data = models.TextField(blank=True, help_text="Optional HTML form data as JSON dict, only used with FormRequest request type, can use {page} placeholder of pagination.")
     pagination_type = models.CharField(max_length=1, choices=PAGINATION_TYPE, default='N')
     pagination_on_start = models.BooleanField(default=False)
     pagination_append_str = models.CharField(max_length=200, blank=True, help_text="Syntax: /somepartofurl/{page}/moreurlstuff.html")

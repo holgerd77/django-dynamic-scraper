@@ -74,14 +74,44 @@ class ScraperElemInline(admin.TabularInline):
 
     
 class ScraperAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'scraped_obj_class', 'status', 'content_type', 'max_items_read', 'max_items_save', 'pagination_type', 'checker_type',)
+    list_display = ('id', 'name', 'scraped_obj_class', 'status', 'content_type', 'max_items_read', 'max_items_save', 'request_type', 'pagination_type', 'checker_type',)
     list_display_links = ('name',)
     list_editable = ('status',)
-    list_filter = ('scraped_obj_class', 'status', 'content_type', 'pagination_type', 'checker_type',)
+    list_filter = ('scraped_obj_class', 'status', 'content_type', 'request_type', 'pagination_type', 'checker_type',)
     search_fields = ['name']
     inlines = [
         ScraperElemInline
     ]
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'scraped_obj_class', 'status', 'content_type',  'detail_page_content_type', \
+                'render_javascript', 'max_items_read', 'max_items_save')
+        }),
+        (None, {
+            'fields': ('request_type',)
+        }),
+        ('Request options', {
+            'classes': ('collapse',),
+            'fields': ('headers', 'cookies', 'meta', 'form_data')
+        }),
+        (None, {
+            'fields': ('pagination_type',)
+        }),
+        ('Pagination options', {
+            'classes': ('collapse',),
+            'fields': ('pagination_on_start', 'pagination_append_str', 'pagination_page_replace')
+        }),
+        (None, {
+            'fields': ('checker_type',)
+        }),
+        ('Checker options', {
+            'classes': ('collapse',),
+            'fields': ('checker_x_path', 'checker_x_path_result', 'checker_ref_url')
+        }),
+        (None, {
+            'fields': ('comments',)
+        }),
+    )
     actions = ['clone_scrapers',]
     
     def clone_scrapers(self, request, queryset):
