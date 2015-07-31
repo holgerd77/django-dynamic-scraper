@@ -5,7 +5,7 @@ from jsonpath_rw.lexer import JsonPathLexerError
 
 from scrapy import log
 from scrapy.selector import Selector
-from scrapy.http import Request
+from scrapy.http import Request, FormRequest
 from scrapy.contrib.loader import ItemLoader
 from scrapy.contrib.loader.processor import TakeFirst
 from scrapy.exceptions import CloseSpider
@@ -19,6 +19,8 @@ from dynamic_scraper.utils import processors
 
 class DjangoSpider(DjangoBaseSpider):
 
+    form_data = None
+
     def __init__(self, *args, **kwargs):
         self.mandatory_vars.append('scraped_obj_class')
         self.mandatory_vars.append('scraped_obj_item_class')
@@ -26,6 +28,14 @@ class DjangoSpider(DjangoBaseSpider):
         super(DjangoSpider, self).__init__(self, *args, **kwargs)
         self._set_config(**kwargs)
         self._set_request_kwargs()
+        if self.scraper.form_data != u'':
+            try:
+                form_data = json.loads(self.scraper.form_data)
+            except ValueError:
+                raise CloseSpider("Incorrect form_data attribute: not a valid JSON dict!")
+            if not isinstance(form_data, dict):
+                raise CloseSpider("Incorrect form_data attribute: not a valid JSON dict!")
+            self.form_data = form_data
         
         self._set_start_urls(self.scrape_url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
@@ -180,7 +190,10 @@ class DjangoSpider(DjangoBaseSpider):
     def start_requests(self):
         for url in self.start_urls:
             self._set_meta_splash_args()
-            yield Request(url, callback=self.parse, **self.request_kwargs)
+            if self.scraper.request_type == 'R':
+                yield Request(url, callback=self.parse, **self.request_kwargs)
+            else:
+                yield FormRequest(url, callback=self.parse, formdata=self.form_data, **self.request_kwargs)
 
 
     def _check_for_double_item(self, item):
@@ -291,7 +304,10 @@ class DjangoSpider(DjangoBaseSpider):
                     url_elem = self.scraper.get_detail_page_url_elems()[0]
                     url = item[url_elem.scraped_obj_attr.name]
                     self._set_meta_splash_args()
-                    yield Request(url, callback=self.parse_item, **self.request_kwargs)
+                    if self.scraper.request_type == 'R':
+                        yield Request(url, callback=self.parse_item, **self.request_kwargs)
+                    else:
+                        yield FormRequest(url, callback=self.parse_item, formdata=self.form_data, **self.request_kwargs)
             else:
                 self.log("Item could not be read!", log.ERROR)
     
