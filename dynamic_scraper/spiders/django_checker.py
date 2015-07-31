@@ -22,6 +22,7 @@ class DjangoChecker(DjangoBaseSpider):
         super(DjangoChecker, self).__init__(self, *args, **kwargs)
         self._set_config(**kwargs)
         self._check_checker_config()
+        self._set_request_kwargs()
         
         self.start_urls.append(self.scrape_url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.checker_scheduler_conf)

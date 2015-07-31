@@ -139,6 +139,23 @@ class DjangoBaseSpider(Spider):
                 raise CloseSpider("Incorrect HTTP header attribute: not a valid JSON dict!")
             self.request_kwargs['headers'] = headers
 
+        if self.scraper.cookies != u'':
+            try:
+                cookies = json.loads(self.scraper.cookies)
+            except ValueError:
+                raise CloseSpider("Incorrect cookies attribute: not a valid JSON dict!")
+            if not isinstance(cookies, dict):
+                raise CloseSpider("Incorrect cookies attribute: not a valid JSON dict!")
+            self.request_kwargs['cookies'] = cookies
+
+        if self.scraper.meta != u'':
+            try:
+                meta = json.loads(self.scraper.meta)
+            except ValueError:
+                raise CloseSpider("Incorrect meta attribute: not a valid JSON dict!")
+            if not isinstance(meta, dict):
+                raise CloseSpider("Incorrect meta attribute: not a valid JSON dict!")
+            self.request_kwargs['meta'] = meta
     
 
     def _set_meta_splash_args(self):
