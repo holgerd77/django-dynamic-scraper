@@ -1,4 +1,4 @@
-import datetime, os
+import datetime, json, os
 from scrapy import log, signals
 from scrapy.spider import Spider
 from scrapy.xlib.pydispatch import dispatcher
@@ -130,6 +130,18 @@ class DjangoBaseSpider(Spider):
 
 
     def _set_request_kwargs(self):
+        if self.scraper.headers != u'':
+            try:
+                headers = json.loads(self.scraper.headers)
+            except ValueError:
+                raise CloseSpider("Incorrect HTTP header attribute: not a valid JSON dict!")
+            if not isinstance(headers, dict):
+                raise CloseSpider("Incorrect HTTP header attribute: not a valid JSON dict!")
+            self.request_kwargs['headers'] = headers
+
+    
+
+    def _set_meta_splash_args(self):
         if self.scraper.detail_page_content_type == 'H' and self.scraper.render_javascript:
             if 'meta' not in self.request_kwargs:
                 self.request_kwargs['meta'] = {}
@@ -137,9 +149,7 @@ class DjangoBaseSpider(Spider):
                 'endpoint': 'render.html',
                 'args': self.conf['SPLASH_ARGS'].copy()
             }
-            print self.request_kwargs
-    
-    
+
     def spider_closed(self):
         if self.conf['RUN_TYPE'] == 'TASK' and self.conf['DO_ACTION']:
             

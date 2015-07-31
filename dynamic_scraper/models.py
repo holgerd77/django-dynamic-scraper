@@ -82,7 +82,7 @@ class Scraper(models.Model):
     max_items_read = models.IntegerField(blank=True, null=True, help_text="Max number of items to be read (empty: unlimited).")
     max_items_save = models.IntegerField(blank=True, null=True, help_text="Max number of items to be saved (empty: unlimited).")
     request_type = models.CharField(max_length=1, choices=REQUEST_TYPE_CHOICES, default='R', help_text="Normal GET request (default) or form request via POST, using Scrapys corresponding request classes (not used for checker).")
-    headers = models.TextField(blank=True, help_text="Optional HTTP headers sent with each request, provided as a JSON dict (e.g. {'Referer':'http://referer_url'})).")
+    headers = models.TextField(blank=True, help_text='Optional HTTP headers sent with each request, provided as a JSON dict (e.g. {"Referer":"http://referer_url"}, use double quotes!)).')
     cookies = models.TextField(blank=True, help_text="Optional cookies as JSON dict, can use {page} placeholder of pagination.")
     meta = models.TextField(blank=True, help_text="Optional Scrapy meta attributes as JSON dict, see Scrapy docs for reference.")
     form_data = models.TextField(blank=True, help_text="Optional HTML form data as JSON dict, only used with FormRequest request type, can use {page} placeholder of pagination.")

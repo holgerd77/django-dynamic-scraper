@@ -179,6 +179,7 @@ class DjangoSpider(DjangoBaseSpider):
 
     def start_requests(self):
         for url in self.start_urls:
+            self._set_meta_splash_args()
             yield Request(url, callback=self.parse, **self.request_kwargs)
 
 
@@ -289,6 +290,7 @@ class DjangoSpider(DjangoBaseSpider):
                 else:
                     url_elem = self.scraper.get_detail_page_url_elems()[0]
                     url = item[url_elem.scraped_obj_attr.name]
+                    self._set_meta_splash_args()
                     yield Request(url, callback=self.parse_item, **self.request_kwargs)
             else:
                 self.log("Item could not be read!", log.ERROR)
