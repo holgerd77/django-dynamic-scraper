@@ -112,14 +112,17 @@ class DjangoSpider(DjangoBaseSpider):
             if scrape_url[-1:] == '/' and append_str[0:1] == '/':
                 append_str = append_str[1:]
 
-            for page in pages:
+            self.pages = pages
+            for page in self.pages:
                 url = scrape_url + append_str.format(page=page)
                 self.start_urls.append(url)
             if not self.scraper.pagination_on_start:
-                self.start_urls.append(scrape_url)
+                self.start_urls.insert(0, scrape_url)
+                self.pages.insert(0, "")
         
         if self.scraper.pagination_type == 'N':
             self.start_urls.append(scrape_url)
+            self.pages = ["",]
 
 
     def _set_loader_context(self, context_str):
@@ -188,12 +191,20 @@ class DjangoSpider(DjangoBaseSpider):
 
 
     def start_requests(self):
+        index = 0
         for url in self.start_urls:
             self._set_meta_splash_args()
+            kwargs = self.request_kwargs
+            form_data = self.form_data
+            if 'cookies' in kwargs:
+                kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', unicode(self.pages[index])))
+            if form_data:
+                form_data = json.loads(json.dumps(form_data).replace('{page}', unicode(self.pages[index])))
+            index += 1
             if self.scraper.request_type == 'R':
-                yield Request(url, callback=self.parse, **self.request_kwargs)
+                yield Request(url, callback=self.parse, **kwargs)
             else:
-                yield FormRequest(url, callback=self.parse, formdata=self.form_data, **self.request_kwargs)
+                yield FormRequest(url, callback=self.parse, formdata=form_data, **kwargs)
 
 
     def _check_for_double_item(self, item):
@@ -304,10 +315,7 @@ class DjangoSpider(DjangoBaseSpider):
                     url_elem = self.scraper.get_detail_page_url_elems()[0]
                     url = item[url_elem.scraped_obj_attr.name]
                     self._set_meta_splash_args()
-                    if self.scraper.request_type == 'R':
-                        yield Request(url, callback=self.parse_item, **self.request_kwargs)
-                    else:
-                        yield FormRequest(url, callback=self.parse_item, formdata=self.form_data, **self.request_kwargs)
+                    yield Request(url, callback=self.parse_item, **self.request_kwargs)
             else:
                 self.log("Item could not be read!", log.ERROR)
     
