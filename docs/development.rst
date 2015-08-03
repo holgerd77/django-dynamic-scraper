@@ -96,6 +96,7 @@ Release Notes
 =============
 **Changes in version 0.7.1-beta** (Not yet released)
 
+* Fixed severe bug preventing ``pagination`` for ``cookies`` and ``form_data`` to work properly
 * Added a new section in the docs for :ref:`advanced_request_options`
 
 **Changes in version 0.7.0-beta** (2015-07-31)

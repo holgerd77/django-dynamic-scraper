@@ -194,8 +194,8 @@ class DjangoSpider(DjangoBaseSpider):
         index = 0
         for url in self.start_urls:
             self._set_meta_splash_args()
-            kwargs = self.request_kwargs
-            form_data = self.form_data
+            kwargs = self.request_kwargs.copy()
+            form_data = self.form_data.copy()
             if 'cookies' in kwargs:
                 kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', unicode(self.pages[index])))
             if form_data:
