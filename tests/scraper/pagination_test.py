@@ -29,12 +29,24 @@ class PaginationTest(ScraperTest):
         self.scraper.save()
 
 
+    def test_config_empty_append_str(self):
+        self.setUpPaginationRangeFunctTypeScraper()
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_generic/event_main.html')
+        self.event_website.save()
+        self.scraper.pagination_append_str = ''
+        self.scraper.save()
+
+        self.run_event_spider(1)
+        self.assertEqual(len(Event.objects.all()), 4)
+
+
     def test_config_append_str_without_page(self):
         self.setUpPaginationRangeFunctTypeScraper()
         self.scraper.pagination_append_str = '.html'
         self.scraper.save()
 
-        self.assertRaises(CloseSpider, self.run_event_spider, 1)
+        self.run_event_spider(1)
+        self.assertEqual(len(Event.objects.all()), 4)
 
 
     def test_p_on_start(self):

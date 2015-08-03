@@ -79,10 +79,6 @@ class DjangoSpider(DjangoBaseSpider):
     def _set_start_urls(self, scrape_url):
         
         if self.scraper.pagination_type != 'N':
-            if not self.scraper.pagination_append_str:
-                raise CloseSpider('Please provide a pagination_append_str for pagination (e.g. "/archive/{page}/")!')
-            if self.scraper.pagination_append_str.find('{page}') == -1:
-                raise CloseSpider('Pagination_append_str has to contain "{page}" as placeholder for page replace!')
             if not self.scraper.pagination_page_replace:
                 raise CloseSpider('Please provide a pagination_page_replace context corresponding to pagination_type!')
         
@@ -194,8 +190,14 @@ class DjangoSpider(DjangoBaseSpider):
         index = 0
         for url in self.start_urls:
             self._set_meta_splash_args()
-            kwargs = self.request_kwargs.copy()
-            form_data = self.form_data.copy()
+            if self.request_kwargs:
+                kwargs = self.request_kwargs.copy()
+            else:
+                kwargs = self.request_kwargs
+            if self.form_data:
+                form_data = self.form_data.copy()
+            else:
+                form_data = self.form_data
             if 'cookies' in kwargs:
                 kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', unicode(self.pages[index])))
             if form_data:
