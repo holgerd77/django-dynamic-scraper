@@ -9,7 +9,17 @@ def form_data(request, test_case):
         if 'simple' in request.POST and request.POST['simple'] == 'SIMPLE_VALUE':
             return redirect('/static/site_generic/event_main.html')
         else:
-            return HttpResponse('Cookie not found!')
+            return HttpResponse('Form data not found!')
+    elif test_case == 'pagination':
+        if 'page' in request.POST:
+            if request.POST['page'] == '1':
+                return redirect('/static/site_generic/event_main1.html')
+            elif request.POST['page'] == '2':
+                return redirect('/static/site_generic/event_main2.html')
+            else:
+                return HttpResponse('Form data not found!')
+        else:
+            return HttpResponse('Form data not found!')
     else:
         raise Http404
 

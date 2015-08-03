@@ -403,6 +403,23 @@ Since ``DDS v.0.7+`` you have more options to fine-tune your scraping requests b
    Parameters for the different options are passed as ``JSON`` dicts. Make sure to use ``double quotes``
    for attribute values and to leave the ``comma`` for the last attribute key-value pair.
 
+Form Data
+---------
+.. image:: images/screenshot_django-admin_scraper_request_form_data.png
+
+If you want to scrape data provided on a website via a web form, data is often returned via ``POST`` request after
+sending various ``POST request parameters`` for narrowing the results. For this scenario use the ``FormRequest`` request
+type in the scraper admin and provide the adequate form data as a JSON dictionary in the request options.
+
+You can also use the ``{page}`` placeholder. This placeholder is replaced for consecutive pages according
+to your pagination parameters (see: :ref:`pagination`).
+
+HTTP Headers
+------------
+.. image:: images/screenshot_django-admin_scraper_request_http_headers.png
+
+For setting/changing specific ``HTTP header`` fields like the referer URL use the ``headers`` text field in the request options.
+
 Request Cookies
 ---------------
 .. image:: images/screenshot_django-admin_scraper_request_cookies.png
@@ -417,6 +434,14 @@ to your pagination parameters (see: :ref:`pagination`).
 .. note::
    If you want to pass a ``session ID`` for a site as a ``cookie``, you can open the desired website in your browser 
    and copy-paste the session ID from the development console for immediately following scraper runs.
+
+Scrapy Meta Options
+-------------------
+.. image:: images/screenshot_django-admin_scraper_request_scrapy_meta_data.png
+
+Changing Scrapy meta attributes, see
+`Scrapy docs <doc.scrapy.org/en/latest/topics/request-response.html#topics-request-meta>`_ for reference.
+
 
 
 .. _pagination:
