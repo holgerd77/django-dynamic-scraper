@@ -94,6 +94,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.7.1-beta** (Not yet released)
+
+* Added a new section in the docs for :ref:`advanced_request_options`
+
 **Changes in version 0.7.0-beta** (2015-07-31)
 
 * Adding additional HTTP header attributes to scrapers in Django admin

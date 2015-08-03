@@ -114,7 +114,7 @@ class ScraperTest(TestCase):
         self.spider = EventSpider(**kwargs)
         self.crawler.crawl(self.spider)
         self.crawler.start()
-        #log.start()
+        log.start(loglevel="DEBUG", logstdout=True)
         reactor.run()
         
     
@@ -159,6 +159,7 @@ class ScraperTest(TestCase):
         if 'DSCRAPER_IMAGES_STORE_FORMAT' in self.dds_settings:
             settings.set('DSCRAPER_IMAGES_STORE_FORMAT', self.dds_settings['DSCRAPER_IMAGES_STORE_FORMAT'], priority='cmdline')
 
+        settings.set('COOKIES_DEBUG', True)
         self.crawler = Crawler(settings)
         self.crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
         self.crawler.configure()

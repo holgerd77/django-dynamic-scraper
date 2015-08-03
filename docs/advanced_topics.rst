@@ -390,6 +390,37 @@ So scraped items are checked in a (relatively, defined by your configuration) sh
 If the item turns out to be persistently existing, the checks are prolonged till ``MAX_TIME`` is reached.
 
 
+.. _advanced_request_options:
+
+Advanced Request Options
+========================
+
+Since ``DDS v.0.7+`` you have more options to fine-tune your scraping requests by e.g. providing additional values for
+``cookies`` or ``HTTP headers``. These values are internally passed to Scrapy's `Request object <http://doc.scrapy.org/en/latest/topics/request-response.html#request-objects>`_. You can find the extended request options in the 
+``Request options`` tab in the ``Scraper form`` of your ``Django project admin``.
+
+.. note::
+   Parameters for the different options are passed as ``JSON`` dicts. Make sure to use ``double quotes``
+   for attribute values and to leave the ``comma`` for the last attribute key-value pair.
+
+Request Cookies
+---------------
+.. image:: images/screenshot_django-admin_scraper_request_cookies.png
+
+Sometime the output of a website you want to scrape might depend on the values of some cookies sent to the server.
+For this occasion you can use the ``Cookies`` form in the request options tab, e.g. for setting the language of a
+website to ``english``.
+
+You can also use the ``{page}`` placeholder. This placeholder is replaced for consecutive pages according
+to your pagination parameters (see: :ref:`pagination`).
+
+.. note::
+   If you want to pass a ``session ID`` for a site as a ``cookie``, you can open the desired website in your browser 
+   and copy-paste the session ID from the development console for immediately following scraper runs.
+
+
+.. _pagination:
+
 Pagination
 ==========
 
