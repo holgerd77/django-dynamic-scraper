@@ -222,7 +222,7 @@ class DjangoSpider(DjangoBaseSpider):
                 num_item_idfs += 1
 
         cnt_double = 0
-        if num_item_idfs == len(idf_elems):
+        if len(idf_elems) > 0 and num_item_idfs == len(idf_elems):
             qs = self.scraped_obj_class.objects
             for idf_elem in idf_elems:
                 idf_name = idf_elem.scraped_obj_attr.name

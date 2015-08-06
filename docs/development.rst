@@ -100,6 +100,10 @@ Release Notes
   (allowing e.g. more flexible ``POST`` requests), see: :ref:`advanced_request_options`
 * Added new ``body`` attribute to ``Scraper`` allowing for sending custom request ``HTTP message body`` data, see:
   :ref:`advanced_request_options`
+* Allowing ``pagination`` for ``headers``, ``body`` attributes
+* Allowing of ``ScrapedObjectClass`` definitions in ``Django admin`` with no attributes defined as ``ID field``
+  (omits double checking process when used)
+* New migration ``0006``, run Django ``migration`` command
 
 **Changes in version 0.7.1-beta** (2015-08-03)
 

@@ -33,7 +33,7 @@
     "fields": {
         "obj_class": 1,
         "name": "title",
-        "id_field": true,
+        "id_field": false,
         "attr_type": "S"
     },
     "model": "dynamic_scraper.scrapedobjattr",
@@ -43,7 +43,7 @@
     "fields": {
         "obj_class": 1,
         "name": "url",
-        "id_field": false,
+        "id_field": true,
         "attr_type": "U"
     },
     "model": "dynamic_scraper.scrapedobjattr",
@@ -61,6 +61,7 @@
 },
 {
     "fields": {
+        "body": "",
         "cookies": "",
         "checker_x_path_result": "",
         "checker_ref_url": "http://en.wikinews.org/wiki/This_wiki_article_doesnt_exist",
@@ -69,6 +70,7 @@
         "comments": "",
         "pagination_page_replace": "",
         "checker_type": "4",
+        "method": "GET",
         "scraped_obj_class": 1,
         "status": "A",
         "max_items_save": null,
@@ -89,6 +91,7 @@
 },
 {
     "fields": {
+        "body": "",
         "cookies": "",
         "checker_x_path_result": "",
         "checker_ref_url": "",
@@ -97,6 +100,7 @@
         "comments": "",
         "pagination_page_replace": "",
         "checker_type": "N",
+        "method": "GET",
         "scraped_obj_class": 1,
         "status": "A",
         "max_items_save": null,
@@ -250,5 +254,25 @@
     },
     "model": "dynamic_scraper.schedulerruntime",
     "pk": 1
+},
+{
+    "fields": {
+        "url": "http://en.wikinews.org/wiki/Main_Page",
+        "scraper_runtime": 1,
+        "name": "Wikinews",
+        "scraper": 1
+    },
+    "model": "open_news.newswebsite",
+    "pk": 1
+},
+{
+    "fields": {
+        "url": "http://www.justice.gov/api/v1/blog_entries.json?amp%3Bpagesize=2",
+        "scraper_runtime": null,
+        "name": "US Department of Justice - Press Releases",
+        "scraper": 2
+    },
+    "model": "open_news.newswebsite",
+    "pk": 2
 }
 ]
