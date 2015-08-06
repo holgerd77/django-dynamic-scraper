@@ -94,7 +94,14 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.7.1-beta** (Not yet released)
+**Changes in version 0.7.2-beta** (2015-08-06)
+
+* Added new ``method`` attribute to ``Scraper`` not binding HTTP method choice (``GET``/``POST``) so strictly to choice of ``request_type``
+  (allowing e.g. more flexible ``POST`` requests), see: :ref:`advanced_request_options`
+* Added new ``body`` attribute to ``Scraper`` allowing for sending custom request ``HTTP message body`` data, see:
+  :ref:`advanced_request_options`
+
+**Changes in version 0.7.1-beta** (2015-08-03)
 
 * Fixed severe bug preventing ``pagination`` for ``cookies`` and ``form_data`` to work properly
 * Added a new section in the docs for :ref:`advanced_request_options`

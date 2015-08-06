@@ -198,15 +198,19 @@ class DjangoSpider(DjangoBaseSpider):
                 form_data = self.form_data.copy()
             else:
                 form_data = self.form_data
+            if 'headers' in kwargs:
+                kwargs['headers'] = json.loads(json.dumps(kwargs['headers']).replace('{page}', unicode(self.pages[index])))
+            if 'body' in kwargs:
+                kwargs['body'] = kwargs['body'].replace('{page}', unicode(self.pages[index]))
             if 'cookies' in kwargs:
                 kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', unicode(self.pages[index])))
             if form_data:
                 form_data = json.loads(json.dumps(form_data).replace('{page}', unicode(self.pages[index])))
             index += 1
             if self.scraper.request_type == 'R':
-                yield Request(url, callback=self.parse, **kwargs)
+                yield Request(url, callback=self.parse, method=self.scraper.method, **kwargs)
             else:
-                yield FormRequest(url, callback=self.parse, formdata=form_data, **kwargs)
+                yield FormRequest(url, callback=self.parse, method=self.scraper.method, formdata=form_data, **kwargs)
 
 
     def _check_for_double_item(self, item):

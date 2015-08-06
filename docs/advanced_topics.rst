@@ -403,22 +403,31 @@ Since ``DDS v.0.7+`` you have more options to fine-tune your scraping requests b
    Parameters for the different options are passed as ``JSON`` dicts. Make sure to use ``double quotes``
    for attribute values and to leave the ``comma`` for the last attribute key-value pair.
 
-Form Data
----------
-.. image:: images/screenshot_django-admin_scraper_request_form_data.png
+Request Type and Method
+-----------------------
+.. image:: images/screenshot_django-admin_scraper_request_type_and_method.png
 
-If you want to scrape data provided on a website via a web form, data is often returned via ``POST`` request after
-sending various ``POST request parameters`` for narrowing the results. For this scenario use the ``FormRequest`` request
-type in the scraper admin and provide the adequate form data as a JSON dictionary in the request options.
-
-You can also use the ``{page}`` placeholder. This placeholder is replaced for consecutive pages according
-to your pagination parameters (see: :ref:`pagination`).
+The request type - corresponding to Scrapy's `Request classes <http://doc.scrapy.org/en/latest/topics/request-response.html#request-objects>`_ - and the type of the request being sent as ``GET`` or ``POST``. Normally you will choose ``GET``
+together with a classic ``Request`` and ``POST`` with a ``FormRequest`` but for 
+special cases you are free too choose here.
 
 HTTP Headers
 ------------
 .. image:: images/screenshot_django-admin_scraper_request_http_headers.png
 
 For setting/changing specific ``HTTP header`` fields like the referer URL use the ``headers`` text field in the request options.
+
+HTTP Body
+---------
+.. image:: images/screenshot_django-admin_scraper_request_body.png
+
+Setting/changing the ``HTTP body``. This can be useful for some special-case scenarios, for example if you want
+to send a  ``POST`` request with content type for the request altered and sending ``POST`` parameters as a ``JSON`` dict.
+
+.. note::
+   Don't be fooled, especially by the example provided: data for the body attribute is NOT provided as ``JSON`` but
+   as a ``string``. While e.g. the ``Headers`` field always has to be in ``JSON`` format, the ``Body`` text is just
+   randomly ``JSON`` in this example, but it could also be ``This is my body text.``.
 
 Request Cookies
 ---------------
@@ -442,6 +451,16 @@ Scrapy Meta Options
 Changing Scrapy meta attributes, see
 `Scrapy docs <doc.scrapy.org/en/latest/topics/request-response.html#topics-request-meta>`_ for reference.
 
+Form Data
+---------
+.. image:: images/screenshot_django-admin_scraper_request_form_data.png
+
+If you want to scrape data provided on a website via a web form, data is often returned via ``POST`` request after
+sending various ``POST request parameters`` for narrowing the results. For this scenario use the ``FormRequest`` request
+type and ``POST`` as method in the scraper admin and provide the adequate form data as a JSON dictionary in the request options.
+
+You can also use the ``{page}`` placeholder. This placeholder is replaced for consecutive pages according
+to your pagination parameters (see: :ref:`pagination`).
 
 
 .. _pagination:

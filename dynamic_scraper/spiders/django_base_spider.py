@@ -139,6 +139,9 @@ class DjangoBaseSpider(Spider):
                 raise CloseSpider("Incorrect HTTP header attribute: not a valid JSON dict!")
             self.request_kwargs['headers'] = headers
 
+        if self.scraper.body != u'':
+            self.request_kwargs['body'] = self.scraper.body
+
         if self.scraper.cookies != u'':
             try:
                 cookies = json.loads(self.scraper.cookies)

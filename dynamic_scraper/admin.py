@@ -88,11 +88,11 @@ class ScraperAdmin(admin.ModelAdmin):
                 'render_javascript', 'max_items_read', 'max_items_save')
         }),
         (None, {
-            'fields': ('request_type',)
+            'fields': ('request_type', 'method')
         }),
         ('Request options', {
             'classes': ('collapse',),
-            'fields': ('headers', 'cookies', 'meta', 'form_data')
+            'fields': ('headers', 'body', 'cookies', 'meta', 'form_data')
         }),
         (None, {
             'fields': ('pagination_type',)
