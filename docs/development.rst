@@ -94,6 +94,11 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.7.3-beta** (Not yet released!)
+
+* Fixed bug preventing processing of ``JSON`` with non-string data types (e.g. ``Number``) for scraped attributes,
+  values are now automatically converted to ``String``
+
 **Changes in version 0.7.2-beta** (2015-08-06)
 
 * Added new ``method`` attribute to ``Scraper`` not binding HTTP method choice (``GET``/``POST``) so strictly to choice of ``request_type``
