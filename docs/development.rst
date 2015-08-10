@@ -94,7 +94,7 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.7.3-beta** (Not yet released!)
+**Changes in version 0.7.3-beta** (2015-08-10)
 
 * New attribute ``dont_filter`` for ``Scraper`` request options (see: :ref:`advanced_request_options`), necessary
   for some scenarios where ``Scrapy`` falsely marks (and omits) requests as being duplicate (e.g. when scraping uniform

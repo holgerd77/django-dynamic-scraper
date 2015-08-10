@@ -10,8 +10,16 @@ Django Dynamic Scraper (DDS) is an app for Django build on top of the scraping f
 of the features of Scrapy it lets you dynamically create and manage spiders via the Django admin interface.
 
 .. note::
-   Lot's of new features added recently : ``Django 1.8``/``Scrapy 0.24`` support, ``Javascript`` rendering,  
-   scraping ``JSON`` content, more flexible ID concept, see :ref:`releasenotes` for further details!
+   Lot's of new features added recently :
+
+   * ``Django 1.8``/``Scrapy 0.24`` support
+   * ``Javascript`` rendering
+   * Scraping ``JSON`` content
+   * More flexible ID concept
+   * Custom ``HTTP Header/Body``, ``Cookies``, ``GET/POST`` requests
+   * ``Scrapy Meta`` attributes
+
+   See :ref:`releasenotes` for further details!
 
 Features
 --------

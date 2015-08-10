@@ -200,7 +200,6 @@ class DjangoSpider(DjangoBaseSpider):
                 form_data = self.form_data
             if 'headers' in kwargs:
                 kwargs['headers'] = json.loads(json.dumps(kwargs['headers']).replace('{page}', unicode(self.pages[index])))
-                print kwargs['headers']
             if 'body' in kwargs:
                 kwargs['body'] = kwargs['body'].replace('{page}', unicode(self.pages[index]))
             if 'cookies' in kwargs:
