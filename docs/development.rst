@@ -96,8 +96,12 @@ Release Notes
 =============
 **Changes in version 0.7.3-beta** (Not yet released!)
 
+* New attribute ``dont_filter`` for ``Scraper`` request options (see: :ref:`advanced_request_options`), necessary
+  for some scenarios where ``Scrapy`` falsely marks (and omits) requests as being duplicate (e.g. when scraping uniform
+  URLs together with custom HTTP header pagination)
 * Fixed bug preventing processing of ``JSON`` with non-string data types (e.g. ``Number``) for scraped attributes,
   values are now automatically converted to ``String``
+* New migration ``0007``, run Django ``migration`` command
 
 **Changes in version 0.7.2-beta** (2015-08-06)
 

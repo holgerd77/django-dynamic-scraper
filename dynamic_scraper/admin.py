@@ -89,7 +89,7 @@ class ScraperAdmin(admin.ModelAdmin):
         }),
         ('Request options', {
             'classes': ('collapse',),
-            'fields': ('headers', 'body', 'cookies', 'meta', 'form_data')
+            'fields': ('headers', 'body', 'cookies', 'meta', 'form_data', 'dont_filter')
         }),
         (None, {
             'fields': ('pagination_type',)
