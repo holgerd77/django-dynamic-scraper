@@ -71,6 +71,8 @@ class ScraperElemInline(admin.TabularInline):
 
     
 class ScraperAdmin(admin.ModelAdmin):
+    class Media:
+        js = ("js/admin_custom.js",)
     list_display = ('id', 'name', 'scraped_obj_class', 'status', 'content_type', 'max_items_read', 'max_items_save', 'request_type', 'pagination_type', 'checker_type',)
     list_display_links = ('name',)
     list_editable = ('status',)

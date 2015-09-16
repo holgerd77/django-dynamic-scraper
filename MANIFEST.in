@@ -2,6 +2,7 @@ include LICENSE
 include MANIFEST.in
 include README.rst
 include requirements.txt
+recursive-include dynamic_scraper/static *
 recursive-include docs *
 recursive-include example_project *
 recursive-include tests *
