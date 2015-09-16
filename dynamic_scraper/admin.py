@@ -64,7 +64,11 @@ class ScrapedObjClassAdmin(admin.ModelAdmin):
         ScrapedObjAttrInline
     ]
 
-    
+
+class RequestPageTypeInline(admin.StackedInline):
+    model = RequestPageType
+    extra = 1
+
 class ScraperElemInline(admin.TabularInline):
     model = ScraperElem
     extra = 3
@@ -79,6 +83,7 @@ class ScraperAdmin(admin.ModelAdmin):
     list_filter = ('scraped_obj_class', 'status', 'content_type', 'request_type', 'pagination_type', 'checker_type',)
     search_fields = ['name']
     inlines = [
+        RequestPageTypeInline,
         ScraperElemInline
     ]
     fieldsets = (

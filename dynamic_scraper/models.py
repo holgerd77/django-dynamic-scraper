@@ -162,14 +162,50 @@ class Scraper(models.Model):
         ordering = ['name', 'scraped_obj_class',]
 
 
+class RequestPageType(models.Model):
+    TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP%d" % n, "Detail Page %d" % n) for n in range(1, 26)])
+    CONTENT_TYPE_CHOICES = (
+        ('H', 'HTML'),
+        ('X', 'XML'),
+        ('J', 'JSON'),
+    )
+    REQUEST_TYPE_CHOICES = (
+        ('R', 'Request'),
+        ('F', 'FormRequest'),
+    )
+    METHOD_CHOICES = (
+        ('GET', 'GET'),
+        ('POST', 'POST'),
+    )
+    page_type = models.CharField(max_length=3, choices=TYPE_CHOICES, unique=True)
+    scraped_obj_attr = models.ForeignKey(ScrapedObjAttr, blank=True, null=True, help_text="Empty for main page, attribute of type URL scraped from main page for detail pages.")
+    scraper = models.ForeignKey(Scraper)
+    content_type = models.CharField(max_length=1, choices=CONTENT_TYPE_CHOICES, default='H', help_text="Data type format for scraped pages of page type (for JSON use JSONPath instead of XPath)")
+    render_javascript = models.BooleanField(default=False, help_text="Render Javascript on pages (ScrapyJS/Splash deployment needed, careful: resource intense)")
+    request_type = models.CharField(max_length=1, choices=REQUEST_TYPE_CHOICES, default='R', help_text="Normal (typically GET) request (default) or form request (typically POST), using Scrapys corresponding request classes (not used for checker).")
+    method = models.CharField(max_length=10, choices=METHOD_CHOICES, default='GET', help_text="HTTP request via GET or POST.")
+    headers = models.TextField(blank=True, help_text='Optional HTTP headers sent with each request, provided as a JSON dict (e.g. {"Referer":"http://referer_url"}, use double quotes!)), can use {page} placeholder of pagination.')
+    body = models.TextField(blank=True, help_text="Optional HTTP message body provided as a unicode string, can use {page} placeholder of pagination.")
+    cookies = models.TextField(blank=True, help_text="Optional cookies as JSON dict (use double quotes!), can use {page} placeholder of pagination.")
+    meta = models.TextField(blank=True, help_text="Optional Scrapy meta attributes as JSON dict (use double quotes!), see Scrapy docs for reference.")
+    form_data = models.TextField(blank=True, help_text="Optional HTML form data as JSON dict (use double quotes!), only used with FormRequest request type, can use {page} placeholder of pagination.")
+    dont_filter = models.BooleanField(default=False, help_text="Do not filter duplicate requests, useful for some scenarios with requests falsely marked as being duplicate (e.g. uniform URL + pagination by HTTP header).")
+
+    def __unicode(self):
+        return self.type
+
+
 class ScraperElem(models.Model):
+    REQUEST_PAGE_TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP%d" % n, "Detail Page %d" % n) for n in range(1, 26)])
     scraped_obj_attr = models.ForeignKey(ScrapedObjAttr)
     scraper = models.ForeignKey(Scraper)   
     x_path = models.CharField(max_length=200)
     reg_exp = models.CharField(max_length=200, blank=True)
     from_detail_page = models.BooleanField(default=False)
+    request_page_type = models.CharField(max_length=3, choices=REQUEST_PAGE_TYPE_CHOICES, default="MP")
     processors = models.CharField(max_length=200, blank=True)
     proc_ctxt = models.CharField(max_length=200, blank=True)
+    save_to_db = models.BooleanField(default=True)
     mandatory = models.BooleanField(default=True)
 
 
