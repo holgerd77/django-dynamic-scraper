@@ -94,6 +94,12 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.8.0-beta** (Not yet released!)
+
+* TODO
+* Replaced Scrapy ``Spider`` with ``CrawlSpider`` class being the basis for ``DjangoBaseSpider``, allowing
+  for more flexibility when extending
+
 **Changes in version 0.7.3-beta** (2015-08-10)
 
 * New attribute ``dont_filter`` for ``Scraper`` request options (see: :ref:`advanced_request_options`), necessary
