@@ -1,6 +1,7 @@
 import datetime, json, os
 from scrapy import log, signals
 from scrapy.spider import Spider
+from scrapy.contrib.spiders import CrawlSpider
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy.exceptions import CloseSpider
 
@@ -13,7 +14,7 @@ from django.db.models import Q
 from dynamic_scraper.models import Log, LogMarker
 
 
-class DjangoBaseSpider(Spider):
+class DjangoBaseSpider(CrawlSpider):
     
     name = None
     action_successful = False
