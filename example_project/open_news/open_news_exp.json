@@ -1,0 +1,374 @@
+[
+{
+    "fields": {
+        "checker_scheduler_conf": "\"MIN_TIME\": 1440,\r\n\"MAX_TIME\": 10080,\r\n\"INITIAL_NEXT_ACTION_FACTOR\": 1,\r\n\"ZERO_ACTIONS_FACTOR_CHANGE\": 5,\r\n\"FACTOR_CHANGE_FACTOR\": 1.3,\r\n",
+        "scraper_scheduler_conf": "\"MIN_TIME\": 15,\r\n\"MAX_TIME\": 10080,\r\n\"INITIAL_NEXT_ACTION_FACTOR\": 10,\r\n\"ZERO_ACTIONS_FACTOR_CHANGE\": 20,\r\n\"FACTOR_CHANGE_FACTOR\": 1.3,\r\n",
+        "name": "Article",
+        "comments": ""
+    },
+    "model": "dynamic_scraper.scrapedobjclass",
+    "pk": 1
+},
+{
+    "fields": {
+        "obj_class": 1,
+        "name": "base",
+        "id_field": false,
+        "attr_type": "B"
+    },
+    "model": "dynamic_scraper.scrapedobjattr",
+    "pk": 1
+},
+{
+    "fields": {
+        "obj_class": 1,
+        "name": "description",
+        "id_field": false,
+        "attr_type": "S"
+    },
+    "model": "dynamic_scraper.scrapedobjattr",
+    "pk": 2
+},
+{
+    "fields": {
+        "obj_class": 1,
+        "name": "title",
+        "id_field": false,
+        "attr_type": "S"
+    },
+    "model": "dynamic_scraper.scrapedobjattr",
+    "pk": 3
+},
+{
+    "fields": {
+        "obj_class": 1,
+        "name": "url",
+        "id_field": true,
+        "attr_type": "U"
+    },
+    "model": "dynamic_scraper.scrapedobjattr",
+    "pk": 4
+},
+{
+    "fields": {
+        "obj_class": 1,
+        "name": "thumbnail",
+        "id_field": false,
+        "attr_type": "I"
+    },
+    "model": "dynamic_scraper.scrapedobjattr",
+    "pk": 5
+},
+{
+    "fields": {
+        "body": "",
+        "cookies": "",
+        "checker_x_path_result": "",
+        "checker_ref_url": "http://en.wikinews.org/wiki/This_wiki_article_doesnt_exist",
+        "meta": "",
+        "dont_filter": false,
+        "pagination_append_str": "",
+        "comments": "",
+        "pagination_page_replace": "",
+        "checker_type": "4",
+        "method": "GET",
+        "scraped_obj_class": 1,
+        "status": "A",
+        "max_items_save": null,
+        "max_items_read": null,
+        "request_type": "R",
+        "content_type": "H",
+        "detail_page_content_type": "H",
+        "name": "Wikinews Scraper",
+        "render_javascript": false,
+        "checker_x_path": "",
+        "pagination_on_start": false,
+        "pagination_type": "N",
+        "headers": "",
+        "form_data": ""
+    },
+    "model": "dynamic_scraper.scraper",
+    "pk": 1
+},
+{
+    "fields": {
+        "body": "",
+        "cookies": "",
+        "checker_x_path_result": "",
+        "checker_ref_url": "",
+        "meta": "",
+        "dont_filter": false,
+        "pagination_append_str": "",
+        "comments": "",
+        "pagination_page_replace": "",
+        "checker_type": "N",
+        "method": "GET",
+        "scraped_obj_class": 1,
+        "status": "A",
+        "max_items_save": null,
+        "max_items_read": 10,
+        "request_type": "R",
+        "content_type": "J",
+        "detail_page_content_type": "H",
+        "name": "US Department of Justice - Press Release Scraper",
+        "render_javascript": false,
+        "checker_x_path": "",
+        "pagination_on_start": false,
+        "pagination_type": "N",
+        "headers": "",
+        "form_data": ""
+    },
+    "model": "dynamic_scraper.scraper",
+    "pk": 2
+},
+{
+    "fields": {
+        "body": "",
+        "cookies": "",
+        "render_javascript": false,
+        "dont_filter": false,
+        "scraped_obj_attr": null,
+        "scraper": 2,
+        "headers": "",
+        "request_type": "R",
+        "meta": "",
+        "page_type": "MP",
+        "content_type": "J",
+        "form_data": "",
+        "method": "GET"
+    },
+    "model": "dynamic_scraper.requestpagetype",
+    "pk": 1
+},
+{
+    "fields": {
+        "body": "",
+        "cookies": "",
+        "render_javascript": false,
+        "dont_filter": false,
+        "scraped_obj_attr": 4,
+        "scraper": 2,
+        "headers": "",
+        "request_type": "R",
+        "meta": "",
+        "page_type": "DP1",
+        "content_type": "H",
+        "form_data": "",
+        "method": "GET"
+    },
+    "model": "dynamic_scraper.requestpagetype",
+    "pk": 2
+},
+{
+    "fields": {
+        "body": "",
+        "cookies": "",
+        "render_javascript": false,
+        "dont_filter": false,
+        "scraped_obj_attr": null,
+        "scraper": 1,
+        "headers": "",
+        "request_type": "R",
+        "meta": "",
+        "page_type": "MP",
+        "content_type": "H",
+        "form_data": "",
+        "method": "GET"
+    },
+    "model": "dynamic_scraper.requestpagetype",
+    "pk": 3
+},
+{
+    "fields": {
+        "body": "",
+        "cookies": "",
+        "render_javascript": false,
+        "dont_filter": false,
+        "scraped_obj_attr": 4,
+        "scraper": 1,
+        "headers": "",
+        "request_type": "R",
+        "meta": "",
+        "page_type": "DP1",
+        "content_type": "H",
+        "form_data": "",
+        "method": "GET"
+    },
+    "model": "dynamic_scraper.requestpagetype",
+    "pk": 4
+},
+{
+    "fields": {
+        "save_to_db": true,
+        "proc_ctxt": "",
+        "x_path": "//td[@class=\"l_box\"]",
+        "reg_exp": "",
+        "scraped_obj_attr": 1,
+        "scraper": 1,
+        "from_detail_page": false,
+        "request_page_type": "MP",
+        "mandatory": true,
+        "processors": ""
+    },
+    "model": "dynamic_scraper.scraperelem",
+    "pk": 1
+},
+{
+    "fields": {
+        "save_to_db": true,
+        "proc_ctxt": "",
+        "x_path": "//h1[@id=\"firstHeading\"]/text()",
+        "reg_exp": "",
+        "scraped_obj_attr": 3,
+        "scraper": 1,
+        "from_detail_page": true,
+        "request_page_type": "DP1",
+        "mandatory": true,
+        "processors": ""
+    },
+    "model": "dynamic_scraper.scraperelem",
+    "pk": 2
+},
+{
+    "fields": {
+        "save_to_db": true,
+        "proc_ctxt": "",
+        "x_path": "p/span[@class=\"l_summary\"]/text()",
+        "reg_exp": "",
+        "scraped_obj_attr": 2,
+        "scraper": 1,
+        "from_detail_page": false,
+        "request_page_type": "MP",
+        "mandatory": true,
+        "processors": ""
+    },
+    "model": "dynamic_scraper.scraperelem",
+    "pk": 3
+},
+{
+    "fields": {
+        "save_to_db": true,
+        "proc_ctxt": "'pre_url': 'http://en.wikinews.org'",
+        "x_path": "span[@class=\"l_title\"]/a/@href",
+        "reg_exp": "",
+        "scraped_obj_attr": 4,
+        "scraper": 1,
+        "from_detail_page": false,
+        "request_page_type": "MP",
+        "mandatory": true,
+        "processors": "pre_url"
+    },
+    "model": "dynamic_scraper.scraperelem",
+    "pk": 4
+},
+{
+    "fields": {
+        "save_to_db": true,
+        "proc_ctxt": "'pre_url': 'http:'",
+        "x_path": "div[@class=\"l_image\"]/a/img/@src",
+        "reg_exp": "",
+        "scraped_obj_attr": 5,
+        "scraper": 1,
+        "from_detail_page": false,
+        "request_page_type": "MP",
+        "mandatory": true,
+        "processors": "pre_url"
+    },
+    "model": "dynamic_scraper.scraperelem",
+    "pk": 5
+},
+{
+    "fields": {
+        "save_to_db": true,
+        "proc_ctxt": "",
+        "x_path": "results",
+        "reg_exp": "",
+        "scraped_obj_attr": 1,
+        "scraper": 2,
+        "from_detail_page": false,
+        "request_page_type": "MP",
+        "mandatory": true,
+        "processors": ""
+    },
+    "model": "dynamic_scraper.scraperelem",
+    "pk": 6
+},
+{
+    "fields": {
+        "save_to_db": true,
+        "proc_ctxt": "",
+        "x_path": "body",
+        "reg_exp": "",
+        "scraped_obj_attr": 2,
+        "scraper": 2,
+        "from_detail_page": false,
+        "request_page_type": "MP",
+        "mandatory": true,
+        "processors": ""
+    },
+    "model": "dynamic_scraper.scraperelem",
+    "pk": 7
+},
+{
+    "fields": {
+        "save_to_db": true,
+        "proc_ctxt": "",
+        "x_path": "title",
+        "reg_exp": "",
+        "scraped_obj_attr": 3,
+        "scraper": 2,
+        "from_detail_page": false,
+        "request_page_type": "MP",
+        "mandatory": true,
+        "processors": ""
+    },
+    "model": "dynamic_scraper.scraperelem",
+    "pk": 8
+},
+{
+    "fields": {
+        "save_to_db": true,
+        "proc_ctxt": "",
+        "x_path": "url",
+        "reg_exp": "",
+        "scraped_obj_attr": 4,
+        "scraper": 2,
+        "from_detail_page": false,
+        "request_page_type": "MP",
+        "mandatory": true,
+        "processors": ""
+    },
+    "model": "dynamic_scraper.scraperelem",
+    "pk": 9
+},
+{
+    "fields": {
+        "next_action_factor": 7.692,
+        "next_action_time": "2013-09-28T10:27:58.747",
+        "num_zero_actions": 3,
+        "runtime_type": "S"
+    },
+    "model": "dynamic_scraper.schedulerruntime",
+    "pk": 1
+},
+{
+    "fields": {
+        "url": "http://en.wikinews.org/wiki/Main_Page",
+        "scraper_runtime": 1,
+        "name": "Wikinews",
+        "scraper": 1
+    },
+    "model": "open_news.newswebsite",
+    "pk": 1
+},
+{
+    "fields": {
+        "url": "http://www.justice.gov/api/v1/blog_entries.json?amp%3Bpagesize=2",
+        "scraper_runtime": null,
+        "name": "US Department of Justice - Press Releases",
+        "scraper": 2
+    },
+    "model": "open_news.newswebsite",
+    "pk": 2
+}
+]

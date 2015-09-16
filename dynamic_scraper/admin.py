@@ -77,10 +77,10 @@ class ScraperElemInline(admin.TabularInline):
 class ScraperAdmin(admin.ModelAdmin):
     class Media:
         js = ("js/admin_custom.js",)
-    list_display = ('id', 'name', 'scraped_obj_class', 'status', 'content_type', 'max_items_read', 'max_items_save', 'request_type', 'pagination_type', 'checker_type',)
+    list_display = ('id', 'name', 'scraped_obj_class', 'status', 'max_items_read', 'max_items_save', 'pagination_type', 'checker_type',)
     list_display_links = ('name',)
     list_editable = ('status',)
-    list_filter = ('scraped_obj_class', 'status', 'content_type', 'request_type', 'pagination_type', 'checker_type',)
+    list_filter = ('scraped_obj_class', 'status', 'pagination_type', 'checker_type',)
     search_fields = ['name']
     inlines = [
         RequestPageTypeInline,
@@ -88,15 +88,8 @@ class ScraperAdmin(admin.ModelAdmin):
     ]
     fieldsets = (
         (None, {
-            'fields': ('name', 'scraped_obj_class', 'status', 'content_type',  'detail_page_content_type', \
-                'render_javascript', 'max_items_read', 'max_items_save')
-        }),
-        (None, {
-            'fields': ('request_type', 'method')
-        }),
-        ('Request options', {
-            'classes': ('collapse',),
-            'fields': ('headers', 'body', 'cookies', 'meta', 'form_data', 'dont_filter')
+            'fields': ('name', 'scraped_obj_class', 'status', \
+                'max_items_read', 'max_items_save')
         }),
         (None, {
             'fields': ('pagination_type',)
