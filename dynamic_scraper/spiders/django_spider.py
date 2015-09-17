@@ -41,9 +41,9 @@ class DjangoSpider(DjangoBaseSpider):
         self.log(msg, log.INFO)
 
 
-    def _set_request_kwargs():
+    def _set_request_kwargs(self):
         super(DjangoSpider, self)._set_request_kwargs()
-        for rpt in scraper.requestpagetype_set.all():
+        for rpt in self.scraper.requestpagetype_set.all():
             if rpt.form_data != u'':
                 try:
                     form_data = json.loads(rpt.form_data)
@@ -236,15 +236,16 @@ class DjangoSpider(DjangoBaseSpider):
 
     def _set_loader(self, response, from_page, xs, item):
         self.from_page = from_page
+        rpt = self.scraper.get_rpt(from_page)
         if not self.from_page == 'MP':
             item = response.request.meta['item']
-            if self.scraper.detail_page_content_type == 'J':
+            if rpt.content_type == 'J':
                 json_resp = json.loads(response.body_as_unicode())
                 self.loader = JsonItemLoader(item=item, selector=json_resp)
             else:
                 self.loader = ItemLoader(item=item, response=response)
         else:
-            if self.scraper.content_type == 'J':
+            if rpt.content_type == 'J':
                 self.loader = JsonItemLoader(item=item, selector=xs)
             else:
                 self.loader = ItemLoader(item=item, selector=xs)
@@ -252,7 +253,9 @@ class DjangoSpider(DjangoBaseSpider):
         self.loader.log = self.log
     
 
-    def parse_item(self, response, from_page, xs=None):
+    def parse_item(self, response, xs=None, from_page=None):
+        if not from_page:
+            from_page = response.request.meta['from_page']
         self._set_loader(response, from_page, xs, self.scraped_obj_item_class())
         if from_page == 'MP':
             self.items_read_count += 1
@@ -301,7 +304,7 @@ class DjangoSpider(DjangoBaseSpider):
         for obj in base_objects:
             item_num = self.items_read_count + 1
             self.log("Starting to crawl item %d from page %d." % (item_num, response.request.meta['page']), log.INFO)
-            item = self.parse_item(response, 'MP', obj)
+            item = self.parse_item(response, obj, 'MP')
             #print item
             
             if item:
@@ -314,10 +317,6 @@ class DjangoSpider(DjangoBaseSpider):
                 is_double = False
                 if only_main_page_idfs:
                     item, is_double = self._check_for_double_item(item)
-                
-                if 'meta' not in self.mp_request_kwargs:
-                    self.mp_request_kwargs['meta'] = {}
-                self.mp_request_kwargs['meta']['item'] = item
                 
                 # Don't go on reading detail pages when...
                 # No detail page URLs defined or
@@ -333,12 +332,16 @@ class DjangoSpider(DjangoBaseSpider):
                     url_elems = self.scraper.get_detail_page_url_elems()
                     for url_elem in url_elems:
                         url = item[url_elem.scraped_obj_attr.name]
-                        rpt = self.scraper.get_detail_page_rpt(url_elem.request_page_type)
+                        rpt = self.scraper.get_rpt_for_scraped_obj_attr(url_elem.scraped_obj_attr)
                         self._set_meta_splash_args()
+                        if 'meta' not in self.dp_request_kwargs[rpt.page_type]:
+                            self.dp_request_kwargs[rpt.page_type]['meta'] = {}
+                        self.dp_request_kwargs[rpt.page_type]['meta']['item'] = item
+                        self.dp_request_kwargs[rpt.page_type]['meta']['from_page'] = rpt.page_type
                         if rpt.request_type == 'R':
-                            yield Request(url, callback=self.parse_item, method=rpt.method, dont_filter=rpt.dont_filter, **self.dp_request_kwargs[url_elem.request_page_type])
+                            yield Request(url, callback=self.parse_item, method=rpt.method, dont_filter=rpt.dont_filter, **self.dp_request_kwargs[rpt.page_type])
                         else:
-                            yield FormRequest(url, callback=self.parse_item, method=rpt.method, formdata=self.dp_form_data[url_elem.request_page_type], dont_filter=rpt.dont_filter, **self.dp_request_kwargs[url_elem.request_page_type])
+                            yield FormRequest(url, callback=self.parse_item, method=rpt.method, formdata=self.dp_form_data[rpt.page_type], dont_filter=rpt.dont_filter, **self.dp_request_kwargs[rpt.page_type])
             else:
                 self.log("Item could not be read!", log.ERROR)
     
