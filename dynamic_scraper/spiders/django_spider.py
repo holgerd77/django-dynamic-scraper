@@ -130,52 +130,6 @@ class DjangoSpider(DjangoBaseSpider):
             self.pages = ["",]
 
 
-    def _set_loader_context(self, context_str):
-        try:
-            context_str = context_str.strip(', ')
-            context = ast.literal_eval("{" + context_str + "}")
-            context['spider'] = self
-            self.loader.context = context
-        except SyntaxError:
-            self.log("Wrong context definition format: " + context_str, log.ERROR)
-
-
-    def _get_processors(self, procs_str):
-        procs = [TakeFirst(), processors.string_strip,]
-        if not procs_str:
-            return procs
-        procs_tmp = list(procs_str.split(','))
-        for p in procs_tmp:
-            p = p.strip()
-            if hasattr(processors, p):
-                procs.append(getattr(processors, p))
-            else:
-                self.log("Processor '%s' is not defined!" % p, log.ERROR)
-        procs = tuple(procs)
-        return procs
-
-
-    def _scrape_item_attr(self, scraper_elem):
-        if(self.from_page == scraper_elem.request_page_type):
-            procs = self._get_processors(scraper_elem.processors)
-            self._set_loader_context(scraper_elem.proc_ctxt)
-            
-            static_ctxt = self.loader.context.get('static', '')
-            if processors.static in procs and static_ctxt:
-                self.loader.add_value(scraper_elem.scraped_obj_attr.name, static_ctxt)
-            elif(scraper_elem.reg_exp):
-                self.loader.add_xpath(scraper_elem.scraped_obj_attr.name, scraper_elem.x_path, *procs,  re=scraper_elem.reg_exp)
-            else:
-                self.loader.add_xpath(scraper_elem.scraped_obj_attr.name, scraper_elem.x_path, *procs)
-            msg  = '{0: <20}'.format(scraper_elem.scraped_obj_attr.name)
-            c_values = self.loader.get_collected_values(scraper_elem.scraped_obj_attr.name)
-            if len(c_values) > 0:
-                msg += "'" + c_values[0] + "'"
-            else:
-                msg += u'None'
-            self.log(msg, log.DEBUG)
-
-
     def start_requests(self):
         index = 0
         for url in self.start_urls:
@@ -196,6 +150,9 @@ class DjangoSpider(DjangoBaseSpider):
                 kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', unicode(self.pages[index])))
             if form_data:
                 form_data = json.loads(json.dumps(form_data).replace('{page}', unicode(self.pages[index])))
+            if 'meta' not in kwargs:
+                    kwargs['meta'] = {}
+            kwargs['meta']['page'] = index + 1
             rpt = self.scraper.get_main_page_rpt()
             index += 1
             if rpt.request_type == 'R':
@@ -229,7 +186,53 @@ class DjangoSpider(DjangoBaseSpider):
             return item, True
         else:
             return item, False
+
+
+    def _get_processors(self, procs_str):
+        procs = [TakeFirst(), processors.string_strip,]
+        if not procs_str:
+            return procs
+        procs_tmp = list(procs_str.split(','))
+        for p in procs_tmp:
+            p = p.strip()
+            if hasattr(processors, p):
+                procs.append(getattr(processors, p))
+            else:
+                self.log("Processor '%s' is not defined!" % p, log.ERROR)
+        procs = tuple(procs)
+        return procs
+
+
+    def _set_loader_context(self, context_str):
+        try:
+            context_str = context_str.strip(', ')
+            context = ast.literal_eval("{" + context_str + "}")
+            context['spider'] = self
+            self.loader.context = context
+        except SyntaxError:
+            self.log("Wrong context definition format: " + context_str, log.ERROR)
     
+
+    def _scrape_item_attr(self, scraper_elem, from_page):
+        if(from_page == scraper_elem.request_page_type):
+            procs = self._get_processors(scraper_elem.processors)
+            self._set_loader_context(scraper_elem.proc_ctxt)
+            
+            static_ctxt = self.loader.context.get('static', '')
+            if processors.static in procs and static_ctxt:
+                self.loader.add_value(scraper_elem.scraped_obj_attr.name, static_ctxt)
+            elif(scraper_elem.reg_exp):
+                self.loader.add_xpath(scraper_elem.scraped_obj_attr.name, scraper_elem.x_path, *procs,  re=scraper_elem.reg_exp)
+            else:
+                self.loader.add_xpath(scraper_elem.scraped_obj_attr.name, scraper_elem.x_path, *procs)
+            msg  = '{0: <20}'.format(scraper_elem.scraped_obj_attr.name)
+            c_values = self.loader.get_collected_values(scraper_elem.scraped_obj_attr.name)
+            if len(c_values) > 0:
+                msg += "'" + c_values[0] + "'"
+            else:
+                msg += u'None'
+            self.log(msg, log.DEBUG)
+
 
     def _set_loader(self, response, from_page, xs, item):
         self.from_page = from_page
@@ -251,13 +254,13 @@ class DjangoSpider(DjangoBaseSpider):
 
     def parse_item(self, response, from_page, xs=None):
         self._set_loader(response, from_page, xs, self.scraped_obj_item_class())
-        if not self.from_detail_page:
+        if from_page == 'MP':
             self.items_read_count += 1
             
         elems = self.scraper.get_scrape_elems()
         
         for elem in elems:
-            self._scrape_item_attr(elem)
+            self._scrape_item_attr(elem, from_page)
         # Dealing with Django Char- and TextFields defining blank field as null
         item = self.loader.load_item()
         for key, value in item.items():
@@ -265,7 +268,7 @@ class DjangoSpider(DjangoBaseSpider):
                self.scraped_obj_class()._meta.get_field(key).blank and \
                not self.scraped_obj_class()._meta.get_field(key).null:
                 item[key] = ''
-        if self.from_detail_page:
+        if from_page != 'MP':
             item, is_double = self._check_for_double_item(item)
         
         return item
@@ -297,7 +300,7 @@ class DjangoSpider(DjangoBaseSpider):
 
         for obj in base_objects:
             item_num = self.items_read_count + 1
-            self.log("Starting to crawl item %s." % str(item_num), log.INFO)
+            self.log("Starting to crawl item %d from page %d." % (item_num, response.request.meta['page']), log.INFO)
             item = self.parse_item(response, 'MP', obj)
             #print item
             
