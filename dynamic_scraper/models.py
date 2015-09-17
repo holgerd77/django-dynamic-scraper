@@ -104,6 +104,12 @@ class Scraper(models.Model):
     checker_ref_url = models.URLField(max_length=500, blank=True)
     comments = models.TextField(blank=True)
     
+    def get_main_page_rpt(self):
+        return self.requestpagetype_set.get(page_type='MP')
+
+    def get_detail_page_rpts(self):
+        return s.requestpagetype_set.filter(~Q(page_type='MP'))
+
     def get_base_elems(self):
         return self.scraperelem_set.filter(scraped_obj_attr__attr_type='B')
     

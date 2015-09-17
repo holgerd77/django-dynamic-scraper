@@ -31,7 +31,8 @@ class DjangoBaseSpider(CrawlSpider):
         "LOG_LIMIT": 250,
     }
 
-    request_kwargs = {}
+    mp_request_kwargs = {}
+    dp_request_kwargs = {}
 
     command  = 'scrapy crawl SPIDERNAME -a id=REF_OBJECT_ID '
     command += '[-a do_action=(yes|no) -a run_type=(TASK|SHELL)'
@@ -131,45 +132,61 @@ class DjangoBaseSpider(CrawlSpider):
 
 
     def _set_request_kwargs(self):
-        if self.scraper.headers != u'':
-            try:
-                headers = json.loads(self.scraper.headers)
-            except ValueError:
-                raise CloseSpider("Incorrect HTTP header attribute: not a valid JSON dict!")
-            if not isinstance(headers, dict):
-                raise CloseSpider("Incorrect HTTP header attribute: not a valid JSON dict!")
-            self.request_kwargs['headers'] = headers
+        try:
+            scraper.get_main_page_rpt()
+        except ObjectDoesNotExist:
+            raise CloseSpider("Scraper must have exactly one main page request page type!")
 
-        if self.scraper.body != u'':
-            self.request_kwargs['body'] = self.scraper.body
+        for rpt in scraper.requestpagetype_set.all():
+            if rpt.page_type == 'MP':
+                pt_dict = self.mp_request_kwargs
+            else:
+                pt_dict = self.dp_request_kwargs[rpt.page_type]
 
-        if self.scraper.cookies != u'':
-            try:
-                cookies = json.loads(self.scraper.cookies)
-            except ValueError:
-                raise CloseSpider("Incorrect cookies attribute: not a valid JSON dict!")
-            if not isinstance(cookies, dict):
-                raise CloseSpider("Incorrect cookies attribute: not a valid JSON dict!")
-            self.request_kwargs['cookies'] = cookies
+            if rpt.headers != u'':
+                try:
+                    headers = json.loads(rpt.headers)
+                except ValueError:
+                    raise CloseSpider("Incorrect HTTP header attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                if not isinstance(headers, dict):
+                    raise CloseSpider("Incorrect HTTP header attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                pt_dict['headers'] = headers
 
-        if self.scraper.meta != u'':
-            try:
-                meta = json.loads(self.scraper.meta)
-            except ValueError:
-                raise CloseSpider("Incorrect meta attribute: not a valid JSON dict!")
-            if not isinstance(meta, dict):
-                raise CloseSpider("Incorrect meta attribute: not a valid JSON dict!")
-            self.request_kwargs['meta'] = meta
+            if rpt.body != u'':
+                pt_dict['body'] = rpt.body
+
+            if rpt.cookies != u'':
+                try:
+                    cookies = json.loads(rpt.cookies)
+                except ValueError:
+                    raise CloseSpider("Incorrect cookies attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                if not isinstance(cookies, dict):
+                    raise CloseSpider("Incorrect cookies attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                pt_dict['cookies'] = cookies
+
+            if rpt.meta != u'':
+                try:
+                    meta = json.loads(rpt.meta)
+                except ValueError:
+                    raise CloseSpider("Incorrect meta attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                if not isinstance(meta, dict):
+                    raise CloseSpider("Incorrect meta attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                pt_dict['meta'] = meta
     
 
     def _set_meta_splash_args(self):
-        if self.scraper.detail_page_content_type == 'H' and self.scraper.render_javascript:
-            if 'meta' not in self.request_kwargs:
-                self.request_kwargs['meta'] = {}
-            self.request_kwargs['meta']['splash'] = {
-                'endpoint': 'render.html',
-                'args': self.conf['SPLASH_ARGS'].copy()
-            }
+        for rpt in scraper.requestpagetype_set.all():
+            if rpt.page_type == 'MP':
+                pt_dict = self.mp_request_kwargs
+            else:
+                pt_dict = self.dp_request_kwargs[rpt.page_type]
+            if rpt.content_type == 'H' and rpt.render_javascript:
+                if 'meta' not in pt_dict:
+                    pt_dict['meta'] = {}
+                pt_dict['meta']['splash'] = {
+                    'endpoint': 'render.html',
+                    'args': self.conf['SPLASH_ARGS'].copy()
+                }
 
     def spider_closed(self):
         if self.conf['RUN_TYPE'] == 'TASK' and self.conf['DO_ACTION']:

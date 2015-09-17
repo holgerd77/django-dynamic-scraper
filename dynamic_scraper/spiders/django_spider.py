@@ -19,7 +19,8 @@ from dynamic_scraper.utils import processors
 
 class DjangoSpider(DjangoBaseSpider):
 
-    form_data = None
+    mp_form_data = None
+    dp_form_data = {}
 
     def __init__(self, *args, **kwargs):
         self.mandatory_vars.append('scraped_obj_class')
@@ -28,14 +29,6 @@ class DjangoSpider(DjangoBaseSpider):
         super(DjangoSpider, self).__init__(self, *args, **kwargs)
         self._set_config(**kwargs)
         self._set_request_kwargs()
-        if self.scraper.form_data != u'':
-            try:
-                form_data = json.loads(self.scraper.form_data)
-            except ValueError:
-                raise CloseSpider("Incorrect form_data attribute: not a valid JSON dict!")
-            if not isinstance(form_data, dict):
-                raise CloseSpider("Incorrect form_data attribute: not a valid JSON dict!")
-            self.form_data = form_data
         
         self._set_start_urls(self.scrape_url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
@@ -46,6 +39,22 @@ class DjangoSpider(DjangoBaseSpider):
         
         msg = "Spider for " + self.ref_object.__class__.__name__ + " \"" + str(self.ref_object) + "\" (" + str(self.ref_object.pk) + ") initialized."
         self.log(msg, log.INFO)
+
+
+    def _set_request_kwargs():
+        super(DjangoSpider, self)._set_request_kwargs()
+        for rpt in scraper.requestpagetype_set.all():
+            if rpt.form_data != u'':
+                try:
+                    form_data = json.loads(rpt.form_data)
+                except ValueError:
+                    raise CloseSpider("Incorrect form_data attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                if not isinstance(form_data, dict):
+                    raise CloseSpider("Incorrect form_data attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                if rpt.page_type == 'MP':
+                    self.mp_form_data = form_data
+                else:
+                    self.dp_form_data[rpt.page_type] = form_data
 
 
     def _set_config(self, **kwargs):
@@ -190,14 +199,14 @@ class DjangoSpider(DjangoBaseSpider):
         index = 0
         for url in self.start_urls:
             self._set_meta_splash_args()
-            if self.request_kwargs:
-                kwargs = self.request_kwargs.copy()
+            if self.mp_request_kwargs:
+                kwargs = self.mp_request_kwargs.copy()
             else:
-                kwargs = self.request_kwargs
-            if self.form_data:
-                form_data = self.form_data.copy()
+                kwargs = self.mp_request_kwargs
+            if self.mp_form_data:
+                form_data = self.mp_form_data.copy()
             else:
-                form_data = self.form_data
+                form_data = self.mp_form_data
             if 'headers' in kwargs:
                 kwargs['headers'] = json.loads(json.dumps(kwargs['headers']).replace('{page}', unicode(self.pages[index])))
             if 'body' in kwargs:
@@ -206,11 +215,12 @@ class DjangoSpider(DjangoBaseSpider):
                 kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', unicode(self.pages[index])))
             if form_data:
                 form_data = json.loads(json.dumps(form_data).replace('{page}', unicode(self.pages[index])))
+            rpt = self.scraper.get_main_page_rpt()
             index += 1
-            if self.scraper.request_type == 'R':
-                yield Request(url, callback=self.parse, method=self.scraper.method, dont_filter=self.scraper.dont_filter, **kwargs)
+            if rpt.request_type == 'R':
+                yield Request(url, callback=self.parse, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
             else:
-                yield FormRequest(url, callback=self.parse, method=self.scraper.method, formdata=form_data, dont_filter=self.scraper.dont_filter, **kwargs)
+                yield FormRequest(url, callback=self.parse, method=rpt.method, formdata=form_data, dont_filter=rpt.dont_filter, **kwargs)
 
 
     def _check_for_double_item(self, item):
