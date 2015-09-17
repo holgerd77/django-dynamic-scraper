@@ -32,7 +32,7 @@ class DjangoSpider(DjangoBaseSpider):
         
         self._set_start_urls(self.scrape_url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
-        self.from_detail_page = False
+        self.from_page = 'MP'
         self.loader = None
         self.items_read_count = 0
         self.items_save_count = 0
@@ -156,7 +156,7 @@ class DjangoSpider(DjangoBaseSpider):
 
 
     def _scrape_item_attr(self, scraper_elem):
-        if(self.from_detail_page == scraper_elem.from_detail_page):
+        if(self.from_page == scraper_elem.request_page_type):
             procs = self._get_processors(scraper_elem.processors)
             self._set_loader_context(scraper_elem.proc_ctxt)
             
@@ -174,25 +174,6 @@ class DjangoSpider(DjangoBaseSpider):
             else:
                 msg += u'None'
             self.log(msg, log.DEBUG)
-
-
-    def _set_loader(self, response, xs, item):
-        if not xs:
-            self.from_detail_page = True
-            item = response.request.meta['item']
-            if self.scraper.detail_page_content_type == 'J':
-                json_resp = json.loads(response.body_as_unicode())
-                self.loader = JsonItemLoader(item=item, selector=json_resp)
-            else:
-                self.loader = ItemLoader(item=item, response=response)
-        else:
-            self.from_detail_page = False
-            if self.scraper.content_type == 'J':
-                self.loader = JsonItemLoader(item=item, selector=xs)
-            else:
-                self.loader = ItemLoader(item=item, selector=xs)
-        self.loader.default_output_processor = TakeFirst()
-        self.loader.log = self.log
 
 
     def start_requests(self):
@@ -249,9 +230,27 @@ class DjangoSpider(DjangoBaseSpider):
         else:
             return item, False
     
+
+    def _set_loader(self, response, from_page, xs, item):
+        self.from_page = from_page
+        if not self.from_page == 'MP':
+            item = response.request.meta['item']
+            if self.scraper.detail_page_content_type == 'J':
+                json_resp = json.loads(response.body_as_unicode())
+                self.loader = JsonItemLoader(item=item, selector=json_resp)
+            else:
+                self.loader = ItemLoader(item=item, response=response)
+        else:
+            if self.scraper.content_type == 'J':
+                self.loader = JsonItemLoader(item=item, selector=xs)
+            else:
+                self.loader = ItemLoader(item=item, selector=xs)
+        self.loader.default_output_processor = TakeFirst()
+        self.loader.log = self.log
     
-    def parse_item(self, response, xs=None):
-        self._set_loader(response, xs, self.scraped_obj_item_class())
+
+    def parse_item(self, response, from_page, xs=None):
+        self._set_loader(response, from_page, xs, self.scraped_obj_item_class())
         if not self.from_detail_page:
             self.items_read_count += 1
             
@@ -276,7 +275,7 @@ class DjangoSpider(DjangoBaseSpider):
         xs = Selector(response)
         base_elem = self.scraper.get_base_elem()
 
-        if self.scraper.content_type == 'J':
+        if self.scraper.get_main_page_rpt().content_type == 'J':
             json_resp = json.loads(response.body_as_unicode())
             try:
                 jsonpath_expr = parse(base_elem.x_path)
@@ -299,39 +298,44 @@ class DjangoSpider(DjangoBaseSpider):
         for obj in base_objects:
             item_num = self.items_read_count + 1
             self.log("Starting to crawl item %s." % str(item_num), log.INFO)
-            item = self.parse_item(response, obj)
+            item = self.parse_item(response, 'MP', obj)
             #print item
             
             if item:
                 only_main_page_idfs = True
                 idf_elems = self.scraper.get_id_field_elems()
                 for idf_elem in idf_elems:
-                    if idf_elem.from_detail_page:
+                    if idf_elem.request_page_type != 'MP':
                         only_main_page_idfs = False
 
                 is_double = False
                 if only_main_page_idfs:
                     item, is_double = self._check_for_double_item(item)
                 
-                if 'meta' not in self.request_kwargs:
-                    self.request_kwargs['meta'] = {}
-                self.request_kwargs['meta']['item'] = item
+                if 'meta' not in self.mp_request_kwargs:
+                    self.mp_request_kwargs['meta'] = {}
+                self.mp_request_kwargs['meta']['item'] = item
                 
-                # Don't go on reading detail page when...
-                # No detail page URL defined or
-                # DOUBLE item with only main page IDFs and no standard update elements to be scraped from detail page or 
-                # generally no attributes scraped from detail page
-                cnt_sue_detail = self.scraper.get_standard_update_elems_from_detail_page().count()
-                cnt_detail_scrape = self.scraper.get_from_detail_page_scrape_elems().count()
+                # Don't go on reading detail pages when...
+                # No detail page URLs defined or
+                # DOUBLE item with only main page IDFs and no standard update elements to be scraped from detail pages or 
+                # generally no attributes scraped from detail pages
+                cnt_sue_detail = self.scraper.get_standard_update_elems_from_detail_pages().count()
+                cnt_detail_scrape = self.scraper.get_from_detail_pages_scrape_elems().count()
 
                 if self.scraper.get_detail_page_url_elems().count() == 0 or \
                     (is_double and cnt_sue_detail == 0) or cnt_detail_scrape == 0:
                     yield item
                 else:
-                    url_elem = self.scraper.get_detail_page_url_elems()[0]
-                    url = item[url_elem.scraped_obj_attr.name]
-                    self._set_meta_splash_args()
-                    yield Request(url, callback=self.parse_item, **self.request_kwargs)
+                    url_elems = self.scraper.get_detail_page_url_elems()
+                    for url_elem in url_elems:
+                        url = item[url_elem.scraped_obj_attr.name]
+                        rpt = self.scraper.get_detail_page_rpt(url_elem.request_page_type)
+                        self._set_meta_splash_args()
+                        if rpt.request_type == 'R':
+                            yield Request(url, callback=self.parse_item, method=rpt.method, dont_filter=rpt.dont_filter, **self.dp_request_kwargs[url_elem.request_page_type])
+                        else:
+                            yield FormRequest(url, callback=self.parse_item, method=rpt.method, formdata=self.dp_form_data[url_elem.request_page_type], dont_filter=rpt.dont_filter, **self.dp_request_kwargs[url_elem.request_page_type])
             else:
                 self.log("Item could not be read!", log.ERROR)
     

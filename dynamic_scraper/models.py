@@ -110,6 +110,9 @@ class Scraper(models.Model):
     def get_detail_page_rpts(self):
         return s.requestpagetype_set.filter(~Q(page_type='MP'))
 
+    def get_detail_page_rpt(self, page_type):
+        return self.requestpagetype_set.get(page_type=page_type)
+
     def get_base_elems(self):
         return self.scraperelem_set.filter(scraped_obj_attr__attr_type='B')
     
@@ -134,8 +137,8 @@ class Scraper(models.Model):
     def get_standard_update_elems(self):
         return self.scraperelem_set.filter(scraped_obj_attr__attr_type='T')
 
-    def get_standard_update_elems_from_detail_page(self):
-        return self.scraperelem_set.filter(scraped_obj_attr__attr_type='T').filter(from_detail_page=True)
+    def get_standard_update_elems_from_detail_pages(self):
+        return self.scraperelem_set.filter(scraped_obj_attr__attr_type='T').filter(~Q(page_type='MP'))
     
     def get_image_elems(self):
         return self.scraperelem_set.filter(scraped_obj_attr__attr_type='I')
@@ -157,9 +160,8 @@ class Scraper(models.Model):
         q4 = Q(scraped_obj_attr__attr_type='I')
         return self.scraperelem_set.filter(q1 | q2 | q3 | q4).filter(mandatory=True)
     
-    def get_from_detail_page_scrape_elems(self):
-        q1 = Q(from_detail_page=True)
-        return self.scraperelem_set.filter(q1)
+    def get_from_detail_pages_scrape_elems(self):
+        return self.scraperelem_set.filter(~Q(page_type='MP'))
     
     def __unicode__(self):
         return self.name + " (" + self.scraped_obj_class.name + ")"
