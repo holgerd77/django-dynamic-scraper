@@ -343,6 +343,7 @@ class DjangoSpider(DjangoBaseSpider):
                             kwargs['meta']['last'] = True
                         else:
                             kwargs['meta']['last'] = False
+                        log.msg(str(kwargs), level=log.INFO)
                         if rpt.request_type == 'R':
                             yield Request(url, callback=self.parse_item, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
                         else:
