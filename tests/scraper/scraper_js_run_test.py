@@ -43,8 +43,8 @@ class ScraperJSRunTest(ScraperTest):
     
     def setUpScraperJSDockerChecker(self):
         self.setUpScraperJSChecker('http://10.0.2.2:8010/static/')
-        self.rpt_mp.render_javascript = True
-        self.rpt_mp.save()
+        self.rpt_dp1.render_javascript = True
+        self.rpt_dp1.save()
     
 
 
@@ -68,6 +68,17 @@ class ScraperJSRunTest(ScraperTest):
         self.run_event_spider(1)
         self.assertEqual(len(Event.objects.filter(description='Event 1 JS description')), 1)
 
+    def test_only_main_page_scrapyjs_main_page(self):
+        self.setUpScraperJSDockerScraper()
+        self.event_website.url = os.path.join('http://10.0.2.2:8010/static/', 'site_with_js/event_main.html')
+        self.event_website.save()
+        self.rpt_dp1.render_javascript = False
+        self.rpt_dp1.save()
+
+        self.run_event_spider(1)
+        self.assertEqual(len(Event.objects.all()), 2)
+        self.assertEqual(len(Event.objects.filter(description='Event 1 description')), 1)
+        self.assertEqual(len(Event.objects.filter(description='Event 1 JS description')), 0)
 
     def test_default_no_scrapyjs_checker_delete(self):
         self.setUpScraperJSDefaultChecker()

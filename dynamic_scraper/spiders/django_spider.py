@@ -29,7 +29,6 @@ class DjangoSpider(DjangoBaseSpider):
         super(DjangoSpider, self).__init__(self, *args, **kwargs)
         self._set_config(**kwargs)
         self._set_request_kwargs()
-        self._set_meta_splash_args()
         
         self._set_start_urls(self.scrape_url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
@@ -252,6 +251,8 @@ class DjangoSpider(DjangoBaseSpider):
     
 
     def parse_item(self, response, xs=None, from_page=None):
+        #log.msg(str(response.request.meta), level=log.INFO)
+        #log.msg(response.body_as_unicode(), level=log.INFO)
         if not from_page:
             from_page = response.request.meta['from_page']
         self._set_loader(response, from_page, xs, self.scraped_obj_item_class())
@@ -343,7 +344,8 @@ class DjangoSpider(DjangoBaseSpider):
                             kwargs['meta']['last'] = True
                         else:
                             kwargs['meta']['last'] = False
-                        log.msg(str(kwargs), level=log.INFO)
+                        self._set_meta_splash_args()
+                        #log.msg(str(kwargs), level=log.INFO)
                         if rpt.request_type == 'R':
                             yield Request(url, callback=self.parse_item, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
                         else:
