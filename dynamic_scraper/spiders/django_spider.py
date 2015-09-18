@@ -271,8 +271,10 @@ class DjangoSpider(DjangoBaseSpider):
                 item[key] = ''
         if from_page != 'MP':
             item, is_double = self._check_for_double_item(item)
-        
-        return item
+            if response.request.meta['last']:
+                return item
+        else:
+            return item
 
 
     def parse(self, response):
@@ -337,6 +339,10 @@ class DjangoSpider(DjangoBaseSpider):
                             kwargs['meta'] = {}
                         kwargs['meta']['item'] = item
                         kwargs['meta']['from_page'] = rpt.page_type
+                        if url_elem == url_elems[len(url_elems)-1]:
+                            kwargs['meta']['last'] = True
+                        else:
+                            kwargs['meta']['last'] = False
                         if rpt.request_type == 'R':
                             yield Request(url, callback=self.parse_item, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
                         else:
