@@ -3,7 +3,7 @@ import os.path, sys
 from scrapy import log
 from scraper.models import Event
 from scraper.scraper_test import EventSpider, ScraperTest
-from dynamic_scraper.models import SchedulerRuntime
+from dynamic_scraper.models import RequestPageType, ScraperElem, SchedulerRuntime
 
 
 class ScraperJSONRunTest(ScraperTest):
@@ -16,11 +16,11 @@ class ScraperJSONRunTest(ScraperTest):
         self.se_url.x_path = u'url'
         self.se_url.save()
         self.se_desc.x_path = u'description'
-        self.se_desc.from_detail_page = False
+        self.se_desc.request_page_type = 'MP'
         self.se_desc.save()
 
-        self.scraper.content_type = 'J'
-        self.scraper.save()
+        self.rpt_mp.content_type = 'J'
+        self.rpt_mp.save()
 
         self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_json_content_type/event_main.json')
         self.event_website.save()
@@ -82,7 +82,7 @@ class ScraperJSONRunTest(ScraperTest):
     def test_detail_page(self):
         self.setUpScraperJSONDefaultScraper()
         self.se_desc.x_path = u'//div/div[@class="description"]/text()'
-        self.se_desc.from_detail_page = True
+        self.se_desc.request_page_type = 'DP1'
         self.se_desc.save()
         self.run_event_spider(1)
         #log.msg(unicode(Event.objects.all()), level=log.INFO)
@@ -91,16 +91,49 @@ class ScraperJSONRunTest(ScraperTest):
 
     def test_detail_page_json(self):
         self.setUpScraperJSONDefaultScraper()
-        self.scraper.detail_page_content_type = 'J'
-        self.scraper.save()
+        self.rpt_dp1.content_type = 'J'
+        self.rpt_dp1.save()
         self.se_url.x_path = u'json_url'
         self.se_url.save()
         self.se_desc.x_path = u'event_details.description'
-        self.se_desc.from_detail_page = True
+        self.se_desc.request_page_type = 'DP1'
         self.se_desc.save()
         self.run_event_spider(1)
         #log.msg(unicode(Event.objects.all()), level=log.INFO)
         self.assertEqual(len(Event.objects.filter(description='Event Detail Page 1 Description')), 1)
+
+
+    def test_multiple_detail_pages(self):
+        self.setUpScraperJSONDefaultScraper()
+        self.se_desc.x_path = u'//div/div[@class="description2"]/text()'
+        self.se_desc.request_page_type = 'DP1'
+        self.se_desc.save()
+
+        self.soa_url2.id_field = True
+        self.soa_url2.save()
+
+        self.rpt_dp2 = RequestPageType(page_type='DP2', scraper=self.scraper, scraped_obj_attr=self.soa_url2, content_type='J')
+        self.rpt_dp2.save()
+        
+        self.se_url2 = ScraperElem(scraped_obj_attr=self.soa_url2, scraper=self.scraper, 
+            x_path=u'json_url', request_page_type='MP')
+        self.se_url2.save()
+        
+        self.se_desc2 = ScraperElem(scraped_obj_attr=self.soa_desc2, scraper=self.scraper, 
+            x_path=u'event_details.description2', request_page_type='DP2', mandatory=False)
+        self.se_desc2.save()
+        
+
+        self.run_event_spider(1)
+        #log.msg(unicode(Event.objects.all()), level=log.INFO)
+        events = Event.objects.filter(
+            title='Event 1',
+            url='http://localhost:8010/static/site_with_json_content_type/event1.html',
+            url2='http://localhost:8010/static/site_with_json_content_type/event1.json',
+            #description='Event Detail Page 1 Description HTML',
+            description2='Event Detail Page 1 Description JSON',
+        )
+        self.assertEqual(len(events), 1)
 
 
     def test_checker_x_path_type_x_path_delete(self):

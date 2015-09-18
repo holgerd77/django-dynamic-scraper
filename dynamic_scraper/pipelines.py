@@ -57,7 +57,7 @@ class DjangoImagesPipeline(ImagesPipeline):
 class ValidationPipeline(object):
 
     def process_item(self, item, spider):
-        
+        log.msg("***ITEM*** " + str(item), level=log.INFO)
         #Check if item is double and remove DOUBLE string from ID fields
         #(no good way found to pass meta data to this point...)
         idf_elems = spider.scraper.get_id_field_elems()

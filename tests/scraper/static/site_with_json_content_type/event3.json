@@ -1,6 +1,7 @@
 {
   "event_details": {
     "title": "Event Detail Page 3",
-    "description": "Event Detail Page 3 Description"
+    "description": "Event Detail Page 3 Description",
+    "description2": "Event Detail Page 3 Description JSON"
   }
 }

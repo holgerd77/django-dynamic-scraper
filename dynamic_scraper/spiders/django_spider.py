@@ -29,6 +29,7 @@ class DjangoSpider(DjangoBaseSpider):
         super(DjangoSpider, self).__init__(self, *args, **kwargs)
         self._set_config(**kwargs)
         self._set_request_kwargs()
+        self._set_meta_splash_args()
         
         self._set_start_urls(self.scrape_url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
@@ -134,14 +135,11 @@ class DjangoSpider(DjangoBaseSpider):
         index = 0
         for url in self.start_urls:
             self._set_meta_splash_args()
-            if self.mp_request_kwargs:
-                kwargs = self.mp_request_kwargs.copy()
-            else:
-                kwargs = self.mp_request_kwargs
+            kwargs = self.mp_request_kwargs.copy()
             if self.mp_form_data:
                 form_data = self.mp_form_data.copy()
             else:
-                form_data = self.mp_form_data
+                form_data = None
             if 'headers' in kwargs:
                 kwargs['headers'] = json.loads(json.dumps(kwargs['headers']).replace('{page}', unicode(self.pages[index])))
             if 'body' in kwargs:
@@ -329,19 +327,20 @@ class DjangoSpider(DjangoBaseSpider):
                     (is_double and cnt_sue_detail == 0) or cnt_detail_scrape == 0:
                     yield item
                 else:
+                    #self.run_detail_page_request()
                     url_elems = self.scraper.get_detail_page_url_elems()
                     for url_elem in url_elems:
                         url = item[url_elem.scraped_obj_attr.name]
                         rpt = self.scraper.get_rpt_for_scraped_obj_attr(url_elem.scraped_obj_attr)
-                        self._set_meta_splash_args()
-                        if 'meta' not in self.dp_request_kwargs[rpt.page_type]:
-                            self.dp_request_kwargs[rpt.page_type]['meta'] = {}
-                        self.dp_request_kwargs[rpt.page_type]['meta']['item'] = item
-                        self.dp_request_kwargs[rpt.page_type]['meta']['from_page'] = rpt.page_type
+                        kwargs = self.dp_request_kwargs[rpt.page_type].copy()
+                        if 'meta' not in kwargs:
+                            kwargs['meta'] = {}
+                        kwargs['meta']['item'] = item
+                        kwargs['meta']['from_page'] = rpt.page_type
                         if rpt.request_type == 'R':
-                            yield Request(url, callback=self.parse_item, method=rpt.method, dont_filter=rpt.dont_filter, **self.dp_request_kwargs[rpt.page_type])
+                            yield Request(url, callback=self.parse_item, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
                         else:
-                            yield FormRequest(url, callback=self.parse_item, method=rpt.method, formdata=self.dp_form_data[rpt.page_type], dont_filter=rpt.dont_filter, **self.dp_request_kwargs[rpt.page_type])
+                            yield FormRequest(url, callback=self.parse_item, method=rpt.method, formdata=self.dp_form_data[rpt.page_type], dont_filter=rpt.dont_filter, **kwargs)
             else:
                 self.log("Item could not be read!", log.ERROR)
     

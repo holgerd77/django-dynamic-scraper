@@ -172,24 +172,33 @@ class ScraperTest(TestCase):
         self.soa_title.save()
         self.soa_url = ScrapedObjAttr(name=u'url', attr_type='U', obj_class=self.sc, id_field=True)
         self.soa_url.save()
+        self.soa_url2 = ScrapedObjAttr(name=u'url2', attr_type='U', obj_class=self.sc)
+        self.soa_url2.save()
         self.soa_desc = ScrapedObjAttr(name=u'description', attr_type='S', obj_class=self.sc)
         self.soa_desc.save()
+        self.soa_desc2 = ScrapedObjAttr(name=u'description2', attr_type='S', obj_class=self.sc)
+        self.soa_desc2.save()
 
         self.scraper = Scraper(name=u'Event Scraper', scraped_obj_class=self.sc, status='A',)
         self.scraper.save()
         
         self.se_base = ScraperElem(scraped_obj_attr=self.soa_base, scraper=self.scraper, 
-        x_path=u'//ul/li', from_detail_page=False)
+        x_path=u'//ul/li', request_page_type='MP')
         self.se_base.save()
         self.se_title = ScraperElem(scraped_obj_attr=self.soa_title, scraper=self.scraper, 
-            x_path=u'a/text()', from_detail_page=False)
+            x_path=u'a/text()', request_page_type='MP')
         self.se_title.save()
         self.se_url = ScraperElem(scraped_obj_attr=self.soa_url, scraper=self.scraper, 
-            x_path=u'a/@href', from_detail_page=False)
+            x_path=u'a/@href', request_page_type='MP')
         self.se_url.save()
         self.se_desc = ScraperElem(scraped_obj_attr=self.soa_desc, scraper=self.scraper, 
-            x_path=u'//div/div[@class="description"]/text()', from_detail_page=True, mandatory=False)
+            x_path=u'//div/div[@class="description"]/text()', request_page_type='DP1', mandatory=False)
         self.se_desc.save()
+
+        self.rpt_mp  = RequestPageType(page_type='MP', scraper=self.scraper)
+        self.rpt_mp.save()
+        self.rpt_dp1 = RequestPageType(page_type='DP1', scraper=self.scraper, scraped_obj_attr=self.soa_url)
+        self.rpt_dp1.save()
         
         self.sched_rt = SchedulerRuntime()
         self.sched_rt.save()

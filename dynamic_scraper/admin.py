@@ -43,8 +43,8 @@ class ScrapedObjAttrFormSet(BaseInlineFormSet):
             raise ValidationError("For the scraped object class definition one object attribute of type BASE is required!")
         if cnt_type_b > 1:
             raise ValidationError("Only one object attribute of type BASE allowed!")
-        if cnt_type_u > 1:
-            raise ValidationError("Currently only one detail page URL is supported!")
+        if cnt_type_u > 25:
+            raise ValidationError("Maximum number of 25 detail page URLs supported!")
         if cnt_type_i > 1:
             raise ValidationError("Currently only one image per object supported!")
 
