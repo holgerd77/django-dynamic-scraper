@@ -42,7 +42,9 @@ class ScraperJSONRunTest(ScraperTest):
         self.event.save()
 
     def extraSetUpJSONChecker(self):
-        self.scraper.detail_page_content_type = 'J'
+        self.rpt_dp1.content_type = 'J'
+        self.rpt_dp1.save()
+
         self.scraper.checker_type = 'X'
         self.scraper.checker_x_path = u'event_not_found'
         self.scraper.checker_x_path_result = u'Event not found!'

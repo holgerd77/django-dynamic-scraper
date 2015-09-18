@@ -23,6 +23,7 @@ class DjangoChecker(DjangoBaseSpider):
         self._set_config(**kwargs)
         self._check_checker_config()
         self._set_request_kwargs()
+        self._set_meta_splash_args()
         
         self.start_urls.append(self.scrape_url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.checker_scheduler_conf)
@@ -92,8 +93,14 @@ class DjangoChecker(DjangoBaseSpider):
 
     def start_requests(self):
         for url in self.start_urls:
-            self._set_meta_splash_args()
-            yield Request(url, callback=self.parse, **self.request_kwargs)
+            url_elem = self.scraper.get_detail_page_url_elems()[0]
+            self.rpt = self.scraper.get_rpt_for_scraped_obj_attr(url_elem.scraped_obj_attr)
+            kwargs = self.dp_request_kwargs[self.rpt.page_type].copy()
+
+            if self.rpt.request_type == 'R':
+                yield Request(url, callback=self.parse, method=self.rpt.method, dont_filter=self.rpt.dont_filter, **kwargs)
+            else:
+                yield FormRequest(url, callback=self.parse, method=self.rpt.method, formdata=self.dp_form_data[self.rpt.page_type], dont_filter=self.rpt.dont_filter, **kwargs)
 
 
     def response_received(self, **kwargs):
@@ -114,7 +121,7 @@ class DjangoChecker(DjangoBaseSpider):
         if self.scraper.checker_type == '4':
             self.log("No 404. Item kept.", log.INFO)
             return
-        if self.scraper.detail_page_content_type == 'J':
+        if self.rpt.content_type == 'J':
             json_resp = json.loads(response.body_as_unicode())
             try:
                 jsonpath_expr = parse(self.scraper.checker_x_path)
