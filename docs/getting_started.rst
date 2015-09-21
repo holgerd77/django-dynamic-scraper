@@ -269,6 +269,8 @@ This completes the xpath definitions for our scraper. The form you have filled o
    You can also **scrape** attributes of your object **from outside the base element** by using the ``..`` notation
    in your XPath expressions to get to the parent nodes!
 
+.. _adding_request_page_types:
+
 Adding corresponding request page types
 ---------------------------------------
 

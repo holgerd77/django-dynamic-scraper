@@ -96,9 +96,25 @@ Release Notes
 =============
 **Changes in version 0.8.0-beta** (Not yet released!)
 
-* TODO
+* New request page types for main page and detail pages of scrapers (see: :ref:`adding_request_page_types`):
+
+  * Cleaner association of request options like content or request type to main or detail pages (see: :ref:`advanced_request_options`)
+  * More flexibility in using different request options for main and detail pages (rendering Javascript on main but not on 
+    detail pages, different HTTP header or body values,...)
+  * Allowance of several detail page URLs per scraper
+  * Possibility for not saving the detail page URL used for scraping by unchecking corresponding new ``ScrapedObjClass`` 
+    attribute ``save_to_db``
+
+* ATTENTION! This release comes with heavy internal changes regarding both DB structure and scraping logic.
+  Unit tests are running through, but there might be untested edge cases. If you want to use the new functionality in a production 
+  environment please do this with extra care. You also might want to wait for 2-3 weeks after release
+  and/or for a following 0.8.1 release (not sure if necessary yet)
 * Replaced Scrapy ``Spider`` with ``CrawlSpider`` class being the basis for ``DjangoBaseSpider``, allowing
   for more flexibility when extending
+* Custom migration for automatically creating new ``RequestPageType`` objects for existing scrapers
+* Unit tests for new functionality
+* Partly restructured documentation, separate :ref:`installation` section
+* New migrations ``0008``, ``0009``, ``0010``, run Django ``migration`` command
 
 **Changes in version 0.7.3-beta** (2015-08-10)
 
