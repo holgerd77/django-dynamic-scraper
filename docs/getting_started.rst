@@ -235,8 +235,9 @@ similar to the following screenshot below, at least if you follow the example pr
 Before being able to create scrapers in Django Dynamic Scraper you have to define which parts of the Django
 model class you defined above should be filled by your scraper. This is done via creating a new 
 :ref:`scraped_obj_class` in your Django admin interface and then adding several :ref:`scraped_obj_attr` 
-datasets to it, which is done inline in the form for the :ref:`scraped_obj_class`. The attributes for the
-object class have to be named like the attributes in your model class to be scraped. In our open news example
+datasets to it, which is done inline in the form for the :ref:`scraped_obj_class`. All attributes for the
+object class which are marked as to be saved to the database have to be named like the attributes in your 
+model class to be scraped. In our open news example
 we want the title, the description, and the url of an Article to be scraped, so we add these attributes with
 the corresponding names to the scraped obj class.
 
