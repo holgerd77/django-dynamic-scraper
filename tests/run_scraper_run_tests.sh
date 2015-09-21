@@ -10,7 +10,8 @@ test_single_standard_id_field
 test_double_standard_id_field
 test_standard_update_field
 test_standard_update_field_update
-test_save_to_db_field
+test_save_to_db
+test_save_to_db_non_model_attribute
 test_testmode
 test_task_run_type
 test_no_task_run_type

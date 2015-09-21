@@ -123,13 +123,23 @@ class ScraperRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.filter(title='Event 1 - Old Title')), 0)
     
 
-    def test_save_to_db_field(self):
+    def test_save_to_db(self):
         self.soa_desc.save_to_db = False
         self.soa_desc.save()
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 4)
         self.assertEqual(Event.objects.filter(description='Event 1 description').count(), 0)
+
+
+    def test_save_to_db_non_model_attribute(self):
+        self.soa_desc.name='non_model_attribute'
+        self.soa_desc.save_to_db = False
+        self.soa_desc.mandatory = True
+        self.soa_desc.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 4)
 
     
     def test_testmode(self):

@@ -1,4 +1,4 @@
-import ast, json
+import ast, json, scrapy
 
 from jsonpath_rw import jsonpath, parse
 from jsonpath_rw.lexer import JsonPathLexerError
@@ -17,10 +17,12 @@ from dynamic_scraper.utils.scheduler import Scheduler
 from dynamic_scraper.utils import processors
 
 
+
 class DjangoSpider(DjangoBaseSpider):
 
     mp_form_data = None
     dp_form_data = {}
+    non_db_results = {}
 
     def __init__(self, *args, **kwargs):
         self.mandatory_vars.append('scraped_obj_class')
@@ -34,6 +36,7 @@ class DjangoSpider(DjangoBaseSpider):
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
         self.from_page = 'MP'
         self.loader = None
+        self.dummy_loader = None
         self.items_read_count = 0
         self.items_save_count = 0
         
@@ -206,6 +209,7 @@ class DjangoSpider(DjangoBaseSpider):
             context = ast.literal_eval("{" + context_str + "}")
             context['spider'] = self
             self.loader.context = context
+            self.dummy_loader.context = context
         except SyntaxError:
             self.log("Wrong context definition format: " + context_str, log.ERROR)
     
@@ -215,15 +219,27 @@ class DjangoSpider(DjangoBaseSpider):
             procs = self._get_processors(scraper_elem.processors)
             self._set_loader_context(scraper_elem.proc_ctxt)
             
-            static_ctxt = self.loader.context.get('static', '')
-            if processors.static in procs and static_ctxt:
-                self.loader.add_value(scraper_elem.scraped_obj_attr.name, static_ctxt)
-            elif(scraper_elem.reg_exp):
-                self.loader.add_xpath(scraper_elem.scraped_obj_attr.name, scraper_elem.x_path, *procs,  re=scraper_elem.reg_exp)
+            if not scraper_elem.scraped_obj_attr.save_to_db:
+                name = 'tmp_field'
+                loader = self.dummy_loader
             else:
-                self.loader.add_xpath(scraper_elem.scraped_obj_attr.name, scraper_elem.x_path, *procs)
-            msg  = '{0: <20}'.format(scraper_elem.scraped_obj_attr.name)
-            c_values = self.loader.get_collected_values(scraper_elem.scraped_obj_attr.name)
+                name = scraper_elem.scraped_obj_attr.name
+                loader = self.loader
+
+            static_ctxt = loader.context.get('static', '')
+            
+            if processors.static in procs and static_ctxt:
+                loader.add_value(name, static_ctxt)
+            elif(scraper_elem.reg_exp):
+                loader.add_xpath(name, scraper_elem.x_path, *procs,  re=scraper_elem.reg_exp)
+            else:
+                loader.add_xpath(name, scraper_elem.x_path, *procs)
+            if not scraper_elem.scraped_obj_attr.save_to_db:
+                item = loader.load_item()
+                if name in item:
+                    self.non_db_results[scraper_elem.scraped_obj_attr.name] = item[name]
+            msg  = '{0: <20}'.format(name)
+            c_values = loader.get_collected_values(name)
             if len(c_values) > 0:
                 msg += "'" + c_values[0] + "'"
             else:
@@ -248,6 +264,25 @@ class DjangoSpider(DjangoBaseSpider):
                 self.loader = ItemLoader(item=item, selector=xs)
         self.loader.default_output_processor = TakeFirst()
         self.loader.log = self.log
+
+
+    def _set_dummy_loader(self, response, from_page, xs, item):
+        self.from_page = from_page
+        rpt = self.scraper.get_rpt(from_page)
+        if not self.from_page == 'MP':
+            item = response.request.meta['item']
+            if rpt.content_type == 'J':
+                json_resp = json.loads(response.body_as_unicode())
+                self.dummy_loader = JsonItemLoader(item=DummyItem(), selector=json_resp)
+            else:
+                self.dummy_loader = ItemLoader(item=DummyItem(), response=response)
+        else:
+            if rpt.content_type == 'J':
+                self.dummy_loader = JsonItemLoader(item=DummyItem(), selector=xs)
+            else:
+                self.dummy_loader = ItemLoader(item=DummyItem(), selector=xs)
+        self.dummy_loader.default_output_processor = TakeFirst()
+        self.dummy_loader.log = self.log
     
 
     def parse_item(self, response, xs=None, from_page=None):
@@ -256,12 +291,15 @@ class DjangoSpider(DjangoBaseSpider):
         if not from_page:
             from_page = response.request.meta['from_page']
         self._set_loader(response, from_page, xs, self.scraped_obj_item_class())
+        self._set_dummy_loader(response, from_page, xs, self.scraped_obj_item_class())
         if from_page == 'MP':
             self.items_read_count += 1
             
         elems = self.scraper.get_scrape_elems()
         
         for elem in elems:
+            if not elem.scraped_obj_attr.save_to_db:
+                self._set_dummy_loader(response, from_page, xs, self.scraped_obj_item_class())
             self._scrape_item_attr(elem, from_page)
         # Dealing with Django Char- and TextFields defining blank field as null
         item = self.loader.load_item()
@@ -333,7 +371,10 @@ class DjangoSpider(DjangoBaseSpider):
                     #self.run_detail_page_request()
                     url_elems = self.scraper.get_detail_page_url_elems()
                     for url_elem in url_elems:
-                        url = item[url_elem.scraped_obj_attr.name]
+                        if not url_elem.scraped_obj_attr.save_to_db:
+                            url = self.non_db_results[url_elem.scraped_obj_attr.name]
+                        else:
+                            url = item[url_elem.scraped_obj_attr.name]
                         rpt = self.scraper.get_rpt_for_scraped_obj_attr(url_elem.scraped_obj_attr)
                         kwargs = self.dp_request_kwargs[rpt.page_type].copy()
                         if 'meta' not in kwargs:
@@ -353,3 +394,6 @@ class DjangoSpider(DjangoBaseSpider):
             else:
                 self.log("Item could not be read!", log.ERROR)
     
+
+class DummyItem(scrapy.Item):
+    tmp_field = scrapy.Field()

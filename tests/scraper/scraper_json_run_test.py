@@ -111,7 +111,11 @@ class ScraperJSONRunTest(ScraperTest):
         self.se_desc.request_page_type = 'DP1'
         self.se_desc.save()
 
-        self.soa_url2.id_field = True
+        self.soa_url.id_field = False
+        self.soa_url.save_to_db = False
+        self.soa_url.save()
+
+        self.soa_url2.save_to_db = False
         self.soa_url2.save()
 
         self.rpt_dp2 = RequestPageType(page_type='DP2', scraper=self.scraper, scraped_obj_attr=self.soa_url2, content_type='J')
@@ -130,8 +134,8 @@ class ScraperJSONRunTest(ScraperTest):
         #log.msg(unicode(Event.objects.all()), level=log.INFO)
         events = Event.objects.filter(
             title='Event 1',
-            url='http://localhost:8010/static/site_with_json_content_type/event1.html',
-            url2='http://localhost:8010/static/site_with_json_content_type/event1.json',
+            #url='http://localhost:8010/static/site_with_json_content_type/event1.html',
+            #url2='http://localhost:8010/static/site_with_json_content_type/event1.json',
             #description='Event Detail Page 1 Description HTML',
             description2='Event Detail Page 1 Description JSON',
         )
