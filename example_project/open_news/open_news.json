@@ -11,6 +11,7 @@
 },
 {
     "fields": {
+        "save_to_db": true,
         "obj_class": 1,
         "name": "base",
         "id_field": false,
@@ -21,6 +22,7 @@
 },
 {
     "fields": {
+        "save_to_db": true,
         "obj_class": 1,
         "name": "description",
         "id_field": false,
@@ -31,6 +33,7 @@
 },
 {
     "fields": {
+        "save_to_db": true,
         "obj_class": 1,
         "name": "title",
         "id_field": false,
@@ -41,6 +44,7 @@
 },
 {
     "fields": {
+        "save_to_db": true,
         "obj_class": 1,
         "name": "url",
         "id_field": true,
@@ -51,6 +55,7 @@
 },
 {
     "fields": {
+        "save_to_db": true,
         "obj_class": 1,
         "name": "thumbnail",
         "id_field": false,
@@ -61,40 +66,40 @@
 },
 {
     "fields": {
-        "checker_x_path_result": "",
-        "checker_ref_url": "http://en.wikinews.org/wiki/This_wiki_article_doesnt_exist",
-        "pagination_append_str": "",
-        "comments": "",
-        "pagination_page_replace": "",
-        "checker_type": "4",
-        "scraped_obj_class": 1,
         "status": "A",
-        "max_items_save": null,
-        "max_items_read": null,
+        "pagination_page_replace": "",
+        "checker_ref_url": "http://en.wikinews.org/wiki/This_wiki_article_doesnt_exist",
+        "checker_x_path_result": "",
         "name": "Wikinews Scraper",
+        "max_items_save": null,
         "checker_x_path": "",
+        "pagination_append_str": "",
+        "max_items_read": null,
         "pagination_on_start": false,
-        "pagination_type": "N"
+        "pagination_type": "N",
+        "checker_type": "4",
+        "comments": "",
+        "scraped_obj_class": 1
     },
     "model": "dynamic_scraper.scraper",
     "pk": 1
 },
 {
     "fields": {
-        "checker_x_path_result": "",
-        "checker_ref_url": "",
-        "pagination_append_str": "",
-        "comments": "",
-        "pagination_page_replace": "",
-        "checker_type": "N",
-        "scraped_obj_class": 1,
         "status": "A",
-        "max_items_save": null,
-        "max_items_read": 10,
+        "pagination_page_replace": "",
+        "checker_ref_url": "",
+        "checker_x_path_result": "",
         "name": "US Department of Justice - Press Release Scraper",
+        "max_items_save": null,
         "checker_x_path": "",
+        "pagination_append_str": "",
+        "max_items_read": 10,
         "pagination_on_start": false,
-        "pagination_type": "N"
+        "pagination_type": "N",
+        "checker_type": "N",
+        "comments": "",
+        "scraped_obj_class": 1
     },
     "model": "dynamic_scraper.scraper",
     "pk": 2
@@ -177,135 +182,126 @@
 },
 {
     "fields": {
-        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "//td[@class=\"l_box\"]",
-        "reg_exp": "",
+        "processors": "",
         "scraped_obj_attr": 1,
         "scraper": 1,
         "request_page_type": "MP",
         "mandatory": true,
-        "processors": ""
+        "reg_exp": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 1
 },
 {
     "fields": {
-        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "//h1[@id=\"firstHeading\"]/text()",
-        "reg_exp": "",
+        "processors": "",
         "scraped_obj_attr": 3,
         "scraper": 1,
         "request_page_type": "DP1",
         "mandatory": true,
-        "processors": ""
+        "reg_exp": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 2
 },
 {
     "fields": {
-        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "p/span[@class=\"l_summary\"]/text()",
-        "reg_exp": "",
+        "processors": "",
         "scraped_obj_attr": 2,
         "scraper": 1,
         "request_page_type": "MP",
         "mandatory": true,
-        "processors": ""
+        "reg_exp": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 3
 },
 {
     "fields": {
-        "save_to_db": true,
         "proc_ctxt": "'pre_url': 'http://en.wikinews.org'",
         "x_path": "span[@class=\"l_title\"]/a/@href",
-        "reg_exp": "",
+        "processors": "pre_url",
         "scraped_obj_attr": 4,
         "scraper": 1,
         "request_page_type": "MP",
         "mandatory": true,
-        "processors": "pre_url"
+        "reg_exp": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 4
 },
 {
     "fields": {
-        "save_to_db": true,
         "proc_ctxt": "'pre_url': 'http:'",
         "x_path": "div[@class=\"l_image\"]/a/img/@src",
-        "reg_exp": "",
+        "processors": "pre_url",
         "scraped_obj_attr": 5,
         "scraper": 1,
         "request_page_type": "MP",
         "mandatory": true,
-        "processors": "pre_url"
+        "reg_exp": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 5
 },
 {
     "fields": {
-        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "results",
-        "reg_exp": "",
+        "processors": "",
         "scraped_obj_attr": 1,
         "scraper": 2,
         "request_page_type": "MP",
         "mandatory": true,
-        "processors": ""
+        "reg_exp": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 6
 },
 {
     "fields": {
-        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "body",
-        "reg_exp": "",
+        "processors": "",
         "scraped_obj_attr": 2,
         "scraper": 2,
         "request_page_type": "MP",
         "mandatory": true,
-        "processors": ""
+        "reg_exp": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 7
 },
 {
     "fields": {
-        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "title",
-        "reg_exp": "",
+        "processors": "",
         "scraped_obj_attr": 3,
         "scraper": 2,
         "request_page_type": "MP",
         "mandatory": true,
-        "processors": ""
+        "reg_exp": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 8
 },
 {
     "fields": {
-        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "url",
-        "reg_exp": "",
+        "processors": "",
         "scraped_obj_attr": 4,
         "scraper": 2,
         "request_page_type": "MP",
         "mandatory": true,
-        "processors": ""
+        "reg_exp": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 9

@@ -42,6 +42,7 @@ class ScrapedObjAttr(models.Model):
     obj_class = models.ForeignKey(ScrapedObjClass)
     attr_type = models.CharField(max_length=1, choices=ATTR_TYPE_CHOICES)
     id_field = models.BooleanField(default=False)
+    save_to_db = models.BooleanField(default=True)
     
     def __unicode__(self):
         return self.name + " (" + self.obj_class.__unicode__() + ")"
@@ -216,7 +217,6 @@ class ScraperElem(models.Model):
     request_page_type = models.CharField(max_length=3, choices=REQUEST_PAGE_TYPE_CHOICES, default="MP")
     processors = models.CharField(max_length=200, blank=True)
     proc_ctxt = models.CharField(max_length=200, blank=True)
-    save_to_db = models.BooleanField(default=True)
     mandatory = models.BooleanField(default=True)
 
 
