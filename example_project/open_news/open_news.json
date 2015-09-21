@@ -61,186 +61,251 @@
 },
 {
     "fields": {
-        "body": "",
-        "cookies": "",
         "checker_x_path_result": "",
         "checker_ref_url": "http://en.wikinews.org/wiki/This_wiki_article_doesnt_exist",
-        "meta": "",
         "pagination_append_str": "",
         "comments": "",
         "pagination_page_replace": "",
         "checker_type": "4",
-        "method": "GET",
         "scraped_obj_class": 1,
         "status": "A",
         "max_items_save": null,
         "max_items_read": null,
-        "request_type": "R",
-        "content_type": "H",
-        "detail_page_content_type": "H",
         "name": "Wikinews Scraper",
-        "render_javascript": false,
         "checker_x_path": "",
         "pagination_on_start": false,
-        "pagination_type": "N",
-        "headers": "",
-        "form_data": ""
+        "pagination_type": "N"
     },
     "model": "dynamic_scraper.scraper",
+    "pk": 1
+},
+{
+    "fields": {
+        "checker_x_path_result": "",
+        "checker_ref_url": "",
+        "pagination_append_str": "",
+        "comments": "",
+        "pagination_page_replace": "",
+        "checker_type": "N",
+        "scraped_obj_class": 1,
+        "status": "A",
+        "max_items_save": null,
+        "max_items_read": 10,
+        "name": "US Department of Justice - Press Release Scraper",
+        "checker_x_path": "",
+        "pagination_on_start": false,
+        "pagination_type": "N"
+    },
+    "model": "dynamic_scraper.scraper",
+    "pk": 2
+},
+{
+    "fields": {
+        "body": "",
+        "cookies": "",
+        "render_javascript": false,
+        "dont_filter": false,
+        "scraped_obj_attr": null,
+        "scraper": 2,
+        "headers": "",
+        "request_type": "R",
+        "meta": "",
+        "page_type": "MP",
+        "content_type": "J",
+        "form_data": "",
+        "method": "GET"
+    },
+    "model": "dynamic_scraper.requestpagetype",
     "pk": 1
 },
 {
     "fields": {
         "body": "",
         "cookies": "",
-        "checker_x_path_result": "",
-        "checker_ref_url": "",
-        "meta": "",
-        "pagination_append_str": "",
-        "comments": "",
-        "pagination_page_replace": "",
-        "checker_type": "N",
-        "method": "GET",
-        "scraped_obj_class": 1,
-        "status": "A",
-        "max_items_save": null,
-        "max_items_read": 10,
-        "request_type": "R",
-        "content_type": "J",
-        "detail_page_content_type": "H",
-        "name": "US Department of Justice - Press Release Scraper",
         "render_javascript": false,
-        "checker_x_path": "",
-        "pagination_on_start": false,
-        "pagination_type": "N",
+        "dont_filter": false,
+        "scraped_obj_attr": 4,
+        "scraper": 2,
         "headers": "",
-        "form_data": ""
+        "request_type": "R",
+        "meta": "",
+        "page_type": "DP1",
+        "content_type": "H",
+        "form_data": "",
+        "method": "GET"
     },
-    "model": "dynamic_scraper.scraper",
+    "model": "dynamic_scraper.requestpagetype",
     "pk": 2
 },
 {
     "fields": {
+        "body": "",
+        "cookies": "",
+        "render_javascript": false,
+        "dont_filter": false,
+        "scraped_obj_attr": null,
+        "scraper": 1,
+        "headers": "",
+        "request_type": "R",
+        "meta": "",
+        "page_type": "MP",
+        "content_type": "H",
+        "form_data": "",
+        "method": "GET"
+    },
+    "model": "dynamic_scraper.requestpagetype",
+    "pk": 3
+},
+{
+    "fields": {
+        "body": "",
+        "cookies": "",
+        "render_javascript": false,
+        "dont_filter": false,
+        "scraped_obj_attr": 4,
+        "scraper": 1,
+        "headers": "",
+        "request_type": "R",
+        "meta": "",
+        "page_type": "DP1",
+        "content_type": "H",
+        "form_data": "",
+        "method": "GET"
+    },
+    "model": "dynamic_scraper.requestpagetype",
+    "pk": 4
+},
+{
+    "fields": {
+        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "//td[@class=\"l_box\"]",
-        "processors": "",
+        "reg_exp": "",
         "scraped_obj_attr": 1,
         "scraper": 1,
-        "from_detail_page": false,
+        "request_page_type": "MP",
         "mandatory": true,
-        "reg_exp": ""
+        "processors": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 1
 },
 {
     "fields": {
+        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "//h1[@id=\"firstHeading\"]/text()",
-        "processors": "",
+        "reg_exp": "",
         "scraped_obj_attr": 3,
         "scraper": 1,
-        "from_detail_page": true,
+        "request_page_type": "DP1",
         "mandatory": true,
-        "reg_exp": ""
+        "processors": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 2
 },
 {
     "fields": {
+        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "p/span[@class=\"l_summary\"]/text()",
-        "processors": "",
+        "reg_exp": "",
         "scraped_obj_attr": 2,
         "scraper": 1,
-        "from_detail_page": false,
+        "request_page_type": "MP",
         "mandatory": true,
-        "reg_exp": ""
+        "processors": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 3
 },
 {
     "fields": {
+        "save_to_db": true,
         "proc_ctxt": "'pre_url': 'http://en.wikinews.org'",
         "x_path": "span[@class=\"l_title\"]/a/@href",
-        "processors": "pre_url",
+        "reg_exp": "",
         "scraped_obj_attr": 4,
         "scraper": 1,
-        "from_detail_page": false,
+        "request_page_type": "MP",
         "mandatory": true,
-        "reg_exp": ""
+        "processors": "pre_url"
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 4
 },
 {
     "fields": {
+        "save_to_db": true,
         "proc_ctxt": "'pre_url': 'http:'",
         "x_path": "div[@class=\"l_image\"]/a/img/@src",
-        "processors": "pre_url",
+        "reg_exp": "",
         "scraped_obj_attr": 5,
         "scraper": 1,
-        "from_detail_page": false,
+        "request_page_type": "MP",
         "mandatory": true,
-        "reg_exp": ""
+        "processors": "pre_url"
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 5
 },
 {
     "fields": {
+        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "results",
-        "processors": "",
+        "reg_exp": "",
         "scraped_obj_attr": 1,
         "scraper": 2,
-        "from_detail_page": false,
+        "request_page_type": "MP",
         "mandatory": true,
-        "reg_exp": ""
+        "processors": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 6
 },
 {
     "fields": {
+        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "body",
-        "processors": "",
+        "reg_exp": "",
         "scraped_obj_attr": 2,
         "scraper": 2,
-        "from_detail_page": false,
+        "request_page_type": "MP",
         "mandatory": true,
-        "reg_exp": ""
+        "processors": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 7
 },
 {
     "fields": {
+        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "title",
-        "processors": "",
+        "reg_exp": "",
         "scraped_obj_attr": 3,
         "scraper": 2,
-        "from_detail_page": false,
+        "request_page_type": "MP",
         "mandatory": true,
-        "reg_exp": ""
+        "processors": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 8
 },
 {
     "fields": {
+        "save_to_db": true,
         "proc_ctxt": "",
         "x_path": "url",
-        "processors": "",
+        "reg_exp": "",
         "scraped_obj_attr": 4,
         "scraper": 2,
-        "from_detail_page": false,
+        "request_page_type": "MP",
         "mandatory": true,
-        "reg_exp": ""
+        "processors": ""
     },
     "model": "dynamic_scraper.scraperelem",
     "pk": 9
