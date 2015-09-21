@@ -1,131 +1,13 @@
+.. _getting_started:
+
 ===============
 Getting started
 ===============
-
-
-
-Introduction
-============
-
-With Django Dynamic Scraper (DDS) you can define your Scrapy_ scrapers dynamically via the Django admin interface
-and save your scraped items in the database you defined for your Django project.
-Since it simplifies things DDS is not usable for all kinds of scrapers, but it is well suited for the relatively
-common case of regularly scraping a website with a list of updated items (e.g. news, events, etc.) and than dig 
-into the detail page to scrape some more infos for each item.
-
-Here are some examples for some use cases of DDS:
-Build a scraper for ...
-
-* Local music events for different event locations in your city
-* New organic recipes for asian food
-* The latest articles from blogs covering fashion and style in Berlin
-* ...Up to your imagination! :-)
-
-Django Dynamic Scraper tries to keep its data structure in the database as separated as possible from the 
-models in your app, so it comes with its own Django model classes for defining scrapers, runtime information
-related to your scraper runs and classes for defining the attributes of the models you want to scrape.
-So apart from a few foreign key relations your Django models stay relatively independent and you don't have
-to adjust your model code every time DDS's model structure changes.   
-
-The DDS repository on GitHub contains an example project in the ``example_project`` folder, showing how to 
-create a scraper for open news content on the web (starting with Wikinews_ from Wikipedia). The source code
-from this example is used in the following guidelines.
 
 .. _Scrapy: http://www.scrapy.org 
 .. _Wikinews: http://en.wikinews.org/wiki/Main_Page
 .. _GitHub: https://github.com/holgerd77/django-dynamic-scraper
 
-Installation
-============
-
-.. _requirements:
-
-Requirements
-------------
-The **basic requirements** for Django Dynamic Scraper are:
-
-* Python 2.7+ (earlier versions untested, Python 3.x not yet supported)
-* `Django <https://www.djangoproject.com/>`_ 1.7/1.8 (newer versions untested)
-* Scrapy_ 0.20-0.24 (newer versions untested)
-* `Python JSONPath RW 1.4+ <https://github.com/kennknowles/python-jsonpath-rw>`_
-
-If you want to use the **scheduling mechanism** of DDS you also have to install ``django-celery``:
-
-* `django-celery <http://ask.github.com/django-celery/>`_ 3.1.16 (newer versions untested)
-
-For **scraping images** you will need the Pillow Library:
-
-* `Pillow Libray (PIL fork) 2.5+ <https://python-pillow.github.io/>`_
-
-Since ``v.0.4.1`` ``DDS`` has basic ``ScrapyJS/Splash`` support for rendering/processing ``Javascript`` before
-scraping the page. For this to work you have to install and configure (see: :ref:`setting_up_scrapyjs_splash`) ``ScrapyJS``:
-
-* `ScrapyJS 0.1+ <https://github.com/scrapinghub/scrapyjs>`_ 
-
-.. note::
-   ``DDS 0.4`` version and upwards have dropped ``South`` support and using the internal migration system
-   from ``Django 1.7+``, south migrations can still be found in ``dynamic_scraper/south_migrations`` folder though. If you are upgrading from a DDS version older than ``0.3.2`` make sure to apply all the ``South`` migrations first
-   and the do an initial fake migration for switching to the Django migration system (see also Django docs on
-   migrations)!
-
-.. _release_compatibility:
-
-Release Compatibility Table
----------------------------
-Have a look at the following table for an overview which ``Django``, ``Scrapy`` and ``django-celery`` versions are supported
-by which ``DDS`` version. Due to dev resource constraints backwards compatibility for older ``Django`` or ``Scrapy`` releases for new
-``DDS`` releases normally can not be granted.
-
-+-------------+-------------------------------+---------------------------------------+-------------------------+
-| DDS Version | Django                        | Scrapy                                | django-celery           |
-+=============+===============================+=======================================+=========================+
-| 0.4/0.5     | 1.7/1.8 (newer untested)      | 0.22/0.24 (newer untested)            | 3.1.16 (newer untested) |
-+-------------+-------------------------------+---------------------------------------+-------------------------+
-| 0.3         | 1.4-1.6                       | 0.16/0.18 (recommended)               | 3.0+ (3.1+ untested)    |
-+-------------+-------------------------------+---------------------------------------+-------------------------+
-|             | (1.7+ unsupported)            | 0.20/0.22/0.24 (dep. warnings)        |                         |
-+-------------+-------------------------------+---------------------------------------+-------------------------+
-| 0.2         | 1.4 (1.5+ unsupported)        | 0.14 (0.16+ unsupported) 2.x          | (3.0 untested)          |
-+-------------+-------------------------------+---------------------------------------+-------------------------+
-
-.. note::
-   Please get in touch (GitHub_) if you have any additions to this table. A library version is counted as supported if the
-   DDS testsuite is running through (see: :ref:`test_suite`).
-
-Installation with Pip
----------------------
-Django Dynamic Scraper can be found on the PyPI Package Index `(see package description) <http://pypi.python.org/pypi/django-dynamic-scraper>`_. 
-For the installation with Pip, first install the requirements above. Then install DDS with::
-
-	pip install django-dynamic-scraper
-
-Manual Installation
--------------------
-For manually installing Django Dynamic Scraper download the DDS source code from GitHub or clone the project with
-git into a folder of your choice::
-
-	git clone https://github.com/holgerd77/django-dynamic-scraper.git .
-
-Then you have to met the requirements above. You can do this by
-manually installing the libraries you need with ``pip`` or ``easy_install``, which may be a better choice
-if you e.g. don't want to risk your Django installation to be touched during the installation process. 
-However if you are sure that there
-is no danger ahead or if you are running DDS in a new ``virtualenv`` environment, you can install all the
-requirements above together with::
-
-	pip install -r requirements.txt
-	
-Then either add the ``dynamic_scraper`` folder to your 
-``PYTHONPATH`` or your project manually or install DDS with::
-
-	python setup.py install
-	
-Note, that the requirements are NOT included in the ``setup.py`` script since this caused some problems 
-when testing the installation and the requirements installation process with ``pip`` turned out to be
-more stable.
-	
-Now, to use DDS in your Django project add ``'dynamic_scraper'`` to your ``INSTALLED_APPS`` in your
-project settings.
 
 .. _creatingdjangomodels:
 
@@ -386,23 +268,6 @@ This completes our scraper. The form you have filled out should look similar to 
    You can also **scrape** attributes of your object **from outside the base element** by using the ``..`` notation
    in your XPath expressions to get to the parent nodes!
 
-.. _json_jsonpath_scrapers:
-
-Creating scrapers for JSON/Usage of JSONPath
---------------------------------------------
-
-Beside creating ``HTML`` or ``XML`` scrapers where you can use classic ``XPath`` notation, ``DDS`` supports also scraping pages encoded in ``JSON`` (``v.0.5.0`` and above), e.g. for crawling web APIs or ajax call result pages.
-
-For scraping ``JSON``, ``JSONPath`` is used, an ``XPath``-like expression language for digging into ``JSON``.
-For reference see expressions as defined here:
-
-* `GitHub - python-jsonpath-rw Library <https://github.com/kennknowles/python-jsonpath-rw>`_
-* `JSONPath - XPath for JSON <http://goessner.net/articles/JsonPath/>`_
-
-.. note::
-   Using ``JSONPath`` in ``DDS`` works for standard ``JSON`` page results, but is not as heavily tested as using
-   ``XPath`` for data extraction. If you are working with more complex ``JSONPath`` queries and run into problems,
-   please report them on GitHub_!
 
 Create the domain entity reference object (NewsWebsite) for our open news example
 ---------------------------------------------------------------------------------
@@ -417,115 +282,12 @@ assign the scraper and create an empty :ref:`scheduler_runtime` object with ``SC
 
 .. image:: images/screenshot_django-admin_add_domain_ref_object.png
 
-.. _settingupscrapypython:
 
-Setting up Scrapy/Create necessary python modules for your app
-==============================================================
+Connecting Scrapy with your Django objects
+==========================================
 
-Now after having created the Django models we want to scrape and having created the scraper and associated
-objects in the database we have to set up Scrapy and get it to work together with the stuff we have created.
-To get this going, we have to create a new Scrapy project, adjust some settings in the configuration and create
-two short python module files, one with a spider class, inheriting from :ref:`django_spider`, and a finalising
-pipeline for saving our scraped objects.
-
-.. _setting_up_scrapy:
-
-Setting up Scrapy
------------------
-
-For getting Scrapy_ to work the recommended way to start a new Scrapy project normally is to create a directory
-and template file structure with the ``scrapy startproject myscrapyproject`` command on the shell first. 
-However, there is (initially) not so much code to be written left and the directory structure
-created by the ``startproject`` command cannot really be used when connecting Scrapy to the Django Dynamic Scraper
-library. So the easiest way to start a new scrapy project is to just manually add the ``scrapy.cfg`` 
-project configuration file as well as the Scrapy ``settings.py`` file and adjust these files to your needs.
-It is recommended to just create the Scrapy project in the same Django app you used to create the models you
-want to scrape and then place the modules needed for scrapy in a sub package called ``scraper`` or something
-similar. After finishing this chapter you should end up with a directory structure similar to the following
-(again illustrated using the open news example)::
-
-	example_project/
-		scrapy.cfg
-		open_news/
-			models.py # Your models.py file
-			scraper/
-				settings.py
-				spiders.py
-				(checkers.py)
-				pipelines.py
-				(tasks.py)
-			
-Your ``scrapy.cfg`` file should look similar to the following, just having adjusted the reference to the
-settings file and the project name::
-	
-	[settings]
-	default = open_news.scraper.settings
-	
-	#Scrapy till 0.16
-	[deploy]
-	#url = http://localhost:6800/
-	project = open_news
-
-	#Scrapy with separate scrapyd (0.18+)
-	[deploy:scrapyd1]
-	url = http://localhost:6800/
-	project = open_news	
-
-
-And this is your ``settings.py`` file::
-
-	import os
-	
-	PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-	os.environ.setdefault("DJANGO_SETTINGS_MODULE", "example_project.settings") #Changed in DDS v.0.3
-
-	BOT_NAME = 'open_news'
-	
-	SPIDER_MODULES = ['dynamic_scraper.spiders', 'open_news.scraper',]
-	USER_AGENT = '%s/%s' % (BOT_NAME, '1.0')
-	
-	#Scrapy 0.20+
-	ITEM_PIPELINES = {
-	    'dynamic_scraper.pipelines.ValidationPipeline': 400,
-	    'open_news.scraper.pipelines.DjangoWriterPipeline': 800,
-	}
-
-	#Scrapy up to 0.18
-	ITEM_PIPELINES = [
-	    'dynamic_scraper.pipelines.ValidationPipeline',
-	    'open_news.scraper.pipelines.DjangoWriterPipeline',
-	]
-
-The ``SPIDER_MODULES`` setting is referencing the basic spiders of DDS and our ``scraper`` package where
-Scrapy will find the (yet to be written) spider module. For the ``ITEM_PIPELINES`` setting we have to
-add (at least) two pipelines. The first one is the mandatory pipeline from DDS, doing stuff like checking
-for the mandatory attributes we have defined in our scraper in the DB or preventing double entries already
-existing in the DB (identified by the url attribute of your scraped items) to be saved a second time.  
-
-.. _setting_up_scrapyjs_splash:
-
-Setting up ScrapyJS/Splash (Optional)
--------------------------------------
-
-More and more webpages only show their full information load after various ``Ajax`` calls and/or ``Javascript`` 
-function processing. For being able to scrape those websites ``DDS`` supports ``ScrapyJS/Spash`` starting with 
-``v.0.4.1`` for basic JS rendering/processing.
-
-For this to work you have to install ``Splash`` (the Javascript rendering service) installed - probably via ``Docker``- 
-(see `installation instructions <https://splash.readthedocs.org/en/latest/install.html>`_), and then ``ScrapyJS`` with::
-
-    pip install scrapyjs
-
-Afterwards follow the configuration instructions on the `ScrapyJS GitHub page <https://github.com/scrapinghub/scrapyjs#configuration>`_.
-
-For customization of ``Splash`` args ``DSCRAPER_SPLASH_ARGS`` setting can be used (see: :ref:`settings`).
-
-ScrapyJS can later be used via activating it for certain scrapers in the corresponding ``Django Admin`` form.
-
-.. note::
-   Resources needed for completely rendering a website on your scraping machine are vastly larger then for just
-   requesting/working on the plain HTML text without further processing, so make use of ``ScrapyJS/Splash`` capability
-   on when needed!
+For Scrapy to work with your Django objects we finally set up two static classes, the one being a spider class, 
+inheriting from :ref:`django_spider`, the other being a finalising pipeline for saving our scraped objects.
 
 Adding the spider class
 -----------------------
@@ -534,22 +296,22 @@ The main work left to be done in our spider class - which is inheriting from the
 of Django Dynamic Scraper - is to instantiate the spider by connecting the domain model classes to it
 in the ``__init__`` function::
 
-	from dynamic_scraper.spiders.django_spider import DjangoSpider
-	from open_news.models import NewsWebsite, Article, ArticleItem
-	
-	
-	class ArticleSpider(DjangoSpider):
-	    
-	    name = 'article_spider'
-	
-	    def __init__(self, *args, **kwargs):
-	        self._set_ref_object(NewsWebsite, **kwargs)
-	        self.scraper = self.ref_object.scraper
-	        self.scrape_url = self.ref_object.url
-	        self.scheduler_runtime = self.ref_object.scraper_runtime
-	        self.scraped_obj_class = Article
-	        self.scraped_obj_item_class = ArticleItem
-	        super(ArticleSpider, self).__init__(self, *args, **kwargs)
+  from dynamic_scraper.spiders.django_spider import DjangoSpider
+  from open_news.models import NewsWebsite, Article, ArticleItem
+  
+  
+  class ArticleSpider(DjangoSpider):
+      
+      name = 'article_spider'
+  
+      def __init__(self, *args, **kwargs):
+          self._set_ref_object(NewsWebsite, **kwargs)
+          self.scraper = self.ref_object.scraper
+          self.scrape_url = self.ref_object.url
+          self.scheduler_runtime = self.ref_object.scraper_runtime
+          self.scraped_obj_class = Article
+          self.scraped_obj_item_class = ArticleItem
+          super(ArticleSpider, self).__init__(self, *args, **kwargs)
 
 .. _adding_pipeline_class:
 
@@ -559,34 +321,35 @@ Adding the pipeline class
 Since you maybe want to add some extra attributes to your scraped items, DDS is not saving the scraped items
 for you but you have to do it manually in your own item pipeline::
 
-	from django.db.utils import IntegrityError
-	from scrapy import log
-	from scrapy.exceptions import DropItem
-	from dynamic_scraper.models import SchedulerRuntime
-	
-	class DjangoWriterPipeline(object):
-	    
-	    def process_item(self, item, spider):
-	        try:
-	            item['news_website'] = spider.ref_object
-	            
-	            checker_rt = SchedulerRuntime(runtime_type='C')
-	            checker_rt.save()
-	            item['checker_runtime'] = checker_rt
-	            
-	            item.save()
-	            spider.action_successful = True
-	            spider.log("Item saved.", log.INFO)
-	                
-	        except IntegrityError, e:
-	            spider.log(str(e), log.ERROR)
-	            raise DropItem("Missing attribute.")
-	                
-	        return item 
+  from django.db.utils import IntegrityError
+  from scrapy import log
+  from scrapy.exceptions import DropItem
+  from dynamic_scraper.models import SchedulerRuntime
+  
+  class DjangoWriterPipeline(object):
+      
+      def process_item(self, item, spider):
+          try:
+              item['news_website'] = spider.ref_object
+              
+              checker_rt = SchedulerRuntime(runtime_type='C')
+              checker_rt.save()
+              item['checker_runtime'] = checker_rt
+              
+              item.save()
+              spider.action_successful = True
+              spider.log("Item saved.", log.INFO)
+                  
+          except IntegrityError, e:
+              spider.log(str(e), log.ERROR)
+              raise DropItem("Missing attribute.")
+                  
+          return item 
 
 The things you always have to do here is adding the reference object to the scraped item class and - if you
 are using checker functionality - create the runtime object for the checker. You also have to set the
 ``action_successful`` attribute of the spider, which is used internally by DDS when the spider is closed.
+
 
 .. _running_scrapers:
 

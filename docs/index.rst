@@ -41,6 +41,8 @@ User Manual
 .. toctree::
    :maxdepth: 2
    
+   introduction
+   installation
    getting_started
    advanced_topics
    basic_services
