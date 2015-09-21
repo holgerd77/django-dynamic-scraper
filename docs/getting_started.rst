@@ -134,7 +134,7 @@ is scraping items, the **general workflow of the scraping process** is as follow
 * If provided the DDS scraper is then scraping the url from this item summary block leading to a detail page of the
   item providing more information to scrape
 * All the real item attributes (like a title, a description, a date or an image) are then scraped either from 
-  within the item summary block on the overview page or from the detail page of the item. This can be defined later
+  within the item summary block on the overview page or from a detail page of the item. This can be defined later
   when creating the scraper itself.
 
 To define which of the scraped obj attributes are just simple standard attributes to be scraped, which one
@@ -192,9 +192,10 @@ The main part of defining a scraper in DDS is to create several scraper elements
 the data for the specific :ref:`scraped_obj_attr` by following the main concepts of Scrapy_ for scraping
 data from websites. In the fields named 'x_path' and 'reg_exp' an XPath and (optionally) a regular expression
 is defined to extract the data from the page, following Scrapy's concept of 
-`XPathSelectors <http://readthedocs.org/docs/scrapy/en/latest/topics/selectors.html>`_. The 'from_detail_page'
-check box tells the scraper, if the data for the object attibute for the scraper element should be extracted
-from the overview page or the detail page of the specific item. The fields 'processors' and 'processors_ctxt' are
+`XPathSelectors <http://readthedocs.org/docs/scrapy/en/latest/topics/selectors.html>`_. The 'request_page_type'
+select box tells the scraper, if the data for the object attibute for the scraper element should be extracted
+from the overview page or a detail page of the specific item. For every chosen page type here you have to define a
+corresponding request page type in the admin form above. The fields 'processors' and 'processors_ctxt' are
 used to define output processors for your scraped data like they are defined in Scrapy's
 `Item Loader section <http://readthedocs.org/docs/scrapy/en/latest/topics/loaders.html>`_.
 You can use these processors e.g. to add a string to your scraped data or to bring a scraped date in a
@@ -261,13 +262,25 @@ the complete url.
 .. image:: images/screenshot_django-admin_scraper_1.png
 .. image:: images/screenshot_django-admin_scraper_2.png
 
-This completes our scraper. The form you have filled out should look similar to the screenshot above 
+This completes the xpath definitions for our scraper. The form you have filled out should look similar to the screenshot above 
 (which is broken down to two rows due to space issues).
 
 .. note::
    You can also **scrape** attributes of your object **from outside the base element** by using the ``..`` notation
    in your XPath expressions to get to the parent nodes!
 
+Adding corresponding request page types
+---------------------------------------
+
+For all page types you used for your ``ScraperElemes`` you have to define corresponding ``RequestPageType`` objects
+in the ``Scraper`` admin form. There has to be exactly one main page and 0-25 detail page type objects.
+
+.. image:: images/screenshot_django-admin_request_page_type_example.png
+
+Within the ``RequestPageType`` object you can define request settings like the content type (``HTML``, ``XML``,...),
+the request method (``GET`` or ``POST``) and others for the specific page type. With this it is e.g. possible to 
+scrape HTML content from all the main pages and ``JSON`` content from the followed detail pages. For more information
+on this have a look at the :ref:`advanced_request_options` section.
 
 Create the domain entity reference object (NewsWebsite) for our open news example
 ---------------------------------------------------------------------------------

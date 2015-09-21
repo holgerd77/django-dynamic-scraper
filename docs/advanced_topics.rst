@@ -397,7 +397,8 @@ Advanced Request Options
 
 Since ``DDS v.0.7+`` you have more options to fine-tune your scraping requests by e.g. providing additional values for
 ``cookies`` or ``HTTP headers``. These values are internally passed to Scrapy's `Request object <http://doc.scrapy.org/en/latest/topics/request-response.html#request-objects>`_. You can find the extended request options in the 
-``Request options`` tab in the ``Scraper form`` of your ``Django project admin``.
+``Request options`` tab in the ``Scraper form`` of your ``Django project admin``. For the different page types 
+like the (paginated) main pages and the detail pages following scraped urls you can define different request options.
 
 .. note::
    Parameters for the different options are passed as ``JSON`` dicts. Make sure to use ``double quotes``
