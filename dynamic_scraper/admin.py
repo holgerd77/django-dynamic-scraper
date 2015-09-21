@@ -65,8 +65,39 @@ class ScrapedObjClassAdmin(admin.ModelAdmin):
     ]
 
 
+class RequestPageTypeFormSet(BaseInlineFormSet):
+    
+    def clean(self):
+        super(RequestPageTypeFormSet, self).clean()
+
+        cnt_rpts = 0
+        cnt_rpts_mp = 0
+        cnt_rpts_dp = 0
+
+        for form in self.forms:
+            if not hasattr(form, 'cleaned_data'):
+                continue
+            data = form.cleaned_data
+            if 'DELETE' in data and data['DELETE']:
+                continue
+            if not 'page_type' in data:
+                continue
+            cnt_rpts += 1
+
+            pt = data['page_type']
+            if pt == 'MP':
+                cnt_rpts_mp += 1
+            else:
+                cnt_rpts_dp += 1
+
+        if cnt_rpts_mp == 0:
+            raise ValidationError("For every request page type used for scraper elems definition a RequestPageType object with a corresponding page type has to be added!")
+        if cnt_rpts_mp > 1:
+            raise ValidationError("Only one RequestPageType object for main page requests allowed!")
+
 class RequestPageTypeInline(admin.StackedInline):
     model = RequestPageType
+    formset = RequestPageTypeFormSet
     extra = 1
 
 class ScraperElemInline(admin.TabularInline):
