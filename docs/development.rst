@@ -119,6 +119,7 @@ Release Notes
 * Custom migration for automatically creating new ``RequestPageType`` objects for existing scrapers
 * Unit tests for new functionality
 * Partly restructured documentation, separate :ref:`installation` section
+* Newly added ``static`` files, run Django ``collectstatic`` command (collaps/expand for ``RequestPageType`` inline admin form)
 * New migrations ``0008``, ``0009``, ``0010``, run Django ``migration`` command
 
 **Changes in version 0.7.3-beta** (2015-08-10)
