@@ -14,12 +14,17 @@ setup(
     platforms=['OS Independent'],
     packages=[
         'dynamic_scraper',
-        'dynamic_scraper.spiders',
-        'dynamic_scraper.utils',
-        'dynamic_scraper.migrations',
         'dynamic_scraper.management',
         'dynamic_scraper.management.commands',
+        'dynamic_scraper.migrations',
+        'dynamic_scraper.south_migrations',
+        'dynamic_scraper.spiders',
+        'dynamic_scraper.utils',
     ],
+    package_data = {
+        # If any package contains *.txt or *.rst files, include them:
+        '': ['*.js', '*.html',],
+    },
     #install_requires=[
     #    'Django>=1.7,<1.9',
     #    'Scrapy>=0.22.0,<0.25',
