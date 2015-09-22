@@ -23,7 +23,9 @@ setup(
     ],
     package_data = {
         # If any package contains *.txt or *.rst files, include them:
-        '': ['*.js', '*.html',],
+        'dynamic_scraper': [
+            'static/js/*',
+        ],
     },
     #install_requires=[
     #    'Django>=1.7,<1.9',
