@@ -94,6 +94,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.8.1-beta** (2015-09-22)
+
+* Fixed packaging problem not including custom static Django admin JS file (for ``RequestPageType`` admin form collapse/expand)
+
 **Changes in version 0.8.0-beta** (2015-09-22)
 
 * New request page types for main page and detail pages of scrapers (see: :ref:`adding_request_page_types`):

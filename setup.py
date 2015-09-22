@@ -4,7 +4,7 @@ import os
 
 setup(
     name='django-dynamic-scraper',
-    version='0.8.0',
+    version='0.8.1',
     description='Creating Scrapy scrapers via the Django admin interface',
     author='Holger Drewes',
     author_email='Holger.Drewes@gmail.com',
@@ -22,7 +22,6 @@ setup(
         'dynamic_scraper.utils',
     ],
     package_data = {
-        # If any package contains *.txt or *.rst files, include them:
         'dynamic_scraper': [
             'static/js/*',
         ],
