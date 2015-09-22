@@ -94,7 +94,7 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.8.0-beta** (Not yet released!)
+**Changes in version 0.8.0-beta** (2015-09-22)
 
 * New request page types for main page and detail pages of scrapers (see: :ref:`adding_request_page_types`):
 
@@ -108,7 +108,8 @@ Release Notes
 * ATTENTION! This release comes with heavy internal changes regarding both DB structure and scraping logic.
   Unit tests are running through, but there might be untested edge cases. If you want to use the new functionality in a production 
   environment please do this with extra care. You also might want to wait for 2-3 weeks after release
-  and/or for a following 0.8.1 release (not sure if necessary yet)
+  and/or for a following 0.8.1 release (not sure if necessary yet). If you upgrade it is HIGHLY RECOMMENDED TO BACKUP YOUR
+  PROJECT AND YOUR DB before!
 * Replaced Scrapy ``Spider`` with ``CrawlSpider`` class being the basis for ``DjangoBaseSpider``, allowing
   for more flexibility when extending
 * Custom migration for automatically creating new ``RequestPageType`` objects for existing scrapers
