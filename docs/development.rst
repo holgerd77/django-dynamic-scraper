@@ -98,7 +98,7 @@ Release Notes
 
 * Fixed bug preventing checker tests to work
 * Added Javascript rendering to checkers
-
+* Fixed a bug letting checkers/checker tests choose the wrong detail page URL for checking under certain circumstances
 
 **Changes in version 0.8.1-beta** (2015-09-22)
 
