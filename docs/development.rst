@@ -97,6 +97,7 @@ Release Notes
 **Changes in version 0.8.2-beta** (2015-09-24)
 
 * Fixed bug preventing checker tests to work
+* Added Javascript rendering to checkers
 
 
 **Changes in version 0.8.1-beta** (2015-09-22)

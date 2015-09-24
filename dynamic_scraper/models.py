@@ -125,6 +125,9 @@ class Scraper(models.Model):
     
     def get_detail_page_url_elems(self):
         return self.scraperelem_set.filter(scraped_obj_attr__attr_type='U')
+
+    def get_detail_page_url_id_elems(self):
+        return self.scraperelem_set.filter(scraped_obj_attr__attr_type='U', scraped_obj_attr__id_field=True)
     
     def get_standard_elems(self):
         q1 = Q(scraped_obj_attr__attr_type='S')
