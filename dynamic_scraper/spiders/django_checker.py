@@ -96,6 +96,7 @@ class DjangoChecker(DjangoBaseSpider):
             url_elem = self.scraper.get_detail_page_url_elems()[0]
             self.rpt = self.scraper.get_rpt_for_scraped_obj_attr(url_elem.scraped_obj_attr)
             kwargs = self.dp_request_kwargs[self.rpt.page_type].copy()
+            self._set_meta_splash_args()
 
             if self.rpt.request_type == 'R':
                 yield Request(url, callback=self.parse, method=self.rpt.method, dont_filter=self.rpt.dont_filter, **kwargs)

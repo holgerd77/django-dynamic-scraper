@@ -96,7 +96,8 @@ Release Notes
 =============
 **Changes in version 0.8.2-beta** (2015-09-24)
 
-* TODO
+* Fixed bug preventing checker tests to work
+
 
 **Changes in version 0.8.1-beta** (2015-09-22)
 
