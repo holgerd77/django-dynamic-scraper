@@ -3,7 +3,6 @@
 
 suite='scraper.checker_run_test.CheckerRunTest'
 tests="
-test_checker_test_wrong_checker_config
 test_none_type
 test_x_path_type_keep_video
 test_x_path_type_blank_result_field_keep_video
@@ -17,6 +16,7 @@ test_delete_with_img_all_no_thumbs
 test_delete_with_img_all_with_thumbs
 test_delete_with_img_thumbs_with_thumbs
 test_404_type_404_delete
+test_checker_test_wrong_checker_config
 "
 
 for test in `echo $tests`

@@ -126,7 +126,7 @@ class ScraperTest(TestCase):
         self.checker = EventChecker(**kwargs)
         self.crawler.crawl(self.checker)
         self.crawler.start()
-        #log.start()
+        #log.start(loglevel="DEBUG", logstdout=True)
         reactor.run()
     
     
@@ -141,6 +141,7 @@ class ScraperTest(TestCase):
         self.checker_test.conf['LOG_LEVEL'] = 'DEBUG' 
         self.crawler.crawl(self.checker_test)
         self.crawler.start()
+        log.start(loglevel="DEBUG", logstdout=True)
         reactor.run()
     
     
