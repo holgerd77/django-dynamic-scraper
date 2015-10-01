@@ -3,9 +3,9 @@
 
 suite='scraper.checker_run_test.CheckerRunTest'
 tests="
-test_none_type
-test_x_path_type_keep_video
-test_x_path_type_blank_result_field_keep_video
+test_no_checker
+test_x_path_type_keep
+test_x_path_type_blank_result_field_keep
 test_x_path_type_404_delete
 test_x_path_type_404_delete_with_zero_actions
 test_x_path_type_x_path_delete

@@ -3,7 +3,7 @@ import os.path, unittest
 from scrapy.exceptions import CloseSpider
 from scraper.models import Event
 from scraper.scraper_test import EventChecker, ScraperTest
-from dynamic_scraper.models import SchedulerRuntime, Log
+from dynamic_scraper.models import Checker, Log, SchedulerRuntime
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -13,11 +13,14 @@ class CheckerRunTest(ScraperTest):
     def setUp(self):
         super(CheckerRunTest, self).setUp()
         
-        self.scraper.checker_type = 'X'
-        self.scraper.checker_x_path = u'//div[@class="event_not_found"]/div/text()'
-        self.scraper.checker_x_path_result = u'Event was deleted!'
-        self.scraper.checker_ref_url = u'http://localhost:8010/static/site_for_checker/event_not_found.html'
-        self.scraper.save()
+        self.checker = Checker()
+        self.checker.scraped_obj_attr = self.soa_url
+        self.checker.scraper = self.scraper
+        self.checker.checker_type = 'X'
+        self.checker.checker_x_path = u'//div[@class="event_not_found"]/div/text()'
+        self.checker.checker_x_path_result = u'Event was deleted!'
+        self.checker.checker_ref_url = u'http://localhost:8010/static/site_for_checker/event_not_found.html'
+        self.checker.save()
         
         scheduler_rt = SchedulerRuntime()
         scheduler_rt.save()
@@ -29,13 +32,12 @@ class CheckerRunTest(ScraperTest):
         self.event.save()
     
     
-    def test_none_type(self):
-        self.scraper.checker_type = 'N'
-        self.scraper.save()
+    def test_no_checker(self):
+        self.checker.delete()
         self.assertRaises(CloseSpider, self.run_event_checker, 1)
     
     
-    def test_x_path_type_keep_video(self):
+    def test_x_path_type_keep(self):
         self.event.url = 'http://localhost:8010/static/site_for_checker/event1.html'
         self.event.save()
         
@@ -43,7 +45,7 @@ class CheckerRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.all()), 1)
     
     
-    def test_x_path_type_blank_result_field_keep_video(self):
+    def test_x_path_type_blank_result_field_keep(self):
         self.scraper.checker_x_path_result = ''
         self.event.url = 'http://localhost:8010/static/site_for_checker/event1.html'
         self.event.save()
@@ -157,8 +159,8 @@ class CheckerRunTest(ScraperTest):
 
     
     def test_404_type_404_delete(self):
-        self.scraper.checker_type = '4'
-        self.scraper.save()
+        self.checker.checker_type = '4'
+        self.checker.save()
         self.event.url = 'http://localhost:8010/static/site_for_checker/event_which_is_not_there.html'
         self.event.save()
         
@@ -167,8 +169,8 @@ class CheckerRunTest(ScraperTest):
     
     
     def test_404_type_x_path_delete(self):
-        self.scraper.checker_type = '4'
-        self.scraper.save()
+        self.checker.checker_type = '4'
+        self.checker.save()
         
         self.run_event_checker(1)
         self.assertEqual(len(Event.objects.all()), 1)
@@ -176,8 +178,8 @@ class CheckerRunTest(ScraperTest):
 
     @unittest.skip("Skipped, CloseSpider can't be catched from within test env, other option: direct access to Scrapy log strings.")
     def test_checker_test_wrong_checker_config(self):
-        self.scraper.checker_ref_url = ''
-        self.scraper.save()
+        self.checker.checker_ref_url = ''
+        self.checker.save()
         
         self.assertRaises(CloseSpider, self.run_checker_test(1))
 

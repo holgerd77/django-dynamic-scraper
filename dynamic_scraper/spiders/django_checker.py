@@ -25,7 +25,6 @@ class DjangoChecker(DjangoBaseSpider):
         self._set_request_kwargs()
         self._set_meta_splash_args()
         
-        self.start_urls.append(self.scrape_url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.checker_scheduler_conf)
         dispatcher.connect(self.response_received, signal=signals.response_received)
         
@@ -39,18 +38,17 @@ class DjangoChecker(DjangoBaseSpider):
 
 
     def _check_checker_config(self):
-        if self.scraper.checker_type == 'N':
-            msg = 'No checker defined for scraper!'
+        if self.scraper.checker_set.count() == 0:
+            msg = 'No checkers defined for scraper!'
             log.msg(msg, log.WARNING)
-            raise CloseSpider(msg)
-
-        if self.scraper.get_detail_page_url_id_elems().count() != 1:
-            msg = 'Checkers can only be used for scraped object classed defined with a single DETAIL_PAGE_URL type id field!'
-            log.msg(msg, log.ERROR)
             raise CloseSpider(msg)
 
 
     def _del_ref_object(self):
+        if self.action_successful:
+            self.log("Item already deleted, skipping.", log.INFO)
+            return
+        
         from scrapy.utils.project import get_project_settings
         settings = get_project_settings()
         
@@ -91,16 +89,20 @@ class DjangoChecker(DjangoBaseSpider):
 
 
     def start_requests(self):
-        for url in self.start_urls:
-            url_elem = self.scraper.get_detail_page_url_id_elems()[0]
-            self.rpt = self.scraper.get_rpt_for_scraped_obj_attr(url_elem.scraped_obj_attr)
-            kwargs = self.dp_request_kwargs[self.rpt.page_type].copy()
+        for checker in self.scraper.checker_set.all():
+            url = getattr(self.ref_object, checker.scraped_obj_attr.name)
+            rpt = self.scraper.get_rpt_for_scraped_obj_attr(checker.scraped_obj_attr)
+            kwargs = self.dp_request_kwargs[rpt.page_type].copy()
+            if 'meta' not in kwargs:
+                kwargs['meta'] = {}
+            kwargs['meta']['checker'] = checker
+            kwargs['meta']['rpt'] = rpt
             self._set_meta_splash_args()
-
-            if self.rpt.request_type == 'R':
-                yield Request(url, callback=self.parse, method=self.rpt.method, dont_filter=self.rpt.dont_filter, **kwargs)
-            else:
-                yield FormRequest(url, callback=self.parse, method=self.rpt.method, formdata=self.dp_form_data[self.rpt.page_type], dont_filter=self.rpt.dont_filter, **kwargs)
+            if url:
+                if rpt.request_type == 'R':
+                    yield Request(url, callback=self.parse, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
+                else:
+                    yield FormRequest(url, callback=self.parse, method=rpt.method, formdata=self.dp_form_data[rpt.page_type], dont_filter=rpt.dont_filter, **kwargs)
 
 
     def response_received(self, **kwargs):
@@ -118,31 +120,33 @@ class DjangoChecker(DjangoBaseSpider):
 
     def parse(self, response):
         # x_path test
-        if self.scraper.checker_type == '4':
+        checker = response.request.meta['checker']
+        rpt = response.request.meta['rpt']
+        if checker.checker_type == '4':
             self.log("No 404. Item kept.", log.INFO)
             return
-        if self.rpt.content_type == 'J':
+        if rpt.content_type == 'J':
             json_resp = json.loads(response.body_as_unicode())
             try:
-                jsonpath_expr = parse(self.scraper.checker_x_path)
+                jsonpath_expr = parse(checker.checker_x_path)
             except JsonPathLexerError:
                 raise CloseSpider("Invalid checker JSONPath!")
             test_select = [match.value for match in jsonpath_expr.find(json_resp)]
             #self.log(unicode(test_select), log.INFO)
         else:
             try:
-                test_select = response.xpath(self.scraper.checker_x_path).extract()
+                test_select = response.xpath(checker.checker_x_path).extract()
             except ValueError:
                 self.log('Invalid checker XPath!', log.ERROR)
                 return
         
-        if len(test_select) > 0 and self.scraper.checker_x_path_result == '':
+        if len(test_select) > 0 and checker.checker_x_path_result == '':
             self.log("Elements for XPath found on page (no result string defined).", log.INFO)
             if self.conf['DO_ACTION']:
                 self._del_ref_object()
             return
-        elif len(test_select) > 0 and test_select[0] == self.scraper.checker_x_path_result:
-            self.log("XPath result string '" + self.scraper.checker_x_path_result + "' found on page.", log.INFO)
+        elif len(test_select) > 0 and test_select[0] == checker.checker_x_path_result:
+            self.log("XPath result string '" + checker.checker_x_path_result + "' found on page.", log.INFO)
             if self.conf['DO_ACTION']:
                 self._del_ref_object()
             return
