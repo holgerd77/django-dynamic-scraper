@@ -94,7 +94,7 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.8.3-beta** (Not yet released)
+**Changes in version 0.8.3-beta** (2015-10-01)
 
 * More flexible checker concept now being an own ``Checker`` model class and allowing for more than one checker for a
   single scraper. This allows checking for different URLs or xpath conditions.
