@@ -193,7 +193,7 @@ class RequestPageType(models.Model):
         ('POST', 'POST'),
     )
     page_type = models.CharField(max_length=3, choices=TYPE_CHOICES)
-    scraped_obj_attr = models.ForeignKey(ScrapedObjAttr, blank=True, null=True, help_text="Empty for main page, attribute of type URL scraped from main page for detail pages.")
+    scraped_obj_attr = models.ForeignKey(ScrapedObjAttr, blank=True, null=True, help_text="Empty for main page, attribute of type DETAIL_PAGE_URL scraped from main page for detail pages.")
     scraper = models.ForeignKey(Scraper)
     content_type = models.CharField(max_length=1, choices=CONTENT_TYPE_CHOICES, default='H', help_text="Data type format for scraped pages of page type (for JSON use JSONPath instead of XPath)")
     render_javascript = models.BooleanField(default=False, help_text="Render Javascript on pages (ScrapyJS/Splash deployment needed, careful: resource intense)")
@@ -205,10 +205,25 @@ class RequestPageType(models.Model):
     meta = models.TextField(blank=True, help_text="Optional Scrapy meta attributes as JSON dict (use double quotes!), see Scrapy docs for reference.")
     form_data = models.TextField(blank=True, help_text="Optional HTML form data as JSON dict (use double quotes!), only used with FormRequest request type, can use {page} placeholder of pagination.")
     dont_filter = models.BooleanField(default=False, help_text="Do not filter duplicate requests, useful for some scenarios with requests falsely marked as being duplicate (e.g. uniform URL + pagination by HTTP header).")
+    comments = models.TextField(blank=True)
 
     def __unicode__(self):
         return self.get_page_type_display()
 
+
+class Checker(models.Model):
+    CHECKER_TYPE = (
+        ('4', '404'),
+        ('X', '404_OR_X_PATH'),
+    )
+    scraped_obj_attr = models.ForeignKey(ScrapedObjAttr, help_text="Attribute of type DETAIL_PAGE_URL, several checkers for same DETAIL_PAGE_URL attribute possible.")
+    scraper = models.ForeignKey(Scraper)
+    checker_type = models.CharField(max_length=1, choices=CHECKER_TYPE, default='4')
+    checker_x_path = models.CharField(max_length=200, blank=True)
+    checker_x_path_result = models.CharField(max_length=200, blank=True)
+    checker_ref_url = models.URLField(max_length=500, blank=True)
+    comments = models.TextField(blank=True)
+    
 
 class ScraperElem(models.Model):
     REQUEST_PAGE_TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP%d" % n, "Detail Page %d" % n) for n in range(1, 26)])

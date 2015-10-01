@@ -16,6 +16,7 @@ of the features of Scrapy it lets you dynamically create and manage spiders via 
    * ``Javascript`` rendering
    * Scraping ``JSON`` content
    * More flexible ID and detail page URL(s) concept
+   * Several checkers for a single scraper
    * Custom ``HTTP Header/Body``, ``Cookies``, ``GET/POST`` requests
    * ``Scrapy Meta`` attributes
 

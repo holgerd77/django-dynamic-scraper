@@ -96,7 +96,10 @@ Release Notes
 =============
 **Changes in version 0.8.3-beta** (Not yet released)
 
-* TODO
+* More flexible checker concept now being an own ``Checker`` model class and allowing for more than one checker for a
+  single scraper. This allows checking for different URLs or xpath conditions.
+* Additional comment fields for ``RequestPageTypes`` and ``Checkers`` in admin for own notes
+* New migrations ``0011``, ``0012``, run Django ``migrate`` command
 
 **Changes in version 0.8.2-beta** (2015-09-24)
 
@@ -130,7 +133,7 @@ Release Notes
 * Unit tests for new functionality
 * Partly restructured documentation, separate :ref:`installation` section
 * Newly added ``static`` files, run Django ``collectstatic`` command (collaps/expand for ``RequestPageType`` inline admin form)
-* New migrations ``0008``, ``0009``, ``0010``, run Django ``migration`` command
+* New migrations ``0008``, ``0009``, ``0010``, run Django ``migrate`` command
 
 **Changes in version 0.7.3-beta** (2015-08-10)
 
@@ -139,7 +142,7 @@ Release Notes
   URLs together with custom HTTP header pagination)
 * Fixed bug preventing processing of ``JSON`` with non-string data types (e.g. ``Number``) for scraped attributes,
   values are now automatically converted to ``String``
-* New migration ``0007``, run Django ``migration`` command
+* New migration ``0007``, run Django ``migrate`` command
 
 **Changes in version 0.7.2-beta** (2015-08-06)
 
@@ -150,7 +153,7 @@ Release Notes
 * Allowing ``pagination`` for ``headers``, ``body`` attributes
 * Allowing of ``ScrapedObjectClass`` definitions in ``Django admin`` with no attributes defined as ``ID field``
   (omits double checking process when used)
-* New migration ``0006``, run Django ``migration`` command
+* New migration ``0006``, run Django ``migrate`` command
 
 **Changes in version 0.7.1-beta** (2015-08-03)
 
@@ -165,7 +168,7 @@ Release Notes
 * Passing Scraper specific Scrapy meta data
 * Support for form requests, passing form data within requests
 * Pagination support for cookies, form data
-* New migration ``0005``, run Django ``migration`` command
+* New migration ``0005``, run Django ``migrate`` command
 * All changes visible in Scraper form of Django admin
 * ATTENTION! While unit tests for existing functionality all passing through, new functionality is not heavily
   tested yet due to problems in creating test scenarios. If you want to use the new functionality in a production 
@@ -178,7 +181,7 @@ Release Notes
 * Replaced implicit and static ID concept of mandatory ``DETAIL_PAGE_URL`` type attribute serving as ID with a more
   flexible concept of explicitly setting ``ID Fields`` for ``ScrapedObjClass`` in ``Django`` admin 
   (see: :ref:`defining_scraped_object_class`)
-* New attribute ``id_field`` for ``ScrapedObjClass``, please run Django ``migration`` command (migration ``0004``)
+* New attribute ``id_field`` for ``ScrapedObjClass``, please run Django ``migrate`` command (migration ``0004``)
 * ``DETAIL_PAGE_URL`` type attribute not necessary any more when defining the scraped object class allowing for more
   scraping use cases (classic and simple/flat datasets not referencing a certain detail page)
 * Single ``DETAIL_PAGE_URL`` type ``ID Field`` still necessary for using ``DDS`` checker functionality
