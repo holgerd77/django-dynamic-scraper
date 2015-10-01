@@ -31,6 +31,16 @@ class CheckerRunTest(ScraperTest):
             checker_runtime=scheduler_rt)
         self.event.save()
     
+    def setUpWithSecondChecker(self):
+        self.checker2 = Checker()
+        self.checker2.scraped_obj_attr = self.soa_url
+        self.checker2.scraper = self.scraper
+        self.checker2.checker_type = 'X'
+        self.checker2.checker_x_path = u'//div[@class="event_not_found"]/div/text()'
+        self.checker2.checker_x_path_result = u'Event was deleted!'
+        self.checker2.checker_ref_url = u'http://localhost:8010/static/site_for_checker/event_not_found.html'
+        self.checker2.save()
+        
     
     def test_no_checker(self):
         self.checker.delete()
@@ -38,6 +48,15 @@ class CheckerRunTest(ScraperTest):
     
     
     def test_x_path_type_keep(self):
+        self.event.url = 'http://localhost:8010/static/site_for_checker/event1.html'
+        self.event.save()
+        
+        self.run_event_checker(1)
+        self.assertEqual(len(Event.objects.all()), 1)
+    
+    
+    def test_x_path_type_keep_double(self):
+        self.setUpWithSecondChecker()
         self.event.url = 'http://localhost:8010/static/site_for_checker/event1.html'
         self.event.save()
         
@@ -82,7 +101,6 @@ class CheckerRunTest(ScraperTest):
         
     
     def test_x_path_type_x_path_delete(self):
-        
         self.event.url = 'http://localhost:8010/static/site_for_checker/event2.html'
         self.event.save()
         
@@ -90,6 +108,25 @@ class CheckerRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.all()), 0)
     
     
+    def test_x_path_type_x_path_first_delete_double(self):
+        self.setUpWithSecondChecker()
+        self.event.url = 'http://localhost:8010/static/site_for_checker/event2.html'
+        self.event.save()
+        
+        self.run_event_checker(1)
+        self.assertEqual(len(Event.objects.all()), 0)
+    
+    
+    def test_x_path_type_x_path_second_delete_double(self):
+        self.setUpWithSecondChecker()
+        self.checker.checker_x_path = u'//div[@class="oh_my_wrong_xpath_for_delete"]/div/text()'
+        self.checker.save()
+        self.event.url = 'http://localhost:8010/static/site_for_checker/event2.html'
+        self.event.save()
+        
+        self.run_event_checker(1)
+        self.assertEqual(len(Event.objects.all()), 0)
+        
     def test_x_path_type_blank_result_field_x_path_delete(self):
         self.scraper.checker_x_path_result = ''
         self.event.url = 'http://localhost:8010/static/site_for_checker/event2.html'

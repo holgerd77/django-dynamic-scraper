@@ -99,6 +99,11 @@ Release Notes
 * More flexible checker concept now being an own ``Checker`` model class and allowing for more than one checker for a
   single scraper. This allows checking for different URLs or xpath conditions.
 * Additional comment fields for ``RequestPageTypes`` and ``Checkers`` in admin for own notes
+* Adopted unit tests to reflect new checker structure
+* ``self.scrape_url = self.ref_object.url`` assignment in checker python class not used any more 
+  (see: :ref:`creating_checker_class`), you might directly want to remove this from your project class
+  definition to avoid future confusion
+* Some docs rewriting for Checker creation (see: :ref:`item_checkers`)
 * New migrations ``0011``, ``0012``, run Django ``migrate`` command
 
 **Changes in version 0.8.2-beta** (2015-09-24)

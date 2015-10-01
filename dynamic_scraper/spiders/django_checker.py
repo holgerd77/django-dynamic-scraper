@@ -16,6 +16,7 @@ from dynamic_scraper.utils.scheduler import Scheduler
 class DjangoChecker(DjangoBaseSpider):
     
     name = "django_checker"
+    mandatory_vars = ['ref_object', 'scraper',]
 
 
     def __init__(self, *args, **kwargs):
@@ -100,21 +101,23 @@ class DjangoChecker(DjangoBaseSpider):
             self._set_meta_splash_args()
             if url:
                 if rpt.request_type == 'R':
-                    yield Request(url, callback=self.parse, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
+                    yield Request(url, callback=self.parse, method=rpt.method, dont_filter=True, **kwargs)
                 else:
-                    yield FormRequest(url, callback=self.parse, method=rpt.method, formdata=self.dp_form_data[rpt.page_type], dont_filter=rpt.dont_filter, **kwargs)
+                    yield FormRequest(url, callback=self.parse, method=rpt.method, formdata=self.dp_form_data[rpt.page_type], dont_filter=True, **kwargs)
 
 
     def response_received(self, **kwargs):
+        checker = kwargs['response'].request.meta['checker']
+        rpt = kwargs['response'].request.meta['rpt']
         # 404 test
         if kwargs['response'].status == 404:
             
             if self.scheduler_runtime.num_zero_actions == 0:
-                self.log("Checker test returned second 404.", log.INFO)
+                self.log("Checker test returned second 404 (%s). Delete reason." % unicode(checker), log.INFO)
                 if self.conf['DO_ACTION']:
                     self._del_ref_object()
             else:
-                self.log("Checker test returned first 404.", log.INFO)
+                self.log("Checker test returned first 404 (%s)." % unicode(checker), log.INFO)
                 self.action_successful = True
 
 
@@ -123,33 +126,33 @@ class DjangoChecker(DjangoBaseSpider):
         checker = response.request.meta['checker']
         rpt = response.request.meta['rpt']
         if checker.checker_type == '4':
-            self.log("No 404. Item kept.", log.INFO)
+            self.log("No 404 (%s)." % unicode(checker), log.INFO)
             return
         if rpt.content_type == 'J':
             json_resp = json.loads(response.body_as_unicode())
             try:
                 jsonpath_expr = parse(checker.checker_x_path)
             except JsonPathLexerError:
-                raise CloseSpider("Invalid checker JSONPath!")
+                raise CloseSpider("Invalid checker JSONPath (%s)!" % unicode(checker))
             test_select = [match.value for match in jsonpath_expr.find(json_resp)]
             #self.log(unicode(test_select), log.INFO)
         else:
             try:
                 test_select = response.xpath(checker.checker_x_path).extract()
             except ValueError:
-                self.log('Invalid checker XPath!', log.ERROR)
+                self.log("Invalid checker XPath (%s)!" % unicode(checker), log.ERROR)
                 return
         
         if len(test_select) > 0 and checker.checker_x_path_result == '':
-            self.log("Elements for XPath found on page (no result string defined).", log.INFO)
+            self.log("Elements for XPath found on page (no result string defined) (%s). Delete reason." % unicode(checker), log.INFO)
             if self.conf['DO_ACTION']:
                 self._del_ref_object()
             return
         elif len(test_select) > 0 and test_select[0] == checker.checker_x_path_result:
-            self.log("XPath result string '" + checker.checker_x_path_result + "' found on page.", log.INFO)
+            self.log("XPath result string '%s' found on page (%s). Delete reason." % (checker.checker_x_path_result, unicode(checker)), log.INFO)
             if self.conf['DO_ACTION']:
                 self._del_ref_object()
             return
         else:
-            self.log("XPath result string not found. Item kept.", log.INFO)
+            self.log("XPath result string not found (%s)." % unicode(checker), log.INFO)
             return

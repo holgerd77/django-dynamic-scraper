@@ -10,15 +10,13 @@ Defining item checkers
 ======================
 
 Django Dynamic Scraper comes with a built-in mechanism to check, if items once scraped are still existing
-or if they could be deleted from the database. The entity providing this mechanism in DDS is called an 
-item checker. An item checker is like a scraper also using the scraping logic from Scrapy. But instead of
-building together a new scraped item, it just checks the detail page referenced by the url of a scraped item.
-Depending on the ``checker_type`` and the result of the detail page check, the scraped item is kept or
-will be deleted from the DB.
+or if they could be deleted from the database. The entity providing this mechanism in DDS is called a 
+``checker``. A ``checker`` is like a scraper also using the scraping logic from Scrapy. But instead of
+building together a new scraped item, it just checks the detail page referenced by a ``DETAIL_PAGE_URL`` 
+of a scraped item. Depending on the ``checker_type`` and the result of the detail page check, the scraped 
+item is kept or will be deleted from the DB.
 
-.. note::
-   Checker functionality of DDS only works for scraped object classes with a single ``DETAIL_PAGE_URL`` type
-   ``ID field`` (see: :ref:`defining_scraped_object_class`).
+.. _creating_checker_class:
 
 Creating a checker class
 ------------------------
@@ -37,30 +35,30 @@ in our ``scraper`` directory::
 	    def __init__(self, *args, **kwargs):
 	        self._set_ref_object(Article, **kwargs)
 	        self.scraper = self.ref_object.news_website.scraper
-	        self.scrape_url = self.ref_object.url
+	        #self.scrape_url = self.ref_object.url (Not used any more in DDS v.0.8.3+)
 	        self.scheduler_runtime = self.ref_object.checker_runtime
 	        super(ArticleChecker, self).__init__(self, *args, **kwargs)
 
 The checker class inherits from the :ref:`django_checker` class from DDS and mainly gives the checker the
 information what to check and what parameters to use for checking. Be careful that the reference object
-is now the scraped object itself, since the checker is scraping from the item page url of this object. The
-url field to check is set with ``self.scrape_url = self.ref_object.url``. Furthermore the checker needs its
-configuration data from the scraper of the reference object. The scheduler runtime is used to schedule the
-next check. So if you want to use checkers for your scraped object, you have to provide a foreign key to 
-a :ref:`scheduler_runtime` object in your model class. The scheduler runtime object also has to be saved
-manually in your pipeline class (see: :ref:`adding_pipeline_class`).
+is now the scraped object itself, since the checker is scraping from the item page url of this object.
+Furthermore the checker needs its configuration data from the scraper of the reference object. The scheduler
+runtime is used to schedule the next check. So if you want to use checkers for your scraped object, you have 
+to provide a foreign key to a :ref:`scheduler_runtime` object in your model class. The scheduler runtime object
+also has to be saved manually in your pipeline class (see: :ref:`adding_pipeline_class`).
 
-Select checker type/set check parameters
-----------------------------------------
+Checker Configuration
+---------------------
+You can create one or more checkers per scraper in the ``Django admin``. A checker is connected to a
+``DETAIL_PAGE_URL`` attribute and has a certain type, defining the checker behaviour. If you define
+more than one checker for a scraper an item is deleted when one of the checkers succeed.
+
 There are momentarily the following checker types to choose from:
 
 ================= =========================================================================
 ``404``           Item is deleted after check has returned 404 HTTP status code 2x in a row
 ``404_OR_X_PATH`` Same as 404 + check for an x_path value in the result
 ================= =========================================================================
-
-The checker type and the x_path parameters when choosing ``404_OR_X_PATH`` as checker type 
-are defined in the Django admin forms of the different scrapers:
 
 .. image:: images/screenshot_django-admin_checker_params.png
 

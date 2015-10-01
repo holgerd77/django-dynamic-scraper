@@ -9,6 +9,7 @@ from dynamic_scraper.models import Scraper
 class CheckerTest(DjangoBaseSpider):
     
     name = 'checker_test'
+    mandatory_vars = ['ref_object', 'scraper',]
     
     command = 'scrapy crawl checker_test -a id=SCRAPER_ID'
     
@@ -17,32 +18,27 @@ class CheckerTest(DjangoBaseSpider):
         self.scraper = self.ref_object
         self._set_config(**kwargs)
         
-        if self.scraper.checker_type == 'N':
-            msg = "No checker defined for scraper!"
+        if self.scraper.checker_set.count() == 0:
+            msg = "No checkers defined for scraper!"
             log.msg(msg, log.ERROR)
             raise CloseSpider(msg)
         
-        if self.scraper.get_detail_page_url_id_elems().count() != 1:
-            msg = 'Checkers can only be used for scraped object classed defined with a single DETAIL_PAGE_URL type id field!'
-            log.msg(msg, log.ERROR)
-            raise CloseSpider(msg)
-        
-        if self.scraper.checker_type == '4':
-            if not self.scraper.checker_ref_url:
-                msg = "Please provide a reference url for your 404 checker (Command: %s)." % (self.command)
-                log.msg(msg, log.ERROR)
-                raise CloseSpider(msg)
-        
-        if self.scraper.checker_type == 'X':
-            if not self.scraper.checker_x_path or not self.scraper.checker_ref_url:
-                msg = "Please provide the necessary x_path fields for your 404_OR_X_PATH checker (Command: %s)." % (self.command)
-                log.msg(msg, log.ERROR)
-                raise CloseSpider(msg)
+        for checker in self.scraper.checker_set.all():
+            if checker.checker_type == '4':
+                if not checker.checker_ref_url:
+                    msg = "Please provide a reference url for your checker (%s) (Command: %s)." % (unicode(checker), self.command)
+                    log.msg(msg, log.ERROR)
+                    raise CloseSpider(msg)
+            
+            if checker.checker_type == 'X':
+                if not checker.checker_x_path or not checker.checker_ref_url:
+                    msg = "Please provide the necessary x_path fields for your checker (%s) (Command: %s)." % (unicode(checker), self.command)
+                    log.msg(msg, log.ERROR)
+                    raise CloseSpider(msg)
 
         self._set_request_kwargs()
         self._set_meta_splash_args()
         
-        self.start_urls.append(self.scraper.checker_ref_url)
         dispatcher.connect(self.response_received, signal=signals.response_received)
     
     
@@ -56,46 +52,56 @@ class CheckerTest(DjangoBaseSpider):
     
     
     def start_requests(self):
-        for url in self.start_urls:
-            url_elem = self.scraper.get_detail_page_url_id_elems()[0]
-            self.rpt = self.scraper.get_rpt_for_scraped_obj_attr(url_elem.scraped_obj_attr)
-            kwargs = self.dp_request_kwargs[self.rpt.page_type].copy()
+        for checker in self.scraper.checker_set.all():
+            url = checker.checker_ref_url
+            rpt = self.scraper.get_rpt_for_scraped_obj_attr(checker.scraped_obj_attr)
+            kwargs = self.dp_request_kwargs[rpt.page_type].copy()
+            if 'meta' not in kwargs:
+                kwargs['meta'] = {}
+            kwargs['meta']['checker'] = checker
+            kwargs['meta']['rpt'] = rpt
             self._set_meta_splash_args()
-
-            if self.rpt.request_type == 'R':
-                yield Request(url, callback=self.parse, method=self.rpt.method, dont_filter=self.rpt.dont_filter, **kwargs)
-            else:
-                yield FormRequest(url, callback=self.parse, method=self.rpt.method, formdata=self.dp_form_data[self.rpt.page_type], dont_filter=self.rpt.dont_filter, **kwargs)
+            if url:
+                if rpt.request_type == 'R':
+                    yield Request(url, callback=self.parse, method=rpt.method, dont_filter=True, **kwargs)
+                else:
+                    yield FormRequest(url, callback=self.parse, method=rpt.method, formdata=self.dp_form_data[rpt.page_type], dont_filter=True, **kwargs)
 
 
     def response_received(self, **kwargs):
+        checker = kwargs['response'].request.meta['checker']
+        rpt = kwargs['response'].request.meta['rpt']
         if kwargs['response'].status == 404:
-            if self.scraper.checker_type == '4':
-                self.log("Checker configuration working (ref url request returning 404).", log.INFO)
-            if self.scraper.checker_type == 'X':
-                self.log('A request of your ref url is returning 404. Your x_path can not be applied!', log.WARNING)
+            if checker.checker_type == '4':
+                self.log("Checker configuration working (ref url request returning 404) (%s)." % unicode(checker), log.INFO)
+            if checker.checker_type == 'X':
+                self.log('A request of your checker ref url is returning 404. Your x_path can not be applied (%s)!' % unicode(checker), log.WARNING)
         else:
-            if self.scraper.checker_type == '4':
-                self.log('Ref url request not returning 404!', log.WARNING)
+            if checker.checker_type == '4':
+                self.log('Checker ref url request not returning 404 (%s)!' % unicode(checker), log.WARNING)
+    
     
     def parse(self, response):        
-        if self.scraper.checker_type == '4':
+        checker = response.request.meta['checker']
+        rpt = response.request.meta['rpt']
+        
+        if checker.checker_type == '4':
             return
-
+        
         try:
-            test_select = response.xpath(self.scraper.checker_x_path).extract()
+            test_select = response.xpath(checker.checker_x_path).extract()
         except ValueError:
-            self.log('Invalid checker x_path!', log.ERROR)
+            self.log('Invalid x_path (%s)!' % unicode(checker), log.ERROR)
             return
         if len(test_select) == 0:
-            self.log("Checker configuration not working (no elements found for xpath on reference url page)!", log.ERROR)
+            self.log("Checker configuration not working (no elements found for xpath on reference url page) (%s)!" % unicode(checker), log.ERROR)
         else:
-            if self.scraper.checker_x_path_result == '':
-                self.log("Checker configuration working (elements for x_path found on reference url page (no x_path result defined)).", log.INFO)
+            if checker.checker_x_path_result == '':
+                self.log("Checker configuration working (elements for x_path found on reference url page (no x_path result defined)) (%s)." % unicode(checker), log.INFO)
             else:
-                if test_select[0] != self.scraper.checker_x_path_result:
-                    self.log("Checker configuration not working (expected x_path result not found on reference url page)!", log.ERROR)
+                if test_select[0] != checker.checker_x_path_result:
+                    self.log("Checker configuration not working (expected x_path result not found on reference url page) (%s)!" % unicode(checker), log.ERROR)
                 else:
-                    self.log("Checker configuration working (expected x_path result found on reference url page).", log.INFO)
+                    self.log("Checker configuration working (expected x_path result found on reference url page) (%s)." % unicode(checker), log.INFO)
                 
         
