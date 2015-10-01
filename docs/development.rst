@@ -94,6 +94,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.8.3-beta** (Not yet released)
+
+* TODO
+
 **Changes in version 0.8.2-beta** (2015-09-24)
 
 * Fixed bug preventing checker tests to work
