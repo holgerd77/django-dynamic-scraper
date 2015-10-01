@@ -112,7 +112,8 @@ class ScraperElemInline(admin.TabularInline):
 class ScraperAdmin(admin.ModelAdmin):
     class Media:
         js = ("js/admin_custom.js",)
-    list_display = ('id', 'name', 'scraped_obj_class', 'status', 'max_items_read', 'max_items_save', 'pagination_type',)
+    list_display = ('id', 'name', 'scraped_obj_class', 'status', 'max_items_read', 'max_items_save', \
+        'pagination_type', 'rpts', 'checkers',)
     list_display_links = ('name',)
     list_editable = ('status',)
     list_filter = ('scraped_obj_class', 'status', 'pagination_type',)
@@ -138,6 +139,17 @@ class ScraperAdmin(admin.ModelAdmin):
             'fields': ('comments',)
         }),
     )
+    
+    def rpts(self, obj):
+        return unicode(obj.requestpagetype_set.count())
+    
+    def checkers(self, obj):
+        cnt = obj.checker_set.count()
+        if cnt > 0:
+            return unicode(cnt)
+        else:
+            return ""
+    
     actions = ['clone_scrapers',]
     
     def clone_scrapers(self, request, queryset):
