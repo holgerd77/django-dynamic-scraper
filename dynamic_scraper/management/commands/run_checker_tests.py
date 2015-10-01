@@ -31,6 +31,7 @@ class Command(BaseCommand):
     
     
     def handle(self, *args, **options):
+        '''
         if options.get('only_active'):
             scraper_list = Scraper.objects.filter(
                 checker_x_path__isnull=False, 
@@ -42,30 +43,32 @@ class Command(BaseCommand):
                 checker_x_path__isnull=False, 
                 checker_ref_url__isnull=False
             )
+        '''
         mail_to_admins = False
         msg = ''
-        for scraper in scraper_list:
-            scraper_str  = unicode(scraper) + " "
-            scraper_str += "(ID:" + unicode(scraper.pk) + ", Status: " + scraper.get_status_display() + ")"
-            print "Run checker test for scraper %s..." % scraper_str
-            
-            cmd  = 'scrapy crawl checker_test '
-            if options.get('report_only_errors'):
-                cmd += '-L ERROR '
-            else:
-                cmd += '-L WARNING '
-            cmd += '-a id=' + str(scraper.pk)
-            
-            p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
-            stderr = p.communicate()[1]
-            
-            if stderr != '':
-                print stderr
-                msg += 'Checker test for scraper %s failed:\n' % scraper_str
-                msg += stderr + '\n\n'
-                mail_to_admins = True
-            else:
-                print "Checker configuration working."
+        for scraper in Scraper.objects.all():
+            if not (options.get('only_active') and scraper.status != 'A') and scraper.checker_set.count() > 0:
+                scraper_str  = unicode(scraper) + " "
+                scraper_str += "(ID:" + unicode(scraper.pk) + ", Status: " + scraper.get_status_display() + ")"
+                print "Run checker test for scraper %s..." % scraper_str
+                
+                cmd  = 'scrapy crawl checker_test '
+                if options.get('report_only_errors'):
+                    cmd += '-L ERROR '
+                else:
+                    cmd += '-L WARNING '
+                cmd += '-a id=' + str(scraper.pk)
+                
+                p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
+                stderr = p.communicate()[1]
+                
+                if stderr != '':
+                    print stderr
+                    msg += 'Checker test for scraper %s failed:\n' % scraper_str
+                    msg += stderr + '\n\n'
+                    mail_to_admins = True
+                else:
+                    print "Checker configuration working."
         
         if options.get('send_admin_mail') and mail_to_admins:
             print "Send mail to admins..."
