@@ -112,10 +112,10 @@ class ScraperElemInline(admin.TabularInline):
 class ScraperAdmin(admin.ModelAdmin):
     class Media:
         js = ("js/admin_custom.js",)
-    list_display = ('id', 'name', 'scraped_obj_class', 'status', 'max_items_read', 'max_items_save', 'pagination_type', 'checker_type',)
+    list_display = ('id', 'name', 'scraped_obj_class', 'status', 'max_items_read', 'max_items_save', 'pagination_type',)
     list_display_links = ('name',)
     list_editable = ('status',)
-    list_filter = ('scraped_obj_class', 'status', 'pagination_type', 'checker_type',)
+    list_filter = ('scraped_obj_class', 'status', 'pagination_type',)
     search_fields = ['name']
     inlines = [
         RequestPageTypeInline,
@@ -133,13 +133,6 @@ class ScraperAdmin(admin.ModelAdmin):
         ('Pagination options', {
             'classes': ('collapse',),
             'fields': ('pagination_on_start', 'pagination_append_str', 'pagination_page_replace')
-        }),
-        (None, {
-            'fields': ('checker_type',)
-        }),
-        ('Checker options', {
-            'classes': ('collapse',),
-            'fields': ('checker_x_path', 'checker_x_path_result', 'checker_ref_url')
         }),
         (None, {
             'fields': ('comments',)

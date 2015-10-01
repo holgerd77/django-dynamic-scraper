@@ -73,11 +73,6 @@ class Scraper(models.Model):
         ('R', 'RANGE_FUNCT'),
         ('F', 'FREE_LIST'),
     )
-    CHECKER_TYPE = (
-        ('N', 'NONE'),
-        ('4', '404'),
-        ('X', '404_OR_X_PATH'),
-    )
     name = models.CharField(max_length=200)
     scraped_obj_class = models.ForeignKey(ScrapedObjClass)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
@@ -99,10 +94,6 @@ class Scraper(models.Model):
     pagination_append_str = models.CharField(max_length=200, blank=True, help_text="Syntax: /somepartofurl/{page}/moreurlstuff.html")
     pagination_page_replace = models.TextField(blank=True, 
         help_text="RANGE_FUNCT: uses Python range funct., syntax: [start], stop[, step], FREE_LIST: 'Replace text 1', 'Some other text 2', 'Maybe a number 3', ...")
-    checker_type = models.CharField(max_length=1, choices=CHECKER_TYPE, default='N')
-    checker_x_path = models.CharField(max_length=200, blank=True)
-    checker_x_path_result = models.CharField(max_length=200, blank=True)
-    checker_ref_url = models.URLField(max_length=500, blank=True)
     comments = models.TextField(blank=True)
     
     def get_main_page_rpt(self):

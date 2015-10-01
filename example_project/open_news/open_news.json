@@ -68,16 +68,12 @@
     "fields": {
         "status": "A",
         "pagination_page_replace": "",
-        "checker_ref_url": "http://en.wikinews.org/wiki/This_wiki_article_doesnt_exist",
-        "checker_x_path_result": "",
         "name": "Wikinews Scraper",
         "max_items_save": null,
-        "checker_x_path": "",
         "pagination_append_str": "",
         "max_items_read": null,
         "pagination_on_start": false,
         "pagination_type": "N",
-        "checker_type": "4",
         "comments": "",
         "scraped_obj_class": 1
     },
@@ -88,16 +84,12 @@
     "fields": {
         "status": "A",
         "pagination_page_replace": "",
-        "checker_ref_url": "",
-        "checker_x_path_result": "",
         "name": "US Department of Justice - Press Release Scraper",
         "max_items_save": null,
-        "checker_x_path": "",
         "pagination_append_str": "",
         "max_items_read": 10,
         "pagination_on_start": false,
         "pagination_type": "N",
-        "checker_type": "N",
         "comments": "",
         "scraped_obj_class": 1
     },
