@@ -6,10 +6,11 @@ from django.db import models, migrations
 
 def create_default_checker_objects(apps, schema_editor):
     Scraper = apps.get_model("dynamic_scraper", "Scraper")
+    Checker = apps.get_model("dynamic_scraper", "Checker")
     for s in Scraper.objects.all():
         url_elem = None
-        url_id_elems = s.get_detail_page_url_id_elems()
-        url_elems = s.get_detail_page_url_elems()
+        url_id_elems = s.scraperelem_set.filter(scraped_obj_attr__attr_type='U', scraped_obj_attr__id_field=True)
+        url_elems = s.scraperelem_set.filter(scraped_obj_attr__attr_type='U')
         if url_id_elems.count() > 0:
             url_elem = url_id_elems[0]
         elif url_elems.count() > 0:

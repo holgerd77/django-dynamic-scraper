@@ -208,7 +208,10 @@ class RequestPageType(models.Model):
     comments = models.TextField(blank=True)
 
     def __unicode__(self):
-        return self.get_page_type_display()
+        ret_str = self.get_page_type_display()
+        if self.scraped_obj_attr:
+            ret_str += ' (' + unicode(self.scraped_obj_attr) + ')'
+        return ret_str
 
 
 class Checker(models.Model):
@@ -223,6 +226,9 @@ class Checker(models.Model):
     checker_x_path_result = models.CharField(max_length=200, blank=True)
     checker_ref_url = models.URLField(max_length=500, blank=True)
     comments = models.TextField(blank=True)
+    
+    def __unicode__(self):
+        return  unicode(self.scraped_obj_attr) + ' > ' + self.get_checker_type_display()
     
 
 class ScraperElem(models.Model):

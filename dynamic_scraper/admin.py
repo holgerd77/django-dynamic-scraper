@@ -98,7 +98,11 @@ class RequestPageTypeFormSet(BaseInlineFormSet):
 class RequestPageTypeInline(admin.StackedInline):
     model = RequestPageType
     formset = RequestPageTypeFormSet
-    extra = 1
+    extra = 0
+
+class CheckerInline(admin.StackedInline):
+    model = Checker
+    extra = 0
 
 class ScraperElemInline(admin.TabularInline):
     model = ScraperElem
@@ -115,6 +119,7 @@ class ScraperAdmin(admin.ModelAdmin):
     search_fields = ['name']
     inlines = [
         RequestPageTypeInline,
+        CheckerInline,
         ScraperElemInline
     ]
     fieldsets = (
