@@ -112,6 +112,7 @@
         "dont_filter": false,
         "scraped_obj_attr": null,
         "scraper": 2,
+        "comments": "",
         "headers": "",
         "request_type": "R",
         "meta": "",
@@ -131,6 +132,7 @@
         "dont_filter": false,
         "scraped_obj_attr": 4,
         "scraper": 2,
+        "comments": "",
         "headers": "",
         "request_type": "R",
         "meta": "",
@@ -150,6 +152,7 @@
         "dont_filter": false,
         "scraped_obj_attr": null,
         "scraper": 1,
+        "comments": "",
         "headers": "",
         "request_type": "R",
         "meta": "",
@@ -169,6 +172,7 @@
         "dont_filter": false,
         "scraped_obj_attr": 4,
         "scraper": 1,
+        "comments": "",
         "headers": "",
         "request_type": "R",
         "meta": "",
@@ -179,6 +183,19 @@
     },
     "model": "dynamic_scraper.requestpagetype",
     "pk": 4
+},
+{
+    "fields": {
+        "checker_ref_url": "http://en.wikinews.org/wiki/This_wiki_article_doesnt_exist",
+        "checker_x_path_result": "",
+        "scraped_obj_attr": 4,
+        "checker_x_path": "",
+        "scraper": 1,
+        "comments": "",
+        "checker_type": "4"
+    },
+    "model": "dynamic_scraper.checker",
+    "pk": 1
 },
 {
     "fields": {
