@@ -19,6 +19,10 @@ class TaskUtils():
             'run_type': kwargs['run_type'],
             'do_action': kwargs['do_action']
         }
+        
+        # add priority of scrapy jobs
+        param_dict['priority'] = kwargs.get('priority', 0.0)
+        
         params = urllib.urlencode(param_dict)
         headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
         conn = httplib.HTTPConnection("localhost:6800")
