@@ -1,9 +1,12 @@
+#Stage 2 Update (Python 3)
+from __future__ import unicode_literals
+from builtins import str
 import datetime
 from scrapy import log
 
 
 def string_strip(text, loader_context):
-    if not (isinstance(text, str) or isinstance(text, unicode)):
+    if not isinstance(text, str):
         text = str(text)
     chars = loader_context.get('string_strip', ' \n\t\r')
     return text.strip(chars)
@@ -124,7 +127,7 @@ def duration(text, loader_context):
     if(cformat == '%S'):
         if text_int:
             if text_int >= 3600:
-                hours_str = str(text_int / 3600) + ':'
+                hours_str = str(text_int // 3600) + ':'
                 secs_under_hour_str = str(text_int % 3600)
                 text = hours_str + _breakdown_time_unit_overlap(secs_under_hour_str, 60)
                 cformat = '%H:%M:%S'
