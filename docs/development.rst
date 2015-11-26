@@ -94,6 +94,14 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.8.4-beta** (Not yet released!)
+
+Preparatory release for ``Python 3`` support (not there yet!)
+
+* New dependency on `Python-Future 0.15+ <http://python-future.org/>`_ to support integrated ``Python 2/3`` code base,
+  please install with ``pip install future``
+
+
 **Changes in version 0.8.3-beta** (2015-10-01)
 
 * More flexible checker concept now being an own ``Checker`` model class and allowing for more than one checker for a

@@ -3,5 +3,6 @@ Scrapy>=0.22,<0.25
 scrapyd
 jsonpath-rw>=1.4
 django-celery==3.1.16
+future>=0.15,<0.16
 pillow
 
