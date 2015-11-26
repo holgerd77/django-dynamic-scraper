@@ -1,7 +1,10 @@
+#Stage 2 Update (Python 3)
+from __future__ import division
+from builtins import object
 import ast, datetime
 from django.core.exceptions import ImproperlyConfigured
 
-class Scheduler():
+class Scheduler(object):
     
     
     def __init__(self, conf_dict_str):
