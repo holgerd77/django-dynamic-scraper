@@ -1,10 +1,11 @@
+from builtins import object
 import datetime, json
 import urllib, urllib2, httplib
 from scrapy.utils.project import get_project_settings
 settings = get_project_settings()
 from dynamic_scraper.models import Scraper
 
-class TaskUtils():
+class TaskUtils(object):
     
     conf = {
         "MAX_SPIDER_RUNS_PER_TASK": 10,
