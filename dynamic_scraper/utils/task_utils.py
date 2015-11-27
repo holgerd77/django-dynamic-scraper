@@ -64,12 +64,8 @@ class TaskUtils(object):
         for key in kwargs:
             filter_kwargs[key] = kwargs[key]
         
-        exclude_kwargs = {
-            '%s__checker_type' % scraper_field_path: 'N',
-        }
-        
         max = settings.get('DSCRAPER_MAX_CHECKER_RUNS_PER_TASK', self.conf['MAX_CHECKER_RUNS_PER_TASK'])
-        ref_obj_list = ref_obj_class.objects.filter(*args, **filter_kwargs).exclude(**exclude_kwargs).order_by('%s__next_action_time' % runtime_field_name)[:max]
+        ref_obj_list = ref_obj_class.objects.filter(*args, **filter_kwargs).order_by('%s__next_action_time' % runtime_field_name)[:max]
         if not self._pending_jobs(checker_name):
             for ref_object in ref_obj_list:
                 self._run_spider(id=ref_object.pk, spider=checker_name, run_type='TASK', do_action='yes')
