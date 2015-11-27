@@ -1,3 +1,7 @@
+#Stage 2 Update (Python 3)
+from __future__ import print_function
+from __future__ import unicode_literals
+from builtins import str
 from optparse import make_option
 from subprocess import Popen, PIPE
 from django.conf import settings
@@ -48,9 +52,9 @@ class Command(BaseCommand):
         msg = ''
         for scraper in Scraper.objects.all():
             if not (options.get('only_active') and scraper.status != 'A') and scraper.checker_set.count() > 0:
-                scraper_str  = unicode(scraper) + " "
-                scraper_str += "(ID:" + unicode(scraper.pk) + ", Status: " + scraper.get_status_display() + ")"
-                print "Run checker test for scraper %s..." % scraper_str
+                scraper_str  = str(scraper) + " "
+                scraper_str += "(ID:" + str(scraper.pk) + ", Status: " + scraper.get_status_display() + ")"
+                print("Run checker test for scraper {}".format(scraper_str))
                 
                 cmd  = 'scrapy crawl checker_test '
                 if options.get('report_only_errors'):
@@ -63,15 +67,15 @@ class Command(BaseCommand):
                 stderr = p.communicate()[1]
                 
                 if stderr != '':
-                    print stderr
+                    print(stderr)
                     msg += 'Checker test for scraper %s failed:\n' % scraper_str
                     msg += stderr + '\n\n'
                     mail_to_admins = True
                 else:
-                    print "Checker configuration working."
+                    print("Checker configuration working.")
         
         if options.get('send_admin_mail') and mail_to_admins:
-            print "Send mail to admins..."
+            print("Send mail to admins...")
             if 'django.contrib.sites' in settings.INSTALLED_APPS:
                 from django.contrib.sites.models import Site
                 subject = Site.objects.get_current().name
