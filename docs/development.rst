@@ -98,8 +98,10 @@ Release Notes
 
 Preparatory release for ``Python 3`` support (not there yet!)
 
+* Fixed severe bug in ``task_utils.py`` preventing checker scheduling to work
 * New dependency on `Python-Future 0.15+ <http://python-future.org/>`_ to support integrated ``Python 2/3`` code base,
   please install with ``pip install future``
+* Updating many files for being ``Python 2/3`` compatible
 
 
 **Changes in version 0.8.3-beta** (2015-10-01)
