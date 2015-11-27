@@ -1,3 +1,7 @@
+#Stage 2 Update (Python 3)
+from __future__ import unicode_literals
+from builtins import str
+from builtins import object
 from datetime import date
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
@@ -110,7 +114,7 @@ class ScraperElemInline(admin.TabularInline):
 
     
 class ScraperAdmin(admin.ModelAdmin):
-    class Media:
+    class Media(object):
         js = ("js/admin_custom.js",)
     list_display = ('id', 'name', 'scraped_obj_class', 'status', 'max_items_read', 'max_items_save', \
         'pagination_type', 'rpts', 'checkers',)
@@ -141,12 +145,12 @@ class ScraperAdmin(admin.ModelAdmin):
     )
     
     def rpts(self, obj):
-        return unicode(obj.requestpagetype_set.count())
+        return str(obj.requestpagetype_set.count())
     
     def checkers(self, obj):
         cnt = obj.checker_set.count()
         if cnt > 0:
-            return unicode(cnt)
+            return str(cnt)
         else:
             return ""
     
