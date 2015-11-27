@@ -1,13 +1,15 @@
+from __future__ import unicode_literals
+from django.utils.encoding import python_2_unicode_compatible
+from builtins import range
+from builtins import str
+from builtins import object
 import datetime
 from django.db import models
 from django.db.models import Q
 
 
+@python_2_unicode_compatible
 class ScrapedObjClass(models.Model):
-    class Meta:
-        verbose_name = "Scraped object class"
-        verbose_name_plural = "Scraped object classes"
-        
     name = models.CharField(max_length=200)
     scraper_scheduler_conf = models.TextField(default='\
 "MIN_TIME": 15,\n\
@@ -23,13 +25,16 @@ class ScrapedObjClass(models.Model):
 "FACTOR_CHANGE_FACTOR": 1.3,\n')
     comments = models.TextField(blank=True)
     
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
-    class Meta:
+    class Meta(object):
+        verbose_name = "Scraped object class"
+        verbose_name_plural = "Scraped object classes"
         ordering = ['name',]
 
 
+@python_2_unicode_compatible
 class ScrapedObjAttr(models.Model):
     ATTR_TYPE_CHOICES = (
         ('S', 'STANDARD'),
@@ -44,10 +49,11 @@ class ScrapedObjAttr(models.Model):
     id_field = models.BooleanField(default=False)
     save_to_db = models.BooleanField(default=True)
     
-    def __unicode__(self):
-        return self.name + " (" + self.obj_class.__unicode__() + ")"
+    def __str__(self):
+        return self.name + " (" + str(self.obj_class) + ")"
 
 
+@python_2_unicode_compatible
 class Scraper(models.Model):
     STATUS_CHOICES = (
         ('A', 'ACTIVE'),
@@ -150,15 +156,16 @@ class Scraper(models.Model):
     def get_from_detail_pages_scrape_elems(self):
         return self.scraperelem_set.filter(~Q(request_page_type='MP'))
     
-    def __unicode__(self):
+    def __str__(self):
         return self.name + " (" + self.scraped_obj_class.name + ")"
     
-    class Meta:
+    class Meta(object):
         ordering = ['name', 'scraped_obj_class',]
 
 
+@python_2_unicode_compatible
 class RequestPageType(models.Model):
-    TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP%d" % n, "Detail Page %d" % n) for n in range(1, 26)])
+    TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP%d" % n, "Detail Page %d" % n) for n in list(range(1, 26))])
     CONTENT_TYPE_CHOICES = (
         ('H', 'HTML'),
         ('X', 'XML'),
@@ -187,13 +194,14 @@ class RequestPageType(models.Model):
     dont_filter = models.BooleanField(default=False, help_text="Do not filter duplicate requests, useful for some scenarios with requests falsely marked as being duplicate (e.g. uniform URL + pagination by HTTP header).")
     comments = models.TextField(blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         ret_str = self.get_page_type_display()
         if self.scraped_obj_attr:
-            ret_str += ' (' + unicode(self.scraped_obj_attr) + ')'
+            ret_str += ' (' + str(self.scraped_obj_attr) + ')'
         return ret_str
 
 
+@python_2_unicode_compatible
 class Checker(models.Model):
     CHECKER_TYPE = (
         ('4', '404'),
@@ -207,12 +215,12 @@ class Checker(models.Model):
     checker_ref_url = models.URLField(max_length=500, blank=True)
     comments = models.TextField(blank=True)
     
-    def __unicode__(self):
-        return  unicode(self.scraped_obj_attr) + ' > ' + self.get_checker_type_display()
+    def __str__(self):
+        return  str(self.scraped_obj_attr) + ' > ' + self.get_checker_type_display()
     
 
 class ScraperElem(models.Model):
-    REQUEST_PAGE_TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP%d" % n, "Detail Page %d" % n) for n in range(1, 26)])
+    REQUEST_PAGE_TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP%d" % n, "Detail Page %d" % n) for n in list(range(1, 26))])
     scraped_obj_attr = models.ForeignKey(ScrapedObjAttr)
     scraper = models.ForeignKey(Scraper)   
     x_path = models.CharField(max_length=200)
@@ -224,6 +232,7 @@ class ScraperElem(models.Model):
     mandatory = models.BooleanField(default=True)
 
 
+@python_2_unicode_compatible
 class SchedulerRuntime(models.Model):
     TYPE = (
         ('S', 'SCRAPER'),
@@ -234,10 +243,10 @@ class SchedulerRuntime(models.Model):
     next_action_factor = models.FloatField(blank=True, null=True)
     num_zero_actions = models.IntegerField(default=0)
     
-    def __unicode__(self):
-        return unicode(self.id)
+    def __str__(self):
+        return str(self.id)
     
-    class Meta:
+    class Meta(object):
         ordering = ['next_action_time',]
 
 
@@ -284,5 +293,5 @@ class Log(models.Model):
                 numeric_level = choice[0]
         return numeric_level        
     
-    class Meta:
+    class Meta(object):
         ordering = ['-date']
