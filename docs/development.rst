@@ -94,6 +94,11 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.8.6-beta** (2015-11-30)
+
+* Two new management command ``check_last_checker_deletes`` and ``check_last_scraper_saves`` which can be run as a cron job
+  for basic scraper/checker monitoring (see: :ref:`monitoring`)
+
 **Changes in version 0.8.5-beta** (2015-11-30)
 
 * New ``last_scraper_save``, ``last_checker_delete`` ``datetime`` attributes for ``Scraper`` model for monitoring/

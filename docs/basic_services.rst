@@ -65,3 +65,17 @@ Configuration
 -------------
 You can configure DDS logging behaviour by providing some settings in your `settings.py`
 configuration file (see :ref:`settings`).
+
+.. _monitoring:
+
+Monitoring
+==========
+
+For monitoring scraper/checker functionality there are two basic management commands which can be run
+as a cronjob::
+
+  python manage.py check_last_scraper_saves <num_hours>
+  python manage.py check_last_checker_deletes <num_hours>
+  
+Setting the ``--only-active`` flag will reduce checks to active scrapers, with ``--send-admin-mail`` an
+error mail will be sent to all admin when last save/delete is older than ``<num_hours>``.
