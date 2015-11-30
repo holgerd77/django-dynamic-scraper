@@ -94,6 +94,12 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.8.5-beta** (2015-11-30)
+
+* New ``last_scraper_save``, ``last_checker_delete`` ``datetime`` attributes for ``Scraper`` model for monitoring/
+  statistis purposes (can be seen on ``Scraper`` overview page in ``Django admin``)
+* New migration ``0013``, run Django ``migrate`` command
+
 **Changes in version 0.8.4-beta** (2015-11-27)
 
 Starting update process for ``Python 3`` support with this release (not there yet!)
@@ -102,7 +108,6 @@ Starting update process for ``Python 3`` support with this release (not there ye
 * New dependency on `Python-Future 0.15+ <http://python-future.org/>`_ to support integrated ``Python 2/3`` code base,
   please install with ``pip install future``
 * Updating several files for being ``Python 2/3`` compatible
-
 
 **Changes in version 0.8.3-beta** (2015-10-01)
 
