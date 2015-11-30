@@ -1,4 +1,4 @@
-import ast, json, scrapy
+import ast, datetime, json, scrapy
 
 from jsonpath_rw import jsonpath, parse
 from jsonpath_rw.lexer import JsonPathLexerError
@@ -9,6 +9,8 @@ from scrapy.http import Request, FormRequest
 from scrapy.contrib.loader import ItemLoader
 from scrapy.contrib.loader.processor import TakeFirst
 from scrapy.exceptions import CloseSpider
+
+from django.db.models.signals import post_save
 
 from dynamic_scraper.spiders.django_base_spider import DjangoBaseSpider
 from dynamic_scraper.models import ScraperElem
@@ -31,6 +33,8 @@ class DjangoSpider(DjangoBaseSpider):
         super(DjangoSpider, self).__init__(self, *args, **kwargs)
         self._set_config(**kwargs)
         self._set_request_kwargs()
+        
+        post_save.connect(self._post_save_tasks, sender=self.scraped_obj_class)
         
         self._set_start_urls(self.scrape_url)
         self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
@@ -393,6 +397,12 @@ class DjangoSpider(DjangoBaseSpider):
                             yield FormRequest(url, callback=self.parse_item, method=rpt.method, formdata=self.dp_form_data[rpt.page_type], dont_filter=rpt.dont_filter, **kwargs)
             else:
                 self.log("Item could not be read!", log.ERROR)
+    
+    
+    def _post_save_tasks(self, sender, instance, created, **kwargs):
+        if instance and created:
+            self.scraper.last_scraper_save = datetime.datetime.now()
+            self.scraper.save()
     
 
 class DummyItem(scrapy.Item):

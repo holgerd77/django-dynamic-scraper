@@ -117,7 +117,7 @@ class ScraperAdmin(admin.ModelAdmin):
     class Media(object):
         js = ("js/admin_custom.js",)
     list_display = ('id', 'name', 'scraped_obj_class', 'status', 'max_items_read', 'max_items_save', \
-        'pagination_type', 'rpts', 'checkers',)
+        'pagination_type', 'rpts', 'checkers', 'last_scraper_save', 'last_checker_delete',)
     list_display_links = ('name',)
     list_editable = ('status',)
     list_filter = ('scraped_obj_class', 'status', 'pagination_type',)

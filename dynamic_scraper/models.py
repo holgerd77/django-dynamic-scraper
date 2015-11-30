@@ -91,6 +91,8 @@ class Scraper(models.Model):
     pagination_page_replace = models.TextField(blank=True, 
         help_text="RANGE_FUNCT: uses Python range funct., syntax: [start], stop[, step], FREE_LIST: 'Replace text 1', 'Some other text 2', 'Maybe a number 3', ...")
     comments = models.TextField(blank=True)
+    last_scraper_save = models.DateTimeField(null=True, blank=True)
+    last_checker_delete = models.DateTimeField(null=True, blank=True)
     
     def get_main_page_rpt(self):
         return self.requestpagetype_set.get(page_type='MP')

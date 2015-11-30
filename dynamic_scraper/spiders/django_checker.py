@@ -1,4 +1,4 @@
-import json, os
+import datetime, json, os
 
 from jsonpath_rw import jsonpath, parse
 from jsonpath_rw.lexer import JsonPathLexerError
@@ -85,6 +85,8 @@ class DjangoChecker(DjangoBaseSpider):
             pass
         
         self.ref_object.delete()
+        self.scraper.last_checker_delete = datetime.datetime.now()
+        self.scraper.save()
         self.action_successful = True
         self.log("Item deleted.", log.INFO)
 
@@ -156,3 +158,4 @@ class DjangoChecker(DjangoBaseSpider):
         else:
             self.log("XPath result string not found (%s)." % unicode(checker), log.INFO)
             return
+    
