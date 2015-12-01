@@ -98,6 +98,12 @@ Release Notes
 
 * New syntax/semantics of management commands ``check_last_checker_deletes`` 
   and ``check_last_scraper_saves``
+* Added ``last_scraper_save_alert_period`` and ``last_checker_delete_alert_period`` alert period fields 
+  for scraper, new migration ``0014``, run Django ``migrate`` command
+* New fields are used for providing time periods for the lowest accepted value for last scraper saves and checker deletes,
+  these values are then checked by the management commands above (see: :ref:`monitoring`)
+* Older timestamps for current values of a scraper for ``last_scraper_save`` and ``last_checker_delete`` also 
+  trigger a visual warning indication in the Django admin scraper overview page
 
 **Changes in version 0.8.6-beta** (2015-11-30)
 
