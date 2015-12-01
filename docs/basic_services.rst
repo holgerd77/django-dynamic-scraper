@@ -71,11 +71,22 @@ configuration file (see :ref:`settings`).
 Monitoring
 ==========
 
-For monitoring scraper/checker functionality there are two basic management commands which can be run
-as a cronjob::
+There are two basic attributes in ``DDS`` within the ``scraper admin form`` which can be used to monitor scraper/checker
+functionality by checking when the ``last_scraper_save`` or ``last_checker_delete`` occurred.
 
-  python manage.py check_last_scraper_saves <num_hours>
-  python manage.py check_last_checker_deletes <num_hours>
-  
-Setting the ``--only-active`` flag will reduce checks to active scrapers, with ``--send-admin-mail`` an
-error mail will be sent to all admin when last save/delete is older than ``<num_hours>``.
+.. image:: images/screenshot_django-admin_alert_period_form_fields.png
+
+If ``last_scraper_save_alert_period`` or ``last_checker_delete_alert_period`` is set with an alert period in the 
+format demanded it is indicated by red timestamps on the admin scraper overview page if a scraper save or checker delete
+is getting too old, indicating that the scraper/checker might not be working any more.
+
+.. image:: images/screenshot_django-admin_scraper_overview_last_checker_delete_alert.png
+
+There are two additional management commands for monitoring::
+
+  python manage.py check_last_scraper_saves
+  python manage.py check_last_checker_deletes
+
+These will check all the timestamps for scrapers where the alert periods are set and send an error mail
+if the ``--send-admin-mail`` flag is set. These management commands can be used e.g. with a ``cronjob`` to automatically
+check scraper/checker functionality.
