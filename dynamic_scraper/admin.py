@@ -155,6 +155,8 @@ class ScraperAdmin(admin.ModelAdmin):
             return ""
     
     def last_scraper_save_(self, obj):
+        if not obj.last_scraper_save:
+            return ''
         html_str = obj.last_scraper_save.strftime('%Y-%m-%d %H:%m')
         if obj.last_scraper_save_alert_period != '':
             td = obj.get_last_scraper_save_alert_period_timedelta()
@@ -167,6 +169,8 @@ class ScraperAdmin(admin.ModelAdmin):
     last_scraper_save_.allow_tags = True
     
     def last_checker_delete_(self, obj):
+        if not obj.last_checker_delete:
+            return ''
         html_str = obj.last_checker_delete.strftime('%Y-%m-%d %H:%m')
         if obj.last_checker_delete_alert_period != '':
             td = obj.get_last_checker_delete_alert_period_timedelta()
