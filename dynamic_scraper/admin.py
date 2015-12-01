@@ -155,28 +155,30 @@ class ScraperAdmin(admin.ModelAdmin):
             return ""
     
     def last_scraper_save_(self, obj):
-        if not obj.last_scraper_save:
-            return ''
-        html_str = obj.last_scraper_save.strftime('%Y-%m-%d %H:%m')
+        html_str = ''
+        if obj.last_scraper_save:
+            html_str = obj.last_scraper_save.strftime('%Y-%m-%d %H:%m')
+        
         if obj.last_scraper_save_alert_period != '':
             td = obj.get_last_scraper_save_alert_period_timedelta()
             if td:
                 html_str = html_str + ' (' + obj.last_scraper_save_alert_period + ')'
-                if obj.last_scraper_save < datetime.datetime.now() - td:
+                if not obj.last_scraper_save or obj.last_scraper_save < datetime.datetime.now() - td:
                     html_str = '<span style="color:red;">' + html_str + '</span>'
         return html_str
     
     last_scraper_save_.allow_tags = True
     
     def last_checker_delete_(self, obj):
-        if not obj.last_checker_delete:
-            return ''
-        html_str = obj.last_checker_delete.strftime('%Y-%m-%d %H:%m')
+        html_str = ''
+        if obj.last_checker_delete:
+            html_str = obj.last_checker_delete.strftime('%Y-%m-%d %H:%m')
+        
         if obj.last_checker_delete_alert_period != '':
             td = obj.get_last_checker_delete_alert_period_timedelta()
             if td:
                 html_str = html_str + ' (' + obj.last_checker_delete_alert_period + ')'
-                if obj.last_checker_delete < datetime.datetime.now() - td:
+                if not obj.last_checker_delete or obj.last_checker_delete < datetime.datetime.now() - td:
                     html_str = '<span style="color:red;">' + html_str + '</span>'
         return html_str
     

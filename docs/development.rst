@@ -94,6 +94,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.8.9-beta** (2015-12-01)
+
+* Minor changes
+
 **Changes in version 0.8.8-beta** (2015-12-01)
 
 * Fixed a bug in ``Django admin`` from previous release
