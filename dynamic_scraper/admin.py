@@ -117,7 +117,7 @@ class ScraperAdmin(admin.ModelAdmin):
     class Media(object):
         js = ("js/admin_custom.js",)
     list_display = ('id', 'name', 'scraped_obj_class', 'status', 'max_items_read', 'max_items_save', \
-        'pagination_type', 'rpts', 'checkers', 'last_scraper_save', 'last_checker_delete',)
+        'pagination_type', 'rpts', 'checkers', 'last_scraper_save_', 'last_checker_delete_',)
     list_display_links = ('name',)
     list_editable = ('status',)
     list_filter = ('scraped_obj_class', 'status', 'pagination_type',)
@@ -140,7 +140,7 @@ class ScraperAdmin(admin.ModelAdmin):
             'fields': ('pagination_on_start', 'pagination_append_str', 'pagination_page_replace')
         }),
         (None, {
-            'fields': ('comments',)
+            'fields': ('last_scraper_save_alert_period', 'last_checker_delete_alert_period', 'comments',)
         }),
     )
     
@@ -153,6 +153,30 @@ class ScraperAdmin(admin.ModelAdmin):
             return str(cnt)
         else:
             return ""
+    
+    def last_scraper_save_(self, obj):
+        html_str = obj.last_scraper_save.strftime('%Y-%m-%d %H:%m')
+        if obj.last_scraper_save_alert_period != '':
+            td = obj.get_last_scraper_save_alert_period_timedelta()
+            if td:
+                html_str = html_str + ' (' + obj.last_scraper_save_alert_period + ')'
+                if obj.last_scraper_save < datetime.datetime.now() - td:
+                    html_str = '<span style="color:red;">' + html_str + '</span>'
+        return html_str
+    
+    last_scraper_save_.allow_tags = True
+    
+    def last_checker_delete_(self, obj):
+        html_str = obj.last_checker_delete.strftime('%Y-%m-%d %H:%m')
+        if obj.last_checker_delete_alert_period != '':
+            td = obj.get_last_checker_delete_alert_period_timedelta()
+            if td:
+                html_str = html_str + ' (' + obj.last_checker_delete_alert_period + ')'
+                if obj.last_checker_delete < datetime.datetime.now() - td:
+                    html_str = '<span style="color:red;">' + html_str + '</span>'
+        return html_str
+    
+    last_checker_delete_.allow_tags = True
     
     actions = ['clone_scrapers',]
     

@@ -92,13 +92,39 @@ class Scraper(models.Model):
         help_text="RANGE_FUNCT: uses Python range funct., syntax: [start], stop[, step], FREE_LIST: 'Replace text 1', 'Some other text 2', 'Maybe a number 3', ...")
     last_scraper_save_alert_period = models.CharField(max_length=5, blank=True, 
         help_text="Optional, used for scraper monitoring with 'check_last_scraper_saves' management cmd, \
-        syntax: <hours>h or <days>d or <weeks>w (e.g. '6h', '5d', '2w')")
+        syntax: [HOURS]h or [DAYS]d or [WEEKS]w (e.g. '6h', '5d', '2w')")
     last_checker_delete_alert_period = models.CharField(max_length=5, blank=True, 
         help_text="Optional, used for scraper monitoring with 'check_last_checker_deletes' management cmd, \
-        syntax: <hours>h or <days>d or <weeks>w (e.g. '6h', '5d', '2w')")
+        syntax: [HOURS]h or [DAYS]d or [WEEKS]w (e.g. '6h', '5d', '2w')")
     comments = models.TextField(blank=True)
     last_scraper_save = models.DateTimeField(null=True, blank=True)
     last_checker_delete = models.DateTimeField(null=True, blank=True)
+    
+    def get_alert_period_timedelta(self, attribute_str):
+        if getattr(self, attribute_str) and len(getattr(self, attribute_str)) >= 2:
+            period_str = getattr(self, attribute_str)[-1]
+            num_str = getattr(self, attribute_str)[:-1]
+            if period_str in ('h', 'd', 'w',):
+                try:
+                    num_int = int(num_str)
+                    if period_str == 'h':
+                        return datetime.timedelta(0, 0, 0, 0, 0, num_int)
+                    if period_str == 'd':
+                        return datetime.timedelta(num_int)
+                    if period_str == 'w':
+                        return datetime.timedelta(0, 0, 0, 0, 0, 0, num_int)
+                except ValueError:
+                    return None
+            else:
+                return None
+        else:
+            return None
+    
+    def get_last_scraper_save_alert_period_timedelta(self):
+        return self.get_alert_period_timedelta('last_scraper_save_alert_period')
+    
+    def get_last_checker_delete_alert_period_timedelta(self):
+        return self.get_alert_period_timedelta('last_checker_delete_alert_period')
     
     def get_main_page_rpt(self):
         return self.requestpagetype_set.get(page_type='MP')
