@@ -11,8 +11,7 @@ from django.core.management.base import BaseCommand
 from dynamic_scraper.models import Scraper
 
 class Command(BaseCommand):
-    help = 'Checks last checker deletes of a scraper being older than <num_hours>'
-    args = '<num_hours>'
+    help = 'Checks last checker deletes of a scraper being older than <last_checker_delete_alert_period> period provided in admin form'
     
     option_list = BaseCommand.option_list + (
         make_option(
@@ -30,33 +29,31 @@ class Command(BaseCommand):
     )
     
     
-    def handle(self, num_hours, *args, **options):
+    def handle(self, *args, **options):
         mail_to_admins = False
         msg = ''
-        try:
-            num_hours = int(num_hours)
-        except ValueError:
-            raise CommandError("Please provide number of hours as an integer value!")
         
-        
-        for scraper in Scraper.objects.all():
-            if not (options.get('only_active') and scraper.status != 'A'):
-                scraper_str  = str(scraper) + " "
-                scraper_str += "(ID:" + str(scraper.pk) + ", Status: " + scraper.get_status_display() + ")"
-                print("Check last checker deletes for scraper {}".format(scraper_str))
+        for s in Scraper.objects.all():
+            td = s.get_last_checker_delete_alert_period_timedelta()
+            if not (options.get('only_active') and s.status != 'A') and td:
+                period = s.last_checker_delete_alert_period
+                s_str = "SCRAPER: {scraper}\nID:{id}, Status:{status}, Alert Period:{period}".format(
+                    scraper=str(s), id=s.pk, status=s.get_status_display(), period=period)
+                print(s_str)
                 
-                if not scraper.last_checker_delete or \
-                    (scraper.last_checker_delete < (datetime.datetime.now() - datetime.timedelta(0, 0, 0, 0, 0, num_hours))):
-                    date_str = 'None'
-                    if scraper.last_checker_delete:
-                        date_str = scraper.last_checker_delete.strftime('%Y-%m-%d %H:%m')
-                    error_str = "Last checker delete older than {} hours ({})!".format(str(num_hours), date_str)
+                if not s.last_checker_delete or \
+                    (s.last_checker_delete < (datetime.datetime.now() - td)):
+                    if s.last_checker_delete:
+                        error_str = "Last checker delete older than alert period ({date_str})!".format(
+                            date_str=s.last_checker_delete.strftime('%Y-%m-%d %H:%m'),)
+                    else:
+                        error_str = "Last checker delete not available!"
                     print(error_str)
-                    msg += 'Last checker delete check for scraper %s failed:\n' % scraper_str
-                    msg += error_str + '\n\n'
+                    msg += s_str + '\n' + error_str + '\n\n'
                     mail_to_admins = True
                 else:
                     print("OK")
+            print()
         
         if options.get('send_admin_mail') and mail_to_admins:
             print("Send mail to admins...")
