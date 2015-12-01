@@ -94,6 +94,11 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.8.7-beta** (2015-12-01)
+
+* Renaming and new syntax/semantics of management commands ``check_last_checker_deletes`` (-> ``check_last_checker_delete``) 
+  and ``check_last_scraper_saves`` (-> ``check_last_scraper_save``)
+
 **Changes in version 0.8.6-beta** (2015-11-30)
 
 * Two new management commands ``check_last_checker_deletes`` and ``check_last_scraper_saves`` which can be run as a cron job
