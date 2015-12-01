@@ -90,6 +90,12 @@ class Scraper(models.Model):
     pagination_append_str = models.CharField(max_length=200, blank=True, help_text="Syntax: /somepartofurl/{page}/moreurlstuff.html")
     pagination_page_replace = models.TextField(blank=True, 
         help_text="RANGE_FUNCT: uses Python range funct., syntax: [start], stop[, step], FREE_LIST: 'Replace text 1', 'Some other text 2', 'Maybe a number 3', ...")
+    last_scraper_save_alert_period = models.CharField(max_length=5, blank=True, 
+        help_text="Optional, used for scraper monitoring with 'check_last_scraper_saves' management cmd, \
+        syntax: <hours>h or <days>d or <weeks>w (e.g. '6h', '5d', '2w')")
+    last_checker_delete_alert_period = models.CharField(max_length=5, blank=True, 
+        help_text="Optional, used for scraper monitoring with 'check_last_checker_deletes' management cmd, \
+        syntax: <hours>h or <days>d or <weeks>w (e.g. '6h', '5d', '2w')")
     comments = models.TextField(blank=True)
     last_scraper_save = models.DateTimeField(null=True, blank=True)
     last_checker_delete = models.DateTimeField(null=True, blank=True)
