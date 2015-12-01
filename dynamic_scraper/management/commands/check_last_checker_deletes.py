@@ -53,7 +53,7 @@ class Command(BaseCommand):
                     mail_to_admins = True
                 else:
                     print("OK")
-            print()
+                print()
         
         if options.get('send_admin_mail') and mail_to_admins:
             print("Send mail to admins...")
