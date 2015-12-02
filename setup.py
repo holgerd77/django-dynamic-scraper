@@ -26,15 +26,18 @@ setup(
             'static/js/*',
         ],
     },
-    #install_requires=[
+    install_requires=[
+    #    Django, Scrapy and Celery requirements are commented out here and have
+    #    to be installed manually to avoid side-effects when updating the software.
+    #    Version numbers are updated accordingly though.
     #    'Django>=1.7,<1.9',
     #    'Scrapy>=0.22.0,<0.25',
     #    'scrapyd',
-    #    'jsonpath-rw>=1.4',
+        'jsonpath-rw>=1.4',
     #    'django-celery==3.1.16', # Scheduling
-    #    'future>=0.15,<0.16',
-    #    'pillow',
-    #],
+        'future>=0.15,<0.16',
+        'pillow',
+    ],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
