@@ -68,13 +68,19 @@
     "fields": {
         "status": "A",
         "pagination_page_replace": "",
+        "last_scraper_save_alert": "2015-12-04T02:59:41.213",
         "name": "Wikinews Scraper",
         "max_items_save": null,
+        "last_checker_delete_alert": "2015-12-04T02:59:41.183",
         "pagination_append_str": "",
         "max_items_read": null,
         "pagination_on_start": false,
         "pagination_type": "N",
+        "last_checker_delete": "2015-11-30T06:36:33.423",
         "comments": "",
+        "last_scraper_save": "2015-11-30T10:20:03.295",
+        "last_checker_delete_alert_period": "1d",
+        "last_scraper_save_alert_period": "1w",
         "scraped_obj_class": 1
     },
     "model": "dynamic_scraper.scraper",
@@ -84,13 +90,19 @@
     "fields": {
         "status": "A",
         "pagination_page_replace": "",
+        "last_scraper_save_alert": "2015-12-04T02:59:41.213",
         "name": "US Department of Justice - Press Release Scraper",
         "max_items_save": null,
+        "last_checker_delete_alert": "2015-12-04T02:59:41.183",
         "pagination_append_str": "",
         "max_items_read": 10,
         "pagination_on_start": false,
         "pagination_type": "N",
+        "last_checker_delete": null,
         "comments": "",
+        "last_scraper_save": null,
+        "last_checker_delete_alert_period": "1w",
+        "last_scraper_save_alert_period": "1d",
         "scraped_obj_class": 1
     },
     "model": "dynamic_scraper.scraper",
@@ -317,13 +329,23 @@
 },
 {
     "fields": {
-        "next_action_factor": 7.692,
-        "next_action_time": "2013-09-28T10:27:58.747",
-        "num_zero_actions": 3,
+        "next_action_factor": 5.917,
+        "next_action_time": "2015-11-27T05:23:51.852",
+        "num_zero_actions": 0,
         "runtime_type": "S"
     },
     "model": "dynamic_scraper.schedulerruntime",
     "pk": 1
+},
+{
+    "fields": {
+        "next_action_factor": 0.769,
+        "next_action_time": "2015-11-28T04:18:55.164",
+        "num_zero_actions": 0,
+        "runtime_type": "C"
+    },
+    "model": "dynamic_scraper.schedulerruntime",
+    "pk": 36
 },
 {
     "fields": {

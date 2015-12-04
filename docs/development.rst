@@ -96,7 +96,7 @@ Release Notes
 =============
 **Changes in version 0.8.10-beta** (2015-12-04)
 
-* TODO
+* New migration ``0015``, run Django ``migrate`` command
 
 **Changes in version 0.8.9-beta** (2015-12-01)
 
