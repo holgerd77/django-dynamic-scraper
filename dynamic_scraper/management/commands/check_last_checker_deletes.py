@@ -41,34 +41,41 @@ class Command(BaseCommand):
         
         if options.get('with_next_alert'):
             scrapers = Scraper.objects.filter(next_last_checker_delete_alert__lte=datetime.datetime.now())
+            print("{num} scraper(s) with future next alert timestamp found in DB...\n".format(num=len(scrapers)))
         else:
             scrapers = Scraper.objects.all()
+            print("{num} scraper(s) found in DB...\n".format(num=len(scrapers)))
         
         for s in scrapers:
-            td = s.get_last_checker_delete_alert_period_timedelta()
-            if not (options.get('only_active') and s.status != 'A') and td:
-                period = s.last_checker_delete_alert_period
-                s_str = "SCRAPER: {scraper}\nID:{id}, Status:{status}, Alert Period:{period}".format(
-                    scraper=str(s), id=s.pk, status=s.get_status_display(), period=period)
-                print(s_str)
-                
-                if options.get('with_next_alert'):
-                    s.next_last_checker_delete_alert = datetime.datetime.now() + td
-                    s.save()
-                
-                if not s.last_checker_delete or \
-                    (s.last_checker_delete < (datetime.datetime.now() - td)):
-                    if s.last_checker_delete:
-                        error_str = "Last checker delete older than alert period ({date_str})!".format(
-                            date_str=s.last_checker_delete.strftime('%Y-%m-%d %H:%m'),)
+            if not (options.get('only_active') and s.status != 'A'):
+                td = s.get_last_checker_delete_alert_period_timedelta()
+                if td:
+                    period = s.last_checker_delete_alert_period
+                    s_str = "SCRAPER: {scraper}\nID:{id}, Status:{status}, Alert Period:{period}".format(
+                        scraper=str(s), id=s.pk, status=s.get_status_display(), period=period)
+                    print(s_str)
+                    
+                    if options.get('with_next_alert'):
+                        s.next_last_checker_delete_alert = datetime.datetime.now() + td
+                        s.save()
+                    
+                    if not s.last_checker_delete or \
+                        (s.last_checker_delete < (datetime.datetime.now() - td)):
+                        if s.last_checker_delete:
+                            error_str = "Last checker delete older than alert period ({date_str})!".format(
+                                date_str=s.last_checker_delete.strftime('%Y-%m-%d %H:%m'),)
+                        else:
+                            error_str = "Last checker delete not available!"
+                        print(error_str)
+                        msg += s_str + '\n' + error_str + '\n\n'
+                        mail_to_admins = True
                     else:
-                        error_str = "Last checker delete not available!"
-                    print(error_str)
-                    msg += s_str + '\n' + error_str + '\n\n'
-                    mail_to_admins = True
+                        print("OK")
+                    print()
                 else:
-                    print("OK")
-                print()
+                    print("Ommitting scraper {scraper}, no (valid) time period set.\n".format(scraper=str(s)))
+            else:
+                print("Ommitting scraper {scraper}, not active.\n".format(scraper=str(s)))
         
         if options.get('send_admin_mail') and mail_to_admins:
             print("Send mail to admins...")

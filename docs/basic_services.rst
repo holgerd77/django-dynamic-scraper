@@ -109,5 +109,5 @@ An alert for a  scraper with an alert period of 2 weeks will then trigger first 
 more than 2 weeks ago. With the above flag, the next alert will then be earliest 2 weeks after the first alert.
 
 .. note::
-   Using the ``--update-next-alert`` flag only makes sense if your periods for your alerts are significantly 
+   Using the ``--with-next-alert`` flag only makes sense if your periods for your alerts are significantly 
    longer (e.g. 1 week+) than your cronjob frequency (e.g. every day).

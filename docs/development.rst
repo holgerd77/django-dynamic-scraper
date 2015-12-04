@@ -96,8 +96,9 @@ Release Notes
 =============
 **Changes in version 0.8.10-beta** (2015-12-04)
 
-* New ``--with-next-alert`` flag for monitoring management cmds to reduce amount of mail alerts,
+* New ``--with-next-alert`` flag for monitoring management commands to reduce amount of mail alerts,
   see updated :ref:`monitoring` section for details
+* More verbose output for monitoring management commands
 * New migration ``0015``, run Django ``migrate`` command
 
 **Changes in version 0.8.9-beta** (2015-12-01)
