@@ -141,8 +141,8 @@ class ScraperAdmin(admin.ModelAdmin):
         }),
         ('Monitoring', {
             'classes': ('collapse',),
-            'fields': ('last_scraper_save_alert_period', 'last_scraper_save_alert',
-                'last_checker_delete_alert_period', 'last_checker_delete_alert',)
+            'fields': ('last_scraper_save_alert_period', 'next_last_scraper_save_alert',
+                'last_checker_delete_alert_period', 'next_last_checker_delete_alert',)
         }),
         (None, {
             'fields': ('comments',)
