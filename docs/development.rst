@@ -94,6 +94,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.8.10-beta** (2015-12-04)
+
+* TODO
+
 **Changes in version 0.8.9-beta** (2015-12-01)
 
 * Minor changes
