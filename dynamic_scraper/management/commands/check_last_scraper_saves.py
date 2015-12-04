@@ -26,6 +26,12 @@ class Command(BaseCommand):
             dest="send_admin_mail",
             default=False,
             help="Send report mail to Django admins if last saves are too old"),
+        make_option(
+            '--with-next-alert',
+            action="store_true",
+            dest="with_next_alert",
+            default=False,
+            help="Only run for scrapers with past next alert timestamp/update timestamp afterwards"),
     )
     
     
@@ -33,13 +39,22 @@ class Command(BaseCommand):
         mail_to_admins = False
         msg = ''
         
-        for s in Scraper.objects.all():
+        if options.get('with_next_alert'):
+            scrapers = Scraper.objects.filter(next_last_scraper_save_alert__lte=datetime.datetime.now())
+        else:
+            scrapers = Scraper.objects.all()
+        
+        for s in scrapers:
             td = s.get_last_scraper_save_alert_period_timedelta()
             if not (options.get('only_active') and s.status != 'A') and td:
                 period = s.last_scraper_save_alert_period
                 s_str = "SCRAPER: {scraper}\nID:{id}, Status:{status}, Alert Period:{period}".format(
                     scraper=str(s), id=s.pk, status=s.get_status_display(), period=period)
                 print(s_str)
+                
+                if options.get('with_next_alert'):
+                    s.next_last_scraper_save_alert = datetime.datetime.now() + td
+                    s.save()
                 
                 if not s.last_scraper_save or \
                     (s.last_scraper_save < (datetime.datetime.now() - td)):

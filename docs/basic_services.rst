@@ -90,8 +90,8 @@ Monitoring Automation
 
 You can use the following Django ``management commands`` to monitor your scrapers and checkers on a regular basis::
 
-  python manage.py check_last_scraper_saves [--send-admin-mail] [--update-next-alert]
-  python manage.py check_last_checker_deletes [--send-admin-mail] [--update-next-alert]
+  python manage.py check_last_scraper_saves [--send-admin-mail] [--with-next-alert]
+  python manage.py check_last_checker_deletes [--send-admin-mail] [--with-next-alert]
 
 Standard behaviour of the commands is to check, if the last scraper save or last checker delete occured is older
 than the corresponding alert period set (see configuration section above). If the ``--send-admin-mail`` flag is set
@@ -100,8 +100,10 @@ alert timestamps (see Django admin form) will be set to the current timestamp.
 
 Practically this leads to a lot of alerts/mails (depending on the frequency of your cronjobs) once an alert
 situation triggers. If you want to switch from a ``Report-Always`` to a ``Report-Once`` (more or less) behaviour
-you can set the ``--update-next-alert`` flag. This will set the corresponding next alert timestamp in the future
-by your alert period set as the earliest time for a new alert. 
+you can set the ``--with-next-alert`` flag.
+
+This will run alert checks only for scrapers where the corresponding next alert timestamp has passed.
+The timestamp is then updated by the alert period set as the earliest time for a new alert. 
 
 An alert for a  scraper with an alert period of 2 weeks will then trigger first after the last item was scraped
 more than 2 weeks ago. With the above flag, the next alert will then be earliest 2 weeks after the first alert.
