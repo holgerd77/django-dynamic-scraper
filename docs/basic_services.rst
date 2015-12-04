@@ -71,10 +71,13 @@ configuration file (see :ref:`settings`).
 Monitoring
 ==========
 
-There are two basic attributes in ``DDS`` within the ``scraper admin form`` which can be used to monitor scraper/checker
-functionality by checking when the ``last_scraper_save`` or ``last_checker_delete`` occurred.
+Configuration
+-------------
 
-.. image:: images/screenshot_django-admin_alert_period_form_fields.png
+There is a montoring section in the ``DDS`` scraper admin form with basic settings which can be used to monitor scraper/checker
+functionality by checking when the ``last_scraper_save`` or ``last_checker_delete`` occurred:
+
+.. image:: images/screenshot_django-admin_monitoring_section.png
 
 If ``last_scraper_save_alert_period`` or ``last_checker_delete_alert_period`` is set with an alert period in the 
 format demanded it is indicated by red timestamps on the admin scraper overview page if a scraper save or checker delete
@@ -82,7 +85,10 @@ is getting too old, indicating that the scraper/checker might not be working any
 
 .. image:: images/screenshot_django-admin_scraper_overview_last_checker_delete_alert.png
 
-There are two additional management commands for monitoring::
+Monitoring Automation
+---------------------
+
+You can use the following Django ``management commands`` to monitor your scrapers and checkers on a regular basis::
 
   python manage.py check_last_scraper_saves
   python manage.py check_last_checker_deletes

@@ -93,12 +93,12 @@ class Scraper(models.Model):
     last_scraper_save_alert_period = models.CharField(max_length=5, blank=True, 
         help_text="Optional, used for scraper monitoring with 'check_last_scraper_saves' management cmd, \
         syntax: [HOURS]h or [DAYS]d or [WEEKS]w (e.g. '6h', '5d', '2w')")
-    last_scraper_save_alert = models.DateTimeField(default=datetime.datetime.now,
+    next_last_scraper_save_alert = models.DateTimeField(default=datetime.datetime.now,
         help_text="Next time the last scraper save will be alerted, normally set on management cmd run.",)
     last_checker_delete_alert_period = models.CharField(max_length=5, blank=True, 
         help_text="Optional, used for scraper monitoring with 'check_last_checker_deletes' management cmd, \
         syntax: [HOURS]h or [DAYS]d or [WEEKS]w (e.g. '6h', '5d', '2w')")
-    last_checker_delete_alert = models.DateTimeField(default=datetime.datetime.now,
+    next_last_checker_delete_alert = models.DateTimeField(default=datetime.datetime.now,
         help_text="Next time the last checker delete will be alerted, normally set on management cmd run.",)
     comments = models.TextField(blank=True)
     last_scraper_save = models.DateTimeField(null=True, blank=True)

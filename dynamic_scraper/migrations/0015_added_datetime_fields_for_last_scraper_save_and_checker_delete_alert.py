@@ -14,12 +14,12 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='scraper',
-            name='last_checker_delete_alert',
+            name='next_last_checker_delete_alert',
             field=models.DateTimeField(default=datetime.datetime.now, help_text='Next time the last checker delete will be alerted, normally set on management cmd run.'),
         ),
         migrations.AddField(
             model_name='scraper',
-            name='last_scraper_save_alert',
+            name='next_last_scraper_save_alert',
             field=models.DateTimeField(default=datetime.datetime.now, help_text='Next time the last scraper save will be alerted, normally set on management cmd run.'),
         ),
         migrations.AlterField(
