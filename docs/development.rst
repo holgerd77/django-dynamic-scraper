@@ -97,6 +97,7 @@ Release Notes
 **Changes in version 0.8.11-beta** (2016-01-05)
 
 * New :ref:`detail_page_url_placeholders` which can be used for more flexible detail page URL creation
+* Unit test for new functionality
 
 **Changes in version 0.8.10-beta** (2015-12-04)
 
