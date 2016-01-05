@@ -318,6 +318,21 @@ class DjangoSpider(DjangoBaseSpider):
                 return item
         else:
             return item
+    
+    def _replace_detail_page_url_placeholders(self, url, item):
+        standard_elems = self.scraper.get_standard_elems()
+        for scraper_elem in standard_elems:
+            if scraper_elem.request_page_type == 'MP':
+                name = scraper_elem.scraped_obj_attr.name
+                if not scraper_elem.scraped_obj_attr.save_to_db:
+                    if name in self.non_db_results and \
+                       self.non_db_results[name] != None:
+                        url = url.replace('{' + name + '}', str(self.non_db_results[name]))
+                else:
+                    if name in item and \
+                       item[name] != None:
+                        url = url.replace('{' + name + '}', str(item[name]))
+        return url
 
 
     def parse(self, response):
@@ -377,8 +392,12 @@ class DjangoSpider(DjangoBaseSpider):
                     for url_elem in url_elems:
                         if not url_elem.scraped_obj_attr.save_to_db:
                             url = self.non_db_results[url_elem.scraped_obj_attr.name]
+                            url = self._replace_detail_page_url_placeholders(url, item)
+                            self.non_db_results[url_elem.scraped_obj_attr.name] = url
                         else:
                             url = item[url_elem.scraped_obj_attr.name]
+                            url = self._replace_detail_page_url_placeholders(url, item)
+                            item[url_elem.scraped_obj_attr.name] = url
                         rpt = self.scraper.get_rpt_for_scraped_obj_attr(url_elem.scraped_obj_attr)
                         kwargs = self.dp_request_kwargs[rpt.page_type].copy()
                         if 'meta' not in kwargs:
