@@ -17,6 +17,14 @@ class ScraperProcessorRunTest(ScraperTest):
         self.se_url.save()
         self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_processor/event_main.html')
         self.event_website.save()
+    
+    
+    def setUpProcessorTestWithDetailPageUrlPlaceholder(self):
+        self.se_url.processors = u'pre_url'
+        self.se_url.proc_ctxt = u"'pre_url': 'http://localhost:8010/static/{title}/'"
+        self.se_url.save()
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_processor/event_main_placeholder.html')
+        self.event_website.save()
 
 
     def test_processor(self):
@@ -89,3 +97,14 @@ class ScraperProcessorRunTest(ScraperTest):
         
         self.assertEqual(len(Event.objects.all()), 2)
         self.assertEqual(Event.objects.get(title='Event 1').description, '563423')
+    
+    
+    def test_processor_with_detail_page_url_placeholder(self):
+        self.setUpProcessorTestWithDetailPageUrlPlaceholder()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 1)
+        self.assertEqual(
+            Event.objects.get(title='site_with_processor').url,
+            'http://localhost:8010/static/site_with_processor/event1.html')
+        

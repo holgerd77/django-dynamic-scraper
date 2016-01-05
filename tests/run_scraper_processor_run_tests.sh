@@ -9,6 +9,7 @@ test_replace_processor_correct_x_path
 test_static_processor_wrong_x_path
 test_static_processor_correct_x_path
 test_reg_exp
+test_processor_with_detail_page_url_placeholder
 "
 
 for test in `echo $tests`
