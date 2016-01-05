@@ -94,6 +94,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.8.11-beta** (2016-01-05)
+
+* New :ref:`detail_page_url_placeholders` which can be used for more flexible detail page URL creation
+
 **Changes in version 0.8.10-beta** (2015-12-04)
 
 * New ``--with-next-alert`` flag for monitoring management cmds to reduce amount of mail alerts,

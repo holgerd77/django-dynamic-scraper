@@ -269,6 +269,11 @@ This completes the xpath definitions for our scraper. The form you have filled o
    You can also **scrape** attributes of your object **from outside the base element** by using the ``..`` notation
    in your XPath expressions to get to the parent nodes!
 
+.. note::
+   Starting with ``DDS v.0.8.11`` you can build your **detail page URLs** with
+   placeholders for **main page attributes** in the form of ``{ATTRIBUTE_NAME}``, see :ref:`detail_page_url_placeholders` for further reference.
+
+
 .. _adding_request_page_types:
 
 Adding corresponding request page types
