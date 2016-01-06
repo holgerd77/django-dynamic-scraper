@@ -4,7 +4,7 @@ import os
 
 setup(
     name='django-dynamic-scraper',
-    version='0.8.11',
+    version='0.8.12',
     description='Creating Scrapy scrapers via the Django admin interface',
     author='Holger Drewes',
     author_email='Holger.Drewes@gmail.com',
@@ -36,7 +36,7 @@ setup(
         'jsonpath-rw>=1.4',
     #    'django-celery==3.1.16', # Scheduling
         'future>=0.15,<0.16',
-        'pillow',
+        'pillow>=3.0,<4.0',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',

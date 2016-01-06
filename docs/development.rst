@@ -94,6 +94,12 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.8.12-beta** (2016-01-06)
+
+* Fixed ``Clone Scraper`` Django admin action omitting the creation of ``RequestPageType`` and ``Checker``
+  objects introduced in the ``0.8`` series
+* Narrowing the requirements for ``Pillow`` to ``3.x`` versions to reduce possible future side effects
+
 **Changes in version 0.8.11-beta** (2016-01-05)
 
 * New :ref:`detail_page_url_placeholders` which can be used for more flexible detail page URL creation
