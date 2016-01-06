@@ -194,6 +194,8 @@ class ScraperAdmin(admin.ModelAdmin):
     def clone_scrapers(self, request, queryset):
         for scraper in queryset:
             scraper_elems = scraper.scraperelem_set.all()
+            rpts = scraper.requestpagetype_set.all()
+            checkers = scraper.checker_set.all()
             scraper.pk = None
             scraper.name = scraper.name + " (COPY)"
             scraper.status = 'P'
@@ -202,6 +204,14 @@ class ScraperAdmin(admin.ModelAdmin):
                 se.pk = None
                 se.scraper = scraper
                 se.save()
+            for rpt in rpts:
+                rpt.pk = None
+                rpt.scraper = scraper
+                rpt.save()
+            for checker in checkers:
+                checker.pk = None
+                checker.scraper = scraper
+                checker.save()
         
         rows_updated = queryset.count()
         if rows_updated == 1:
