@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from builtins import str
+from builtins import object
 import hashlib, ntpath
 from dynamic_scraper.models import ScraperElem
 from scrapy import log
@@ -29,7 +32,7 @@ class DjangoImagesPipeline(ImagesPipeline):
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             return '%s.jpg' % (image_guid)
         elif self.conf["IMAGES_STORE_FORMAT"] == 'THUMBS':
-            return 'thumbs/%s/%s.jpg' % (self.THUMBS.iterkeys().next(), image_guid)
+            return 'thumbs/%s/%s.jpg' % (next(iter(self.THUMBS.keys())), image_guid)
         else:
             return 'full/%s.jpg' % (image_guid)
 
@@ -59,7 +62,7 @@ class ValidationPipeline(object):
     def process_item(self, item, spider):
         
         #Process processor placeholders
-        for key, value in item.items():
+        for key, value in list(item.items()):
             standard_elems = spider.scraper.get_standard_elems()
             for scraper_elem in standard_elems:
                 name = scraper_elem.scraped_obj_attr.name
@@ -115,7 +118,7 @@ class ValidationPipeline(object):
                     attr_name = elem.scraped_obj_attr.name
                     if attr_name in item and hasattr(exist_object, attr_name):
                         setattr(dummy_object, attr_name, item[attr_name])
-                        if unicode(getattr(dummy_object, attr_name)) != unicode(getattr(exist_object, attr_name)):
+                        if str(getattr(dummy_object, attr_name)) != str(getattr(exist_object, attr_name)):
                             setattr(exist_object, attr_name, item[attr_name])
                             if len(updated_attribute_list) > 0:
                                 updated_attribute_list += ', '

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import ast, datetime, json, scrapy
 
 from jsonpath_rw import jsonpath, parse
@@ -327,11 +328,11 @@ class DjangoSpider(DjangoBaseSpider):
                 if not scraper_elem.scraped_obj_attr.save_to_db:
                     if name in self.non_db_results and \
                        self.non_db_results[name] != None:
-                        url = url.replace('{' + name + '}', str(self.non_db_results[name]))
+                        url = url.replace('{' + name + '}', unicode(self.non_db_results[name]))
                 else:
                     if name in item and \
                        item[name] != None:
-                        url = url.replace('{' + name + '}', str(item[name]))
+                        url = url.replace('{' + name + '}', unicode(item[name]))
         return url
 
 
