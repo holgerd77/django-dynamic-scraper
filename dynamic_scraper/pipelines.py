@@ -58,6 +58,22 @@ class ValidationPipeline(object):
 
     def process_item(self, item, spider):
         
+        #Process processor placeholders
+        for key, value in item.items():
+            standard_elems = spider.scraper.get_standard_elems()
+            for scraper_elem in standard_elems:
+                name = scraper_elem.scraped_obj_attr.name
+                if not scraper_elem.scraped_obj_attr.save_to_db:
+                    if value and name in spider.non_db_results and \
+                       spider.non_db_results[name] != None:
+                        value = value.replace('{' + name + '}', str(spider.non_db_results[name]))
+                        item[key] = value
+                else:
+                    if value and name in item and \
+                       item[name] != None:
+                        value = value.replace('{' + name + '}', str(item[name]))
+                        item[key] = value
+        
         #Check if item is double and remove DOUBLE string from ID fields
         #(no good way found to pass meta data to this point...)
         idf_elems = spider.scraper.get_id_field_elems()

@@ -107,4 +107,25 @@ class ScraperProcessorRunTest(ScraperTest):
         self.assertEqual(
             Event.objects.get(title='site_with_processor').url,
             'http://localhost:8010/static/site_with_processor/event1.html')
+    
+    
+    def test_processor_with_placeholder_mp_to_dp(self):
+        self.setUpProcessorTest()
+        self.se_desc.processors = u'post_string'
+        self.se_desc.proc_ctxt = u"'post_string': '_START_{title}_END'"
+        self.se_desc.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(Event.objects.filter(description='Event 1 description_START_Event 1_END').count(), 1)
+    
+    
+    def test_processor_with_placeholder_dp_to_mp(self):
+        self.setUpProcessorTest()
+        self.se_title.processors = u'post_string'
+        self.se_title.proc_ctxt = u"'post_string': '_START_{description}_END'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(Event.objects.filter(title='Event 1_START_Event 1 description_END').count(), 1)
+        
         
