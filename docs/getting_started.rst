@@ -271,7 +271,7 @@ This completes the xpath definitions for our scraper. The form you have filled o
 
 .. note::
    Starting with ``DDS v.0.8.11`` you can build your **detail page URLs** with
-   placeholders for **main page attributes** in the form of ``{ATTRIBUTE_NAME}``, see :ref:`detail_page_url_placeholders` for further reference.
+   placeholders for **main page attributes** in the form of ``{ATTRIBUTE_NAME}``, see :ref:`attribute_placeholders` for further reference.
 
 
 .. _adding_request_page_types:

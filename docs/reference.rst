@@ -142,15 +142,20 @@ Processors
 General Functionality
 ---------------------
 
-.. _detail_page_url_placeholders:
+.. _attribute_placeholders:
 
-Detail Page URL Placeholders
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Processors used on **detail page URLs** can use **placeholders** 
-for **main page attributes** in the form of ``{ATTRIBUTE_NAME}``. This can be used for more flexible
+Attribute Placeholders
+^^^^^^^^^^^^^^^^^^^^^^
+Processors can use placeholders referencing other scraped attributes in the form of ``{ATTRIBUTE_NAME}``.
+These placeholders are then replaced with the other scraped attribute string after all other processing 
+steps (scraping, regex, processors).
+
+Attribute placeholders can also be used to form **detail page URLs**. This can be used for more flexible
 detail page creation, e.g. by defining a non-saved help attribute ``tmp_attr_1`` in your ``ScrapedObjClass``
 definition and using a ``pre_url`` processor like ``'pre_url': 'http://someurl.org/{tmp_attr_1}'``.
-Placeholder replacement takes place after all other processing steps (scraping, regex, processors).
+
+.. note::
+   Placeholders for detail page URLs can only be used with attributes scraped from the main page!
 
 Processor Description
 ---------------------

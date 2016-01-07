@@ -94,6 +94,11 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.8.13-beta** (2016-01-07)
+
+* Expanded detail page URL processor placeholder concept to generic attribute placeholders (:ref:`attribute_placeholders`)
+* Unit test for new functionality
+
 **Changes in version 0.8.12-beta** (2016-01-06)
 
 * Fixed ``Clone Scraper`` Django admin action omitting the creation of ``RequestPageType`` and ``Checker``
@@ -102,7 +107,7 @@ Release Notes
 
 **Changes in version 0.8.11-beta** (2016-01-05)
 
-* New :ref:`detail_page_url_placeholders` which can be used for more flexible detail page URL creation
+* New :ref:`attribute_placeholders` (previously: detail page URL placeholder) which can be used for more flexible detail page URL creation
 * Unit test for new functionality
 
 **Changes in version 0.8.10-beta** (2015-12-04)
