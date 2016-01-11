@@ -101,35 +101,34 @@ class ValidationPipeline(object):
                 raise DropItem()
         
         if spider.conf['MAX_ITEMS_SAVE'] and spider.items_save_count >= spider.conf['MAX_ITEMS_SAVE']:
-            spider.log("Max items save reached, item not saved.", log.INFO)
+            spider.log("Max items save reached, item not saved or further processed.", log.INFO)
             raise DropItem()
         
         if not spider.conf['DO_ACTION']:
-            spider.log("TESTMODE: Item not saved.", log.INFO)
-            raise DropItem()
-
-        if is_double:
-            standard_update_elems = spider.scraper.get_standard_update_elems()
-            updated_attribute_list = ''
-            if len(standard_update_elems) > 0 and len(exist_objects) == 1:
-                exist_object = exist_objects[0]
-                dummy_object = spider.scraped_obj_class()
-                for elem in standard_update_elems:
-                    attr_name = elem.scraped_obj_attr.name
-                    if attr_name in item and hasattr(exist_object, attr_name):
-                        setattr(dummy_object, attr_name, item[attr_name])
-                        if str(getattr(dummy_object, attr_name)) != str(getattr(exist_object, attr_name)):
-                            setattr(exist_object, attr_name, item[attr_name])
-                            if len(updated_attribute_list) > 0:
-                                updated_attribute_list += ', '
-                            updated_attribute_list += attr_name
-            if len(updated_attribute_list) > 0:
-                exist_object.save()
-                raise DropItem("Item already in DB, attributes updated: " + updated_attribute_list)
-            else:
-                raise DropItem("Double item.")
-        
-        spider.items_save_count += 1
+            spider.log("Item not saved to Django DB.", log.INFO)
+        else:
+            if is_double:
+                standard_update_elems = spider.scraper.get_standard_update_elems()
+                updated_attribute_list = ''
+                if len(standard_update_elems) > 0 and len(exist_objects) == 1:
+                    exist_object = exist_objects[0]
+                    dummy_object = spider.scraped_obj_class()
+                    for elem in standard_update_elems:
+                        attr_name = elem.scraped_obj_attr.name
+                        if attr_name in item and hasattr(exist_object, attr_name):
+                            setattr(dummy_object, attr_name, item[attr_name])
+                            if str(getattr(dummy_object, attr_name)) != str(getattr(exist_object, attr_name)):
+                                setattr(exist_object, attr_name, item[attr_name])
+                                if len(updated_attribute_list) > 0:
+                                    updated_attribute_list += ', '
+                                updated_attribute_list += attr_name
+                if len(updated_attribute_list) > 0:
+                    exist_object.save()
+                    raise DropItem("Item already in DB, attributes updated: " + updated_attribute_list)
+                else:
+                    raise DropItem("Double item.")
+            
+            spider.items_save_count += 1
 
         return item
 
