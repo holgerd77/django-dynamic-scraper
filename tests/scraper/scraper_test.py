@@ -3,6 +3,7 @@ import os, os.path, shutil
 from django.test import TestCase
 
 from scrapy import log, signals
+from scrapy.exceptions import DropItem
 
 from scrapy.utils.project import get_project_settings
 settings = get_project_settings()
@@ -38,16 +39,22 @@ class EventSpider(DjangoSpider):
 class DjangoWriterPipeline(object):
     
     def process_item(self, item, spider):
-        item['event_website'] = spider.ref_object
+        if spider.conf['DO_ACTION']:
+            try:
+                item['event_website'] = spider.ref_object
+                
+                checker_rt = SchedulerRuntime()
+                checker_rt.save()
+                item['checker_runtime'] = checker_rt
+                
+                if not 'description' in item or item['description'] == None:
+                    item['description'] = u''
+                
+                item.save()
+            except IntegrityError, e:
+                spider.log(str(e), log.ERROR)
+                raise DropItem("Missing attribute.")
         
-        checker_rt = SchedulerRuntime()
-        checker_rt.save()
-        item['checker_runtime'] = checker_rt
-        
-        if not 'description' in item or item['description'] == None:
-            item['description'] = u''
-        
-        item.save()
         return item 
 
 

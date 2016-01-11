@@ -374,7 +374,7 @@ class DjangoSpider(DjangoBaseSpider):
                         only_main_page_idfs = False
 
                 is_double = False
-                if only_main_page_idfs:
+                if only_main_page_idfs and self.conf['DO_ACTION']:
                     item, is_double = self._check_for_double_item(item)
                 
                 # Don't go on reading detail pages when...
