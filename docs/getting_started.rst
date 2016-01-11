@@ -25,34 +25,34 @@ the scraped items belong to. Often this class will represent a website, but it c
 category, a topic or something similar. In our news example we call the class ``NewsWebsite``. Below is the
 code for this two model classes::
 
-	from django.db import models
-	from dynamic_scraper.models import Scraper, SchedulerRuntime
-	from scrapy.contrib.djangoitem import DjangoItem
-	
-	
-	class NewsWebsite(models.Model):
-	    name = models.CharField(max_length=200)
-	    url = models.URLField()
-	    scraper = models.ForeignKey(Scraper, blank=True, null=True, on_delete=models.SET_NULL)
-	    scraper_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
-	    
-	    def __unicode__(self):
-	        return self.name
-	
-	
-	class Article(models.Model):
-	    title = models.CharField(max_length=200)
-	    news_website = models.ForeignKey(NewsWebsite) 
-	    description = models.TextField(blank=True)
-	    url = models.URLField()
-	    checker_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
-	    
-	    def __unicode__(self):
-	        return self.title
-	
-	
-	class ArticleItem(DjangoItem):
-	    django_model = Article
+  from django.db import models
+  from dynamic_scraper.models import Scraper, SchedulerRuntime
+  from scrapy.contrib.djangoitem import DjangoItem
+  
+  
+  class NewsWebsite(models.Model):
+      name = models.CharField(max_length=200)
+      url = models.URLField()
+      scraper = models.ForeignKey(Scraper, blank=True, null=True, on_delete=models.SET_NULL)
+      scraper_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
+      
+      def __unicode__(self):
+          return self.name
+  
+  
+  class Article(models.Model):
+      title = models.CharField(max_length=200)
+      news_website = models.ForeignKey(NewsWebsite) 
+      description = models.TextField(blank=True)
+      url = models.URLField()
+      checker_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
+      
+      def __unicode__(self):
+          return self.title
+  
+  
+  class ArticleItem(DjangoItem):
+      django_model = Article
 
 As you can see, there are some foreign key fields defined in the models referencing DDS models.
 The ``NewsWebsite`` class has a reference to the :ref:`scraper` DDS model, which contains the main
@@ -91,15 +91,15 @@ deleted as well. If you want this to happen, you can use Django's
 `pre_delete signals <https://docs.djangoproject.com/en/dev/topics/db/models/#overriding-model-methods>`_
 in your ``models.py`` to delete e.g. the ``checker_runtime`` when deleting an article::
 
-	@receiver(pre_delete)
-	def pre_delete_handler(sender, instance, using, **kwargs):
-	    ....
-	    
-	    if isinstance(instance, Article):
-	        if instance.checker_runtime:
-	            instance.checker_runtime.delete()
-	            
-	pre_delete.connect(pre_delete_handler)
+  @receiver(pre_delete)
+  def pre_delete_handler(sender, instance, using, **kwargs):
+      ....
+      
+      if isinstance(instance, Article):
+          if instance.checker_runtime:
+              instance.checker_runtime.delete()
+              
+  pre_delete.connect(pre_delete_handler)
 
 
 .. _DjangoItem: https://scrapy.readthedocs.org/en/latest/topics/djangoitem.html
@@ -142,13 +142,13 @@ is the base attribute (this is a bit of an artificial construct) and which one e
 later, we have to choose an attribute type for each attribute defined. There is a choice between the following
 types (taken from ``dynamic_scraper.models.ScrapedObjAttr``)::
 
-	ATTR_TYPE_CHOICES = (
-	    ('S', 'STANDARD'),
-	    ('T', 'STANDARD (UPDATE)'),
-	    ('B', 'BASE'),
-	    ('U', 'DETAIL_PAGE_URL'),
-	    ('I', 'IMAGE'),
-	)
+  ATTR_TYPE_CHOICES = (
+      ('S', 'STANDARD'),
+      ('T', 'STANDARD (UPDATE)'),
+      ('B', 'BASE'),
+      ('U', 'DETAIL_PAGE_URL'),
+      ('I', 'IMAGE'),
+  )
 
 ``STANDARD``, ``BASE`` and ``DETAIL_PAGE_URL`` should be clear by now, ``STANDARD (UPDATE)`` behaves like ``STANDARD``, 
 but these attributes are updated with the new values if the item is already in the DB. ``IMAGE`` represents attributes which will 
@@ -224,10 +224,10 @@ The next screenshot is from a news article detail page:
 We will use these code snippets in our examples.
 
 .. note::
-	If you don't want to manually create the necessary DB objects for the example project, you can also run
-	``python manage.py loaddata open_news/open_news.json`` from within the ``example_project`` directory in your 
-	favorite shell to have all the objects necessary for the example created automatically .
-	
+  If you don't want to manually create the necessary DB objects for the example project, you can also run
+  ``python manage.py loaddata open_news/open_news.json`` from within the ``example_project`` directory in your 
+  favorite shell to have all the objects necessary for the example created automatically .
+  
 .. note::
    The WikiNews site changes its code from time to time. I will try to update the example code and text in the
    docs, but I won't keep pace with the screenshots so they can differ slightly compared to the real world example.
@@ -349,22 +349,23 @@ for you but you have to do it manually in your own item pipeline::
   class DjangoWriterPipeline(object):
       
       def process_item(self, item, spider):
-          try:
-              item['news_website'] = spider.ref_object
+        if spider.conf['DO_ACTION']: #Necessary since DDS v.0.9+
+              try:
+                  item['news_website'] = spider.ref_object
               
-              checker_rt = SchedulerRuntime(runtime_type='C')
-              checker_rt.save()
-              item['checker_runtime'] = checker_rt
+                  checker_rt = SchedulerRuntime(runtime_type='C')
+                  checker_rt.save()
+                  item['checker_runtime'] = checker_rt
               
-              item.save()
-              spider.action_successful = True
-              spider.log("Item saved.", log.INFO)
+                  item.save()
+                  spider.action_successful = True
+                  spider.log("Item saved.", log.INFO)
                   
-          except IntegrityError, e:
-              spider.log(str(e), log.ERROR)
-              raise DropItem("Missing attribute.")
+              except IntegrityError, e:
+                  spider.log(str(e), log.ERROR)
+                  raise DropItem("Missing attribute.")
                   
-          return item 
+        return item 
 
 The things you always have to do here is adding the reference object to the scraped item class and - if you
 are using checker functionality - create the runtime object for the checker. You also have to set the
@@ -380,10 +381,10 @@ You can run/test spiders created with Django Dynamic Scraper from the command li
 normal Scrapy spiders, but with some additional arguments given. The syntax of the DDS spider run command is
 as following::
 
-	scrapy crawl SPIDERNAME -a id=REF_OBJECT_ID 
-	                        [-a do_action=(yes|no) -a run_type=(TASK|SHELL) 
-	                        -a max_items_read={Int} -a max_items_save={Int}]
-	
+  scrapy crawl [--output=FILE --output-format=FORMAT] SPIDERNAME -a id=REF_OBJECT_ID 
+                          [-a do_action=(yes|no) -a run_type=(TASK|SHELL) 
+                          -a max_items_read={Int} -a max_items_save={Int}]
+  
 * With ``-a id=REF_OBJECT_ID`` you provide the ID of the reference object items should be scraped for,
   in our example case that would be the Wikinews ``NewsWebsite`` object, probably with ID 1 if you haven't
   added other objects before. This argument is mandatory.
@@ -397,10 +398,14 @@ as following::
 * With ``-a max_items_read={Int}`` and ``-a max_items_save={Int}`` you can override the scraper settings for these
   params.
 
+* If you don't want your output saved to the Django DB but to a custom file you can use Scrapy`s build-in 
+  output options ``--output=FILE`` and ``--output-format=FORMAT`` to scrape items into a file. Use this without 
+  setting the ``-a do_action=yes`` parameter!
+
 So, to invoke our Wikinews scraper, we have the following command::
 
-	scrapy crawl article_spider -a id=1 -a do_action=yes
-	
+  scrapy crawl article_spider -a id=1 -a do_action=yes
+  
 
 If you have done everything correctly (which would be a bit unlikely for the first run after so many single steps,
 but just in theory... :-)), you should get some output similar to the following, of course with other 

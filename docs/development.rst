@@ -94,6 +94,25 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.9.0-beta** (2016-01-11)
+
+* BREAKING!!! This release slighly changes the semantics of the internal ``ValidationPipeline`` class
+  in ``dynamic_scraper/pipelines.py`` to also pass items to your custom user pipeline when the
+  ``do_action`` command line parameter (see: :ref:`running_scrapers`) is not set. This creates the need
+  of an additional ``if spider.conf['DO_ACTION']:`` restriction in your custom user pipeline function 
+  (see: :ref:`adding_pipeline_class`). Make sure to add this line, otherwise you will get unwanted side
+  effects. If you do more stuff in your custom pipeline class also have a broader look if this new
+  behaviour changes your processing (you should be save though if you apply the ``if`` restriction above
+  to all of your code in the classs).
+* Decoupling of ``DDS`` ``Django`` item save mechanism for the pipeline processing to allow the usage
+  of Scrapy`s build-in output options ``--output=FILE`` and ``--output-format=FORMAT`` to scrape items 
+  into a file instead of the DB (see: :ref:`running_scrapers`).
+* The above is the main change, not touching too much code. Release number nevertheless jumped up a whole
+  version number to indicate a major breaking change in using the library!
+* Another reason for the new ``0.9`` version number is the amount of new features being added throuhout
+  minor ``0.8`` releases (more flexible checker concept, monitoring functionality, attribute placeholders)
+  to point out the amount of changes since ``0.8.0``.  
+
 **Changes in version 0.8.13-beta** (2016-01-07)
 
 * Expanded detail page URL processor placeholder concept to generic attribute placeholders (:ref:`attribute_placeholders`)
