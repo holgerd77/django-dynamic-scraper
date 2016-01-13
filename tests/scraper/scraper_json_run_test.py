@@ -85,7 +85,18 @@ class ScraperJSONRunTest(ScraperTest):
         self.run_event_spider(1)
         self.assertEqual(Event.objects.get(pk=1).title, 'Event 1')
         self.assertEqual(Event.objects.get(pk=1).description, 'Event 1 Description')
-
+    
+    
+    def test_static_processor_empty_x_path(self):
+        self.setUpScraperJSONDefaultScraper()
+        self.se_title.x_path = u''
+        self.se_title.processors = u'static'
+        self.se_title.proc_ctxt = u"'static': 'This text should always be there'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.filter(title='This text should always be there')), 3)
+    
 
     def test_detail_page(self):
         self.setUpScraperJSONDefaultScraper()

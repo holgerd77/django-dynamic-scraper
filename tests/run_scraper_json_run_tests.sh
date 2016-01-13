@@ -6,6 +6,7 @@ tests="
 test_num_scraped_objects
 test_non_repetition
 test_non_data_mixing
+test_static_processor_empty_x_path
 test_detail_page
 test_detail_page_json
 test_checker_x_path_type_x_path_delete

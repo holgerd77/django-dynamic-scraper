@@ -76,7 +76,18 @@ class ScraperProcessorRunTest(ScraperTest):
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 2)
-
+    
+    
+    def test_static_processor_empty_x_path(self):
+        self.setUpProcessorTest()
+        self.se_title.x_path = u''
+        self.se_title.processors = u'static'
+        self.se_title.proc_ctxt = u"'static': 'This text should always be there'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.filter(title='This text should always be there')), 2)
+    
 
     def test_static_processor_correct_x_path(self):
         self.setUpProcessorTest()
