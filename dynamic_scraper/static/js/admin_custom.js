@@ -27,5 +27,12 @@ $(document).ready(function() {
                 $(this).html('(' + gettext('Hide') + ')');
             }
         }).removeAttr('href').css('cursor', 'pointer');
+				
+				// Limit height of ScraperElem textarea fields
+				var ta_fields = 'tr.dynamic-scraperelem_set textarea, ';
+				ta_fields += 'div.field-checker_x_path textarea, ';
+				ta_fields += 'div.field-checker_x_path_result textarea';
+				$(ta_fields).css('height', '40px');
+				$(ta_fields).css('width', '220px');
     });
 });
