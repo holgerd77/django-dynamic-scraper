@@ -249,8 +249,8 @@ class Checker(models.Model):
     scraped_obj_attr = models.ForeignKey(ScrapedObjAttr, help_text="Attribute of type DETAIL_PAGE_URL, several checkers for same DETAIL_PAGE_URL attribute possible.")
     scraper = models.ForeignKey(Scraper)
     checker_type = models.CharField(max_length=1, choices=CHECKER_TYPE, default='4')
-    checker_x_path = models.CharField(max_length=200, blank=True)
-    checker_x_path_result = models.CharField(max_length=200, blank=True)
+    checker_x_path = models.TextField(blank=True)
+    checker_x_path_result = models.TextField(blank=True)
     checker_ref_url = models.URLField(max_length=500, blank=True)
     comments = models.TextField(blank=True)
     
@@ -262,12 +262,12 @@ class ScraperElem(models.Model):
     REQUEST_PAGE_TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP%d" % n, "Detail Page %d" % n) for n in list(range(1, 26))])
     scraped_obj_attr = models.ForeignKey(ScrapedObjAttr)
     scraper = models.ForeignKey(Scraper)   
-    x_path = models.CharField(max_length=200)
-    reg_exp = models.CharField(max_length=200, blank=True)
+    x_path = models.TextField(blank=True)
+    reg_exp = models.TextField(blank=True)
     #from_detail_page = models.BooleanField(default=False)
     request_page_type = models.CharField(max_length=3, choices=REQUEST_PAGE_TYPE_CHOICES, default="MP")
-    processors = models.CharField(max_length=200, blank=True)
-    proc_ctxt = models.CharField(max_length=200, blank=True)
+    processors = models.TextField(blank=True)
+    proc_ctxt = models.TextField(blank=True)
     mandatory = models.BooleanField(default=True)
 
 
