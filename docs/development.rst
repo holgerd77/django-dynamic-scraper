@@ -94,6 +94,17 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.9.1-beta** (2016-01-13)
+
+* Allowing empty ``x_path`` scraper attribute fields for easier appliance of ``static`` processor to fill
+  in static values
+* Enlargening ``x_path``, ``reg_exp`` and ``processor`` fields in Django admin scraper definition from
+  ``CharField`` to ``TextField`` for more extensive ``x_path``, ``reg_exp`` and ``processor`` definitions
+  and more comfortable input/editing
+* New command line option ``max_pages_read`` for limiting the number of pages read on test runs
+  (see: :ref:`running_scrapers`)
+* New migration ``0016``, run Django ``migrate`` command
+
 **Changes in version 0.9.0-beta** (2016-01-11)
 
 * BREAKING!!! This release slighly changes the semantics of the internal ``ValidationPipeline`` class
