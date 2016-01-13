@@ -89,6 +89,17 @@ class DjangoSpider(DjangoBaseSpider):
             log_msg += "max_items_save " + str(self.conf['MAX_ITEMS_SAVE'])
         else:
             self.conf['MAX_ITEMS_SAVE'] = self.scraper.max_items_save
+        #max_pages_read 
+        if 'max_pages_read' in kwargs:
+            try:
+                self.conf['MAX_PAGES_READ'] = int(kwargs['max_pages_read'])
+            except ValueError:
+                raise CloseSpider("You have to provide an integer value as max_pages_read parameter!")
+            if len(log_msg) > 0:
+                log_msg += ", "
+            log_msg += "max_pages_read " + str(self.conf['MAX_PAGES_READ'])
+        else:
+            self.conf['MAX_PAGES_READ'] = None
             
         super(DjangoSpider, self)._set_config(log_msg, **kwargs)
 
@@ -126,6 +137,8 @@ class DjangoSpider(DjangoBaseSpider):
                 append_str = append_str[1:]
 
             self.pages = pages
+            if self.conf['MAX_PAGES_READ']:
+                self.pages = self.pages[0:self.conf['MAX_PAGES_READ']]
             for page in self.pages:
                 url = scrape_url + append_str.format(page=page)
                 self.start_urls.append(url)
