@@ -1,7 +1,7 @@
 #Stage 2 Update (Python 3)
 from __future__ import unicode_literals
 from builtins import str
-import datetime
+import datetime, re
 from scrapy import log
 
 
@@ -10,7 +10,14 @@ def string_strip(text, loader_context):
         text = str(text)
     chars = loader_context.get('string_strip', ' \n\t\r')
     return text.strip(chars)
+
+
+def remove_chars(text, loader_context):
+    pattern = loader_context.get('remove_chars', '')
+    result_str = re.sub(pattern, '', str(text))
     
+    return result_str
+
 
 def pre_string(text, loader_context):
     pre_str = loader_context.get('pre_string', '')
