@@ -26,6 +26,9 @@ class DjangoSpider(DjangoBaseSpider):
     mp_form_data = None
     dp_form_data = {}
     non_db_results = {}
+    
+    current_output_num_mp_response_bodies = 0
+    current_output_num_dp_response_bodies = 0
 
     def __init__(self, *args, **kwargs):
         self.mandatory_vars.append('scraped_obj_class')
@@ -100,6 +103,28 @@ class DjangoSpider(DjangoBaseSpider):
             log_msg += "max_pages_read " + str(self.conf['MAX_PAGES_READ'])
         else:
             self.conf['MAX_PAGES_READ'] = None
+        #output_num_mp_response_bodies
+        if 'output_num_mp_response_bodies' in kwargs:
+            try:
+                self.conf['OUTPUT_NUM_MP_RESPONSE_BODIES'] = int(kwargs['output_num_mp_response_bodies'])
+            except ValueError:
+                raise CloseSpider("You have to provide an integer value as output_num_mp_response_bodies parameter!")
+            if len(log_msg) > 0:
+                log_msg += ", "
+            log_msg += "output_num_mp_response_bodies " + str(self.conf['OUTPUT_NUM_MP_RESPONSE_BODIES'])
+        else:
+            self.conf['OUTPUT_NUM_MP_RESPONSE_BODIES'] = 0
+        #output_num_dp_response_bodies
+        if 'output_num_dp_response_bodies' in kwargs:
+            try:
+                self.conf['OUTPUT_NUM_DP_RESPONSE_BODIES'] = int(kwargs['output_num_dp_response_bodies'])
+            except ValueError:
+                raise CloseSpider("You have to provide an integer value as output_num_dp_response_bodies parameter!")
+            if len(log_msg) > 0:
+                log_msg += ", "
+            log_msg += "output_num_dp_response_bodies " + str(self.conf['OUTPUT_NUM_DP_RESPONSE_BODIES'])
+        else:
+            self.conf['OUTPUT_NUM_DP_RESPONSE_BODIES'] = 0
             
         super(DjangoSpider, self)._set_config(log_msg, **kwargs)
 
@@ -312,6 +337,13 @@ class DjangoSpider(DjangoBaseSpider):
         self._set_dummy_loader(response, from_page, xs, self.scraped_obj_item_class())
         if from_page == 'MP':
             self.items_read_count += 1
+        else:
+            if self.current_output_num_dp_response_bodies < self.conf['OUTPUT_NUM_DP_RESPONSE_BODIES']:
+                self.current_output_num_dp_response_bodies += 1
+                self.log("Response body ({url})\n\n***** RP_DP_{num}_START *****\n{resp_body}\n***** RP_DP_{num}_END *****\n\n".format(
+                    url=response.url,
+                    resp_body=response.body,
+                    num=self.current_output_num_dp_response_bodies), log.INFO)
             
         elems = self.scraper.get_scrape_elems()
         
@@ -352,7 +384,14 @@ class DjangoSpider(DjangoBaseSpider):
     def parse(self, response):
         xs = Selector(response)
         base_elem = self.scraper.get_base_elem()
-
+        
+        if self.current_output_num_mp_response_bodies < self.conf['OUTPUT_NUM_MP_RESPONSE_BODIES']:
+            self.current_output_num_mp_response_bodies += 1
+            self.log("Response body ({url})\n\n***** RP_MP_{num}_START *****\n{resp_body}\n***** RP_MP_{num}_END *****\n\n".format(
+                url=response.url,
+                resp_body=response.body,
+                num=self.current_output_num_mp_response_bodies), log.INFO)
+        
         if self.scraper.get_main_page_rpt().content_type == 'J':
             json_resp = json.loads(response.body_as_unicode())
             try:
