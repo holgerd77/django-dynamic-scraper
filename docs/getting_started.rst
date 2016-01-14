@@ -389,7 +389,8 @@ as following::
   scrapy crawl [--output=FILE --output-format=FORMAT] SPIDERNAME -a id=REF_OBJECT_ID 
                           [-a do_action=(yes|no) -a run_type=(TASK|SHELL) 
                           -a max_items_read={Int} -a max_items_save={Int}
-                          -a max_pages_read={Int}]
+                          -a max_pages_read={Int}
+                          -a output_num_mp_response_bodies={Int} -a output_num_dp_response_bodies={Int} ]
   
 * With ``-a id=REF_OBJECT_ID`` you provide the ID of the reference object items should be scraped for,
   in our example case that would be the Wikinews ``NewsWebsite`` object, probably with ID 1 if you haven't
@@ -405,6 +406,11 @@ as following::
   params.
 
 * With ``-a max_pages_read={Int}`` you can limit the number of pages read when using pagination
+
+* With ``-a output_num_mp_response_bodies={Int}`` and ``-a output_num_dp_response_bodies={Int}`` you can log
+  the complete response body content of the {Int} first main/detail page responses to the screen for debugging
+  (beginnings/endings are marked with a unique string in the form ``RP_MP_{num}_START`` for using full-text
+  search for orientation)
 
 * If you don't want your output saved to the Django DB but to a custom file you can use Scrapy`s build-in 
   output options ``--output=FILE`` and ``--output-format=FORMAT`` to scrape items into a file. Use this without 

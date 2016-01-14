@@ -94,6 +94,12 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.9.3-beta** (2016-01-14)
+
+* New command line options ``output_num_mp_response_bodies`` and ``output_num_dp_response_bodies``
+  for logging the complete response bodies of the first {Int} main/detail page responses to the screen
+  for debugging (for the really hard cases :-)) (see: :ref:`running_scrapers`)
+
 **Changes in version 0.9.2-beta** (2016-01-14)
 
 * New processor ``remove_chars`` (see: :ref:`processors`) for removing one or several type of chars from
