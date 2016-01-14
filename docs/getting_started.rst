@@ -363,7 +363,12 @@ for you but you have to do it manually in your own item pipeline::
                   
               except IntegrityError, e:
                   spider.log(str(e), log.ERROR)
+                  spider.log(str(item._errors), log.ERROR)
                   raise DropItem("Missing attribute.")
+        else:
+            if not item.is_valid():
+                spider.log(str(item._errors), log.ERROR)
+                raise DropItem("Missing attribute.")
                   
         return item 
 
