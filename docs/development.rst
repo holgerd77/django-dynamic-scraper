@@ -94,6 +94,11 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.9.2-beta** (2016-01-14)
+
+* New processor ``remove_chars`` (see: :ref:`processors`) for removing one or several type of chars from
+  a scraped string
+
 **Changes in version 0.9.1-beta** (2016-01-13)
 
 * Allowing empty ``x_path`` scraper attribute fields for easier appliance of ``static`` processor to fill

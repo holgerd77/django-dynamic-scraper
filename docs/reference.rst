@@ -170,6 +170,16 @@ string_strip
 *Result (Example)*             " ... Example Text!!!" -> "Example Text"
 ============================== ================================================================
 
+remove_chars
+^^^^^^^^^^^^
+============================== ================================================================
+*Description*                  Removing of characters or character pattern using the python
+                               re.sub function by providing a regex pattern
+*Usable with other processors* Yes
+*Context definition (Example)* ``'remove_chars': '[-\.]+'``
+*Result (Example)*             "Example... Text--!--!!" -> "Example Text!!!"
+============================== ================================================================
+
 pre_string
 ^^^^^^^^^^
 ============================== ===================================================================
