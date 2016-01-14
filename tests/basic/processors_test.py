@@ -13,6 +13,17 @@ class ProcessorsTest(TestCase):
         self.assertEqual(result_str, 'This text makes no sense!')
     
     
+    def test_remove_chars(self):
+        result_str = processors.remove_chars("Example Text!!!", {'remove_chars': '[-\.]+'})
+        self.assertEqual(result_str, 'Example Text!!!')
+        
+        result_str = processors.remove_chars("Example... Text-!-!!", {'remove_chars': '[-\.]+'})
+        self.assertEqual(result_str, 'Example Text!!!')
+        
+        result_str = processors.remove_chars("", {'remove_chars': '[-\.]+'})
+        self.assertEqual(result_str, '')
+    
+    
     def test_pre_string(self):
         result_str = processors.pre_string("text", {'pre_string': 'before_'})
         self.assertEqual(result_str, 'before_text')
