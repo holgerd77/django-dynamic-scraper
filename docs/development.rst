@@ -94,6 +94,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.9.4-beta** (2016-01-15)
+
+* Fixed a critical bug when using non-saved fields for scraping leading to incorrect data attribution to items
+
 **Changes in version 0.9.3-beta** (2016-01-14)
 
 * New command line options ``output_num_mp_response_bodies`` and ``output_num_dp_response_bodies``
