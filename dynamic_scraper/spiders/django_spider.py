@@ -25,6 +25,7 @@ class DjangoSpider(DjangoBaseSpider):
 
     mp_form_data = None
     dp_form_data = {}
+    tmp_non_db_results = {}
     non_db_results = {}
     
     current_output_num_mp_response_bodies = 0
@@ -257,7 +258,7 @@ class DjangoSpider(DjangoBaseSpider):
             self.log("Wrong context definition format: " + context_str, log.ERROR)
     
 
-    def _scrape_item_attr(self, scraper_elem, from_page):
+    def _scrape_item_attr(self, scraper_elem, from_page, item_num):
         if(from_page == scraper_elem.request_page_type):
             procs = self._get_processors(scraper_elem.processors)
             self._set_loader_context(scraper_elem.proc_ctxt)
@@ -280,7 +281,7 @@ class DjangoSpider(DjangoBaseSpider):
             if not scraper_elem.scraped_obj_attr.save_to_db:
                 item = loader.load_item()
                 if name in item:
-                    self.non_db_results[scraper_elem.scraped_obj_attr.name] = item[name]
+                    self.tmp_non_db_results[item_num][scraper_elem.scraped_obj_attr.name] = item[name]
             msg  = '{0: <20}'.format(name)
             c_values = loader.get_collected_values(name)
             if len(c_values) > 0:
@@ -328,11 +329,12 @@ class DjangoSpider(DjangoBaseSpider):
         self.dummy_loader.log = self.log
     
 
-    def parse_item(self, response, xs=None, from_page=None):
+    def parse_item(self, response, xs=None, from_page=None, item_num=None):
         #log.msg(str(response.request.meta), level=log.INFO)
         #log.msg(response.body_as_unicode(), level=log.INFO)
         if not from_page:
             from_page = response.request.meta['from_page']
+            item_num = response.request.meta['item_num']
         self._set_loader(response, from_page, xs, self.scraped_obj_item_class())
         self._set_dummy_loader(response, from_page, xs, self.scraped_obj_item_class())
         if from_page == 'MP':
@@ -350,7 +352,7 @@ class DjangoSpider(DjangoBaseSpider):
         for elem in elems:
             if not elem.scraped_obj_attr.save_to_db:
                 self._set_dummy_loader(response, from_page, xs, self.scraped_obj_item_class())
-            self._scrape_item_attr(elem, from_page)
+            self._scrape_item_attr(elem, from_page, item_num)
         # Dealing with Django Char- and TextFields defining blank field as null
         item = self.loader.load_item()
         for key, value in item.items():
@@ -361,6 +363,7 @@ class DjangoSpider(DjangoBaseSpider):
         if from_page != 'MP':
             item, is_double = self._check_for_double_item(item)
             if response.request.meta['last']:
+                self.non_db_results[id(item)] = self.tmp_non_db_results[item_num].copy()
                 return item
         else:
             return item
@@ -371,9 +374,9 @@ class DjangoSpider(DjangoBaseSpider):
             if scraper_elem.request_page_type == 'MP':
                 name = scraper_elem.scraped_obj_attr.name
                 if not scraper_elem.scraped_obj_attr.save_to_db:
-                    if name in self.non_db_results and \
-                       self.non_db_results[name] != None:
-                        url = url.replace('{' + name + '}', unicode(self.non_db_results[name]))
+                    if name in self.tmp_non_db_results and \
+                       self.tmp_non_db_results[name] != None:
+                        url = url.replace('{' + name + '}', unicode(self.tmp_non_db_results[name]))
                 else:
                     if name in item and \
                        item[name] != None:
@@ -414,8 +417,9 @@ class DjangoSpider(DjangoBaseSpider):
 
         for obj in base_objects:
             item_num = self.items_read_count + 1
+            self.tmp_non_db_results[item_num] = {}
             self.log("Starting to crawl item %d from page %d." % (item_num, response.request.meta['page']), log.INFO)
-            item = self.parse_item(response, obj, 'MP')
+            item = self.parse_item(response, obj, 'MP', item_num)
             #print item
             
             if item:
@@ -438,15 +442,16 @@ class DjangoSpider(DjangoBaseSpider):
 
                 if self.scraper.get_detail_page_url_elems().count() == 0 or \
                     (is_double and cnt_sue_detail == 0) or cnt_detail_scrape == 0:
+                    self.non_db_results[id(item)] = self.tmp_non_db_results[item_num].copy()
                     yield item
                 else:
                     #self.run_detail_page_request()
                     url_elems = self.scraper.get_detail_page_url_elems()
                     for url_elem in url_elems:
                         if not url_elem.scraped_obj_attr.save_to_db:
-                            url = self.non_db_results[url_elem.scraped_obj_attr.name]
+                            url = self.tmp_non_db_results[url_elem.scraped_obj_attr.name]
                             url = self._replace_detail_page_url_placeholders(url, item)
-                            self.non_db_results[url_elem.scraped_obj_attr.name] = url
+                            self.tmp_non_db_results[url_elem.scraped_obj_attr.name] = url
                         else:
                             url = item[url_elem.scraped_obj_attr.name]
                             url = self._replace_detail_page_url_placeholders(url, item)
@@ -457,6 +462,7 @@ class DjangoSpider(DjangoBaseSpider):
                             kwargs['meta'] = {}
                         kwargs['meta']['item'] = item
                         kwargs['meta']['from_page'] = rpt.page_type
+                        kwargs['meta']['item_num'] = item_num
                         if url_elem == url_elems[len(url_elems)-1]:
                             kwargs['meta']['last'] = True
                         else:

@@ -138,5 +138,28 @@ class ScraperProcessorRunTest(ScraperTest):
         self.run_event_spider(1)
         
         self.assertEqual(Event.objects.filter(title='Event 1_START_Event 1 description_END').count(), 1)
+    
+    
+    def test_processor_with_placeholder_tmp_to_mp(self):
+        self.setUpProcessorTest()
+        self.se_title.processors = u'post_string'
+        self.se_title.proc_ctxt = u"'post_string': '_START_{extra_standard_1}_END'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(Event.objects.filter(title='Event 1_START_Event 1_END').count(), 1)
+    
+    
+    def test_processor_with_placeholder_tmp_with_placeholder_to_mp(self):
+        self.setUpProcessorTest()
+        self.se_title.processors = u'post_string'
+        self.se_title.proc_ctxt = u"'post_string': '_START_{extra_standard_1}_END'"
+        self.se_title.save()
+        self.se_es_1.processors = u'remove_chars'
+        self.se_es_1.proc_ctxt = u"'remove_chars': '[0-9 ]+'"
+        self.se_es_1.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(Event.objects.filter(title='Event 1_START_Event_END').count(), 1)
         
         

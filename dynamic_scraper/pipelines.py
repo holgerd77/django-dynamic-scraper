@@ -67,9 +67,9 @@ class ValidationPipeline(object):
             for scraper_elem in standard_elems:
                 name = scraper_elem.scraped_obj_attr.name
                 if not scraper_elem.scraped_obj_attr.save_to_db:
-                    if value and name in spider.non_db_results and \
-                       spider.non_db_results[name] != None:
-                        value = value.replace('{' + name + '}', str(spider.non_db_results[name]))
+                    if value and name in spider.non_db_results[id(item)] and \
+                       spider.non_db_results[id(item)][name] != None:
+                        value = value.replace('{' + name + '}', str(spider.non_db_results[id(item)][name]))
                         item[key] = value
                 else:
                     if value and name in item and \

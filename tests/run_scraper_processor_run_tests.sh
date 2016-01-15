@@ -13,6 +13,8 @@ test_reg_exp
 test_processor_with_detail_page_url_placeholder
 test_processor_with_placeholder_mp_to_dp
 test_processor_with_placeholder_dp_to_mp
+test_processor_with_placeholder_tmp_to_mp
+test_processor_with_placeholder_tmp_with_placeholder_to_mp
 "
 
 for test in `echo $tests`

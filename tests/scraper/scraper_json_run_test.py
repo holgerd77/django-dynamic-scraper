@@ -18,6 +18,8 @@ class ScraperJSONRunTest(ScraperTest):
         self.se_desc.x_path = u'description'
         self.se_desc.request_page_type = 'MP'
         self.se_desc.save()
+        self.se_es_1.x_path = u'title'
+        self.se_es_1.save()
 
         self.rpt_mp.content_type = 'J'
         self.rpt_mp.save()

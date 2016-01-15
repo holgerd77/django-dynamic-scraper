@@ -186,6 +186,8 @@ class ScraperTest(TestCase):
         self.soa_desc.save()
         self.soa_desc2 = ScrapedObjAttr(name=u'description2', attr_type='S', obj_class=self.sc)
         self.soa_desc2.save()
+        self.soa_es_1 = ScrapedObjAttr(name=u'extra_standard_1', attr_type='S', obj_class=self.sc, save_to_db=False)
+        self.soa_es_1.save()
 
         self.scraper = Scraper(name=u'Event Scraper', scraped_obj_class=self.sc, status='A',)
         self.scraper.save()
@@ -202,6 +204,9 @@ class ScraperTest(TestCase):
         self.se_desc = ScraperElem(scraped_obj_attr=self.soa_desc, scraper=self.scraper, 
             x_path=u'//div/div[@class="description"]/text()', request_page_type='DP1', mandatory=False)
         self.se_desc.save()
+        self.se_es_1 = ScraperElem(scraped_obj_attr=self.soa_es_1, scraper=self.scraper, 
+            x_path=u'a/text()', request_page_type='MP')
+        self.se_es_1.save()
 
         self.rpt_mp  = RequestPageType(page_type='MP', scraper=self.scraper)
         self.rpt_mp.save()
