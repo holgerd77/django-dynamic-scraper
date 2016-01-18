@@ -94,6 +94,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.9.5-beta** (2016-01-18)
+
+* Fixed a severe bug when using non-saved detail page URLs in scrapers
+
 **Changes in version 0.9.4-beta** (2016-01-15)
 
 * Fixed a critical bug when using non-saved fields for scraping leading to incorrect data attribution to items
