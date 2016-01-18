@@ -10,8 +10,7 @@ How to contribute
 You can contribute to improve Django Dynamic Scraper in many ways:
 
 * If you stumbled over a bug or have suggestions for an improvements or a feature addition report 
-  an issue on the GitHub page
-  with a good description.
+  an issue on the GitHub page with a good description.
 * If you have already fixed the bug or added the feature in the DDS code you can also make a pull request
   on GitHub. While I can't assure that every request will be taken over into the DDS source I will look
   at each request closely and integrate it if I fell that it's a good fit!
