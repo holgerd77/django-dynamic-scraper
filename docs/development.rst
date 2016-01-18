@@ -15,7 +15,7 @@ You can contribute to improve Django Dynamic Scraper in many ways:
   on GitHub. While I can't assure that every request will be taken over into the DDS source I will look
   at each request closely and integrate it if I fell that it's a good fit!
 * Since this documentation is also available in the Github repository of DDS you can also make pull
-  requests for documentation!
+  requests for documentation! 
 
 Here are some topics for which suggestions would be especially interesting:
 
