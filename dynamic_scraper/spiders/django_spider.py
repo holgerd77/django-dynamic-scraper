@@ -368,15 +368,15 @@ class DjangoSpider(DjangoBaseSpider):
         else:
             return item
     
-    def _replace_detail_page_url_placeholders(self, url, item):
+    def _replace_detail_page_url_placeholders(self, url, item, item_num):
         standard_elems = self.scraper.get_standard_elems()
         for scraper_elem in standard_elems:
             if scraper_elem.request_page_type == 'MP':
                 name = scraper_elem.scraped_obj_attr.name
                 if not scraper_elem.scraped_obj_attr.save_to_db:
-                    if name in self.tmp_non_db_results and \
-                       self.tmp_non_db_results[name] != None:
-                        url = url.replace('{' + name + '}', unicode(self.tmp_non_db_results[name]))
+                    if name in self.tmp_non_db_results[item_num] and \
+                       self.tmp_non_db_results[item_num][name] != None:
+                        url = url.replace('{' + name + '}', unicode(self.tmp_non_db_results[item_num][name]))
                 else:
                     if name in item and \
                        item[name] != None:
@@ -449,12 +449,12 @@ class DjangoSpider(DjangoBaseSpider):
                     url_elems = self.scraper.get_detail_page_url_elems()
                     for url_elem in url_elems:
                         if not url_elem.scraped_obj_attr.save_to_db:
-                            url = self.tmp_non_db_results[url_elem.scraped_obj_attr.name]
-                            url = self._replace_detail_page_url_placeholders(url, item)
-                            self.tmp_non_db_results[url_elem.scraped_obj_attr.name] = url
+                            url = self.tmp_non_db_results[item_num][url_elem.scraped_obj_attr.name]
+                            url = self._replace_detail_page_url_placeholders(url, item, item_num)
+                            self.tmp_non_db_results[item_num][url_elem.scraped_obj_attr.name] = url
                         else:
                             url = item[url_elem.scraped_obj_attr.name]
-                            url = self._replace_detail_page_url_placeholders(url, item)
+                            url = self._replace_detail_page_url_placeholders(url, item, item_num)
                             item[url_elem.scraped_obj_attr.name] = url
                         rpt = self.scraper.get_rpt_for_scraped_obj_attr(url_elem.scraped_obj_attr)
                         kwargs = self.dp_request_kwargs[rpt.page_type].copy()
