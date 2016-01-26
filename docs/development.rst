@@ -97,6 +97,9 @@ Release Notes
 
 * Fixed a severe bug causing scrapers to break when scraping unicode text
 * Making unicode text scraping more robust
+* Added several unit tests testing unicode string scraping/usage in various contexts
+* Added order attribute for scraped object attributes for convenience when editing scrapers
+  (see: :ref:`defining_scraped_object_class`)
 
 
 **Changes in version 0.9.5-beta** (2016-01-18)

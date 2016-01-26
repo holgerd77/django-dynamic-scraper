@@ -176,6 +176,11 @@ ID provided by your database.
    even for items already in the DB to compare the values. If you don't use the update functionality, use the simple ``STANDARD``
    attribute instead!
 
+.. note::
+   The ``order`` attribute for the different object attributes is just for convenience and determines the
+   order of the attributes when used for defining ``XPaths`` in your scrapers. Use 10-based or 100-based steps
+   for easier resorting (e.g. '100', '200', '300', ...).
+
 
 Defining your scrapers
 ======================

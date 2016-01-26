@@ -45,6 +45,7 @@ class ScrapedObjAttr(models.Model):
         ('I', 'IMAGE'),
     )
     name = models.CharField(max_length=200)
+    order = models.IntegerField(default=100)
     obj_class = models.ForeignKey(ScrapedObjClass)
     attr_type = models.CharField(max_length=1, choices=ATTR_TYPE_CHOICES)
     id_field = models.BooleanField(default=False)
@@ -52,6 +53,9 @@ class ScrapedObjAttr(models.Model):
     
     def __str__(self):
         return self.name + " (" + str(self.obj_class) + ")"
+    
+    class Meta(object):
+        ordering = ['order',]
 
 
 @python_2_unicode_compatible
@@ -269,6 +273,16 @@ class ScraperElem(models.Model):
     processors = models.TextField(blank=True)
     proc_ctxt = models.TextField(blank=True)
     mandatory = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return '{s} > {soa} Attribute ({rpt})'.format(
+            s=str(self.scraper),
+            soa=self.scraped_obj_attr.name,
+            rpt=self.get_request_page_type_display())
+    
+    class Meta(object):
+        ordering = ['scraped_obj_attr__order',]
+    
 
 
 @python_2_unicode_compatible
