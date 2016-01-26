@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os.path, unittest
 
 from twisted.internet import reactor
@@ -271,8 +272,26 @@ class ScraperRunTest(ScraperTest):
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 2)
+
+
+    def test_unicode_standard_field_main_page(self):
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_unicode/event_main.html')
+        self.event_website.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.filter(title='Event 1 ❤ ☀ ★ ☂ ☻ ♞ ☯ ☭ ☢')), 1)
+        self.assertEqual(len(Event.objects.filter(title='Event 2 雨雪天开车尤其危险')), 1)
     
     
+    def test_unicode_standard_field_detail_page(self):
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_unicode/event_main.html')
+        self.event_website.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.filter(description='Event 1 description ♖ ☦ ✝ ❖ ➎ ♠ ♣ ♥')), 1)
+        self.assertEqual(len(Event.objects.filter(description='Event 2 description Камеры наблюдения заглянули')), 1)
+    
+
     def test_scraper_pause_status(self):
         self.scraper.status = 'P'
         self.scraper.save()

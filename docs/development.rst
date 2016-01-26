@@ -95,7 +95,9 @@ Release Notes
 =============
 **Changes in version 0.9.6-beta** (2016-01-26)
 
-* TODO
+* Fixed a severe bug causing scrapers to break when scraping unicode text
+* Making unicode text scraping more robust
+
 
 **Changes in version 0.9.5-beta** (2016-01-18)
 

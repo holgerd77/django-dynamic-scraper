@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os.path, unittest
 
 from twisted.internet import reactor
@@ -65,6 +66,16 @@ class ScraperProcessorRunTest(ScraperTest):
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 2)
+    
+    
+    def test_replace_processor_unicode_replace(self):
+        self.setUpProcessorTest()
+        self.se_title.processors = u'replace'
+        self.se_title.proc_ctxt = u"'replace': 'Replacement with beautiful unicode ❤ ☀ ★ ☂ ☻ ♞ ☯ ☭ ☢'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.all()), 2)
 
 
     def test_static_processor_wrong_x_path(self):
@@ -96,7 +107,17 @@ class ScraperProcessorRunTest(ScraperTest):
         self.se_title.save()
         self.run_event_spider(1)
         
-        self.assertEqual(len(Event.objects.all()), 2)  
+        self.assertEqual(len(Event.objects.all()), 2)
+    
+    
+    def test_static_processor_unicode_text(self):
+        self.setUpProcessorTest()
+        self.se_title.processors = u'static'
+        self.se_title.proc_ctxt = u"'static': 'This text should always be there ❤ ☀ ★ ☂ ☻ ♞ ☯ ☭ ☢'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.filter(title='This text should always be there ❤ ☀ ★ ☂ ☻ ♞ ☯ ☭ ☢')), 2)
     
     
     def test_reg_exp(self):
@@ -128,6 +149,17 @@ class ScraperProcessorRunTest(ScraperTest):
         self.run_event_spider(1)
         
         self.assertEqual(Event.objects.filter(description='Event 1 description_START_Event 1_END').count(), 1)
+    
+    
+    def test_processor_with_placeholder_mp_to_dp_unicode(self):
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_unicode/event_main.html')
+        self.event_website.save()
+        self.se_desc.processors = u'post_string'
+        self.se_desc.proc_ctxt = u"'post_string': '_START_{title}_END'"
+        self.se_desc.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(Event.objects.filter(description='Event 1 description ♖ ☦ ✝ ❖ ➎ ♠ ♣ ♥_START_Event 1 ❤ ☀ ★ ☂ ☻ ♞ ☯ ☭ ☢_END').count(), 1)
     
     
     def test_processor_with_placeholder_dp_to_mp(self):

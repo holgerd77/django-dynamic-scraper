@@ -20,6 +20,8 @@ test_runtime_config_max_items_save
 test_max_items_read
 test_max_items_save
 test_missing_mandatory
+test_unicode_standard_field_main_page
+test_unicode_standard_field_detail_page
 test_scraper_pause_status
 test_scraper_inactive_status
 "
