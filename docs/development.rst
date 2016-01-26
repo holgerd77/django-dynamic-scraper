@@ -93,6 +93,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.9.6-beta** (2016-01-26)
+
+* TODO
+
 **Changes in version 0.9.5-beta** (2016-01-18)
 
 * Fixed a severe bug when using non-saved detail page URLs in scrapers
