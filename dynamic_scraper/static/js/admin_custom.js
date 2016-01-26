@@ -28,6 +28,12 @@ $(document).ready(function() {
             }
         }).removeAttr('href').css('cursor', 'pointer');
 				
+				// Limit height of common textarea_fields
+				var c_ta_fields = 'div.field-pagination_page_replace textarea, ';
+				c_ta_fields += 'div.field-comments textarea, ';
+				c_ta_fields += 'div.dynamic-requestpagetype_set textarea';
+				$(c_ta_fields).css('height', '54px');
+				
 				// Limit height of ScraperElem textarea fields
 				var ta_fields = 'tr.dynamic-scraperelem_set textarea, ';
 				ta_fields += 'div.field-checker_x_path textarea, ';

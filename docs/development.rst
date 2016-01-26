@@ -100,6 +100,7 @@ Release Notes
 * Added several unit tests testing unicode string scraping/usage in various contexts
 * Added order attribute for scraped object attributes for convenience when editing scrapers
   (see: :ref:`defining_scraped_object_class`)
+* New migration ``0017'', run Django ``migrate`` command
 
 
 **Changes in version 0.9.5-beta** (2016-01-18)
