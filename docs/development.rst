@@ -98,10 +98,10 @@ Release Notes
 * Fixed a severe bug causing scrapers to break when scraping unicode text
 * Making unicode text scraping more robust
 * Added several unit tests testing unicode string scraping/usage in various contexts
+* Reduce size of textarea fields in scraper definitions
 * Added order attribute for scraped object attributes for convenience when editing scrapers
   (see: :ref:`defining_scraped_object_class`)
 * New migration ``0017'', run Django ``migrate`` command
-
 
 **Changes in version 0.9.5-beta** (2016-01-18)
 
