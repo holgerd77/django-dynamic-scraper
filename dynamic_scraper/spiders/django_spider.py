@@ -375,12 +375,14 @@ class DjangoSpider(DjangoBaseSpider):
                 name = scraper_elem.scraped_obj_attr.name
                 if not scraper_elem.scraped_obj_attr.save_to_db:
                     if name in self.tmp_non_db_results[item_num] and \
-                       self.tmp_non_db_results[item_num][name] != None:
-                        url = url.replace('{' + name + '}', unicode(self.tmp_non_db_results[item_num][name]))
+                       self.tmp_non_db_results[item_num][name] != None and \
+                       '{' + name + '}' in url:
+                        url = url.replace('{' + name + '}', self.tmp_non_db_results[item_num][name])
                 else:
                     if name in item and \
-                       item[name] != None:
-                        url = url.replace('{' + name + '}', unicode(item[name]))
+                       item[name] != None and \
+                       '{' + name + '}' in url:
+                        url = url.replace('{' + name + '}', item[name])
         return url
 
 

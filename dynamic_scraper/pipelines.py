@@ -3,6 +3,7 @@ from builtins import str
 from builtins import object
 import hashlib, ntpath
 from dynamic_scraper.models import ScraperElem
+from django.utils.encoding import smart_text
 from scrapy import log
 from scrapy.contrib.pipeline.images import ImagesPipeline
 from scrapy.exceptions import DropItem
@@ -66,14 +67,17 @@ class ValidationPipeline(object):
             standard_elems = spider.scraper.get_standard_elems()
             for scraper_elem in standard_elems:
                 name = scraper_elem.scraped_obj_attr.name
+                value = smart_text(value)
                 if not scraper_elem.scraped_obj_attr.save_to_db:
                     if value and name in spider.non_db_results[id(item)] and \
-                       spider.non_db_results[id(item)][name] != None:
+                       spider.non_db_results[id(item)][name] != None and \
+                       '{' + name + '}' in value:
                         value = value.replace('{' + name + '}', str(spider.non_db_results[id(item)][name]))
                         item[key] = value
                 else:
                     if value and name in item and \
-                       item[name] != None:
+                       item[name] != None and \
+                       '{' + name + '}' in value:
                         value = value.replace('{' + name + '}', str(item[name]))
                         item[key] = value
         
