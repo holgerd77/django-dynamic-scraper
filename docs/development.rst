@@ -97,7 +97,10 @@ Release Notes
 
 * First major release version to support ``Scrapy 1.0+``
 * From this release on older Scrapy versions like ``0.24`` are not supported any more,
-  please update!
+  please update your Scrapy version!
+* There are lots of code adoptions in this release, so there probably will be bugs.
+  If you are running this library in production you might want to wait for at least
+  0.10.1!
 
 * The following manual adoptions in your project are necessary:
 
@@ -107,7 +110,12 @@ Release Notes
     The package has to be separately
     installed with ``pip install scrapy-djangoitem`` and the import in your ``models.py``
     class has to be changed to ``from scrapy_djangoitem import DjangoItem`` 
-    (see: :ref:`creatingdjangomodels`).
+    (see: :ref:`creatingdjangomodels`)
+  * Due to Scrapy`s switch to Python`s build-in logging functionality the logging calls
+    in your custom pipeline class have to be slightly changed, removing the 
+    ``from scrapy import log`` import and changing the ``log.[LOGLEVEL]`` attribute
+    handover in the log function call to ``logging.[LOGLEVEL]``
+    (see: :ref:`adding_pipeline_class`)
 
 **Changes in version 0.9.6-beta** (2016-01-26)
 

@@ -2,7 +2,7 @@ import os, os.path, shutil
 
 from django.test import TestCase
 
-from scrapy import log, signals
+from scrapy import signals
 from scrapy.exceptions import DropItem
 
 from scrapy.utils.project import get_project_settings
@@ -52,7 +52,7 @@ class DjangoWriterPipeline(object):
                 
                 item.save()
             except IntegrityError, e:
-                spider.log(str(e), log.ERROR)
+                spider.log(str(e), logging.ERROR)
                 raise DropItem("Missing attribute.")
         
         return item 

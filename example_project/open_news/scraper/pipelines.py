@@ -1,5 +1,4 @@
 from django.db.utils import IntegrityError
-from scrapy import log
 from scrapy.exceptions import DropItem
 from dynamic_scraper.models import SchedulerRuntime
 
@@ -16,10 +15,10 @@ class DjangoWriterPipeline(object):
                 
                 item.save()
                 spider.action_successful = True
-                spider.log("Item saved to Django DB.", log.INFO)
+                spider.log("Item saved to Django DB.", logging.INFO)
                     
             except IntegrityError, e:
-                spider.log(str(e), log.ERROR)
+                spider.log(str(e), logging.ERROR)
                 raise DropItem("Missing attribute.")
                 
         return item

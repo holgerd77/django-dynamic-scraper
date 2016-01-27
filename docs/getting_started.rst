@@ -346,8 +346,8 @@ Adding the pipeline class
 Since you maybe want to add some extra attributes to your scraped items, DDS is not saving the scraped items
 for you but you have to do it manually in your own item pipeline::
 
+  import logging
   from django.db.utils import IntegrityError
-  from scrapy import log
   from scrapy.exceptions import DropItem
   from dynamic_scraper.models import SchedulerRuntime
   
@@ -364,15 +364,15 @@ for you but you have to do it manually in your own item pipeline::
               
                   item.save()
                   spider.action_successful = True
-                  spider.log("Item saved.", log.INFO)
+                  spider.log("Item saved.", logging.INFO)
                   
               except IntegrityError, e:
-                  spider.log(str(e), log.ERROR)
-                  spider.log(str(item._errors), log.ERROR)
+                  spider.log(str(e), logging.ERROR)
+                  spider.log(str(item._errors), logging.ERROR)
                   raise DropItem("Missing attribute.")
         else:
             if not item.is_valid():
-                spider.log(str(item._errors), log.ERROR)
+                spider.log(str(item._errors), logging.ERROR)
                 raise DropItem("Missing attribute.")
                   
         return item 
