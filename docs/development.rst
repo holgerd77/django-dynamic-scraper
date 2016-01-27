@@ -117,6 +117,11 @@ Release Notes
     handover in the log function call to ``logging.[LOGLEVEL]``
     (see: :ref:`adding_pipeline_class`)
 
+* Following changes have been made:
+
+  * Changed logging to use Python's build-in ``logging`` module
+  * Updated import paths according to Scrapy release documentation
+
 **Changes in version 0.9.6-beta** (2016-01-26)
 
 * Fixed a severe bug causing scrapers to break when scraping unicode text

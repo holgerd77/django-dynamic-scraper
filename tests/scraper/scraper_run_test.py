@@ -2,7 +2,6 @@
 import os.path, unittest
 
 from twisted.internet import reactor
-from scrapy import log
 from scrapy.exceptions import CloseSpider 
 
 from scraper.models import Event
@@ -171,7 +170,7 @@ class ScraperRunTest(ScraperTest):
         
         self.assertEqual(spider.scheduler_runtime.num_zero_actions, 1)
         
-        spider.log("Test message", log.ERROR)
+        spider.log("Test message", logging.ERROR)
         self.assertGreater(Log.objects.count(), 0)
     
     
@@ -190,7 +189,7 @@ class ScraperRunTest(ScraperTest):
         
         self.assertEqual(spider.scheduler_runtime.num_zero_actions, 0)
         
-        spider.log("Test message", log.ERROR)
+        spider.log("Test message", logging.ERROR)
         self.assertEqual(Log.objects.count(), 0)
     
     

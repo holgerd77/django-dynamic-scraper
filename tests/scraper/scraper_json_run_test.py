@@ -1,6 +1,5 @@
 import os.path, sys
 
-from scrapy import log
 from scraper.models import Event
 from scraper.scraper_test import EventSpider, ScraperTest
 from dynamic_scraper.models import Checker, RequestPageType, ScraperElem, SchedulerRuntime
@@ -72,7 +71,7 @@ class ScraperJSONRunTest(ScraperTest):
     def test_num_scraped_objects(self):
         self.setUpScraperJSONDefaultScraper()
         self.run_event_spider(1)
-        #log.msg(unicode(Event.objects.all()), level=log.INFO)
+        #logging.info(unicode(Event.objects.all()))
         self.assertEqual(len(Event.objects.all()), 3)
 
 
@@ -106,7 +105,7 @@ class ScraperJSONRunTest(ScraperTest):
         self.se_desc.request_page_type = 'DP1'
         self.se_desc.save()
         self.run_event_spider(1)
-        #log.msg(unicode(Event.objects.all()), level=log.INFO)
+        #logging.info(unicode(Event.objects.all()))
         self.assertEqual(len(Event.objects.filter(description='Event Detail Page 1 Description')), 1)
 
 
@@ -120,7 +119,7 @@ class ScraperJSONRunTest(ScraperTest):
         self.se_desc.request_page_type = 'DP1'
         self.se_desc.save()
         self.run_event_spider(1)
-        #log.msg(unicode(Event.objects.all()), level=log.INFO)
+        #logging.info(unicode(Event.objects.all()))
         self.assertEqual(len(Event.objects.filter(description='Event Detail Page 1 Description')), 1)
 
 
@@ -150,7 +149,7 @@ class ScraperJSONRunTest(ScraperTest):
         
 
         self.run_event_spider(1)
-        #log.msg(unicode(Event.objects.all()), level=log.INFO)
+        #logging.info(unicode(Event.objects.all()))
         events = Event.objects.filter(
             title='Event 1',
             #url='http://localhost:8010/static/site_with_json_content_type/event1.html',
