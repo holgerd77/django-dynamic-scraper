@@ -1,10 +1,9 @@
 from __future__ import unicode_literals
 from builtins import str
 from builtins import object
-import hashlib, ntpath
+import hashlib, logging, ntpath
 from dynamic_scraper.models import ScraperElem
 from django.utils.encoding import smart_text
-from scrapy import log
 from scrapy.contrib.pipeline.images import ImagesPipeline
 from scrapy.exceptions import DropItem
 from scrapy.http import Request
@@ -101,15 +100,15 @@ class ValidationPipeline(object):
             if elem.scraped_obj_attr.save_to_db and (\
                 not elem.scraped_obj_attr.name in item or\
                 (elem.scraped_obj_attr.name in item and not item[elem.scraped_obj_attr.name])):
-                spider.log("Mandatory elem " + elem.scraped_obj_attr.name + " missing!", log.ERROR)
+                spider.log("Mandatory elem " + elem.scraped_obj_attr.name + " missing!", logging.ERROR)
                 raise DropItem()
         
         if spider.conf['MAX_ITEMS_SAVE'] and spider.items_save_count >= spider.conf['MAX_ITEMS_SAVE']:
-            spider.log("Max items save reached, item not saved or further processed.", log.INFO)
+            spider.log("Max items save reached, item not saved or further processed.", logging.INFO)
             raise DropItem()
         
         if not spider.conf['DO_ACTION']:
-            spider.log("Item not saved to Django DB.", log.INFO)
+            spider.log("Item not saved to Django DB.", logging.INFO)
         else:
             if is_double:
                 standard_update_elems = spider.scraper.get_standard_update_elems()
