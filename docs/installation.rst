@@ -11,7 +11,7 @@ The **basic requirements** for Django Dynamic Scraper are:
 
 * Python 2.7+ (earlier versions untested, Python 3.x in preparation, no release date yet)
 * `Django <https://www.djangoproject.com/>`_ 1.7/1.8 (newer versions untested)
-* `Scrapy <http://www.scrapy.org>`_ 0.20-0.24 (newer versions untested)
+* `Scrapy <http://www.scrapy.org>`_ 1.0 (older versions like ``0.24`` not supported any more!)
 * `Python JSONPath RW 1.4+ <https://github.com/kennknowles/python-jsonpath-rw>`_
 * `Python-Future (preparing the code base to run with Python 2/3) 0.15+ <http://python-future.org/>`_
 
@@ -45,7 +45,9 @@ by which ``DDS`` version. Due to dev resource constraints backwards compatibilit
 +-------------+-------------------------------+---------------------------------------+-------------------------+
 | DDS Version | Django                        | Scrapy                                | django-celery           |
 +=============+===============================+=======================================+=========================+
-| 0.4-0.8     | 1.7/1.8 (newer untested)      | 0.22/0.24 (newer untested)            | 3.1.16 (newer untested) |
+| 0.10        | 1.7/1.8 (newer untested)      | 1.0                                   | 3.1.16 (newer untested) |
++-------------+-------------------------------+---------------------------------------+-------------------------+
+| 0.4-0.9     | 1.7/1.8 (newer untested)      | 0.22/0.24 (newer untested)            | 3.1.16 (newer untested) |
 +-------------+-------------------------------+---------------------------------------+-------------------------+
 | 0.3         | 1.4-1.6                       | 0.16/0.18 (recommended)               | 3.0+ (3.1+ untested)    |
 +-------------+-------------------------------+---------------------------------------+-------------------------+
