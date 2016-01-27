@@ -3,7 +3,7 @@ import logging, sys
 
 from jsonpath_rw import jsonpath, parse
 
-from scrapy.contrib.loader import ItemLoader
+from scrapy.loader import ItemLoader
 from scrapy.utils.misc import arg_to_iter
 from scrapy.utils.python import flatten
 

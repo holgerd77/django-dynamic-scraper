@@ -6,8 +6,8 @@ from jsonpath_rw.lexer import JsonPathLexerError
 
 from scrapy.selector import Selector
 from scrapy.http import Request, FormRequest
-from scrapy.contrib.loader import ItemLoader
-from scrapy.contrib.loader.processor import TakeFirst
+from scrapy.loader import ItemLoader
+from scrapy.loader.processors import TakeFirst
 from scrapy.exceptions import CloseSpider
 
 from django.db.models.signals import post_save
