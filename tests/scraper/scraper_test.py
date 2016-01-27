@@ -121,10 +121,6 @@ class ScraperTest(TestCase):
         'do_action': do_action,
         }
         self.spider = EventSpider(**kwargs)
-        #self.crawler.crawl(self.spider)
-        #self.crawler.start()
-        #log.start(loglevel="DEBUG", logstdout=True)
-        #reactor.run()
         self.process.crawl(self.spider, **kwargs)
         self.process.start()
         
@@ -135,10 +131,8 @@ class ScraperTest(TestCase):
         'do_action': 'yes'
         }
         self.checker = EventChecker(**kwargs)
-        self.crawler.crawl(self.checker)
-        self.crawler.start()
-        #log.start(loglevel="DEBUG", logstdout=True)
-        reactor.run()
+        self.process.crawl(self.checker, **kwargs)
+        self.process.start()
     
     
     def run_checker_test(self, id):

@@ -94,8 +94,8 @@ class CheckerRunTest(ScraperTest):
             'run_type': 'TASK',
         }
         checker = EventChecker(**kwargs)
-        self.crawler.crawl(checker)
-        self.crawler.start()
+        self.process.crawl(checker, **kwargs)
+        self.process.start()
         
         self.assertEqual(len(Event.objects.all()), 1)
         
