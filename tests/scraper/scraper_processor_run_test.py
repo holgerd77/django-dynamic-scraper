@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import os.path, unittest
+import logging, os.path, unittest
 
 from twisted.internet import reactor
-from scrapy import log
 from scrapy.exceptions import CloseSpider 
 
 from scraper.models import Event
