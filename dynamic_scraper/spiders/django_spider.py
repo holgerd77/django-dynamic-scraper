@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import ast, datetime, json, scrapy
+import ast, datetime, json, logging, scrapy
 
 from jsonpath_rw import jsonpath, parse
 from jsonpath_rw.lexer import JsonPathLexerError
 
-from scrapy import log
 from scrapy.selector import Selector
 from scrapy.http import Request, FormRequest
 from scrapy.contrib.loader import ItemLoader
@@ -50,7 +49,7 @@ class DjangoSpider(DjangoBaseSpider):
         self.items_save_count = 0
         
         msg = "Spider for " + self.ref_object.__class__.__name__ + " \"" + str(self.ref_object) + "\" (" + str(self.ref_object.pk) + ") initialized."
-        self.log(msg, log.INFO)
+        self.log(msg, logging.INFO)
 
 
     def _set_request_kwargs(self):
@@ -242,7 +241,7 @@ class DjangoSpider(DjangoBaseSpider):
             if hasattr(processors, p):
                 procs.append(getattr(processors, p))
             else:
-                self.log("Processor '%s' is not defined!" % p, log.ERROR)
+                self.log("Processor '%s' is not defined!" % p, logging.ERROR)
         procs = tuple(procs)
         return procs
 
@@ -255,7 +254,7 @@ class DjangoSpider(DjangoBaseSpider):
             self.loader.context = context
             self.dummy_loader.context = context
         except SyntaxError:
-            self.log("Wrong context definition format: " + context_str, log.ERROR)
+            self.log("Wrong context definition format: " + context_str, logging.ERROR)
     
 
     def _scrape_item_attr(self, scraper_elem, from_page, item_num):
@@ -288,7 +287,7 @@ class DjangoSpider(DjangoBaseSpider):
                 msg += "'" + c_values[0] + "'"
             else:
                 msg += u'None'
-            self.log(msg, log.DEBUG)
+            self.log(msg, logging.DEBUG)
 
 
     def _set_loader(self, response, from_page, xs, item):
@@ -330,8 +329,8 @@ class DjangoSpider(DjangoBaseSpider):
     
 
     def parse_item(self, response, xs=None, from_page=None, item_num=None):
-        #log.msg(str(response.request.meta), level=log.INFO)
-        #log.msg(response.body_as_unicode(), level=log.INFO)
+        #log.info(str(response.request.meta))
+        #log.info(response.body_as_unicode())
         if not from_page:
             from_page = response.request.meta['from_page']
             item_num = response.request.meta['item_num']
@@ -345,7 +344,7 @@ class DjangoSpider(DjangoBaseSpider):
                 self.log("Response body ({url})\n\n***** RP_DP_{num}_START *****\n{resp_body}\n***** RP_DP_{num}_END *****\n\n".format(
                     url=response.url,
                     resp_body=response.body,
-                    num=self.current_output_num_dp_response_bodies), log.INFO)
+                    num=self.current_output_num_dp_response_bodies), logging.INFO)
             
         elems = self.scraper.get_scrape_elems()
         
@@ -395,7 +394,7 @@ class DjangoSpider(DjangoBaseSpider):
             self.log("Response body ({url})\n\n***** RP_MP_{num}_START *****\n{resp_body}\n***** RP_MP_{num}_END *****\n\n".format(
                 url=response.url,
                 resp_body=response.body,
-                num=self.current_output_num_mp_response_bodies), log.INFO)
+                num=self.current_output_num_mp_response_bodies), logging.INFO)
         
         if self.scraper.get_main_page_rpt().content_type == 'J':
             json_resp = json.loads(response.body_as_unicode())
@@ -410,7 +409,7 @@ class DjangoSpider(DjangoBaseSpider):
             base_objects = response.xpath(base_elem.x_path)
 
         if(len(base_objects) == 0):
-            self.log("No base objects found!", log.ERROR)
+            self.log("No base objects found!", logging.ERROR)
         
         if(self.conf['MAX_ITEMS_READ']):
             items_left = min(len(base_objects), self.conf['MAX_ITEMS_READ'] - self.items_read_count)
@@ -420,7 +419,7 @@ class DjangoSpider(DjangoBaseSpider):
         for obj in base_objects:
             item_num = self.items_read_count + 1
             self.tmp_non_db_results[item_num] = {}
-            self.log("Starting to crawl item %d from page %d." % (item_num, response.request.meta['page']), log.INFO)
+            self.log("Starting to crawl item %d from page %d." % (item_num, response.request.meta['page']), logging.INFO)
             item = self.parse_item(response, obj, 'MP', item_num)
             #print item
             
@@ -470,13 +469,13 @@ class DjangoSpider(DjangoBaseSpider):
                         else:
                             kwargs['meta']['last'] = False
                         self._set_meta_splash_args()
-                        #log.msg(str(kwargs), level=log.INFO)
+                        #log.info(str(kwargs))
                         if rpt.request_type == 'R':
                             yield Request(url, callback=self.parse_item, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
                         else:
                             yield FormRequest(url, callback=self.parse_item, method=rpt.method, formdata=self.dp_form_data[rpt.page_type], dont_filter=rpt.dont_filter, **kwargs)
             else:
-                self.log("Item could not be read!", log.ERROR)
+                self.log("Item could not be read!", logging.ERROR)
     
     
     def _post_save_tasks(self, sender, instance, created, **kwargs):
