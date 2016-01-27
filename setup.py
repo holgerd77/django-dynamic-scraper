@@ -32,6 +32,7 @@ setup(
     #    Version numbers are updated accordingly though.
     #    'Django>=1.7,<1.9',
     #    'Scrapy>=1.0,<1.1',
+    #    'scrapy-djangoitem>=1.0,<1.1',
     #    'scrapyd',
         'jsonpath-rw>=1.4',
     #    'django-celery==3.1.16', # Scheduling

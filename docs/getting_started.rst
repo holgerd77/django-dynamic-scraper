@@ -27,7 +27,7 @@ code for this two model classes::
 
   from django.db import models
   from dynamic_scraper.models import Scraper, SchedulerRuntime
-  from scrapy.contrib.djangoitem import DjangoItem
+  from scrapy_djangoitem import DjangoItem
   
   
   class NewsWebsite(models.Model):

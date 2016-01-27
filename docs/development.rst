@@ -99,6 +99,16 @@ Release Notes
 * From this release on older Scrapy versions like ``0.24`` are not supported any more,
   please update!
 
+* The following manual adoptions in your project are necessary:
+
+  * Scrapy's ``DjangoItem`` class has now moved from ``scrapy.contrib.djangoitem``
+    to a separate repository ``scrapy-djangoitem`` 
+    ( `see Scrapy docs <http://doc.scrapy.org/en/1.0/news.html#full-list-of-relocations>`_). 
+    The package has to be separately
+    installed with ``pip install scrapy-djangoitem`` and the import in your ``models.py``
+    class has to be changed to ``from scrapy_djangoitem import DjangoItem`` 
+    (see: :ref:`creatingdjangomodels`).
+
 **Changes in version 0.9.6-beta** (2016-01-26)
 
 * Fixed a severe bug causing scrapers to break when scraping unicode text
@@ -107,7 +117,7 @@ Release Notes
 * Reduce size of textarea fields in scraper definitions
 * Added order attribute for scraped object attributes for convenience when editing scrapers
   (see: :ref:`defining_scraped_object_class`)
-* New migration ``0017'', run Django ``migrate`` command
+* New migration ``0017``, run Django ``migrate`` command
 
 **Changes in version 0.9.5-beta** (2016-01-18)
 
