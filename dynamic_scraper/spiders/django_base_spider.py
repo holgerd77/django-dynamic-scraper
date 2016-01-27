@@ -1,6 +1,6 @@
-import datetime, json, os
-from scrapy import log, signals
-from scrapy.spider import Spider
+import datetime, json, logging, os
+from scrapy import signals
+from scrapy.spiders import Spider
 from scrapy.contrib.spiders import CrawlSpider
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy.exceptions import CloseSpider
@@ -42,7 +42,7 @@ class DjangoBaseSpider(CrawlSpider):
     
     def __init__(self, *args, **kwargs):
         msg = "Django settings used: %s" % os.environ.get("DJANGO_SETTINGS_MODULE")
-        log.msg(msg, log.INFO)
+        logging.info(msg)
         
         super(DjangoBaseSpider,  self).__init__(None, **kwargs)
         
@@ -52,13 +52,13 @@ class DjangoBaseSpider(CrawlSpider):
     def _set_ref_object(self, ref_object_class, **kwargs):
         if not 'id' in kwargs:
             msg = "You have to provide an ID (Command: %s)." % self.command
-            log.msg(msg, log.ERROR)
+            logging.error(msg)
             raise CloseSpider(msg)
         try:
             self.ref_object = ref_object_class.objects.get(pk=kwargs['id'])
         except ObjectDoesNotExist:
             msg = "Object with ID " + kwargs['id'] + " not found (Command: %s)." % self.command
-            log.msg(msg, log.ERROR)
+            logging.error(msg)
             raise CloseSpider(msg)
 
 
@@ -89,23 +89,23 @@ class DjangoBaseSpider(CrawlSpider):
         self.conf['IMAGES_STORE_FORMAT'] = settings.get('DSCRAPER_IMAGES_STORE_FORMAT', self.conf['IMAGES_STORE_FORMAT'])
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             msg = "Use simplified FLAT images store format (save the original or one thumbnail image)"
-            log.msg(msg, log.INFO)
+            logging.info(msg)
             if settings.get('IMAGES_THUMBS') and len(settings.get('IMAGES_THUMBS')) > 0:
                 msg = "IMAGES_THUMBS setting found, saving images as thumbnail images with size %s (first entry)" % settings.get('IMAGES_THUMBS').iterkeys().next()
             else:
                 msg = "IMAGES_THUMBS setting not found, saving images with original size"
-            log.msg(msg, log.INFO)
+            logging.info(msg)
         elif self.conf["IMAGES_STORE_FORMAT"] == 'ALL':
             msg = "Use ALL images store format (Scrapy behaviour, save both original and thumbnail images)"
-            log.msg(msg, log.INFO)
+            logging.info(msg)
         else:
             msg = "Use THUMBS images store format (save only the thumbnail images)"
-            log.msg(msg, log.INFO)
+            logging.info(msg)
 
         self.conf['LOG_ENABLED'] = settings.get('DSCRAPER_LOG_ENABLED', self.conf['LOG_ENABLED'])
         self.conf['LOG_LEVEL'] = settings.get('DSCRAPER_LOG_LEVEL', self.conf['LOG_LEVEL'])
         self.conf['LOG_LIMIT'] = settings.get('DSCRAPER_LOG_LIMIT', self.conf['LOG_LIMIT'])
-        self.log("Runtime config: " + log_msg, log.INFO)
+        self.log("Runtime config: " + log_msg, logging.INFO)
         
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)
 
@@ -114,21 +114,21 @@ class DjangoBaseSpider(CrawlSpider):
         if self.conf['RUN_TYPE'] == 'TASK':
             if not getattr(self, 'scheduler_runtime', None):
                 msg = "You have to provide a scheduler_runtime when running with run_type TASK."
-                log.msg(msg, log.ERROR)
+                log.error(msg)
                 raise CloseSpider(msg)
             msg = "SchedulerRuntime (" + str(self.scheduler_runtime) + ") found."
-            self.log(msg, log.INFO)
+            self.log(msg, logging.INFO)
         
         for var in self.mandatory_vars:
             attr = getattr(self, var, None)
             if not attr:
                 msg = "Missing attribute %s (Command: %s)." % (var, self.command)
-                log.msg(msg, log.ERROR)
+                log.error(msg)
                 raise CloseSpider(msg)
             
         if self.scraper.status == 'P' or self.scraper.status == 'I':
             msg = 'Scraper status set to %s!' % (self.scraper.get_status_display())
-            self.log(msg, log.WARNING)
+            self.log(msg, logging.WARNING)
             raise CloseSpider(msg)
 
 
@@ -205,13 +205,13 @@ class DjangoBaseSpider(CrawlSpider):
             msg += "%s, " % str(self.scheduler_runtime.next_action_time.strftime("%Y-%m-%d %H:%m"))
             msg += "Next action factor: %s, " % str(self.scheduler_runtime.next_action_factor)
             msg += "Zero actions: %s)" % str(self.scheduler_runtime.num_zero_actions)
-            self.log(msg, log.INFO)
+            self.log(msg, logging.INFO)
     
     
-    def log(self, message, level=log.DEBUG):
+    def log(self, message, level=logging.DEBUG):
         if self.conf['RUN_TYPE'] == 'TASK' and self.conf['DO_ACTION']:
             
-            if self.conf['LOG_ENABLED'] and level >= Log.numeric_level(self.conf['LOG_LEVEL']):
+            if self.conf['LOG_ENABLED'] and level >= getattr(logging, self.conf['LOG_LEVEL']):
                 l = Log()
                 l.message = message
                 l.ref_object = self.ref_object.__class__.__name__ + " (" + str(self.ref_object.pk) + ")"
@@ -239,7 +239,7 @@ class DjangoBaseSpider(CrawlSpider):
                     items = Log.objects.all()[self.conf['LOG_LIMIT']:]
                     for item in items:
                         item.delete()
-                
-        super(DjangoBaseSpider, self).log(message, level)
+        
+        logging.log(level, message)
         
     
