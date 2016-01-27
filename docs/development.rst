@@ -93,6 +93,12 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.10.0-beta** (2016-01-27)
+
+* First major release version to support ``Scrapy 1.0+``
+* From this release on older Scrapy versions like ``0.24`` are not supported any more,
+  please update!
+
 **Changes in version 0.9.6-beta** (2016-01-26)
 
 * Fixed a severe bug causing scrapers to break when scraping unicode text
