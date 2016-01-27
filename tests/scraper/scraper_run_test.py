@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os.path, unittest
+import logging, os.path, unittest
 
 from twisted.internet import reactor
 from scrapy.exceptions import CloseSpider 
@@ -10,19 +10,19 @@ from dynamic_scraper.models import SchedulerRuntime, Log
 
 
 class ScraperRunTest(ScraperTest):
-    
-    
-    def test_missing_url_elem(self):
-        self.se_url.delete()
-        self.run_event_spider(1)
-        self.assertEqual(len(Event.objects.all()), 4)
-    
+        
 
     def test_scraper(self):
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 4)
         self.assertEqual(Event.objects.get(title='Event 1').description, u'Event 1 description')
+
+    
+    def test_missing_url_elem(self):
+        self.se_url.delete()
+        self.run_event_spider(1)
+        self.assertEqual(len(Event.objects.all()), 4)
         
     
     def test_double(self):
@@ -147,8 +147,8 @@ class ScraperRunTest(ScraperTest):
             'id': 1,
         }
         spider = EventSpider(**kwargs)
-        self.crawler.crawl(spider)
-        self.crawler.start()
+        self.process.crawl(spider, **kwargs)
+        self.process.start()
         
         self.assertEqual(len(Event.objects.all()), 0)
     
@@ -163,10 +163,8 @@ class ScraperRunTest(ScraperTest):
             'run_type': 'TASK',
         }
         spider = EventSpider(**kwargs)
-        self.crawler.crawl(spider)
-        self.crawler.start()
-        #log.start()
-        reactor.run()
+        self.process.crawl(spider, **kwargs)
+        self.process.start()
         
         self.assertEqual(spider.scheduler_runtime.num_zero_actions, 1)
         
@@ -184,8 +182,8 @@ class ScraperRunTest(ScraperTest):
             'run_type': 'SHELL',
         }
         spider = EventSpider(**kwargs)
-        self.crawler.crawl(spider)
-        self.crawler.start()
+        self.process.crawl(spider, **kwargs)
+        self.process.start()
         
         self.assertEqual(spider.scheduler_runtime.num_zero_actions, 0)
         
@@ -222,10 +220,8 @@ class ScraperRunTest(ScraperTest):
             'max_items_read': '3',
         }
         spider = EventSpider(**kwargs)
-        self.crawler.crawl(spider)
-        self.crawler.start()
-        #log.start()
-        reactor.run()
+        self.process.crawl(spider, **kwargs)
+        self.process.start()
 
         self.assertEqual(len(Event.objects.all()), 3)
 
@@ -238,10 +234,8 @@ class ScraperRunTest(ScraperTest):
             'max_items_save': '3',
         }
         spider = EventSpider(**kwargs)
-        self.crawler.crawl(spider)
-        self.crawler.start()
-        #log.start()
-        reactor.run()
+        self.process.crawl(spider, **kwargs)
+        self.process.start()
 
         self.assertEqual(len(Event.objects.all()), 3)
 

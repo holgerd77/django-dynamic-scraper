@@ -1,4 +1,4 @@
-import os, os.path, shutil
+import logging, os, os.path, shutil
 
 from django.test import TestCase
 
@@ -11,6 +11,8 @@ settings = get_project_settings()
 from twisted.internet import reactor
 from scrapy.crawler import Crawler
 from scrapy.xlib.pydispatch import dispatcher
+
+from scrapy.crawler import CrawlerProcess
 
 from dynamic_scraper.spiders.django_spider import DjangoSpider
 from dynamic_scraper.spiders.django_checker import DjangoChecker
@@ -119,10 +121,12 @@ class ScraperTest(TestCase):
         'do_action': do_action,
         }
         self.spider = EventSpider(**kwargs)
-        self.crawler.crawl(self.spider)
-        self.crawler.start()
+        #self.crawler.crawl(self.spider)
+        #self.crawler.start()
         #log.start(loglevel="DEBUG", logstdout=True)
-        reactor.run()
+        #reactor.run()
+        self.process.crawl(self.spider, **kwargs)
+        self.process.start()
         
     
     def run_event_checker(self, id):
@@ -168,10 +172,14 @@ class ScraperTest(TestCase):
             settings.set('DSCRAPER_IMAGES_STORE_FORMAT', self.dds_settings['DSCRAPER_IMAGES_STORE_FORMAT'], priority='cmdline')
 
         settings.set('COOKIES_DEBUG', True)
-        self.crawler = Crawler(settings)
-        self.crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
-        self.crawler.configure()
-
+        settings.set('LOG_ENABLED', False)
+        
+        #self.crawler = Crawler(settings)
+        #self.crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
+        #self.crawler.configure()
+        
+        self.process = CrawlerProcess(settings)
+        
         self.sc = ScrapedObjClass(name='Event')
         self.sc.save()
         self.soa_base = ScrapedObjAttr(name=u'base', attr_type='B', obj_class=self.sc)
