@@ -1,4 +1,5 @@
-from scrapy import log, signals
+import logging
+from scrapy import signals
 from scrapy.exceptions import CloseSpider
 from scrapy.http import Request
 from scrapy.xlib.pydispatch import dispatcher
@@ -20,20 +21,20 @@ class CheckerTest(DjangoBaseSpider):
         
         if self.scraper.checker_set.count() == 0:
             msg = "No checkers defined for scraper!"
-            log.msg(msg, log.ERROR)
+            logging.error(msg)
             raise CloseSpider(msg)
         
         for checker in self.scraper.checker_set.all():
             if checker.checker_type == '4':
                 if not checker.checker_ref_url:
                     msg = "Please provide a reference url for your checker (%s) (Command: %s)." % (unicode(checker), self.command)
-                    log.msg(msg, log.ERROR)
+                    logging.error(msg)
                     raise CloseSpider(msg)
             
             if checker.checker_type == 'X':
                 if not checker.checker_x_path or not checker.checker_ref_url:
                     msg = "Please provide the necessary x_path fields for your checker (%s) (Command: %s)." % (unicode(checker), self.command)
-                    log.msg(msg, log.ERROR)
+                    logging.error(msg)
                     raise CloseSpider(msg)
 
         self._set_request_kwargs()
@@ -73,12 +74,12 @@ class CheckerTest(DjangoBaseSpider):
         rpt = kwargs['response'].request.meta['rpt']
         if kwargs['response'].status == 404:
             if checker.checker_type == '4':
-                self.log("Checker configuration working (ref url request returning 404) (%s)." % unicode(checker), log.INFO)
+                self.log("Checker configuration working (ref url request returning 404) (%s)." % unicode(checker), logging.INFO)
             if checker.checker_type == 'X':
-                self.log('A request of your checker ref url is returning 404. Your x_path can not be applied (%s)!' % unicode(checker), log.WARNING)
+                self.log('A request of your checker ref url is returning 404. Your x_path can not be applied (%s)!' % unicode(checker), logging.WARNING)
         else:
             if checker.checker_type == '4':
-                self.log('Checker ref url request not returning 404 (%s)!' % unicode(checker), log.WARNING)
+                self.log('Checker ref url request not returning 404 (%s)!' % unicode(checker), logging.WARNING)
     
     
     def parse(self, response):        
@@ -91,17 +92,17 @@ class CheckerTest(DjangoBaseSpider):
         try:
             test_select = response.xpath(checker.checker_x_path).extract()
         except ValueError:
-            self.log('Invalid x_path (%s)!' % unicode(checker), log.ERROR)
+            self.log('Invalid x_path (%s)!' % unicode(checker), logging.ERROR)
             return
         if len(test_select) == 0:
-            self.log("Checker configuration not working (no elements found for xpath on reference url page) (%s)!" % unicode(checker), log.ERROR)
+            self.log("Checker configuration not working (no elements found for xpath on reference url page) (%s)!" % unicode(checker), logging.ERROR)
         else:
             if checker.checker_x_path_result == '':
-                self.log("Checker configuration working (elements for x_path found on reference url page (no x_path result defined)) (%s)." % unicode(checker), log.INFO)
+                self.log("Checker configuration working (elements for x_path found on reference url page (no x_path result defined)) (%s)." % unicode(checker), logging.INFO)
             else:
                 if test_select[0] != checker.checker_x_path_result:
-                    self.log("Checker configuration not working (expected x_path result not found on reference url page) (%s)!" % unicode(checker), log.ERROR)
+                    self.log("Checker configuration not working (expected x_path result not found on reference url page) (%s)!" % unicode(checker), logging.ERROR)
                 else:
-                    self.log("Checker configuration working (expected x_path result found on reference url page) (%s)." % unicode(checker), log.INFO)
+                    self.log("Checker configuration working (expected x_path result found on reference url page) (%s)." % unicode(checker), logging.INFO)
                 
         

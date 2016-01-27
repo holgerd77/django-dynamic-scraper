@@ -114,7 +114,7 @@ class DjangoBaseSpider(CrawlSpider):
         if self.conf['RUN_TYPE'] == 'TASK':
             if not getattr(self, 'scheduler_runtime', None):
                 msg = "You have to provide a scheduler_runtime when running with run_type TASK."
-                log.error(msg)
+                logging.error(msg)
                 raise CloseSpider(msg)
             msg = "SchedulerRuntime (" + str(self.scheduler_runtime) + ") found."
             self.log(msg, logging.INFO)
@@ -123,7 +123,7 @@ class DjangoBaseSpider(CrawlSpider):
             attr = getattr(self, var, None)
             if not attr:
                 msg = "Missing attribute %s (Command: %s)." % (var, self.command)
-                log.error(msg)
+                logging.error(msg)
                 raise CloseSpider(msg)
             
         if self.scraper.status == 'P' or self.scraper.status == 'I':

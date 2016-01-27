@@ -329,8 +329,8 @@ class DjangoSpider(DjangoBaseSpider):
     
 
     def parse_item(self, response, xs=None, from_page=None, item_num=None):
-        #log.info(str(response.request.meta))
-        #log.info(response.body_as_unicode())
+        #logging.info(str(response.request.meta))
+        #logging.info(response.body_as_unicode())
         if not from_page:
             from_page = response.request.meta['from_page']
             item_num = response.request.meta['item_num']
@@ -469,7 +469,7 @@ class DjangoSpider(DjangoBaseSpider):
                         else:
                             kwargs['meta']['last'] = False
                         self._set_meta_splash_args()
-                        #log.info(str(kwargs))
+                        #logging.info(str(kwargs))
                         if rpt.request_type == 'R':
                             yield Request(url, callback=self.parse_item, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
                         else:
