@@ -23,5 +23,7 @@ test_processor_with_placeholder_tmp_with_placeholder_to_mp
 for test in `echo $tests`
 do
     echo $suite.$test
-    python manage.py test $suite.$test
+    python manage.py test $suite.$test &
+    sleep 0.6
 done
+wait

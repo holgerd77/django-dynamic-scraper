@@ -228,7 +228,8 @@ class ScraperTest(TestCase):
         
     
     def tearDown(self):
-        pass
+        self.event_website.delete()
+        Event.objects.all().delete()
         
 
         

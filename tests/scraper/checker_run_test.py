@@ -1,4 +1,4 @@
-import os.path, unittest
+import os.path, random, unittest
 
 from scrapy.exceptions import CloseSpider
 from scraper.models import Event
@@ -138,8 +138,11 @@ class CheckerRunTest(ScraperTest):
 
     def _create_imgs_in_dirs(self, img_dirs):
         img_paths = []
+        file_name = 'event_image_{rnd}.jpg'.format(rnd=str(random.randint(0, 1000000)))
+        self.event.description = file_name
+        self.event.save()
         for img_dir in img_dirs:
-            path = os.path.join(self.PROJECT_ROOT, img_dir, 'event_image.jpg')
+            path = os.path.join(self.PROJECT_ROOT, img_dir, file_name)
             if not os.path.exists(os.path.dirname(path)):
                 os.makedirs(os.path.dirname(path))
             if not os.path.exists(path):
@@ -159,7 +162,6 @@ class CheckerRunTest(ScraperTest):
         self.soa_desc.save()
         
         self.event.url = 'http://localhost:8010/static/site_for_checker/event_which_is_not_there.html'
-        self.event.description = 'event_image.jpg'
         self.event.save()
 
         for path in img_paths:
