@@ -1,4 +1,4 @@
-import logging, os.path, unittest
+import logging, os.path, random, unittest
 
 from twisted.internet import reactor
 from scrapy.exceptions import CloseSpider 
