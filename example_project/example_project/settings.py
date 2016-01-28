@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # Django settings for example_project project.
 import os, sys
 

@@ -1,3 +1,5 @@
+#Stage 2 Update (Python 3)
+from __future__ import unicode_literals
 from django.contrib import admin
 from open_news.models import NewsWebsite, Article
 
@@ -6,7 +8,8 @@ class NewsWebsiteAdmin(admin.ModelAdmin):
     list_display_links = ('name',)
     
     def url_(self, instance):
-        return '<a href="%s" target="_blank">%s</a>' % (instance.url, instance.url)
+        return '<a href="{url}" target="_blank">{title}</a>'.format(
+            url=instance.url, title=instance.url)
     url_.allow_tags = True
     
 class ArticleAdmin(admin.ModelAdmin):
@@ -15,7 +18,8 @@ class ArticleAdmin(admin.ModelAdmin):
     raw_id_fields = ('checker_runtime',)
     
     def url_(self, instance):
-        return '<a href="%s" target="_blank">%s</a>' % (instance.url, instance.url)
+        return '<a href="{url}" target="_blank">{title}</a>'.format(
+            url=instance.url, title=instance.url)
     url_.allow_tags = True
 
 admin.site.register(NewsWebsite, NewsWebsiteAdmin)

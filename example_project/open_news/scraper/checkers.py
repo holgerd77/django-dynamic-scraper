@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from dynamic_scraper.spiders.django_checker import DjangoChecker
 from open_news.models import Article
 

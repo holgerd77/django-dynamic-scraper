@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # Scrapy settings for open_news project
 #
 # For simplicity, this file contains only the most important settings by
@@ -16,7 +17,7 @@ sys.path.insert(0, os.path.join(PROJECT_ROOT, "../../..")) #only for example_pro
 BOT_NAME = 'open_news'
 
 SPIDER_MODULES = ['dynamic_scraper.spiders', 'open_news.scraper',]
-USER_AGENT = '%s/%s' % (BOT_NAME, '1.0')
+USER_AGENT = '{b}/{v}'.format(b=BOT_NAME, v='1.0')
 
 ITEM_PIPELINES = {
     'dynamic_scraper.pipelines.DjangoImagesPipeline': 200,
