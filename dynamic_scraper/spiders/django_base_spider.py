@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+from builtins import str
 import datetime, json, logging, os
 from scrapy import signals
 from scrapy.spiders import Spider
@@ -36,12 +38,12 @@ class DjangoBaseSpider(CrawlSpider):
 
     command  = 'scrapy crawl SPIDERNAME -a id=REF_OBJECT_ID '
     command += '[-a do_action=(yes|no) -a run_type=(TASK|SHELL)'
-    command += ' -a max_items_read={Int} -a max_items_save={Int}]'
-    command += ' -a max_pages_read={Int}'
+    command += ' -a max_items_read=[Int] -a max_items_save=[Int]]'
+    command += ' -a max_pages_read=[Int]'
     
     
     def __init__(self, *args, **kwargs):
-        msg = "Django settings used: %s" % os.environ.get("DJANGO_SETTINGS_MODULE")
+        msg = "Django settings used: {s}".format(s=os.environ.get("DJANGO_SETTINGS_MODULE"))
         logging.info(msg)
         
         super(DjangoBaseSpider,  self).__init__(None, **kwargs)
@@ -51,13 +53,14 @@ class DjangoBaseSpider(CrawlSpider):
 
     def _set_ref_object(self, ref_object_class, **kwargs):
         if not 'id' in kwargs:
-            msg = "You have to provide an ID (Command: %s)." % self.command
+            msg = "You have to provide an ID (Command: {c}).".format(c=self.command)
             logging.error(msg)
             raise CloseSpider(msg)
         try:
             self.ref_object = ref_object_class.objects.get(pk=kwargs['id'])
         except ObjectDoesNotExist:
-            msg = "Object with ID " + kwargs['id'] + " not found (Command: %s)." % self.command
+            msg = "Object with ID {id} not found (Command: {c}).".format(
+                id=kwargs['id'], c=self.command)
             logging.error(msg)
             raise CloseSpider(msg)
 
@@ -91,7 +94,9 @@ class DjangoBaseSpider(CrawlSpider):
             msg = "Use simplified FLAT images store format (save the original or one thumbnail image)"
             logging.info(msg)
             if settings.get('IMAGES_THUMBS') and len(settings.get('IMAGES_THUMBS')) > 0:
-                msg = "IMAGES_THUMBS setting found, saving images as thumbnail images with size %s (first entry)" % settings.get('IMAGES_THUMBS').iterkeys().next()
+                msg =  "IMAGES_THUMBS setting found, saving images as thumbnail images "
+                msg += "with size {size} (first entry)".format(
+                    size=next(iter(settings.get('IMAGES_THUMBS').keys())))
             else:
                 msg = "IMAGES_THUMBS setting not found, saving images with original size"
             logging.info(msg)
@@ -122,12 +127,12 @@ class DjangoBaseSpider(CrawlSpider):
         for var in self.mandatory_vars:
             attr = getattr(self, var, None)
             if not attr:
-                msg = "Missing attribute %s (Command: %s)." % (var, self.command)
+                msg = "Missing attribute {a} (Command: {c}).".format(a=var, c=self.command)
                 logging.error(msg)
                 raise CloseSpider(msg)
             
         if self.scraper.status == 'P' or self.scraper.status == 'I':
-            msg = 'Scraper status set to %s!' % (self.scraper.get_status_display())
+            msg = 'Scraper status set to {s}!'.format(s=self.scraper.get_status_display())
             self.log(msg, logging.WARNING)
             raise CloseSpider(msg)
 
@@ -145,34 +150,34 @@ class DjangoBaseSpider(CrawlSpider):
                 self.dp_request_kwargs[rpt.page_type] = {}
                 pt_dict = self.dp_request_kwargs[rpt.page_type]
 
-            if rpt.headers != u'':
+            if rpt.headers != '':
                 try:
                     headers = json.loads(rpt.headers)
                 except ValueError:
-                    raise CloseSpider("Incorrect HTTP header attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                    raise CloseSpider("Incorrect HTTP header attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type))
                 if not isinstance(headers, dict):
-                    raise CloseSpider("Incorrect HTTP header attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                    raise CloseSpider("Incorrect HTTP header attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type))
                 pt_dict['headers'] = headers
 
-            if rpt.body != u'':
+            if rpt.body != '':
                 pt_dict['body'] = rpt.body
 
-            if rpt.cookies != u'':
+            if rpt.cookies != '':
                 try:
                     cookies = json.loads(rpt.cookies)
                 except ValueError:
-                    raise CloseSpider("Incorrect cookies attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                    raise CloseSpider("Incorrect cookies attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type))
                 if not isinstance(cookies, dict):
-                    raise CloseSpider("Incorrect cookies attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                    raise CloseSpider("Incorrect cookies attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type))
                 pt_dict['cookies'] = cookies
 
-            if rpt.meta != u'':
+            if rpt.meta != '':
                 try:
                     meta = json.loads(rpt.meta)
                 except ValueError:
-                    raise CloseSpider("Incorrect meta attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                    raise CloseSpider("Incorrect meta attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type))
                 if not isinstance(meta, dict):
-                    raise CloseSpider("Incorrect meta attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                    raise CloseSpider("Incorrect meta attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type))
                 pt_dict['meta'] = meta
     
 
@@ -202,9 +207,9 @@ class DjangoBaseSpider(CrawlSpider):
             self.scheduler_runtime.num_zero_actions = num_crawls
             self.scheduler_runtime.save()
             msg  = "Scheduler runtime updated (Next action time: "
-            msg += "%s, " % str(self.scheduler_runtime.next_action_time.strftime("%Y-%m-%d %H:%m"))
-            msg += "Next action factor: %s, " % str(self.scheduler_runtime.next_action_factor)
-            msg += "Zero actions: %s)" % str(self.scheduler_runtime.num_zero_actions)
+            msg += "{nat}, ".format(nat=str(self.scheduler_runtime.next_action_time.strftime("%Y-%m-%d %H:%m")))
+            msg += "Next action factor: {naf}, ".format(naf=str(self.scheduler_runtime.next_action_factor))
+            msg += "Zero actions: {za})".format(za=str(self.scheduler_runtime.num_zero_actions))
             self.log(msg, logging.INFO)
     
     
