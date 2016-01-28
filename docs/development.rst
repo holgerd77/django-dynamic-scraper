@@ -121,6 +121,8 @@ Release Notes
 
   * Changed logging to use Python's build-in ``logging`` module
   * Updated import paths according to Scrapy release documentation
+  * Running most of the unit tests in parallel batches (when using the shell scripts)
+    to speed up test runs
 
 **Changes in version 0.9.6-beta** (2016-01-26)
 
