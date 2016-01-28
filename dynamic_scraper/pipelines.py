@@ -30,18 +30,18 @@ class DjangoImagesPipeline(ImagesPipeline):
     def image_key(self, url):
         image_guid = hashlib.sha1(url).hexdigest()
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
-            return '%s.jpg' % (image_guid)
+            return '{ig}.jpg'.format(ig=image_guid)
         elif self.conf["IMAGES_STORE_FORMAT"] == 'THUMBS':
-            return 'thumbs/%s/%s.jpg' % (next(iter(self.THUMBS.keys())), image_guid)
+            return 'thumbs/{p}/{ig}.jpg'.format(p=next(iter(self.THUMBS.keys())), ig=image_guid)
         else:
-            return 'full/%s.jpg' % (image_guid)
+            return 'full/{ig}.jpg'.format(ig=image_guid)
 
     def thumb_key(self, url, thumb_id):
         image_guid = hashlib.sha1(url).hexdigest()
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
-            return '%s.jpg' % (image_guid)
+            return '{ig}.jpg'.format(ig=image_guid)
         else:
-            return 'thumbs/%s/%s.jpg' % (thumb_id, image_guid)
+            return 'thumbs/{p}/{ig}.jpg'.format(p=thumb_id, ig=image_guid)
 
     def item_completed(self, results, item, info):
         try:

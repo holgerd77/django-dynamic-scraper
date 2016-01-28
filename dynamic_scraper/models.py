@@ -208,7 +208,7 @@ class Scraper(models.Model):
 
 @python_2_unicode_compatible
 class RequestPageType(models.Model):
-    TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP%d" % n, "Detail Page %d" % n) for n in list(range(1, 26))])
+    TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP{n}".format(n=str(n)), "Detail Page {n}".format(n=str(n))) for n in list(range(1, 26))])
     CONTENT_TYPE_CHOICES = (
         ('H', 'HTML'),
         ('X', 'XML'),
@@ -263,7 +263,7 @@ class Checker(models.Model):
     
 
 class ScraperElem(models.Model):
-    REQUEST_PAGE_TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP%d" % n, "Detail Page %d" % n) for n in list(range(1, 26))])
+    REQUEST_PAGE_TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP{n}".format(n=str(n)), "Detail Page {n}".format(n=str(n))) for n in list(range(1, 26))])
     scraped_obj_attr = models.ForeignKey(ScrapedObjAttr)
     scraper = models.ForeignKey(Scraper)   
     x_path = models.TextField(blank=True)
