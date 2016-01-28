@@ -1,4 +1,6 @@
+#Stage 2 Update (Python 3)
 from __future__ import unicode_literals
+from builtins import next
 from builtins import str
 from builtins import object
 import hashlib, logging, ntpath
@@ -32,7 +34,7 @@ class DjangoImagesPipeline(ImagesPipeline):
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             return '{ig}.jpg'.format(ig=image_guid)
         elif self.conf["IMAGES_STORE_FORMAT"] == 'THUMBS':
-            return 'thumbs/{p}/{ig}.jpg'.format(p=next(iter(self.THUMBS.keys())), ig=image_guid)
+            return 'thumbs/{p}/{ig}.jpg'.format(p=next(iter(list(self.THUMBS.keys()))), ig=image_guid)
         else:
             return 'full/{ig}.jpg'.format(ig=image_guid)
 
