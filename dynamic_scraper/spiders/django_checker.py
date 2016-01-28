@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+from builtins import str
 import datetime, json, logging, os
 
 from jsonpath_rw import jsonpath, parse
@@ -60,8 +62,8 @@ class DjangoChecker(DjangoBaseSpider):
 
                 thumb_paths = []
                 if settings.get('IMAGES_THUMBS') and len(settings.get('IMAGES_THUMBS')) > 0:
-                    for key in settings.get('IMAGES_THUMBS').iterkeys():
-                        thumb_paths.append(('thumbnail, %s' % key, os.path.join(settings.get('IMAGES_STORE'), 'thumbs', key, img_name),))
+                    for key in settings.get('IMAGES_THUMBS').keys():
+                        thumb_paths.append(('thumbnail, {k}'.format(k=key), os.path.join(settings.get('IMAGES_STORE'), 'thumbs', key, img_name),))
 
                 del_paths = []
                 if self.conf['IMAGES_STORE_FORMAT'] == 'FLAT':
@@ -76,11 +78,11 @@ class DjangoChecker(DjangoBaseSpider):
                     if os.access(path[1], os.F_OK):
                         try:
                             os.unlink(path[1])
-                            self.log("Associated image (%s, %s) deleted." % (img_name, path[0]), logging.INFO)
+                            self.log("Associated image ({n}, {p}) deleted.".format(n=img_name, p=path[0]), logging.INFO)
                         except Exception:
-                            self.log("Associated image (%s, %s) could not be deleted!" % (img_name, path[0]), logging.ERROR)
+                            self.log("Associated image ({n}, {p}) could not be deleted!".format(n=img_name, p=path[0]), logging.ERROR)
                     else:
-                        self.log("Associated image (%s, %s) could not be found!" % (img_name, path[0]), logging.WARNING)
+                        self.log("Associated image ({n}, {p}) could not be found!".format(n=img_name, p=path[0]), logging.WARNING)
         except ScraperElem.DoesNotExist:
             pass
         
@@ -115,11 +117,11 @@ class DjangoChecker(DjangoBaseSpider):
         if kwargs['response'].status == 404:
             
             if self.scheduler_runtime.num_zero_actions == 0:
-                self.log("Checker test returned second 404 (%s). Delete reason." % unicode(checker), logging.INFO)
+                self.log("Checker test returned second 404 ({c}). Delete reason.".format(c=str(checker)), logging.INFO)
                 if self.conf['DO_ACTION']:
                     self._del_ref_object()
             else:
-                self.log("Checker test returned first 404 (%s)." % unicode(checker), logging.INFO)
+                self.log("Checker test returned first 404 ({c}).".format(str(checker)), logging.INFO)
                 self.action_successful = True
 
 
@@ -128,34 +130,34 @@ class DjangoChecker(DjangoBaseSpider):
         checker = response.request.meta['checker']
         rpt = response.request.meta['rpt']
         if checker.checker_type == '4':
-            self.log("No 404 (%s)." % unicode(checker), logging.INFO)
+            self.log("No 404 ({c}).".format(c=str(checker)), logging.INFO)
             return
         if rpt.content_type == 'J':
             json_resp = json.loads(response.body_as_unicode())
             try:
                 jsonpath_expr = parse(checker.checker_x_path)
             except JsonPathLexerError:
-                raise CloseSpider("Invalid checker JSONPath (%s)!" % unicode(checker))
+                raise CloseSpider("Invalid checker JSONPath ({c})!".format(c=str(checker)))
             test_select = [match.value for match in jsonpath_expr.find(json_resp)]
             #self.log(unicode(test_select), logging.INFO)
         else:
             try:
                 test_select = response.xpath(checker.checker_x_path).extract()
             except ValueError:
-                self.log("Invalid checker XPath (%s)!" % unicode(checker), logging.ERROR)
+                self.log("Invalid checker XPath ({c})!".format(c=str(checker)), logging.ERROR)
                 return
         
         if len(test_select) > 0 and checker.checker_x_path_result == '':
-            self.log("Elements for XPath found on page (no result string defined) (%s). Delete reason." % unicode(checker), logging.INFO)
+            self.log("Elements for XPath found on page (no result string defined) ({c}). Delete reason.".format(c=str(checker)), logging.INFO)
             if self.conf['DO_ACTION']:
                 self._del_ref_object()
             return
         elif len(test_select) > 0 and test_select[0] == checker.checker_x_path_result:
-            self.log("XPath result string '%s' found on page (%s). Delete reason." % (checker.checker_x_path_result, unicode(checker)), logging.INFO)
+            self.log("XPath result string '{s}' found on page ({c}). Delete reason.".format(s=checker.checker_x_path_result, c=str(checker)), logging.INFO)
             if self.conf['DO_ACTION']:
                 self._del_ref_object()
             return
         else:
-            self.log("XPath result string not found (%s)." % unicode(checker), logging.INFO)
+            self.log("XPath result string not found ({c}).".format(c=str(checker)), logging.INFO)
             return
     
