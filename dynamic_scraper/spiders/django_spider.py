@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+from builtins import str
+from builtins import map
+from builtins import range
 import ast, datetime, json, logging, scrapy
 
 from jsonpath_rw import jsonpath, parse
@@ -48,7 +52,11 @@ class DjangoSpider(DjangoBaseSpider):
         self.items_read_count = 0
         self.items_save_count = 0
         
-        msg = "Spider for " + self.ref_object.__class__.__name__ + " \"" + str(self.ref_object) + "\" (" + str(self.ref_object.pk) + ") initialized."
+        msg = 'Spider for {roc} "{ro}" ({pk}) initialized.'.format(
+            roc=self.ref_object.__class__.__name__,
+            ro=str(self.ref_object),
+            pk=str(self.ref_object.pk),
+        )
         self.log(msg, logging.INFO)
 
 
@@ -59,9 +67,9 @@ class DjangoSpider(DjangoBaseSpider):
                 try:
                     form_data = json.loads(rpt.form_data)
                 except ValueError:
-                    raise CloseSpider("Incorrect form_data attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                    raise CloseSpider("Incorrect form_data attribute ({pt}): not a valid JSON dict!".format(pt=rpt.page_type))
                 if not isinstance(form_data, dict):
-                    raise CloseSpider("Incorrect form_data attribute (%s): not a valid JSON dict!" % rpt.page_type)
+                    raise CloseSpider("Incorrect form_data attribute ({pt}): not a valid JSON dict!".format(pt=rpt.page_type))
                 if rpt.page_type == 'MP':
                     self.mp_form_data = form_data
                 else:
@@ -141,7 +149,7 @@ class DjangoSpider(DjangoBaseSpider):
                 pages = pages.split(',')
                 if len(pages) > 3:
                     raise Exception
-                pages = range(*map(int, pages)) 
+                pages = list(range(*list(map(int, pages)))) 
             except Exception:
                 raise CloseSpider('Pagination_page_replace for pagination_type "RANGE_FUNCT" ' +\
                                   'has to be provided as python range function arguments ' +\
@@ -186,13 +194,13 @@ class DjangoSpider(DjangoBaseSpider):
             else:
                 form_data = None
             if 'headers' in kwargs:
-                kwargs['headers'] = json.loads(json.dumps(kwargs['headers']).replace('{page}', unicode(self.pages[index])))
+                kwargs['headers'] = json.loads(json.dumps(kwargs['headers']).replace('{page}', str(self.pages[index])))
             if 'body' in kwargs:
-                kwargs['body'] = kwargs['body'].replace('{page}', unicode(self.pages[index]))
+                kwargs['body'] = kwargs['body'].replace('{page}', str(self.pages[index]))
             if 'cookies' in kwargs:
-                kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', unicode(self.pages[index])))
+                kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', str(self.pages[index])))
             if form_data:
-                form_data = json.loads(json.dumps(form_data).replace('{page}', unicode(self.pages[index])))
+                form_data = json.loads(json.dumps(form_data).replace('{page}', str(self.pages[index])))
             if 'meta' not in kwargs:
                     kwargs['meta'] = {}
             kwargs['meta']['page'] = index + 1
@@ -241,7 +249,7 @@ class DjangoSpider(DjangoBaseSpider):
             if hasattr(processors, p):
                 procs.append(getattr(processors, p))
             else:
-                self.log("Processor '%s' is not defined!" % p, logging.ERROR)
+                self.log("Processor '{p}' is not defined!".format(p=p), logging.ERROR)
         procs = tuple(procs)
         return procs
 
@@ -286,7 +294,7 @@ class DjangoSpider(DjangoBaseSpider):
             if len(c_values) > 0:
                 msg += "'" + c_values[0] + "'"
             else:
-                msg += u'None'
+                msg += 'None'
             self.log(msg, logging.DEBUG)
 
 
@@ -354,7 +362,7 @@ class DjangoSpider(DjangoBaseSpider):
             self._scrape_item_attr(elem, from_page, item_num)
         # Dealing with Django Char- and TextFields defining blank field as null
         item = self.loader.load_item()
-        for key, value in item.items():
+        for key, value in list(item.items()):
             if value == None and \
                self.scraped_obj_class()._meta.get_field(key).blank and \
                not self.scraped_obj_class()._meta.get_field(key).null:
@@ -419,7 +427,7 @@ class DjangoSpider(DjangoBaseSpider):
         for obj in base_objects:
             item_num = self.items_read_count + 1
             self.tmp_non_db_results[item_num] = {}
-            self.log("Starting to crawl item %d from page %d." % (item_num, response.request.meta['page']), logging.INFO)
+            self.log("Starting to crawl item {i} from page {p}.".format(i=str(item_num), p=str(response.request.meta['page'])), logging.INFO)
             item = self.parse_item(response, obj, 'MP', item_num)
             #print item
             

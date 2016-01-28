@@ -1,3 +1,4 @@
+import logging
 from django.db.utils import IntegrityError
 from scrapy.exceptions import DropItem
 from dynamic_scraper.models import SchedulerRuntime
