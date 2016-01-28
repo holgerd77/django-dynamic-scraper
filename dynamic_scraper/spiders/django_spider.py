@@ -16,6 +16,7 @@ from scrapy.loader.processors import TakeFirst
 from scrapy.exceptions import CloseSpider
 
 from django.db.models.signals import post_save
+from django.utils.encoding import smart_text
 
 from dynamic_scraper.spiders.django_base_spider import DjangoBaseSpider
 from dynamic_scraper.models import ScraperElem
@@ -293,7 +294,7 @@ class DjangoSpider(DjangoBaseSpider):
             msg  = '{0: <20}'.format(name)
             c_values = loader.get_collected_values(name)
             if len(c_values) > 0:
-                msg += "'" + c_values[0] + "'"
+                msg += "'" + smart_text(c_values[0]) + "'"
             else:
                 msg += 'None'
             self.log(msg, logging.DEBUG)
