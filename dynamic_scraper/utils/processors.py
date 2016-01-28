@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from builtins import str
 import datetime, re
 from scrapy import log
+from scrapy.utils.misc import load_object
 
 
 def string_strip(text, loader_context):
@@ -147,3 +148,9 @@ def duration(text, loader_context):
         loader_context.get('spider').log('Duration could not be parsed ("%s", Format string: "%s")!' % (text, cformat), log.ERROR)
         return None
     return duration.strftime('%H:%M:%S')
+
+
+def dynamic(text, loader_context):
+    func_name = loader_context.pop('func')
+    f = load_object(func_name)
+    return f(text, loader_context)
