@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # Scrapy settings for unit tests
 import os, sys
 

@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import os
 from scrapy.exceptions import CloseSpider 
 from scraper.models import Event
@@ -28,8 +29,8 @@ class ScraperJSRunTest(ScraperTest):
         self.checker.scraped_obj_attr = self.soa_url
         self.checker.scraper = self.scraper
         self.checker.checker_type = 'X'
-        self.checker.checker_x_path = u'//div[@class="event_not_found"]/div/text()'
-        self.checker.checker_ref_url = u'%ssite_with_js/event_not_found.html' % path
+        self.checker.checker_x_path = '//div[@class="event_not_found"]/div/text()'
+        self.checker.checker_ref_url = path + 'site_with_js/event_not_found.html'
         self.checker.save()
         
         scheduler_rt = SchedulerRuntime()
@@ -37,7 +38,7 @@ class ScraperJSRunTest(ScraperTest):
         
         self.event = Event(title='Event 1', event_website=self.event_website,
             description='Event 1 description', 
-            url='%ssite_with_js/event_not_found.html' % path,
+            url=path + 'site_with_js/event_not_found.html',
             checker_runtime=scheduler_rt)
         self.event.save()
 
@@ -85,7 +86,7 @@ class ScraperJSRunTest(ScraperTest):
 
     def test_default_no_scrapyjs_checker_delete(self):
         self.setUpScraperJSDefaultChecker()
-        self.checker.checker_x_path_result = u'Event not found'
+        self.checker.checker_x_path_result = 'Event not found'
         self.checker.save()
 
         self.run_event_checker(1)
@@ -93,7 +94,7 @@ class ScraperJSRunTest(ScraperTest):
 
     def test_default_no_scrapyjs_checker_no_delete(self):
         self.setUpScraperJSDefaultChecker()
-        self.checker.checker_x_path_result = u'Event JS not found'
+        self.checker.checker_x_path_result = 'Event JS not found'
         self.checker.save()
 
         self.run_event_checker(1)
@@ -101,7 +102,7 @@ class ScraperJSRunTest(ScraperTest):
 
     def test_activated_scrapyjs_checker_delete(self):
         self.setUpScraperJSDockerChecker()
-        self.checker.checker_x_path_result = u'Event JS not found'
+        self.checker.checker_x_path_result = 'Event JS not found'
         self.checker.save()
 
         self.run_event_checker(1)
@@ -109,7 +110,7 @@ class ScraperJSRunTest(ScraperTest):
 
     def test_activated_scrapyjs_checker_no_delete(self):
         self.setUpScraperJSDockerChecker()
-        self.checker.checker_x_path_result = u'Event not found'
+        self.checker.checker_x_path_result = 'Event not found'
         self.checker.save()
 
         self.run_event_checker(1)

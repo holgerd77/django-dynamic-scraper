@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from dynamic_scraper.utils.test_utils import build_test_suite_from
 from scraper.scraper_run_test import ScraperRunTest
 from scraper.checker_run_test import CheckerRunTest

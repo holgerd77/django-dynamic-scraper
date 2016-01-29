@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from scraper.scraper_test import ScraperTest
 
 

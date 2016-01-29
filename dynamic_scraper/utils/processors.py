@@ -64,7 +64,7 @@ def date(text, loader_context):
         else:
             date = datetime.datetime.strptime(text, cformat)
     except ValueError:
-        loader_context.get('spider').log('Date could not be parsed ("%s", Format string: "%s")!' % (text, cformat), logging.ERROR)
+        loader_context.get('spider').log('Date could not be parsed ("{t}", Format string: "{f}")!'.format(t=text, f=cformat), logging.ERROR)
         return None
     return date.strftime('%Y-%m-%d')
 
@@ -74,7 +74,7 @@ def time(text, loader_context):
     try:
         time = datetime.datetime.strptime(text, cformat)
     except ValueError:
-        loader_context.get('spider').log('Time could not be parsed ("%s", Format string: "%s")!' % (text, cformat), logging.ERROR)
+        loader_context.get('spider').log('Time could not be parsed ("{t}", Format string: "{f}")!'.format(t=text, f=cformat), logging.ERROR)
         return None
     return time.strftime('%H:%M:%S')
 
@@ -84,7 +84,7 @@ def ts_to_date(ts_str, loader_context):
         ts_int = int(ts_str)
         return datetime.datetime.fromtimestamp(ts_int).strftime('%Y-%m-%d')
     except ValueError:
-        loader_context.get('spider').log('Timestamp could not be parsed ("%s")!' % ts_str, logging.ERROR)
+        loader_context.get('spider').log('Timestamp could not be parsed ("{ts}")!'.format(ts=ts_str), logging.ERROR)
         return None
 
 
@@ -93,7 +93,7 @@ def ts_to_time(ts_str, loader_context):
         ts_int = int(ts_str)
         return datetime.datetime.fromtimestamp(ts_int).strftime('%H:%M:%S')
     except ValueError:
-        loader_context.get('spider').log('Timestamp could not be parsed ("%s")!' % ts_str, logging.ERROR)
+        loader_context.get('spider').log('Timestamp could not be parsed ("{ts}")!'.format(ts=ts_str), logging.ERROR)
         return None
 
 
@@ -143,6 +143,6 @@ def duration(text, loader_context):
     try:
         duration = datetime.datetime.strptime(text, cformat)
     except ValueError:
-        loader_context.get('spider').log('Duration could not be parsed ("%s", Format string: "%s")!' % (text, cformat), logging.ERROR)
+        loader_context.get('spider').log('Duration could not be parsed ("{t}", Format string: "{f}")!'.format(t=text, f=cformat), logging.ERROR)
         return None
     return duration.strftime('%H:%M:%S')

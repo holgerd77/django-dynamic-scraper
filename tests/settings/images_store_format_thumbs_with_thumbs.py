@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from settings.base_settings import *
 
 

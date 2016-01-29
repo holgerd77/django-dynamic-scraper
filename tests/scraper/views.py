@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from django.http import HttpResponse, Http404
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt

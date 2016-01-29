@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import logging, os.path, random, unittest
 
 from twisted.internet import reactor
@@ -36,9 +37,9 @@ class ScraperImgRunTest(ScraperTest):
         self.assertEqual(len(Event.objects.all()), 2)
         self.assertEqual(Event.objects.get(title='Event 1').description, imgs[0])
         for path in expected_paths:
-            self.assertTrue(os.access(path, os.F_OK), "Expected image path %s not found!" % path)
+            self.assertTrue(os.access(path, os.F_OK), "Expected image path {p} not found!".format(p=path))
         for path in non_expected_paths:
-            self.assertFalse(os.access(path, os.F_OK), "Not expected image path %s found!" % path)
+            self.assertFalse(os.access(path, os.F_OK), "Not expected image path {p} found!".format(p=path))
     
     
     def test_img_store_format_flat_no_thumbs(self):

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+from builtins import str
 import os.path, random, unittest
 
 from scrapy.exceptions import CloseSpider
@@ -17,9 +19,9 @@ class CheckerRunTest(ScraperTest):
         self.checker.scraped_obj_attr = self.soa_url
         self.checker.scraper = self.scraper
         self.checker.checker_type = 'X'
-        self.checker.checker_x_path = u'//div[@class="event_not_found"]/div/text()'
-        self.checker.checker_x_path_result = u'Event was deleted!'
-        self.checker.checker_ref_url = u'http://localhost:8010/static/site_for_checker/event_not_found.html'
+        self.checker.checker_x_path = '//div[@class="event_not_found"]/div/text()'
+        self.checker.checker_x_path_result = 'Event was deleted!'
+        self.checker.checker_ref_url = 'http://localhost:8010/static/site_for_checker/event_not_found.html'
         self.checker.save()
         
         scheduler_rt = SchedulerRuntime()
@@ -36,9 +38,9 @@ class CheckerRunTest(ScraperTest):
         self.checker2.scraped_obj_attr = self.soa_url
         self.checker2.scraper = self.scraper
         self.checker2.checker_type = 'X'
-        self.checker2.checker_x_path = u'//div[@class="event_not_found"]/div/text()'
-        self.checker2.checker_x_path_result = u'Event was deleted!'
-        self.checker2.checker_ref_url = u'http://localhost:8010/static/site_for_checker/event_not_found.html'
+        self.checker2.checker_x_path = '//div[@class="event_not_found"]/div/text()'
+        self.checker2.checker_x_path_result = 'Event was deleted!'
+        self.checker2.checker_ref_url = 'http://localhost:8010/static/site_for_checker/event_not_found.html'
         self.checker2.save()
         
     
@@ -119,7 +121,7 @@ class CheckerRunTest(ScraperTest):
     
     def test_x_path_type_x_path_second_delete_double(self):
         self.setUpWithSecondChecker()
-        self.checker.checker_x_path = u'//div[@class="oh_my_wrong_xpath_for_delete"]/div/text()'
+        self.checker.checker_x_path = '//div[@class="oh_my_wrong_xpath_for_delete"]/div/text()'
         self.checker.save()
         self.event.url = 'http://localhost:8010/static/site_for_checker/event2.html'
         self.event.save()

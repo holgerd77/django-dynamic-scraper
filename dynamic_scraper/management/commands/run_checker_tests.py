@@ -68,7 +68,7 @@ class Command(BaseCommand):
                 
                 if stderr != '':
                     print(stderr)
-                    msg += 'Checker test for scraper %s failed:\n' % scraper_str
+                    msg += 'Checker test for scraper {s} failed:\n'.format(s=scraper_str)
                     msg += stderr + '\n\n'
                     mail_to_admins = True
                 else:

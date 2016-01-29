@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import os, unittest
 from scraper.models import Event
 from scraper.scraper_test import EventSpider, ScraperTest
@@ -6,17 +7,17 @@ from scraper.scraper_test import EventSpider, ScraperTest
 class ScraperReqOptionsRunTest(ScraperTest):
 
     def setUpWithRequestTypeMethodScraper(self, test_case):
-        self.event_website.url = os.path.join('http://localhost:8010/scraper/request_type_method/', '%s.html' % test_case)
+        self.event_website.url = os.path.join('http://localhost:8010/scraper/request_type_method/', '{tc}.html'.format(tc=test_case))
         self.event_website.save()
 
 
     def setUpWithHeaderBodyDataScraper(self, test_case):
-        self.event_website.url = os.path.join('http://localhost:8010/scraper/header_body_data/', '%s.html' % test_case)
+        self.event_website.url = os.path.join('http://localhost:8010/scraper/header_body_data/', '{tc}.html'.format(tc=test_case))
         self.event_website.save()
 
 
     def setUpWithFormDataScraper(self, test_case):
-        self.event_website.url = os.path.join('http://localhost:8010/scraper/form_data/', '%s.html' % test_case)
+        self.event_website.url = os.path.join('http://localhost:8010/scraper/form_data/', '{tc}.html'.format(tc=test_case))
         self.event_website.save()
 
         self.rpt_mp.request_type = 'F'
@@ -36,7 +37,7 @@ class ScraperReqOptionsRunTest(ScraperTest):
 
 
     def setUpWithCookiesScraper(self, test_case):
-        self.event_website.url = os.path.join('http://localhost:8010/scraper/cookies/', '%s.html' % test_case)
+        self.event_website.url = os.path.join('http://localhost:8010/scraper/cookies/', '{tc}.html'.format(tc=test_case))
         self.event_website.save()
 
         self.rpt_mp.cookies = '{ "simple": "SIMPLE_VALUE" }'

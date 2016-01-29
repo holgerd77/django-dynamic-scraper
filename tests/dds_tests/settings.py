@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # Django settings for dds_tests project.
 import os.path
 import sys

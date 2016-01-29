@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import logging, os.path, unittest
 
 from twisted.internet import reactor
@@ -16,7 +17,7 @@ class ScraperRunTest(ScraperTest):
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 4)
-        self.assertEqual(Event.objects.get(title='Event 1').description, u'Event 1 description')
+        self.assertEqual(Event.objects.get(title='Event 1').description, 'Event 1 description')
 
     
     def test_missing_url_elem(self):
@@ -28,8 +29,8 @@ class ScraperRunTest(ScraperTest):
     def test_double(self):
         checker_rt = SchedulerRuntime()
         checker_rt.save()
-        event = Event(title=u'Event 1', event_website=self.event_website, 
-            url=u'http://localhost:8010/static/site_generic/event1.html',
+        event = Event(title='Event 1', event_website=self.event_website, 
+            url='http://localhost:8010/static/site_generic/event1.html',
             checker_runtime=checker_rt)
         event.save()
         self.run_event_spider(1)
@@ -41,8 +42,8 @@ class ScraperRunTest(ScraperTest):
     def test_detail_page_url_id_field(self):
         checker_rt = SchedulerRuntime()
         checker_rt.save()
-        event = Event(title=u'Event 1', event_website=self.event_website, 
-            url=u'http://localhost:8010/static/site_generic/event5.html',
+        event = Event(title='Event 1', event_website=self.event_website, 
+            url='http://localhost:8010/static/site_generic/event5.html',
             checker_runtime=checker_rt)
         event.save()
         self.run_event_spider(1)
@@ -54,8 +55,8 @@ class ScraperRunTest(ScraperTest):
     def test_single_standard_id_field(self):
         checker_rt = SchedulerRuntime()
         checker_rt.save()
-        event = Event(title=u'Event 1', event_website=self.event_website, 
-            url=u'http://localhost:8010/static/site_generic/event5.html',
+        event = Event(title='Event 1', event_website=self.event_website, 
+            url='http://localhost:8010/static/site_generic/event5.html',
             checker_runtime=checker_rt)
         event.save()
         self.soa_url.id_field = False
@@ -71,19 +72,19 @@ class ScraperRunTest(ScraperTest):
     def test_double_standard_id_field(self):
         checker_rt = SchedulerRuntime()
         checker_rt.save()
-        event = Event(title=u'Event 1', event_website=self.event_website,
-            description=u'Event 1 description',
-            url=u'http://localhost:8010/static/site_generic/event5.html',
+        event = Event(title='Event 1', event_website=self.event_website,
+            description='Event 1 description',
+            url='http://localhost:8010/static/site_generic/event5.html',
             checker_runtime=checker_rt)
         event.save()
-        event = Event(title=u'Event 2', event_website=self.event_website,
-            description=u'Event 1 description',
-            url=u'http://localhost:8010/static/site_generic/event6.html',
+        event = Event(title='Event 2', event_website=self.event_website,
+            description='Event 1 description',
+            url='http://localhost:8010/static/site_generic/event6.html',
             checker_runtime=checker_rt)
         event.save()
-        event = Event(title=u'Event 1', event_website=self.event_website,
-            description=u'Event 2 description',
-            url=u'http://localhost:8010/static/site_generic/event7.html',
+        event = Event(title='Event 1', event_website=self.event_website,
+            description='Event 2 description',
+            url='http://localhost:8010/static/site_generic/event7.html',
             checker_runtime=checker_rt)
         event.save()
         self.soa_url.id_field = False
@@ -109,8 +110,8 @@ class ScraperRunTest(ScraperTest):
     def test_standard_update_field_update(self):
         checker_rt = SchedulerRuntime()
         checker_rt.save()
-        event = Event(title=u'Event 1 - Old Title', event_website=self.event_website, 
-            url=u'http://localhost:8010/static/site_generic/event1.html',
+        event = Event(title='Event 1 - Old Title', event_website=self.event_website, 
+            url='http://localhost:8010/static/site_generic/event1.html',
             checker_runtime=checker_rt)
         event.save()
         self.soa_title.attr_type = 'T'
@@ -192,13 +193,13 @@ class ScraperRunTest(ScraperTest):
     
     
     def test_xml_content_type(self):
-        self.se_base.x_path = u'//item'
+        self.se_base.x_path = '//item'
         self.se_base.save()
-        self.se_title.x_path = u'title/text()'
+        self.se_title.x_path = 'title/text()'
         self.se_title.save()
-        self.se_url.x_path = u'link/text()'
+        self.se_url.x_path = 'link/text()'
         self.se_url.save()
-        self.se_desc.x_path = u'description/text()'
+        self.se_desc.x_path = 'description/text()'
         self.se_desc.from_detail_page = False
         self.se_desc.save()
         

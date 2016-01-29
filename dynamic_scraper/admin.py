@@ -217,8 +217,8 @@ class ScraperAdmin(admin.ModelAdmin):
         if rows_updated == 1:
             message_bit = "1 scraper was"
         else:
-            message_bit = "%s scrapers were" % rows_updated
-        self.message_user(request, "%s successfully cloned." % message_bit)
+            message_bit = "{num} scrapers were".format(num=rows_updated)
+        self.message_user(request, "{mb} successfully cloned.".format(mb=message_bit))
     
     clone_scrapers.short_description = "Clone selected scrapers"
 

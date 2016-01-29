@@ -32,7 +32,7 @@ class Event(models.Model):
         return self.title + " (" + str(self.id) + ")"
 
     def detailed(self):
-        str  = "title: %s\n" % self.title
+        str  = "title: {t}\n".format(t=self.title)
         str += "event_website:"
         return str
 

@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from builtins import str
+from builtins import object
 import logging, os, os.path, shutil
 
 from django.test import TestCase
@@ -50,7 +53,7 @@ class DjangoWriterPipeline(object):
                 item['checker_runtime'] = checker_rt
                 
                 if not 'description' in item or item['description'] == None:
-                    item['description'] = u''
+                    item['description'] = ''
                 
                 item.save()
             except IntegrityError, e:
@@ -176,38 +179,38 @@ class ScraperTest(TestCase):
         
         self.sc = ScrapedObjClass(name='Event')
         self.sc.save()
-        self.soa_base = ScrapedObjAttr(name=u'base', attr_type='B', obj_class=self.sc)
+        self.soa_base = ScrapedObjAttr(name='base', attr_type='B', obj_class=self.sc)
         self.soa_base.save()
-        self.soa_title = ScrapedObjAttr(name=u'title', attr_type='S', obj_class=self.sc)
+        self.soa_title = ScrapedObjAttr(name='title', attr_type='S', obj_class=self.sc)
         self.soa_title.save()
-        self.soa_url = ScrapedObjAttr(name=u'url', attr_type='U', obj_class=self.sc, id_field=True)
+        self.soa_url = ScrapedObjAttr(name='url', attr_type='U', obj_class=self.sc, id_field=True)
         self.soa_url.save()
-        self.soa_url2 = ScrapedObjAttr(name=u'url2', attr_type='U', obj_class=self.sc)
+        self.soa_url2 = ScrapedObjAttr(name='url2', attr_type='U', obj_class=self.sc)
         self.soa_url2.save()
-        self.soa_desc = ScrapedObjAttr(name=u'description', attr_type='S', obj_class=self.sc)
+        self.soa_desc = ScrapedObjAttr(name='description', attr_type='S', obj_class=self.sc)
         self.soa_desc.save()
-        self.soa_desc2 = ScrapedObjAttr(name=u'description2', attr_type='S', obj_class=self.sc)
+        self.soa_desc2 = ScrapedObjAttr(name='description2', attr_type='S', obj_class=self.sc)
         self.soa_desc2.save()
-        self.soa_es_1 = ScrapedObjAttr(name=u'extra_standard_1', attr_type='S', obj_class=self.sc, save_to_db=False)
+        self.soa_es_1 = ScrapedObjAttr(name='extra_standard_1', attr_type='S', obj_class=self.sc, save_to_db=False)
         self.soa_es_1.save()
 
-        self.scraper = Scraper(name=u'Event Scraper', scraped_obj_class=self.sc, status='A',)
+        self.scraper = Scraper(name='Event Scraper', scraped_obj_class=self.sc, status='A',)
         self.scraper.save()
         
         self.se_base = ScraperElem(scraped_obj_attr=self.soa_base, scraper=self.scraper, 
-        x_path=u'//ul/li', request_page_type='MP')
+        x_path='//ul/li', request_page_type='MP')
         self.se_base.save()
         self.se_title = ScraperElem(scraped_obj_attr=self.soa_title, scraper=self.scraper, 
-            x_path=u'a/text()', request_page_type='MP')
+            x_path='a/text()', request_page_type='MP')
         self.se_title.save()
         self.se_url = ScraperElem(scraped_obj_attr=self.soa_url, scraper=self.scraper, 
-            x_path=u'a/@href', request_page_type='MP')
+            x_path='a/@href', request_page_type='MP')
         self.se_url.save()
         self.se_desc = ScraperElem(scraped_obj_attr=self.soa_desc, scraper=self.scraper, 
-            x_path=u'//div/div[@class="description"]/text()', request_page_type='DP1', mandatory=False)
+            x_path='//div/div[@class="description"]/text()', request_page_type='DP1', mandatory=False)
         self.se_desc.save()
         self.se_es_1 = ScraperElem(scraped_obj_attr=self.soa_es_1, scraper=self.scraper, 
-            x_path=u'a/text()', request_page_type='MP')
+            x_path='a/text()', request_page_type='MP')
         self.se_es_1.save()
 
         self.rpt_mp  = RequestPageType(page_type='MP', scraper=self.scraper)
@@ -218,11 +221,11 @@ class ScraperTest(TestCase):
         self.sched_rt = SchedulerRuntime()
         self.sched_rt.save()
         
-        self.event_website = EventWebsite(pk=1, name=u'Event Website', scraper=self.scraper,
+        self.event_website = EventWebsite(pk=1, name='Event Website', scraper=self.scraper,
             url=os.path.join(self.SERVER_URL, 'site_generic/event_main.html'), scraper_runtime=self.sched_rt,)
         self.event_website.save()
         
-        for name, signal in vars(signals).items():
+        for name, signal in list(vars(signals).items()):
             if not name.startswith('_'):
                 dispatcher.connect(self.record_signal, signal)
         

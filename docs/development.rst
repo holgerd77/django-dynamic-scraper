@@ -93,14 +93,14 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.10.0-beta** (2016-01-27)
+**Changes in version 0.10.0-beta EXPERIMENTAL** (2016-01-27)
 
 * First major release version to support ``Scrapy 1.0+``
 * From this release on older Scrapy versions like ``0.24`` are not supported any more,
   please update your Scrapy version!
-* There are lots of code adoptions in this release, so there probably will be bugs.
-  If you are running this library in production you might want to wait for at least
-  0.10.1!
+* THIS IS AN EXPERIMENTAL RELEASE!!! There are lots of code adoptions in this release,
+  so there probably will be bugs. If you are running this library in production is is 
+  probably a good idea to wait for at least 0.10.1!
 
 * The following manual adoptions in your project are necessary:
 

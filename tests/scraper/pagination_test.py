@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import os.path
 from scraper.models import Event
 from scraper.scraper_test import ScraperTest

@@ -65,7 +65,7 @@ class DjangoSpider(DjangoBaseSpider):
     def _set_request_kwargs(self):
         super(DjangoSpider, self)._set_request_kwargs()
         for rpt in self.scraper.requestpagetype_set.all():
-            if rpt.form_data != u'':
+            if rpt.form_data != '':
                 try:
                     form_data = json.loads(rpt.form_data)
                 except ValueError:
