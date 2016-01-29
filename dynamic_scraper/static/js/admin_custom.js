@@ -30,7 +30,6 @@ $(document).ready(function() {
 				
 				// Limit height of common textarea_fields
 				var c_ta_fields = 'div.field-pagination_page_replace textarea, ';
-				c_ta_fields += 'div.field-comments textarea, ';
 				c_ta_fields += 'div.dynamic-requestpagetype_set textarea';
 				$(c_ta_fields).css('height', '54px');
 				
