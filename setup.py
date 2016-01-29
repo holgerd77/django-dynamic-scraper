@@ -30,12 +30,14 @@ setup(
     #    Django, Scrapy and Celery requirements are commented out here and have
     #    to be installed manually to avoid side-effects when updating the software.
     #    Version numbers are updated accordingly though.
-    #    'Django>=1.7,<1.9',
+    #    'Django>=1.8,<1.10',
     #    'Scrapy>=1.0,<1.1',
     #    'scrapy-djangoitem>=1.0,<1.1',
-    #    'scrapyd',
+    #    'scrapyd>=1.1,<1.2',
         'jsonpath-rw>=1.4',
-    #    'django-celery==3.1.16', # Scheduling
+    #    'kombu>=3.0.33,<3.1',
+    #    'Celery==3.1.20',
+    #    'django-celery==3.1.17', # Scheduling
         'future>=0.15,<0.16',
         'pillow>=3.0,<4.0',
     ],

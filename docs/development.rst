@@ -101,6 +101,10 @@ Release Notes
 * THIS IS AN EXPERIMENTAL RELEASE!!! There are lots of code adoptions in this release,
   so there probably will be bugs. If you are running this library in production is is 
   probably a good idea to wait for at least 0.10.1!
+* Support for ``Django 1.9``
+* EXPERIMENTAL support of the code base for ``Python 3`` (not relevant at time of release
+  since Scrapy is not supporting Python 3 yet due to a dependecy to ``Python/Twisted``,
+  both libraries are on their way though preparing for an update)
 
 * The following manual adoptions in your project are necessary:
 
@@ -123,6 +127,7 @@ Release Notes
   * Updated import paths according to Scrapy release documentation
   * Running most of the unit tests in parallel batches (when using the shell scripts)
     to speed up test runs
+  * Updated ``django-celery`` version requirement to ``3.1.17`` to work with ``Django 1.9``
 
 **Changes in version 0.9.6-beta** (2016-01-26)
 
