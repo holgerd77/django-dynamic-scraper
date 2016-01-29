@@ -230,8 +230,10 @@ We will use these code snippets in our examples.
 
 .. note::
   If you don't want to manually create the necessary DB objects for the example project, you can also run
-  ``python manage.py loaddata open_news/open_news.json`` from within the ``example_project`` directory in your 
-  favorite shell to have all the objects necessary for the example created automatically .
+  ``python manage.py loaddata open_news/open_news_dds_[DDS_VERSION].json`` from within the ``example_project`` 
+  directory in your favorite shell to have all the objects necessary for the example created automatically.
+  Use the file closest to the current DDS version. If you run into problems start installing the fitting
+  DDS version for the fixture, then update the DDS version and apply the latest Django migrations.
   
 .. note::
    The WikiNews site changes its code from time to time. I will try to update the example code and text in the

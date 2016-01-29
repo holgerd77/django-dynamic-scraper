@@ -128,6 +128,7 @@ Release Notes
   * Running most of the unit tests in parallel batches (when using the shell scripts)
     to speed up test runs
   * Updated ``django-celery`` version requirement to ``3.1.17`` to work with ``Django 1.9``
+  * Updated open_news example fixture, introduction of versioned fixture data dumps
 
 **Changes in version 0.9.6-beta** (2016-01-26)
 
