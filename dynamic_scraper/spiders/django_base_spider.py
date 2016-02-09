@@ -5,7 +5,7 @@ import datetime, json, logging, os
 from scrapy import signals
 from scrapy.spiders import Spider
 from scrapy.spiders import CrawlSpider
-from scrapy.xlib.pydispatch import dispatcher
+from pydispatch import dispatcher
 from scrapy.exceptions import CloseSpider
 
 import django
