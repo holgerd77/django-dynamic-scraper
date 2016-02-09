@@ -95,7 +95,8 @@ Release Notes
 =============
 **Changes in version 0.10.1-beta** (2016-02-09)
 
-* TODO
+* Removed dependency on ``scrapy.xlib.pydispatch`` being removed in ``Scrapy 1.1`` 
+  (former ``DDS v.0.10`` releases will break with ``Scrapy 1.1``)
 
 **Changes in version 0.10.0-beta EXPERIMENTAL** (2016-01-27)
 

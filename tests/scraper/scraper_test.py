@@ -13,7 +13,7 @@ settings = get_project_settings()
 
 from twisted.internet import reactor
 from scrapy.crawler import Crawler
-from scrapy.xlib.pydispatch import dispatcher
+from pydispatch import dispatcher
 
 from scrapy.crawler import CrawlerProcess
 

@@ -31,7 +31,7 @@ setup(
     #    to be installed manually to avoid side-effects when updating the software.
     #    Version numbers are updated accordingly though.
     #    'Django>=1.8,<1.10',
-    #    'Scrapy>=1.0,<1.1',
+    #    'Scrapy>=1.0,<1.2',
     #    'scrapy-djangoitem>=1.0,<1.1',
     #    'scrapyd>=1.1,<1.2',
         'jsonpath-rw>=1.4',
