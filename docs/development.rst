@@ -93,6 +93,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.10.1-beta** (2016-02-09)
+
+* TODO
+
 **Changes in version 0.10.0-beta EXPERIMENTAL** (2016-01-27)
 
 * First major release version to support ``Scrapy 1.0+``
