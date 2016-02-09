@@ -272,7 +272,7 @@
         "reg_exp": "",
         "request_page_type": "MP",
         "processors": "pre_url",
-        "proc_ctxt": "'pre_url': 'http:'",
+        "proc_ctxt": "'pre_url': 'https:'",
         "mandatory": true
     }
 },
