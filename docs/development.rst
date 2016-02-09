@@ -95,6 +95,13 @@ Release Notes
 =============
 **Changes in version 0.10.1-beta** (2016-02-09)
 
+
+* TODO
+
+  * Change ``except IntegrityError, e:`` to ``except IntegrityError as e:`` in your custom
+    ``pipelines.py`` module (see: :ref:`adding_pipeline_class`)
+
+* Making the code base compatible with ``Scrapy 1.1``
 * Removed dependency on ``scrapy.xlib.pydispatch`` being removed in ``Scrapy 1.1`` 
   (former ``DDS v.0.10`` releases will break with ``Scrapy 1.1``)
 

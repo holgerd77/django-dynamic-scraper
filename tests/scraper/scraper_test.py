@@ -56,7 +56,7 @@ class DjangoWriterPipeline(object):
                     item['description'] = ''
                 
                 item.save()
-            except IntegrityError, e:
+            except IntegrityError as e:
                 spider.log(str(e), logging.ERROR)
                 raise DropItem("Missing attribute.")
         

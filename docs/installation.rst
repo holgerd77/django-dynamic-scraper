@@ -11,7 +11,7 @@ The **basic requirements** for Django Dynamic Scraper are:
 
 * Python 2.7+ (earlier versions untested) (code base prepared for ``Python 3`` support)
 * `Django <https://www.djangoproject.com/>`_ 1.8/1.9 (newer versions untested)
-* `Scrapy <http://www.scrapy.org>`_ 1.0 (older versions like ``0.24`` not supported any more!)
+* `Scrapy <http://www.scrapy.org>`_ 1.0/1.1 (older versions like ``0.24`` not supported any more!)
 * `Python JSONPath RW 1.4+ <https://github.com/kennknowles/python-jsonpath-rw>`_
 * `Python-Future (preparing the code base to run with Python 2/3) 0.15+ <http://python-future.org/>`_
 
@@ -38,21 +38,22 @@ scraping the page. For this to work you have to install and configure (see: :ref
 
 Release Compatibility Table
 ---------------------------
-Have a look at the following table for an overview which ``Django``, ``Scrapy`` and ``django-celery`` versions are supported
-by which ``DDS`` version. Due to dev resource constraints backwards compatibility for older ``Django`` or ``Scrapy`` releases for new
-``DDS`` releases normally can not be granted.
+Have a look at the following table for an overview which ``Django``, ``Scrapy``, 
+``Python`` and ``django-celery`` versions are supported by which ``DDS`` version. 
+Due to dev resource constraints backwards compatibility for older ``Django`` or 
+``Scrapy`` releases for new ``DDS`` releases normally can not be granted.
 
-+-------------+-------------+----------------------+-------------------------------+
-| DDS Version | Django      | Scrapy               | django-celery/Celery/Kombu    |
-+=============+=============+======================+===============================+
-| 0.10        | 1.8/1.9     | 1.0/1.1              | 3.1.17/3.1.20/3.0.33          |
-+-------------+-------------+----------------------+-------------------------------+
-| 0.4-0.9     | 1.7/1.8     | 0.22/0.24            | 3.1.16 (newer untested)       |
-+-------------+-------------+----------------------+-------------------------------+
-| 0.3         | 1.4-1.6     | 0.16/0.18            | 3.0+ (3.1+ untested)          |
-+-------------+-------------+---------------------------------------+-------------------------------+
-| 0.2         | 1.4         | 0.14                 | (3.0 untested)                |
-+-------------+-------------+----------------------+-------------------------------+
++-------------+-------------+----------------------+----------------------+-------------------------------+
+| DDS Version | Django      | Scrapy               | Python               | django-celery/Celery/Kombu    |
++=============+=============+======================+======================+===============================+
+| 0.10        | 1.8/1.9     | 1.0/1.1 (0.10.1+)    | 2.7                  | 3.1.17/3.1.20/3.0.33          |
++-------------+-------------+----------------------+----------------------+-------------------------------+
+| 0.4-0.9     | 1.7/1.8     | 0.22/0.24            | 2.7                  | 3.1.16 (newer untested)       |
++-------------+-------------+----------------------+----------------------+-------------------------------+
+| 0.3         | 1.4-1.6     | 0.16/0.18            | 2.7                  | 3.0+ (3.1+ untested)          |
++-------------+-------------+----------------------+----------------------+-------------------------------+
+| 0.2         | 1.4         | 0.14                 | 2.7                  | (3.0 untested)                |
++-------------+-------------+----------------------+----------------------+-------------------------------+
 
 .. note::
    Please get in touch (`GitHub <https://github.com/holgerd77/django-dynamic-scraper>`_) if you have any additions to this table. A library version is counted as supported if the
