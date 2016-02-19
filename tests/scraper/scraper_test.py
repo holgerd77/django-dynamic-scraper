@@ -170,7 +170,7 @@ class ScraperTest(TestCase):
 
         settings.set('COOKIES_DEBUG', True)
         settings.set('LOG_LEVEL', 'DEBUG')
-        settings.set('LOG_ENABLED', True)
+        settings.set('LOG_ENABLED', False)
         
         #self.crawler = Crawler(settings)
         #self.crawler.signals.connect(reactor.stop, signal=signals.spider_closed)

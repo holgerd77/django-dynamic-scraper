@@ -7,6 +7,7 @@ import hashlib, logging, ntpath
 from dynamic_scraper.models import ScraperElem
 from django.utils.encoding import smart_text
 from scrapy.pipelines.images import ImagesPipeline
+from scrapy.utils.python import to_bytes
 from scrapy.exceptions import DropItem
 from scrapy.http import Request
 from scrapy.utils.project import get_project_settings
@@ -31,8 +32,7 @@ class DjangoImagesPipeline(ImagesPipeline):
 
     def file_path(self, request, response=None, info=None):
         url = request.url
-        image_guid = hashlib.sha1(url).hexdigest()
-        logging.log(logging.INFO, "TEST")
+        image_guid = hashlib.sha1(to_bytes(url)).hexdigest()
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             return '{ig}.jpg'.format(ig=image_guid)
         elif self.conf["IMAGES_STORE_FORMAT"] == 'THUMBS':
@@ -42,7 +42,7 @@ class DjangoImagesPipeline(ImagesPipeline):
 
     def thumb_path(self, request, thumb_id, response=None, info=None):
         url = request.url
-        image_guid = hashlib.sha1(url).hexdigest()
+        image_guid = hashlib.sha1(to_bytes(url)).hexdigest()
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             return '{ig}.jpg'.format(ig=image_guid)
         else:
@@ -53,7 +53,7 @@ class DjangoImagesPipeline(ImagesPipeline):
             img_elem = info.spider.scraper.get_image_elem()
         except ScraperElem.DoesNotExist:
             return item
-        
+        logging.log(logging.INFO, results)
         results_list = [x for ok, x in results if ok]
         if len(results_list) > 0:
             item[img_elem.scraped_obj_attr.name] = ntpath.basename(results_list[0]['path'])
