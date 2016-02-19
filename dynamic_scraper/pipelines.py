@@ -29,8 +29,10 @@ class DjangoImagesPipeline(ImagesPipeline):
         except (ScraperElem.DoesNotExist, TypeError):
             pass
 
-    def image_key(self, url):
+    def file_path(self, request, response=None, info=None):
+        url = request.url
         image_guid = hashlib.sha1(url).hexdigest()
+        logging.log(logging.INFO, "TEST")
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             return '{ig}.jpg'.format(ig=image_guid)
         elif self.conf["IMAGES_STORE_FORMAT"] == 'THUMBS':
@@ -38,7 +40,8 @@ class DjangoImagesPipeline(ImagesPipeline):
         else:
             return 'full/{ig}.jpg'.format(ig=image_guid)
 
-    def thumb_key(self, url, thumb_id):
+    def thumb_path(self, request, thumb_id, response=None, info=None):
+        url = request.url
         image_guid = hashlib.sha1(url).hexdigest()
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             return '{ig}.jpg'.format(ig=image_guid)

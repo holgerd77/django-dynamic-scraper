@@ -16,6 +16,8 @@ sys.path.insert(0, os.path.join(PROJECT_ROOT, "../../..")) #only for example_pro
 
 BOT_NAME = 'open_news'
 
+LOG_STDOUT = True
+
 SPIDER_MODULES = ['dynamic_scraper.spiders', 'open_news.scraper',]
 USER_AGENT = '{b}/{v}'.format(b=BOT_NAME, v='1.0')
 
