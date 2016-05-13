@@ -9,9 +9,10 @@ Requirements
 ------------
 The **basic requirements** for Django Dynamic Scraper are:
 
-* Python 2.7+ (earlier versions untested) (code base prepared for ``Python 3`` support)
+* Python 2.7+ or Python 3.4+
 * `Django <https://www.djangoproject.com/>`_ 1.8/1.9 (newer versions untested)
-* `Scrapy <http://www.scrapy.org>`_ 1.0/1.1 (older versions like ``0.24`` not supported any more!)
+* `Scrapy <http://www.scrapy.org>`_ 1.1 (older versions like ``0.24`` not supported any more!)
+* `scrapy-djangoitem <https://github.com/scrapy-plugins/scrapy-djangoitem>`_ 1.1
 * `Python JSONPath RW 1.4+ <https://github.com/kennknowles/python-jsonpath-rw>`_
 * `Python-Future (preparing the code base to run with Python 2/3) 0.15+ <http://python-future.org/>`_
 
@@ -26,13 +27,7 @@ For **scraping images** you will need the Pillow Library:
 Since ``v.0.4.1`` ``DDS`` has basic ``ScrapyJS/Splash`` support for rendering/processing ``Javascript`` before
 scraping the page. For this to work you have to install and configure (see: :ref:`setting_up_scrapyjs_splash`) ``ScrapyJS``:
 
-* `ScrapyJS 0.1+ <https://github.com/scrapinghub/scrapyjs>`_ 
-
-.. note::
-   ``DDS 0.4`` version and upwards have dropped ``South`` support and using the internal migration system
-   from ``Django 1.7+``, south migrations can still be found in ``dynamic_scraper/south_migrations`` folder though. If you are upgrading from a DDS version older than ``0.3.2`` make sure to apply all the ``South`` migrations first
-   and the do an initial fake migration for switching to the Django migration system (see also Django docs on
-   migrations)!
+* `scrapy-splash <https://github.com/scrapy-plugins/scrapy-splash>` 0.6 
 
 .. _release_compatibility:
 
@@ -46,7 +41,7 @@ Due to dev resource constraints backwards compatibility for older ``Django`` or
 +-------------+-------------+----------------------+----------------------+-------------------------------+
 | DDS Version | Django      | Scrapy               | Python               | django-celery/Celery/Kombu    |
 +=============+=============+======================+======================+===============================+
-| 0.10        | 1.8/1.9     | 1.0/1.1 (0.10.1+)    | 2.7                  | 3.1.17/3.1.20/3.0.33          |
+| 0.11        | 1.8/1.9     | 1.1                  | 2.7+/3.4+            | 3.1.17/3.1.20/3.0.33          |
 +-------------+-------------+----------------------+----------------------+-------------------------------+
 | 0.4-0.9     | 1.7/1.8     | 0.22/0.24            | 2.7                  | 3.1.16 (newer untested)       |
 +-------------+-------------+----------------------+----------------------+-------------------------------+

@@ -131,6 +131,11 @@ Release Notes
   * Removed dependency on ``scrapy.xlib.pydispatch`` being removed in ``Scrapy 1.1`` 
     (former ``DDS v.0.10`` releases will break with ``Scrapy 1.1``)
 
+* If you use ``Scrapy/Splash`` for ``Javascript`` rendering:
+
+  * Updated dependencies, replaced ``scrapyjs`` with ``scrapy-splash`` (renaming),
+    please update your dependencies accordingly!
+
 **Changes in version 0.10.0-beta EXPERIMENTAL** (2016-01-27)
 
 * Experimental release branch no longer maintained, please see release notes for ``0.11``.
