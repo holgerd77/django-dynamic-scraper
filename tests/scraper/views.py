@@ -18,7 +18,7 @@ def header_body_data(request, test_case):
         if 'HTTP_REFERER' in request.META and request.META['HTTP_REFERER'] == 'http://comingfromhere.io':
             return redirect('/static/site_generic/event_main.html')
     if test_case == 'body':
-        if request.body == 'This is the HTTP request body content.':
+        if request.body == b'This is the HTTP request body content.':
             return redirect('/static/site_generic/event_main.html')
 
     return HttpResponse('Test case not found!')
