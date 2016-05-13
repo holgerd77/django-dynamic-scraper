@@ -140,6 +140,7 @@ class DjangoSpider(DjangoBaseSpider):
 
 
     def _set_start_urls(self, scrape_url):
+        self.start_urls = []
         
         if self.scraper.pagination_type != 'N':
             if not self.scraper.pagination_page_replace:

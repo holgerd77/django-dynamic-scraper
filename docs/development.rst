@@ -136,6 +136,10 @@ Release Notes
   * Updated dependencies, replaced ``scrapyjs`` with ``scrapy-splash`` (renaming),
     please update your dependencies accordingly!
 
+* Bugfixes:
+
+  * Fixed bug with ``DSCRAPER_IMAGES_STORE_FORMAT`` set to ``THUMBS`` not working correctly
+
 **Changes in version 0.10.0-beta EXPERIMENTAL** (2016-01-27)
 
 * Experimental release branch no longer maintained, please see release notes for ``0.11``.
