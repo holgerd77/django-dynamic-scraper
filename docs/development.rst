@@ -93,30 +93,14 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.10.1-beta** (2016-02-09)
 
+**Changes in version 0.11.0-beta** (2016-05-13)
 
-* TODO
-
-  * Change ``except IntegrityError, e:`` to ``except IntegrityError as e:`` in your custom
-    ``pipelines.py`` module (see: :ref:`adding_pipeline_class`)
-
-* Making the code base compatible with ``Scrapy 1.1``
-* Removed dependency on ``scrapy.xlib.pydispatch`` being removed in ``Scrapy 1.1`` 
-  (former ``DDS v.0.10`` releases will break with ``Scrapy 1.1``)
-
-**Changes in version 0.10.0-beta EXPERIMENTAL** (2016-01-27)
-
-* First major release version to support ``Scrapy 1.0+``
+* First major release version with support for ``Scrapy 1.0/1.1``
 * From this release on older Scrapy versions like ``0.24`` are not supported any more,
   please update your Scrapy version!
-* THIS IS AN EXPERIMENTAL RELEASE!!! There are lots of code adoptions in this release,
-  so there probably will be bugs. If you are running this library in production is is 
-  probably a good idea to wait for at least 0.10.1!
+* Beta ``Python 3`` support (needs ``Scrapy 1.1``)
 * Support for ``Django 1.9``
-* EXPERIMENTAL support of the code base for ``Python 3`` (not relevant at time of release
-  since Scrapy is not supporting Python 3 yet due to a dependecy to ``Python/Twisted``,
-  both libraries are on their way though preparing for an update)
 
 * The following manual adoptions in your project are necessary:
 
@@ -132,6 +116,8 @@ Release Notes
     ``from scrapy import log`` import and changing the ``log.[LOGLEVEL]`` attribute
     handover in the log function call to ``logging.[LOGLEVEL]``
     (see: :ref:`adding_pipeline_class`)
+  * Change ``except IntegrityError, e:`` to ``except IntegrityError as e:`` in your custom
+    ``pipelines.py`` module (see: :ref:`adding_pipeline_class`)
 
 * Following changes have been made:
 
@@ -141,6 +127,12 @@ Release Notes
     to speed up test runs
   * Updated ``django-celery`` version requirement to ``3.1.17`` to work with ``Django 1.9``
   * Updated open_news example fixture, introduction of versioned fixture data dumps
+  * Removed dependency on ``scrapy.xlib.pydispatch`` being removed in ``Scrapy 1.1`` 
+    (former ``DDS v.0.10`` releases will break with ``Scrapy 1.1``)
+
+**Changes in version 0.10.0-beta EXPERIMENTAL** (2016-01-27)
+
+* Experimental release branch no longer maintained, please see release notes for ``0.11``.
 
 **Changes in version 0.9.6-beta** (2016-01-26)
 
