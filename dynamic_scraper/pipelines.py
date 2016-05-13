@@ -36,7 +36,7 @@ class DjangoImagesPipeline(ImagesPipeline):
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             return '{ig}.jpg'.format(ig=image_guid)
         elif self.conf["IMAGES_STORE_FORMAT"] == 'THUMBS':
-            return 'thumbs/{p}/{ig}.jpg'.format(p=next(iter(list(self.THUMBS.keys()))), ig=image_guid)
+            return 'thumbs/{p}/{ig}.jpg'.format(p=next(iter(list(settings.get('IMAGES_THUMBS').keys()))), ig=image_guid)
         else:
             return 'full/{ig}.jpg'.format(ig=image_guid)
 
