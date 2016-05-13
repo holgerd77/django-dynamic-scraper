@@ -145,7 +145,7 @@ class ScraperTest(TestCase):
         self.checker_test = CheckerTest(**kwargs)
         self.checker_test.conf['RUN_TYPE'] = 'TASK'
         self.checker_test.conf['DO_ACTION'] = True
-        self.checker_test.conf['LOG_ENABLED'] = True
+        self.checker_test.conf['LOG_ENABLED'] = False
         self.checker_test.conf['LOG_LEVEL'] = 'DEBUG' 
         self.crawler.crawl(self.checker_test)
         self.crawler.start()

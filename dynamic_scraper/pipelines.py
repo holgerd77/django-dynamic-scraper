@@ -53,7 +53,6 @@ class DjangoImagesPipeline(ImagesPipeline):
             img_elem = info.spider.scraper.get_image_elem()
         except ScraperElem.DoesNotExist:
             return item
-        logging.log(logging.INFO, results)
         results_list = [x for ok, x in results if ok]
         if len(results_list) > 0:
             item[img_elem.scraped_obj_attr.name] = ntpath.basename(results_list[0]['path'])
