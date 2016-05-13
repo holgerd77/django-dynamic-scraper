@@ -505,6 +505,8 @@ Starting update process for ``Python 3`` support with this release (not there ye
 Roadmap
 =======
 
+[THIS ROADMAP IS PARTIALLY OUTDATED!]
+
 **pre-alpha**
 
 Django Dynamic Scraper's pre-alpha phase was meant to be for
@@ -512,7 +514,7 @@ people interested having a first look at the library and give some feedback if t
 sense the way they were worked out/conceptionally designed or if a different approach on implementing 
 some parts of the software would have made more sense.
 
-**alpha (current)**
+**alpha**
 
 DDS is currently in alpha stadium, which means that the library has proven itself in (at least) one 
 production environment and can be (cautiously) used for production purposes. However being still very
@@ -521,7 +523,7 @@ The alpha stadium will
 be used for getting most parts of the API relatively stable and eliminate the most urgent bugs/flaws
 from the software.
 
-**beta**
+**beta (current)**
 
 In the beta phase the API of the software should be relatively stable, though occasional changes will
 still be possible if necessary. The beta stadium should be the first period where it is save to use
