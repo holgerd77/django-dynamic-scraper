@@ -12,7 +12,8 @@ of the features of Scrapy it lets you dynamically create and manage spiders via 
 .. note::
    Lot's of new features added recently :
 
-   * ``Django 1.8``/``Scrapy 0.24`` support
+   * ``Django 1.9``/``Scrapy 1.1`` support
+   * Beta ``Python 3`` support
    * ``Javascript`` rendering
    * Scraping ``JSON`` content
    * More flexible ID and detail page URL(s) concept

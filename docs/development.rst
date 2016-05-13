@@ -96,10 +96,11 @@ Release Notes
 
 **Changes in version 0.11.0-beta** (2016-05-13)
 
-* First major release version with support for ``Scrapy 1.0/1.1``
+* First major release version with support for new ``Scrapy 1.0+`` structure
+  (only ``Scrapy 1.1`` officially supported)
 * From this release on older Scrapy versions like ``0.24`` are not supported any more,
   please update your Scrapy version!
-* Beta ``Python 3`` support (needs ``Scrapy 1.1``)
+* Beta ``Python 3`` support
 * Support for ``Django 1.9``
 
 * The following manual adoptions in your project are necessary:
