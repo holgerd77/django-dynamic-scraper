@@ -114,12 +114,12 @@ similar. After finishing this chapter you should end up with a directory structu
     scrapy.cfg
     open_news/
       models.py # Your models.py file
+      (tasks.py)      
       scraper/
         settings.py
         spiders.py
         (checkers.py)
         pipelines.py
-        (tasks.py)
       
 Your ``scrapy.cfg`` file should look similar to the following, just having adjusted the reference to the
 settings file and the project name::
