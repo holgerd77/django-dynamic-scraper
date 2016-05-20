@@ -545,6 +545,8 @@ equivalent to ``$.response.results``. Sometimes it might be necessary to use the
 if you directly want to point to the root of the ``JSON`` file, e.g. to reference the objects in
 a ``JSON`` array file.
 
+.. note::
+   The example project actually contains a working (most of the time :-)) ``JSON`` example scraper!
 
 .. _scraping_images:
 
