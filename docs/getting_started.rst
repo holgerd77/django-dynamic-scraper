@@ -247,7 +247,7 @@ scraper element on default.
 
 2. It is not necessary but just for the purpose of this example let's scrape the title of a news article
 from the article detail page. On an article detail page the headline of the article is enclosed by a
-``<h1>`` tag with an id named 'firstHeading'. So ``//h1[@id="firstHeading"]/span/text()`` should give us the headline.
+``<h1>`` tag with an id named 'firstHeading'. So ``//h1[@id="firstHeading"]/text()`` should give us the headline.
 Since we want to scrape from the detail page, we have to activate the 'from_detail_page' check box.
 
 3. All the standard elements we want to scrape from the overview page are defined relative to the
