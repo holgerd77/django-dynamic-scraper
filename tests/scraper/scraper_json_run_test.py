@@ -159,6 +159,20 @@ class ScraperJSONRunTest(ScraperTest):
             description2='Event Detail Page 1 Description JSON',
         )
         self.assertEqual(len(events), 1)
+    
+    
+    def test_json_array(self):
+        self.setUpScraperJSONDefaultScraper()
+        
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_json_content_type/event_main_array.json')
+        self.event_website.save()
+        
+        self.se_base.x_path = '$'
+        self.se_base.save()
+        
+        self.run_event_spider(1)
+        #logging.info(unicode(Event.objects.all()))
+        self.assertEqual(len(Event.objects.all()), 3)
 
 
     def test_checker_x_path_type_x_path_delete(self):

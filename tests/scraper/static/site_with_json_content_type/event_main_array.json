@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Event 1",
+    "description": "Event 1 Description",
+    "url": "http://localhost:8010/static/site_with_json_content_type/event1.html",
+    "json_url": "http://localhost:8010/static/site_with_json_content_type/event1.json"
+  },
+  {
+    "title": "Event 2",
+    "description": "Event 2 Description",
+    "url": "http://localhost:8010/static/site_with_json_content_type/event2.html",
+    "json_url": "http://localhost:8010/static/site_with_json_content_type/event2.json"
+  },
+  {
+    "title": "Event 3",
+    "description": "Event 3 Description",
+    "url": "http://localhost:8010/static/site_with_json_content_type/event3.html",
+    "json_url": "http://localhost:8010/static/site_with_json_content_type/event3.json"
+  }
+]

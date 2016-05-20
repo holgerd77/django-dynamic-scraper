@@ -9,6 +9,8 @@ test_non_data_mixing
 test_static_processor_empty_x_path
 test_detail_page
 test_detail_page_json
+test_multiple_detail_pages
+test_json_array
 "
 tests2="
 test_checker_x_path_type_x_path_delete
