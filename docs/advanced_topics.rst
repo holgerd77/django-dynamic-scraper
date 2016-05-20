@@ -519,6 +519,33 @@ For reference see expressions as defined here:
    ``XPath`` for data extraction. If you are working with more complex ``JSONPath`` queries and run into problems,
    please report them on `GitHub <https://github.com/holgerd77/django-dynamic-scraper>`_!
 
+Example
+-------
+
+Consider the following simple ``JSON`` example::
+
+  {
+    "response": {
+      "num_results": 3,
+      "results": [
+        {
+          "title": "Example Title",
+          "description": "Example Description"
+        },
+        //...
+      ]
+    }
+  }
+
+The title elements of the results can then be scraped by defining ``response.results`` ``JSONPath`` as the
+base element and ``title`` as the ``JSONPath`` for the scraped object attribute.
+
+Using the ``$`` for refering to the ``JSON`` root is actually optional, so ``response.results`` is 
+equivalent to ``$.response.results``. Sometimes it might be necessary to use the ``$`` though, e.g.
+if you directly want to point to the root of the ``JSON`` file, e.g. to reference the objects in
+a ``JSON`` array file.
+
+
 .. _scraping_images:
 
 Scraping images/screenshots
