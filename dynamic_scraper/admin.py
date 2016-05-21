@@ -4,6 +4,7 @@ from builtins import str
 from builtins import object
 from datetime import date
 from django.contrib import admin
+from django.utils import timezone
 from django.contrib.admin import SimpleListFilter
 from django.core.exceptions import ValidationError
 from django.forms.models import BaseInlineFormSet
@@ -168,7 +169,7 @@ class ScraperAdmin(admin.ModelAdmin):
             td = obj.get_last_scraper_save_alert_period_timedelta()
             if td:
                 html_str = html_str + ' (' + obj.last_scraper_save_alert_period + ')'
-                if not obj.last_scraper_save or obj.last_scraper_save < datetime.datetime.now() - td:
+                if not obj.last_scraper_save or obj.last_scraper_save < timezone.now() - td:
                     html_str = '<span style="color:red;">' + html_str + '</span>'
         return html_str
     
