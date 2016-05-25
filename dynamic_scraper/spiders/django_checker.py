@@ -11,6 +11,8 @@ from scrapy.exceptions import CloseSpider
 from scrapy.http import Request
 from pydispatch import dispatcher
 
+from django.utils import timezone
+
 from dynamic_scraper.spiders.django_base_spider import DjangoBaseSpider
 from dynamic_scraper.models import ScraperElem
 from dynamic_scraper.utils.scheduler import Scheduler
@@ -88,7 +90,7 @@ class DjangoChecker(DjangoBaseSpider):
             pass
         
         self.ref_object.delete()
-        self.scraper.last_checker_delete = datetime.datetime.now()
+        self.scraper.last_checker_delete = timezone.now()
         self.scraper.save()
         self.action_successful = True
         self.log("Item deleted.", logging.INFO)
