@@ -262,6 +262,7 @@ class Checker(models.Model):
         return  str(self.scraped_obj_attr) + ' > ' + self.get_checker_type_display()
     
 
+@python_2_unicode_compatible
 class ScraperElem(models.Model):
     REQUEST_PAGE_TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP{n}".format(n=str(n)), "Detail Page {n}".format(n=str(n))) for n in list(range(1, 26))])
     scraped_obj_attr = models.ForeignKey(ScrapedObjAttr)
