@@ -4,7 +4,7 @@ Introduction
 With Django Dynamic Scraper (DDS) you can define your `Scrapy <http://www.scrapy.org>`_ scrapers dynamically via the Django admin interface
 and save your scraped items in the database you defined for your Django project.
 Since it simplifies things DDS is not usable for all kinds of scrapers, but it is well suited for the relatively
-common case of regularly scraping a website with a list of updated items (e.g. news, events, etc.) and than dig 
+common case of regularly scraping a website with a list of updated items (e.g. news, events, etc.) and then dig 
 into the detail page to scrape some more infos for each item.
 
 Here are some examples for some use cases of DDS:
