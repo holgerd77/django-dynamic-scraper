@@ -198,7 +198,7 @@ the data for the specific :ref:`scraped_obj_attr` by following the main concepts
 data from websites. In the fields named 'x_path' and 'reg_exp' an XPath and (optionally) a regular expression
 is defined to extract the data from the page, following Scrapy's concept of 
 `XPathSelectors <http://readthedocs.org/docs/scrapy/en/latest/topics/selectors.html>`_. The 'request_page_type'
-select box tells the scraper, if the data for the object attibute for the scraper element should be extracted
+select box tells the scraper if the data for the object attibute for the scraper element should be extracted
 from the overview page or a detail page of the specific item. For every chosen page type here you have to define a
 corresponding request page type in the admin form above. The fields 'processors' and 'processors_ctxt' are
 used to define output processors for your scraped data like they are defined in Scrapy's
