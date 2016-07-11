@@ -206,8 +206,8 @@ used to define output processors for your scraped data like they are defined in 
 You can use these processors e.g. to add a string to your scraped data or to bring a scraped date in a
 common format. More on this later. Finally, the 'mandatory' check box is indicating whether the data
 scraped by the scraper element is a necessary field. If you define a scraper element as necessary and no
-data could be scraped for this element the item will be dropped. Note, that you always have to keep attributes
-mandatory, if the corresponding attributes of your domain model class is a mandatory field, otherwise the 
+data could be scraped for this element the item will be dropped. You always have to keep attributes
+mandatory if the corresponding attributes of your domain model class are mandatory fields, otherwise the 
 scraped item can't be saved in the DB.
 
 For the moment, keep the ``status`` to ``MANUAL`` to run the spider via the command line during this tutorial.
