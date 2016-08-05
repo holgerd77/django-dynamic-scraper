@@ -3,5 +3,5 @@ from settings.base_settings import *
 
 
 DSCRAPER_CUSTOM_PROCESSORS = [
-    'tests.scraper.utils.custom_processors',
+    'scraper.utils.custom_processors',
 ]

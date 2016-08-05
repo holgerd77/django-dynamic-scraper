@@ -22,6 +22,8 @@ test_processor_with_placeholder_mp_to_dp_unicode
 test_processor_with_placeholder_dp_to_mp
 test_processor_with_placeholder_tmp_to_mp
 test_processor_with_placeholder_tmp_with_placeholder_to_mp
+test_custom_processor
+test_custom_processor_wrong_path
 "
 
 for (( i = 1; i <= 3; i++ ))

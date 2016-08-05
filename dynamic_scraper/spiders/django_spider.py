@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from builtins import str
 from builtins import map
 from builtins import range
-import ast, datetime, json, logging, scrapy
+import ast, datetime, importlib, json, logging, scrapy
 
 from jsonpath_rw import jsonpath, parse
 from jsonpath_rw.lexer import JsonPathLexerError
@@ -43,6 +43,15 @@ class DjangoSpider(DjangoBaseSpider):
         super(DjangoSpider, self).__init__(self, *args, **kwargs)
         self._set_config(**kwargs)
         self._set_request_kwargs()
+        
+        for cp_path in self.conf['CUSTOM_PROCESSORS']:
+            try:
+                custom_processors = importlib.import_module(cp_path)
+            except ImportError:
+                msg = "Custom processors from {path} could not be imported, processors won't be applied".format(
+                    path=cp_path,
+                )
+                self.log(msg, logging.WARNING)
         
         post_save.connect(self._post_save_tasks, sender=self.scraped_obj_class)
         
@@ -249,9 +258,19 @@ class DjangoSpider(DjangoBaseSpider):
         procs_tmp = list(procs_str.split(','))
         for p in procs_tmp:
             p = p.strip()
+            added = False
             if hasattr(processors, p):
                 procs.append(getattr(processors, p))
-            else:
+                added = True
+            for cp_path in self.conf['CUSTOM_PROCESSORS']:
+                try:
+                    custom_processors = importlib.import_module(cp_path)
+                    if hasattr(custom_processors, p):
+                        procs.append(getattr(custom_processors, p))
+                        added = True
+                except ImportError:
+                    pass
+            if not added:
                 self.log("Processor '{p}' is not defined!".format(p=p), logging.ERROR)
         procs = tuple(procs)
         return procs

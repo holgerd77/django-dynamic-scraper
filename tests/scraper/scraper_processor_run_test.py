@@ -196,10 +196,22 @@ class ScraperProcessorRunTest(ScraperTest):
     
     
     def test_custom_processor(self):
-        self.assertTrue(True)
+        self.setUpProcessorTest()
+        self.se_title.processors = 'custom_post_string'
+        self.se_title.proc_ctxt = "'custom_post_string': '1'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(Event.objects.filter(title='Event 1_test_1').count(), 1)
     
     
     def test_custom_processor_wrong_path(self):
-        self.assertTrue(True)
+        self.setUpProcessorTest()
+        self.se_title.processors = 'custom_post_string'
+        self.se_title.proc_ctxt = "'custom_post_string': '1'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(Event.objects.filter(title='Event 1').count(), 1)
         
         

@@ -107,6 +107,8 @@ class DjangoBaseSpider(CrawlSpider):
         else:
             msg = "Use THUMBS images store format (save only the thumbnail images)"
             logging.info(msg)
+            
+        self.conf['CUSTOM_PROCESSORS'] = settings.get('DSCRAPER_CUSTOM_PROCESSORS', [])
 
         self.conf['LOG_ENABLED'] = settings.get('DSCRAPER_LOG_ENABLED', self.conf['LOG_ENABLED'])
         self.conf['LOG_LEVEL'] = settings.get('DSCRAPER_LOG_LEVEL', self.conf['LOG_LEVEL'])
