@@ -258,7 +258,7 @@ So the XPath is ``p/span[@class="l_summary"]/text()``.
 4. And finally the url can be scraped via the XPath ``span[@class="l_title"]/a/@href``. Since we only scrape 
 the path of our url with this XPath and not the domain, we have to use a processor for the first time to complete
 the url. For this purpose there is a predefined processor called 'pre_url'. You can find more predefined
-processors in the ``dynamic_scraper.utils.processors`` module. 'pre_url' is simply doing what we want,
+processors in the ``dynamic_scraper.utils.processors`` module - see :ref:`processors` for processor reference - 'pre_url' is simply doing what we want,
 namely adding a base url string to the scraped string. To use a processor, just write the function name
 in the processor field. Processors can be given some extra information via the processors_ctxt field.
 In our case we need the spefic base url our scraped string should be appended to. Processor context

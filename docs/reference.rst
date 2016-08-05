@@ -27,6 +27,20 @@ ALL    Storing original (in ``full/``) and thumbnail images (e.g. in ``thumbs/sm
 THUMBS Storing only the thumbnail images (e.g. in ``thumbs/small/``)
 ====== ================================================================================
 
+.. _setting_dscraper_custom_processors:
+
+DSCRAPER_CUSTOM_PROCESSORS
+--------------------------
+Default: ``[]``
+
+List with Python paths to custom processor modules, e.g.::
+
+	DSCRAPER_CUSTOM_PROCESSORS = [
+	    my_project.scraper_module.scraper.processors,
+	    my_project.scraper_module.scraper.more_processors,
+	    //...
+	]
+
 DSCRAPER_SPLASH_ARGS
 --------------------
 Default: ``{ 'wait': 0.5 }``
@@ -157,7 +171,9 @@ definition and using a ``pre_url`` processor like ``'pre_url': 'http://someurl.o
 .. note::
    Placeholders for detail page URLs can only be used with attributes scraped from the main page!
 
-Processor Description
+.. _predefined_processors:
+
+Predefined Processors
 ---------------------
 
 string_strip
@@ -279,3 +295,20 @@ duration
 *Context definition (Example)* ``'duration': '%M Minutes'``
 *Result (Example)*             "77 Minutes" -> "01:17:00"
 ============================== ===================================================================
+
+.. _custom_processors:
+
+Custom Processors
+-----------------
+
+If the existing predefined processors don't fit your needs you can write your own custom processors.
+
+A processor is just a simple Python function taking a string as input (the scraped data) together
+with the context information provided in the Django admin and return a somehow modified string.
+
+To get an idea how processors work have a look at the predefined processors in the 
+``dynamic_scraper.utils.processors`` module.
+
+To tell ``DDS`` about your custom processors provide the path(s) to your processor module(s) via the
+:ref:`setting_dscraper_custom_processors` setting.
+
