@@ -94,6 +94,12 @@ class ScraperTest(TestCase):
         elif args[0] == 'test_img_store_format_thumbs_with_thumbs' or args[0] == 'test_delete_with_img_thumbs_with_thumbs':
             os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.images_store_format_thumbs_with_thumbs';
             from settings import images_store_format_thumbs_with_thumbs as file_settings
+        elif args[0] == 'test_custom_processor':
+            os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.custom_processor'
+            from settings import custom_processor as file_settings
+        elif args[0] == 'test_custom_processor_wrong_path':
+            os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.custom_processor_wrong_path'
+            from settings import custom_processor_wrong_path as file_settings
         else:
             os.environ['SCRAPY_SETTINGS_MODULE'] = 'settings.base_settings';
             from settings import base_settings as file_settings
@@ -109,6 +115,8 @@ class ScraperTest(TestCase):
             self.dds_settings['IMAGES_THUMBS'] = file_settings.IMAGES_THUMBS
         if 'DSCRAPER_IMAGES_STORE_FORMAT' in file_settings.__dict__:
             self.dds_settings['DSCRAPER_IMAGES_STORE_FORMAT'] = file_settings.DSCRAPER_IMAGES_STORE_FORMAT
+        if 'DSCRAPER_CUSTOM_PROCESSORS' in file_settings.__dict__:
+            self.dds_settings['DSCRAPER_CUSTOM_PROCESSORS'] = file_settings.DSCRAPER_CUSTOM_PROCESSORS
 
         super(ScraperTest, self).__init__(*args, **kwargs)
 

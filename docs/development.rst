@@ -96,7 +96,7 @@ Release Notes
 
 **Changes in version 0.11.1-beta** (2016-08-05)
 
-* Integrated an easier way to write :ref:`custom_processors` for post-processing scraped data strings,
+* Easier way for writing/integrating :ref:`custom_processors` for post-processing scraped data strings,
   new associated :ref:`setting_dscraper_custom_processors` setting
   
 

@@ -193,5 +193,13 @@ class ScraperProcessorRunTest(ScraperTest):
         self.run_event_spider(1)
         
         self.assertEqual(Event.objects.filter(title='Event 1_START_Event_END').count(), 1)
+    
+    
+    def test_custom_processor(self):
+        self.assertTrue(True)
+    
+    
+    def test_custom_processor_wrong_path(self):
+        self.assertTrue(True)
         
         
