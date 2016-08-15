@@ -19,6 +19,7 @@ class DjangoImagesPipeline(ImagesPipeline):
     
     def __init__(self, *args, **kwargs):
         super(DjangoImagesPipeline,  self).__init__(*args, **kwargs)
+        self.thumbs = settings.get('IMAGES_THUMBS', {})
     
     def get_media_requests(self, item, info):
         try:

@@ -94,6 +94,11 @@ Docker container can be run with::
 Release Notes
 =============
 
+**Changes in version 0.11.2-beta** (2016-08-15)
+
+* IMPORTANT BUG FIX RELEASE! Fixes a bug saving only one thumbnail size when several thumbnail sizes
+  are defined with ``IMAGES_THUMBS`` setting, bug was introduced with changes in ``DDS v.0.11.0``
+
 **Changes in version 0.11.1-beta** (2016-08-05)
 
 * Easier way for writing/integrating :ref:`custom_processors` for post-processing scraped data strings,
