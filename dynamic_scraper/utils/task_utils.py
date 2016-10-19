@@ -7,6 +7,7 @@ import urllib.request, urllib.parse, http.client
 from scrapy.utils.project import get_project_settings
 settings = get_project_settings()
 from dynamic_scraper.models import Scraper
+import codecs
 
 class TaskUtils(object):
     
@@ -33,7 +34,8 @@ class TaskUtils(object):
     def _pending_jobs(self, spider):
         # Ommit scheduling new jobs if there are still pending jobs for same spider
         resp = urllib.request.urlopen('http://localhost:6800/listjobs.json?project=default')
-        data = json.load(resp)
+        reader = codecs.getreader('utf-8')
+        data = json.load(reader(resp))
         if 'pending' in data:
             for item in data['pending']:
                 if item['spider'] == spider:
