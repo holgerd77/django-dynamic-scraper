@@ -28,7 +28,7 @@ Since ``v.0.4.1`` ``DDS`` has basic ``ScrapyJS/Splash`` support for rendering/pr
 scraping the page. For this to work you have to install and configure (see: :ref:`setting_up_scrapyjs_splash`) ``ScrapyJS``:
 
 * `scrapy-splash <https://github.com/scrapy-plugins/scrapy-splash>` 0.6 
-
+ 
 .. _release_compatibility:
 
 Release Compatibility Table
