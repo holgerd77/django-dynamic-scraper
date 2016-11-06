@@ -47,6 +47,20 @@ def replace(text, loader_context):
     return replace
 
 
+def substr_replace(text, loader_context):
+    substr_replace = loader_context.get('substr_replace', '')
+    try:
+        pos = re.search('[^\\\]:', substr_replace).start()
+        orig_string = substr_replace[0:pos+1]
+        new_string = substr_replace[pos+2:]
+        orig_string = orig_string.replace('\:', ':')
+        new_string = new_string.replace('\:', ':')
+    except AttributeError:
+        loader_context.get('spider').log('Context for substr_replace processor has wrong format ("{t}", Format string: "{f}")!'.format(t=text, f=cformat), logging.ERROR)
+        return None
+    return text.replace(orig_string, new_string)
+
+
 def static(text, loader_context):
     static = loader_context.get('static', '')
     return static
