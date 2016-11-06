@@ -94,6 +94,11 @@ Docker container can be run with::
 Release Notes
 =============
 
+**Changes in version 0.11.3-beta** (2016-11-06)
+
+* New processor ``substr_replace`` for replacing a substring occurring one or multiple times in the scraped 
+  element with a target string (see: :ref:`predefined_processors`)
+
 **Changes in version 0.11.2-beta** (2016-08-15)
 
 * IMPORTANT BUG FIX RELEASE! Fixes a bug saving only one thumbnail size when several thumbnail sizes

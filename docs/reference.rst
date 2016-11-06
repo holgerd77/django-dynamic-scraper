@@ -236,6 +236,18 @@ replace
 *Result (Example)*               "This text was scraped" -> "This is a replacement"
 ============================== ===================================================================
 
+substr_replace
+^^^^^^^^^^^^^^
+============================== ===================================================================
+*Description*                  A substring occurring one or multiple times in the scraped element 
+                               is replaced by a target string provided (Strings are separated by
+                               a ":" char, for use in text please mask ":" char like this: "\:" ).
+*Usable with other processors* Yes
+*Context definition (Syntax)*  ``'substr_replace': '[SUBSTRING]:[TARGET STRING]'``
+*Context definition (Example)* ``'substr_replace': 'Title\: Hello:New Title\: Hi'``
+*Result (Example)*               "Title: Hello my dear friend" -> "New Title: Hi my dear friend"
+============================== ===================================================================
+
 static
 ^^^^^^
 ============================== ===================================================================
