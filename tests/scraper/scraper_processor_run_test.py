@@ -76,7 +76,26 @@ class ScraperProcessorRunTest(ScraperTest):
         self.run_event_spider(1)
         
         self.assertEqual(len(Event.objects.all()), 2)
-
+    
+    def test_substr_replace_processor(self):
+        self.setUpProcessorTest()
+        self.se_title.processors = 'substr_replace'
+        self.se_title.proc_ctxt = "'substr_replace': 'Event 1:New Event 1'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.filter(title='New Event 1')), 1)
+    
+    def test_substr_replace_processor_with_colon(self):
+        self.setUpProcessorTest()
+        self.event_website.url = os.path.join(self.SERVER_URL, 'site_with_processor/event_main_substr_replace_with_colon.html')
+        self.event_website.save()
+        self.se_title.processors = 'substr_replace'
+        self.se_title.proc_ctxt = "'substr_replace': 'Event 1\: This:New Event 1\: That'"
+        self.se_title.save()
+        self.run_event_spider(1)
+        
+        self.assertEqual(len(Event.objects.filter(title='New Event 1: That')), 1)
 
     def test_static_processor_wrong_x_path(self):
         self.setUpProcessorTest()

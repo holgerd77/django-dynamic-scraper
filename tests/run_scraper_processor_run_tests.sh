@@ -7,6 +7,8 @@ test_multiple_processors_use
 test_replace_processor_wrong_x_path
 test_replace_processor_correct_x_path
 test_replace_processor_unicode_replace
+test_substr_replace_processor
+test_substr_replace_processor_with_colon
 test_static_processor_wrong_x_path
 "
 tests2="
