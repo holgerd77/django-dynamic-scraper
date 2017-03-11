@@ -10,7 +10,7 @@ Requirements
 The **basic requirements** for Django Dynamic Scraper are:
 
 * Python 2.7+ or Python 3.4+
-* `Django <https://www.djangoproject.com/>`_ 1.8/1.9/1.10 (newer versions untested)
+* `Django <https://www.djangoproject.com/>`_ 1.8/1.9/1.10/1.11 (newer versions untested)
 * `Scrapy <http://www.scrapy.org>`_ 1.1/1.2(?)/1.3 (older versions like ``0.24`` not supported any more!)
 * `scrapy-djangoitem <https://github.com/scrapy-plugins/scrapy-djangoitem>`_ 1.1
 * `Python JSONPath RW 1.4+ <https://github.com/kennknowles/python-jsonpath-rw>`_
@@ -24,10 +24,11 @@ For **scraping images** you will need the Pillow Library:
 
 * `Pillow Libray (PIL fork) 2.5+ <https://python-pillow.github.io/>`_
 
-Since ``v.0.4.1`` ``DDS`` has basic ``ScrapyJS/Splash`` support for rendering/processing ``Javascript`` before
-scraping the page. For this to work you have to install and configure (see: :ref:`setting_up_scrapyjs_splash`) ``ScrapyJS``:
+Since ``v.0.4.1`` ``DDS`` has basic ``Splash`` support for rendering/processing ``Javascript`` before
+scraping the page. For this to work you have to install and configure ```Splash`` and the connecting (see: :ref:`setting_up_scrapyjs_splash`) 
+``scrapy-splash`` library:
 
-* `scrapy-splash <https://github.com/scrapy-plugins/scrapy-splash>` 0.6 
+* `scrapy-splash <https://github.com/scrapy-plugins/scrapy-splash>`_ 0.7 
  
 .. _release_compatibility:
 
@@ -38,17 +39,17 @@ Have a look at the following table for an overview which ``Django``, ``Scrapy``,
 Due to dev resource constraints backwards compatibility for older ``Django`` or 
 ``Scrapy`` releases for new ``DDS`` releases normally can not be granted.
 
-+-------------+--------------+----------------------+----------------------+-------------------------------+
-| DDS Version | Django       | Scrapy               | Python               | django-celery/Celery/Kombu    |
-+=============+==============+======================+======================+===============================+
-| 0.11        | 1.8/1.9/1.10 | 1.1/1.2(?)/1.3       | 2.7+/3.4+            | 3.2.1/3.1.25/3.0.37           |
-+-------------+--------------+----------------------+----------------------+-------------------------------+
-| 0.4-0.9     | 1.7/1.8      | 0.22/0.24            | 2.7                  | 3.1.16 (newer untested)       |
-+-------------+--------------+----------------------+----------------------+-------------------------------+
-| 0.3         | 1.4-1.6      | 0.16/0.18            | 2.7                  | 3.0+ (3.1+ untested)          |
-+-------------+--------------+----------------------+----------------------+-------------------------------+
-| 0.2         | 1.4          | 0.14                 | 2.7                  | (3.0 untested)                |
-+-------------+--------------+----------------------+----------------------+-------------------------------+
++-------------+-------------------+----------------------+----------------------+-------------------------------+
+| DDS Version | Django            | Scrapy               | Python               | django-celery/Celery/Kombu    |
++=============+===================+======================+======================+===============================+
+| 0.11        | 1.8/1.9/1.10/1.11 | 1.1/1.2(?)/1.3       | 2.7+/3.4+            | 3.2.1/3.1.25/3.0.37           |
++-------------+-------------------+----------------------+----------------------+-------------------------------+
+| 0.4-0.9     | 1.7/1.8           | 0.22/0.24            | 2.7                  | 3.1.16 (newer untested)       |
++-------------+-------------------+----------------------+----------------------+-------------------------------+
+| 0.3         | 1.4-1.6           | 0.16/0.18            | 2.7                  | 3.0+ (3.1+ untested)          |
++-------------+-------------------+----------------------+----------------------+-------------------------------+
+| 0.2         | 1.4               | 0.14                 | 2.7                  | (3.0 untested)                |
++-------------+-------------------+----------------------+----------------------+-------------------------------+
 
 .. note::
    Please get in touch (`GitHub <https://github.com/holgerd77/django-dynamic-scraper>`_) if you have any additions to this table. A library version is counted as supported if the
@@ -170,26 +171,31 @@ existing in the DB (identified by the url attribute of your scraped items) to be
 
 .. _setting_up_scrapyjs_splash:
 
-Setting up ScrapyJS/Splash (Optional)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Setting up Splash (Optional)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 More and more webpages only show their full information load after various ``Ajax`` calls and/or ``Javascript`` 
-function processing. For being able to scrape those websites ``DDS`` supports ``ScrapyJS/Spash`` starting with 
-``v.0.4.1`` for basic JS rendering/processing.
+function processing. For being able to scrape those websites ``DDS`` supports ``Splash`` for basic JS rendering/processing.
 
 For this to work you have to install ``Splash`` (the Javascript rendering service) installed - probably via ``Docker``- 
-(see `installation instructions <https://splash.readthedocs.org/en/latest/install.html>`_), and then ``ScrapyJS`` with::
+(see `installation instructions <https://splash.readthedocs.org/en/latest/install.html>`_).
 
-    pip install scrapyjs
+Tested versions to work with ``DDS``::
+ 
+  Splash 1.8
 
-Afterwards follow the configuration instructions on the `ScrapyJS GitHub page <https://github.com/scrapinghub/scrapyjs#configuration>`_.
+Then ``scrapy-splash`` with::
+
+    pip install scrapy-splash
+
+Afterwards follow the configuration instructions on the `scrapy-splash GitHub page <https://github.com/scrapy-plugins/scrapy-splash#configuration>`_.
 
 For customization of ``Splash`` args ``DSCRAPER_SPLASH_ARGS`` setting can be used (see: :ref:`settings`).
 
-ScrapyJS can later be used via activating it for certain scrapers in the corresponding ``Django Admin`` form.
+``Splash`` can later be used via activating it for certain scrapers in the corresponding ``Django Admin`` form.
 
 .. note::
    Resources needed for completely rendering a website on your scraping machine are vastly larger then for just
-   requesting/working on the plain HTML text without further processing, so make use of ``ScrapyJS/Splash`` capability
+   requesting/working on the plain HTML text without further processing, so make use of ``Splash`` capability
    on when needed!
 
