@@ -36,8 +36,8 @@ Default: ``[]``
 List with Python paths to custom processor modules, e.g.::
 
 	DSCRAPER_CUSTOM_PROCESSORS = [
-	    my_project.scraper_module.scraper.processors,
-	    my_project.scraper_module.scraper.more_processors,
+	    'scraper_module.scraper.processors',
+	    'scraper_module.scraper.more_processors',
 	    //...
 	]
 
