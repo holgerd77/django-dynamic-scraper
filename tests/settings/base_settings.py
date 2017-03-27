@@ -12,7 +12,7 @@ ITEM_PIPELINES = {
 }
 
 #ScrapyJS/Splash
-SPLASH_URL = 'http://192.168.99.100:8050/'
+SPLASH_URL = 'http://127.0.0.1:8050/'
 DUPEFILTER_CLASS = 'scrapyjs.SplashAwareDupeFilter'
 
 DOWNLOADER_MIDDLEWARES = {
