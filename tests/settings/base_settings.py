@@ -13,10 +13,12 @@ ITEM_PIPELINES = {
 
 #ScrapyJS/Splash
 SPLASH_URL = 'http://127.0.0.1:8050/'
-DUPEFILTER_CLASS = 'scrapyjs.SplashAwareDupeFilter'
+DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 
 DOWNLOADER_MIDDLEWARES = {
-    'scrapyjs.SplashMiddleware': 725,
+    'scrapy_splash.SplashCookiesMiddleware': 723,
+    'scrapy_splash.SplashMiddleware': 725,
+    'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
 }
 
 DSCRAPER_SPLASH_ARGS = {

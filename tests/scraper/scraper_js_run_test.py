@@ -5,6 +5,7 @@ from scraper.models import Event
 from scraper.scraper_test import EventSpider, ScraperTest
 from dynamic_scraper.models import Checker, SchedulerRuntime
 
+WITH_JS_URL = 'https://rawgit.com/holgerd77/django-dynamic-scraper/0.11-dev/tests/scraper/static/'
 
 class ScraperJSRunTest(ScraperTest):
     
@@ -13,7 +14,7 @@ class ScraperJSRunTest(ScraperTest):
         self.event_website.save()
 
     def setUpScraperJSDockerScraper(self):
-        self.event_website.url = os.path.join('http://10.0.2.2:8010/static/', 'site_with_js/event_main_docker.html')
+        self.event_website.url = os.path.join(WITH_JS_URL, 'site_with_js/event_main_docker.html')
         self.event_website.save()
         self.rpt_mp.render_javascript = True
         self.rpt_mp.dont_filter = True
@@ -46,7 +47,7 @@ class ScraperJSRunTest(ScraperTest):
         self.setUpScraperJSChecker('http://localhost:8010/static/')
     
     def setUpScraperJSDockerChecker(self):
-        self.setUpScraperJSChecker('http://10.0.2.2:8010/static/')
+        self.setUpScraperJSChecker(WITH_JS_URL)
         self.rpt_dp1.render_javascript = True
         self.rpt_dp1.save()
     
@@ -74,7 +75,7 @@ class ScraperJSRunTest(ScraperTest):
 
     def test_only_main_page_scrapyjs_main_page(self):
         self.setUpScraperJSDockerScraper()
-        self.event_website.url = os.path.join('http://10.0.2.2:8010/static/', 'site_with_js/event_main.html')
+        self.event_website.url = os.path.join(WITH_JS_URL, 'site_with_js/event_main.html')
         self.event_website.save()
         self.rpt_dp1.render_javascript = False
         self.rpt_dp1.save()
