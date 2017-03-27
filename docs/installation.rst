@@ -180,9 +180,10 @@ function processing. For being able to scrape those websites ``DDS`` supports ``
 For this to work you have to install ``Splash`` (the Javascript rendering service) installed - probably via ``Docker``- 
 (see `installation instructions <https://splash.readthedocs.org/en/latest/install.html>`_).
 
-Tested versions to work with ``DDS``::
+Tested versions to work with ``DDS``:
  
-  Splash 1.8
+* Splash 1.8
+* Splash 2.3  
 
 Then ``scrapy-splash`` with::
 
