@@ -91,6 +91,10 @@ Docker container can be run with::
 Release Notes
 =============
 
+**Changes in version 0.11.4-beta** (2017-03-28)
+
+* TODO
+
 **Changes in version 0.11.3-beta** (2016-11-06)
 
 * New processor ``substr_replace`` for replacing a substring occurring one or multiple times in the scraped 
