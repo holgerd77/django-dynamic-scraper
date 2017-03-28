@@ -93,7 +93,7 @@ Release Notes
 
 **Changes in version 0.11.4-beta** (2017-03-28)
 
-* TODO
+* Added initial migrations for example project
 
 **Changes in version 0.11.3-beta** (2016-11-06)
 
