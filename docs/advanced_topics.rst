@@ -116,6 +116,7 @@ Django Dynamic Scraper comes with a build-in scraper called ``checker_test`` whi
 against the defined reference url. You can run this checker on the command line with the following command::
 
 	scrapy crawl checker_test -a id=SCRAPER_ID
+				-a output_response_body=(yes|no) ]
 	
 This scraper is useful both to look, if you have chosen a valid ``checker_x_path_ref_url`` and corresponding ``checker_x_path`` 
 and ``checker_x_path_result`` values as well as to see over time if your reference urls stay valid.
