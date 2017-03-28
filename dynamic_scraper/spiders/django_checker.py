@@ -38,6 +38,15 @@ class DjangoChecker(DjangoBaseSpider):
     
     def _set_config(self, **kwargs):
         log_msg = ""
+        #output_response_body
+        if 'output_response_body' in kwargs and kwargs['output_response_body'] == 'yes':
+            self.conf['OUTPUT_RESPONSE_BODY'] = True
+            if len(log_msg) > 0:
+                log_msg += ", "
+            log_msg += "output_response_body " + str(self.conf['OUTPUT_RESPONSE_BODY'])
+        else:
+            self.conf['OUTPUT_RESPONSE_BODY'] = False
+        
         super(DjangoChecker, self)._set_config(log_msg, **kwargs)
 
 
@@ -130,6 +139,12 @@ class DjangoChecker(DjangoBaseSpider):
         # x_path test
         checker = response.request.meta['checker']
         rpt = response.request.meta['rpt']
+        
+        if self.conf['OUTPUT_RESPONSE_BODY']:
+            self.log("Response body ({url})\n\n***** RP_START *****\n{resp_body}\n***** RP_END *****\n\n".format(
+                url=response.url,
+                resp_body=response.body.decode('utf-8')), logging.INFO)
+        
         if checker.checker_type == '4':
             self.log("No 404 ({c}).".format(c=str(checker)), logging.INFO)
             return

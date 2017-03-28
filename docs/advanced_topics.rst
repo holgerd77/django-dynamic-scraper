@@ -6,8 +6,8 @@ Advanced topics
 
 .. _item_checkers:
 
-Defining item checkers
-======================
+Defining/Running item checkers
+==============================
 
 Django Dynamic Scraper comes with a built-in mechanism to check, if items once scraped are still existing
 or if they could be deleted from the database. The entity providing this mechanism in DDS is called a 
@@ -88,11 +88,15 @@ given xpath is finding elements on the page.
    the second try while XPath checks are deleted at once. So to save crawling resources always try to realize
    your checking with XPath checks, otherwise the crawler need double the amount of checks!
 
+.. _running_your_checkers:
+
 Running your checkers
 ---------------------
 You can test your DDS checkers the same way you would run your scrapers::
 
-	scrapy crawl CHECKERNAME -a id=REF_OBJECT_ID [-a do_action=(yes|no) -a run_type=(TASK|SHELL)]
+	scrapy crawl CHECKERNAME -a id=REF_OBJECT_ID
+				[-a do_action=(yes|no) -a run_type=(TASK|SHELL)
+				-a output_response_body=(yes|no) ]
 
 As a reference object ID you now have to provide the ID of a scraped item to be checked. With ``do_action=yes``
 an item is really deleted, otherwise the checker is only tested without actually manipulating the DB.

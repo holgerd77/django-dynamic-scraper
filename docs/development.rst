@@ -94,6 +94,8 @@ Release Notes
 **Changes in version 0.11.4-beta** (2017-03-28)
 
 * Added initial migrations for example project
+* New optional argument ``output_response_body`` for checker run command for easier checker debugging 
+  (see: :ref:`running_your_checkers`)
 
 **Changes in version 0.11.3-beta** (2016-11-06)
 
