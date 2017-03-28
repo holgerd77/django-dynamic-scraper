@@ -4,7 +4,7 @@ import os
 
 setup(
     name='django-dynamic-scraper',
-    version='0.11.3',
+    version='0.11.4',
     description='Creating Scrapy scrapers via the Django admin interface',
     author='Holger Drewes',
     author_email='Holger.Drewes@gmail.com',
@@ -30,15 +30,15 @@ setup(
     #    Django, Scrapy and Celery requirements are commented out here and have
     #    to be installed manually to avoid side-effects when updating the software.
     #    Version numbers are updated accordingly though.
-    #    'Django>=1.8,<1.10',
-    #    'Scrapy>=1.1,<1.2',
+    #    'Django>=1.8,<1.12',
+    #    'Scrapy>=1.1,<1.4',
     #    'scrapy-djangoitem>=1.1.1,<1.2',
-    #    'scrapy-splash>=0.6.1,<0.7', # Optional
+    #    'scrapy-splash>=0.7', # Optional
     #    'scrapyd>=1.1,<1.2',
         'jsonpath-rw>=1.4',
-    #    'kombu>=3.0.33,<3.1',
-    #    'Celery==3.1.20',
-    #    'django-celery==3.1.17', # Scheduling
+    #    'kombu>=3.0.37,<3.1',
+    #    'Celery==3.1.25',
+    #    'django-celery==3.2.1', # Scheduling
         'future>=0.15,<0.16',
         'pillow>=3.0,<4.0',
     ],
