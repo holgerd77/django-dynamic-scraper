@@ -4,9 +4,11 @@ standard_library.install_aliases()
 from builtins import object
 import datetime, json
 import urllib.request, urllib.parse, http.client
+import os
 from scrapy.utils.project import get_project_settings
 settings = get_project_settings()
 from dynamic_scraper.models import Scraper
+import codecs
 
 class TaskUtils(object):
     
@@ -16,6 +18,12 @@ class TaskUtils(object):
     }
     
     def _run_spider(self, **kwargs):
+        try:
+            scrapyd_host = os.environ['SCRAPYD_HOST']
+            scrapyd_port = os.environ['SCRAPYD_PORT']
+        except KeyError:
+            scrapyd_host = 'localhost'
+            scrapyd_port = '6800'
         param_dict = {
             'project': 'default',
             'spider': kwargs['spider'],
@@ -25,21 +33,28 @@ class TaskUtils(object):
         }
         params = urllib.parse.urlencode(param_dict)
         headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-        conn = http.client.HTTPConnection("localhost:6800")
+        host = scrapyd_host + ':' + scrapyd_port
+        conn = http.client.HTTPConnection(host)
         conn.request("POST", "/schedule.json", params, headers)
         conn.getresponse()
     
-    
     def _pending_jobs(self, spider):
         # Ommit scheduling new jobs if there are still pending jobs for same spider
-        resp = urllib.request.urlopen('http://localhost:6800/listjobs.json?project=default')
-        data = json.load(resp)
+        try:
+            scrapyd_host = os.environ['SCRAPYD_HOST']
+            scrapyd_port = os.environ['SCRAPYD_PORT']
+        except KeyError:
+            scrapyd_host = 'localhost'
+            scrapyd_port = '6800'
+        url = 'http://{host}:{port}/listjobs.json?project=default'.format(host=scrapyd_host, port=scrapyd_port)
+        resp = urllib.request.urlopen(url)
+        reader = codecs.getreader('utf-8')
+        data = json.load(reader(resp))
         if 'pending' in data:
             for item in data['pending']:
                 if item['spider'] == spider:
                     return True
         return False
-    
     
     def run_spiders(self, ref_obj_class, scraper_field_name, runtime_field_name, spider_name, *args, **kwargs):
         filter_kwargs = {
@@ -54,7 +69,6 @@ class TaskUtils(object):
         if not self._pending_jobs(spider_name):
             for ref_object in ref_obj_list:
                 self._run_spider(id=ref_object.pk, spider=spider_name, run_type='TASK', do_action='yes')
-        
 
     def run_checkers(self, ref_obj_class, scraper_field_path, runtime_field_name, checker_name, *args, **kwargs):
         filter_kwargs = {
@@ -69,4 +83,3 @@ class TaskUtils(object):
         if not self._pending_jobs(checker_name):
             for ref_object in ref_obj_list:
                 self._run_spider(id=ref_object.pk, spider=checker_name, run_type='TASK', do_action='yes')
-
