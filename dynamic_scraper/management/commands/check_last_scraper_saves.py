@@ -13,33 +13,21 @@ from dynamic_scraper.models import Scraper
 class Command(BaseCommand):
     help = 'Checks last item saves of a scraper being older than <last_scraper_save_alert_period> period provided in admin form'
     
-    option_list = BaseCommand.option_list + (
-        make_option(
-            '--only-active',
-            action="store_true",
-            dest="only_active",
-            default=False,
-            help="Run scraper save checks only for active scrapers"),
-        make_option(
-            '--send-admin-mail',
-            action="store_true",
-            dest="send_admin_mail",
-            default=False,
-            help="Send report mail to Django admins if last saves are too old"),
-        make_option(
-            '--with-next-alert',
-            action="store_true",
-            dest="with_next_alert",
-            default=False,
-            help="Only run for scrapers with past next alert timestamp/update timestamp afterwards"),
-    )
+    def add_arguments(self, parser):
+        parser.add_argument('--only-active', type=bool, default=False, help="Run scraper save checks only for active scrapers, default=False")
+        parser.add_argument('--send-admin-mail', type=bool, default=False, help="Send report mail to Django admins if last saves are too old, default=False")
+        parser.add_argument('--with-next-alert', type=bool, default=False, help="Only run for scrapers with past next alert timestamp/update timestamp afterwards, default=False")
     
     
     def handle(self, *args, **options):
         mail_to_admins = False
         msg = ''
         
-        if options.get('with_next_alert'):
+        only_active = options['only_active']
+        send_admin_mail = options['send_admin_mail']
+        with_next_alert = options['with_next_alert']
+        
+        if with_next_alert:
             scrapers = Scraper.objects.filter(next_last_scraper_save_alert__lte=datetime.datetime.now())
             print("{num} scraper(s) with future next alert timestamp found in DB...\n".format(num=len(scrapers)))
         else:
@@ -47,7 +35,7 @@ class Command(BaseCommand):
             print("{num} scraper(s) found in DB...\n".format(num=len(scrapers)))
         
         for s in scrapers:
-            if not (options.get('only_active') and s.status != 'A'):
+            if not (only_active and s.status != 'A'):
                 td = s.get_last_scraper_save_alert_period_timedelta()
                 if td:
                     period = s.last_scraper_save_alert_period
@@ -55,7 +43,7 @@ class Command(BaseCommand):
                         scraper=str(s), id=s.pk, status=s.get_status_display(), period=period)
                     print(s_str)
                     
-                    if options.get('with_next_alert'):
+                    if with_next_alert:
                         s.next_last_scraper_save_alert = datetime.datetime.now() + td
                         s.save()
                     
@@ -78,7 +66,7 @@ class Command(BaseCommand):
             else:
                 print("Ommitting scraper {scraper}, not active.\n".format(scraper=str(s)))
         
-        if options.get('send_admin_mail') and mail_to_admins:
+        if send_admin_mail and mail_to_admins:
             print("Send mail to admins...")
             if 'django.contrib.sites' in settings.INSTALLED_APPS:
                 from django.contrib.sites.models import Site

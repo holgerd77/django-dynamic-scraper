@@ -12,31 +12,21 @@ from dynamic_scraper.models import Scraper
 class Command(BaseCommand):
     help = 'Runs all checker tests'
     
-    option_list = BaseCommand.option_list + (
-        make_option(
-            '--only-active',
-            action="store_true",
-            dest="only_active",
-            default=False,
-            help="Run checker tests only for active scrapers"),
-        make_option(
-            '--report-only-errors',
-            action="store_true",
-            dest="report_only_errors",
-            default=False,
-            help="Report only if checker is returning ERROR (default: WARNING/ERROR)"),
-        make_option(
-            '--send-admin-mail',
-            action="store_true",
-            dest="send_admin_mail",
-            default=False,
-            help="Send report mail to Django admins if errors occured"),
-    )
+    def add_arguments(self, parser):
+        parser.add_argument('--only-active', type=bool, default=False, help="Run checker tests only for active scrapers, default=False")
+        parser.add_argument('--report-only-errors', type=bool, default=False, help="Report only if checker is returning ERROR, default: WARNING/ERROR)")
+        parser.add_argument('--send-admin-mail', type=bool, default=False, help="Send report mail to Django admins if errors occured, default=False")
     
     
     def handle(self, *args, **options):
+        
+        only_active = options['only_active']
+        report_only_errors = options['report_only_errors']
+        send_admin_mail = options['send_admin_mail']
+        
+        
         '''
-        if options.get('only_active'):
+        if only_active:
             scraper_list = Scraper.objects.filter(
                 checker_x_path__isnull=False, 
                 checker_ref_url__isnull=False,
@@ -51,13 +41,13 @@ class Command(BaseCommand):
         mail_to_admins = False
         msg = ''
         for scraper in Scraper.objects.all():
-            if not (options.get('only_active') and scraper.status != 'A') and scraper.checker_set.count() > 0:
+            if not (only_active and scraper.status != 'A') and scraper.checker_set.count() > 0:
                 scraper_str  = str(scraper) + " "
                 scraper_str += "(ID:" + str(scraper.pk) + ", Status: " + scraper.get_status_display() + ")"
                 print("Run checker test for scraper {}".format(scraper_str))
                 
                 cmd  = 'scrapy crawl checker_test '
-                if options.get('report_only_errors'):
+                if report_only_errors:
                     cmd += '-L ERROR '
                 else:
                     cmd += '-L WARNING '
@@ -66,15 +56,15 @@ class Command(BaseCommand):
                 p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
                 stderr = p.communicate()[1]
                 
-                if stderr != '':
+                if stderr != b'':
                     print(stderr)
                     msg += 'Checker test for scraper {s} failed:\n'.format(s=scraper_str)
-                    msg += stderr + '\n\n'
+                    msg += str(stderr) + '\n\n'
                     mail_to_admins = True
                 else:
                     print("Checker configuration working.")
         
-        if options.get('send_admin_mail') and mail_to_admins:
+        if send_admin_mail and mail_to_admins:
             print("Send mail to admins...")
             if 'django.contrib.sites' in settings.INSTALLED_APPS:
                 from django.contrib.sites.models import Site
