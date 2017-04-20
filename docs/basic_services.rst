@@ -85,6 +85,8 @@ is getting too old, indicating that the scraper/checker might not be working any
 
 .. image:: images/screenshot_django-admin_scraper_overview_last_checker_delete_alert.png
 
+.. _monitoring_automation:
+
 Monitoring Automation
 ---------------------
 

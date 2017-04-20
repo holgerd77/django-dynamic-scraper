@@ -91,6 +91,11 @@ Docker container can be run with::
 Release Notes
 =============
 
+**Changes in version 0.11.5-beta** (2017-04-20)
+
+* Fixed broken management commands ``check_last_checker_deletes``, ``check_last_scraper_saves`` 
+  (see :ref:`monitoring_automation`) and ``run_checker_tests`` (see :ref:`run_checker_tests`)
+
 **Changes in version 0.11.4-beta** (2017-03-28)
 
 * Added initial migrations for example project
