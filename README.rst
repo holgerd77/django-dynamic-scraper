@@ -20,8 +20,7 @@ and time. If you want to support development please consider a donation to one o
 *cryptocurrency accounts*:
 
 ======= ==================================
-Bitcoin 1P5sLQe4b8ZNCi7AheKL6d1CyzVE3reQUJ
-NXT     NXT-M8QX-BWFY-JAGR-44S3P          
+Bitcoin 1P5sLQe4b8ZNCi7AheKL6d1CyzVE3reQUJ        
 ======= ==================================
 
 Bitcoin QR-Code:
