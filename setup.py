@@ -34,7 +34,7 @@ setup(
     #    'Scrapy>=1.1,<1.4',
     #    'scrapy-djangoitem>=1.1.1,<1.2',
     #    'scrapy-splash>=0.7', # Optional
-    #    'scrapyd>=1.1,<1.2',
+    #    'scrapyd>=1.2,<1.3',
         'jsonpath-rw>=1.4',
     #    'kombu>=3.0.37,<3.1',
     #    'Celery==3.1.25',
