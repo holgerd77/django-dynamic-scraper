@@ -91,6 +91,10 @@ Docker container can be run with::
 Release Notes
 =============
 
+**Changes in version 0.11.6-beta** (2017-04-21)
+
+* Fixed severe bug preventing scheduling to work with Python 3
+
 **Changes in version 0.11.5-beta** (2017-04-20)
 
 * Fixed broken management commands ``check_last_checker_deletes``, ``check_last_scraper_saves`` 
