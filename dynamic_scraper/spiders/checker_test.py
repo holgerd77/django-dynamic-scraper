@@ -24,20 +24,20 @@ class CheckerTest(DjangoBaseSpider):
         
         if self.scraper.checker_set.count() == 0:
             msg = "No checkers defined for scraper!"
-            logging.error(msg)
+            self.dds_logger.error(msg)
             raise CloseSpider(msg)
         
         for checker in self.scraper.checker_set.all():
             if checker.checker_type == '4':
                 if not checker.checker_ref_url:
                     msg = "Please provide a reference url for your checker ({c}) (Command: {cr}).".format(c=str(checker), cr=self.command)
-                    logging.error(msg)
+                    self.dds_logger.error(msg)
                     raise CloseSpider(msg)
             
             if checker.checker_type == 'X':
                 if not checker.checker_x_path or not checker.checker_ref_url:
                     msg = "Please provide the necessary x_path fields for your checker ({c}) (Command: {cr}).".format(c=str(checker), cr=self.command)
-                    logging.error(msg)
+                    self.dds_logger.error(msg)
                     raise CloseSpider(msg)
 
         self._set_request_kwargs()

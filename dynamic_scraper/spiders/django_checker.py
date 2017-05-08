@@ -53,7 +53,7 @@ class DjangoChecker(DjangoBaseSpider):
     def _check_checker_config(self):
         if self.scraper.checker_set.count() == 0:
             msg = 'No checkers defined for scraper!'
-            logging.warning(msg)
+            self.dds_logger.warning(msg)
             raise CloseSpider(msg)
 
 

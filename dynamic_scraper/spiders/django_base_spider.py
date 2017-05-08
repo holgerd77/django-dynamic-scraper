@@ -50,7 +50,8 @@ class DjangoBaseSpider(CrawlSpider):
     
     def __init__(self, *args, **kwargs):
         msg = "Django settings used: {s}".format(s=os.environ.get("DJANGO_SETTINGS_MODULE"))
-        logging.info(msg)
+        self.dds_logger = logging.getLogger('dds')
+        self.dds_logger.info(msg)
         super(DjangoBaseSpider,  self).__init__(None, **kwargs)
         
         self._check_mandatory_vars()
@@ -59,14 +60,14 @@ class DjangoBaseSpider(CrawlSpider):
     def _set_ref_object(self, ref_object_class, **kwargs):
         if not 'id' in kwargs:
             msg = "You have to provide an ID (Command: {c}).".format(c=self.command)
-            logging.error(msg)
+            self.dds_logger.error(msg)
             raise UsageError(msg)
         try:
             self.ref_object = ref_object_class.objects.get(pk=kwargs['id'])
         except ObjectDoesNotExist:
             msg = "Object with ID {id} not found (Command: {c}).".format(
                 id=kwargs['id'], c=self.command)
-            logging.error(msg)
+            self.dds_logger.error(msg)
             raise UsageError(msg)
 
 
@@ -97,20 +98,20 @@ class DjangoBaseSpider(CrawlSpider):
         self.conf['IMAGES_STORE_FORMAT'] = settings.get('DSCRAPER_IMAGES_STORE_FORMAT', self.conf['IMAGES_STORE_FORMAT'])
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             msg = "Use simplified FLAT images store format (save the original or one thumbnail image)"
-            logging.info(msg)
+            self.dds_logger.info(msg)
             if settings.get('IMAGES_THUMBS') and len(settings.get('IMAGES_THUMBS')) > 0:
                 msg =  "IMAGES_THUMBS setting found, saving images as thumbnail images "
                 msg += "with size {size} (first entry)".format(
                     size=next(iter(settings.get('IMAGES_THUMBS').keys())))
             else:
                 msg = "IMAGES_THUMBS setting not found, saving images with original size"
-            logging.info(msg)
+            self.dds_logger.info(msg)
         elif self.conf["IMAGES_STORE_FORMAT"] == 'ALL':
             msg = "Use ALL images store format (Scrapy behaviour, save both original and thumbnail images)"
-            logging.info(msg)
+            self.dds_logger.info(msg)
         else:
             msg = "Use THUMBS images store format (save only the thumbnail images)"
-            logging.info(msg)
+            self.dds_logger.info(msg)
             
         self.conf['CUSTOM_PROCESSORS'] = settings.get('DSCRAPER_CUSTOM_PROCESSORS', [])
 
@@ -126,7 +127,7 @@ class DjangoBaseSpider(CrawlSpider):
         if self.conf['RUN_TYPE'] == 'TASK':
             if not getattr(self, 'scheduler_runtime', None):
                 msg = "You have to provide a scheduler_runtime when running with run_type TASK."
-                logging.error(msg)
+                self.dds_logger.error(msg)
                 raise CloseSpider(msg)
             msg = "SchedulerRuntime (" + str(self.scheduler_runtime) + ") found."
             self.log(msg, logging.INFO)
@@ -135,7 +136,7 @@ class DjangoBaseSpider(CrawlSpider):
             attr = getattr(self, var, None)
             if not attr:
                 msg = "Missing attribute {a} (Command: {c}).".format(a=var, c=self.command)
-                logging.error(msg)
+                self.dds_logger.error(msg)
                 raise CloseSpider(msg)
             
         if self.scraper.status == 'P' or self.scraper.status == 'I':
@@ -252,6 +253,6 @@ class DjangoBaseSpider(CrawlSpider):
                     for item in items:
                         item.delete()
         
-        logging.log(level, message)
+        self.dds_logger.log(level, message)
         
     
