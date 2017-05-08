@@ -317,7 +317,7 @@ class DjangoSpider(DjangoBaseSpider):
                 msg += "'" + smart_text(c_values[0]) + "'"
             else:
                 msg += 'None'
-            self.log(msg, logging.DEBUG)
+            self.log(msg, logging.INFO)
 
 
     def _set_loader(self, response, from_page, xs, item):
