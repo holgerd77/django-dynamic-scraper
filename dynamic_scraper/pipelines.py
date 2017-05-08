@@ -113,7 +113,7 @@ class ValidationPipeline(object):
             raise DropItem()
         
         if not spider.conf['DO_ACTION']:
-            spider.log("Item not saved to Django DB.", logging.INFO)
+            spider.log("Item not saved to Django DB (Test Mode).", logging.INFO)
         else:
             if is_double:
                 standard_update_elems = spider.scraper.get_standard_update_elems()

@@ -90,6 +90,8 @@ class DjangoBaseSpider(CrawlSpider):
             if len(log_msg) > 0:
                 log_msg += ", "
             log_msg += "do_action " + str(self.conf['DO_ACTION'])
+        else:
+            self.log("Running in Test Mode (do_action not set).", logging.INFO)
         
         self.conf['SPLASH_ARGS'] = settings.get('DSCRAPER_SPLASH_ARGS', self.conf['SPLASH_ARGS'])  
         if 'wait' not in self.conf['SPLASH_ARGS']:
