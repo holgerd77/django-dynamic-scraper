@@ -194,6 +194,12 @@ class DjangoSpider(DjangoBaseSpider):
         if self.scraper.pagination_type == 'N':
             self.start_urls.append(scrape_url)
             self.pages = ["",]
+        num = len(self.start_urls)
+        if (num == 1):
+            url_str = 'URL'
+        else:
+            url_str = 'URLs'
+        self.log("Scraper set to run on {num} start {url_str}.".format(num=num, url_str=url_str), logging.INFO)
 
 
     def start_requests(self):
@@ -217,6 +223,7 @@ class DjangoSpider(DjangoBaseSpider):
                     kwargs['meta'] = {}
             kwargs['meta']['page'] = index + 1
             rpt = self.scraper.get_main_page_rpt()
+            self.log("Scraping data from page {page}: {url}".format(page=index+1, url=url), logging.INFO)
             index += 1
             if rpt.request_type == 'R':
                 yield Request(url, callback=self.parse, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
