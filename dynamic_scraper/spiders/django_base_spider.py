@@ -1,15 +1,20 @@
 #Stage 2 Update (Python 3)
 from __future__ import unicode_literals
 from builtins import str
-import datetime, json, logging, os
+import datetime, json, logging, os, sys
 from scrapy import signals
 from scrapy.spiders import Spider
 from scrapy.spiders import CrawlSpider
 from pydispatch import dispatcher
-from scrapy.exceptions import CloseSpider
+from scrapy.exceptions import CloseSpider, UsageError
 
 import django
 django.setup()
+
+class NoParsingFilter(logging.Filter):
+    def filter(self, record=True):
+        return False
+logging.getLogger('twisted').addFilter(NoParsingFilter)
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -46,7 +51,6 @@ class DjangoBaseSpider(CrawlSpider):
     def __init__(self, *args, **kwargs):
         msg = "Django settings used: {s}".format(s=os.environ.get("DJANGO_SETTINGS_MODULE"))
         logging.info(msg)
-        
         super(DjangoBaseSpider,  self).__init__(None, **kwargs)
         
         self._check_mandatory_vars()
@@ -56,14 +60,14 @@ class DjangoBaseSpider(CrawlSpider):
         if not 'id' in kwargs:
             msg = "You have to provide an ID (Command: {c}).".format(c=self.command)
             logging.error(msg)
-            raise CloseSpider(msg)
+            raise UsageError(msg)
         try:
             self.ref_object = ref_object_class.objects.get(pk=kwargs['id'])
         except ObjectDoesNotExist:
             msg = "Object with ID {id} not found (Command: {c}).".format(
                 id=kwargs['id'], c=self.command)
             logging.error(msg)
-            raise CloseSpider(msg)
+            raise UsageError(msg)
 
 
     def _set_config(self, log_msg, **kwargs):
