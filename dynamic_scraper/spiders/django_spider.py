@@ -311,7 +311,7 @@ class DjangoSpider(DjangoBaseSpider):
                 item = loader.load_item()
                 if name in item:
                     self.tmp_non_db_results[item_num][scraper_elem.scraped_obj_attr.name] = item[name]
-            msg  = '{0: <20}'.format(name)
+            msg  = '{page: <4} {name: <20}'.format(name=name, page=from_page)
             c_values = loader.get_collected_values(name)
             if len(c_values) > 0:
                 msg += "'" + smart_text(c_values[0]) + "'"
