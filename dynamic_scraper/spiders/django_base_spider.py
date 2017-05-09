@@ -124,6 +124,9 @@ class DjangoBaseSpider(CrawlSpider):
             log_msg = "{}"
         self.log("Runtime config: " + log_msg, logging.INFO)
         
+        if self.conf['LOG_LEVEL'] == 'DEBUG':
+            logging.getLogger('twisted').removeFilter(NoParsingFilter)
+        
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)
 
 
