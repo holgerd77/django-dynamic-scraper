@@ -46,6 +46,22 @@ class CheckerTest(DjangoBaseSpider):
         dispatcher.connect(self.response_received, signal=signals.response_received)
     
     
+    def output_usage_help(self):
+        out = (
+            '',
+            'DDS Usage',
+            '=========',
+            '  scrapy crawl [scrapy_options] checker_test -a id=SCRAPER_ID [dds_options]',
+            '',
+            'Options',
+            '-------',
+            '-a output_response_body=(yes|no)        Output response body content for debugging',
+            '',
+        )
+        for out_str in out:
+            self.dds_logger.info(out_str)
+    
+    
     def _set_config(self, **kwargs):
         log_msg = ""
         #output_response_body

@@ -41,11 +41,6 @@ class DjangoBaseSpider(CrawlSpider):
 
     mp_request_kwargs = {}
     dp_request_kwargs = {}
-
-    command  = 'scrapy crawl SPIDERNAME -a id=REF_OBJECT_ID '
-    command += '[-a do_action=(yes|no) -a run_type=(TASK|SHELL)'
-    command += ' -a max_items_read=[Int] -a max_items_save=[Int]]'
-    command += ' -a max_pages_read=[Int]'
     
     
     def __init__(self, *args, **kwargs):
@@ -55,20 +50,24 @@ class DjangoBaseSpider(CrawlSpider):
         super(DjangoBaseSpider,  self).__init__(None, **kwargs)
         
         self._check_mandatory_vars()
-
+        
 
     def _set_ref_object(self, ref_object_class, **kwargs):
+        self.dds_logger = logging.getLogger('dds')
+        
         if not 'id' in kwargs:
-            msg = "You have to provide an ID (Command: {c}).".format(c=self.command)
+            msg = "You have to provide the ID of your reference object."
             self.dds_logger.error(msg)
-            raise UsageError(msg)
+            self.output_usage_help()
+            raise UsageError()
         try:
             self.ref_object = ref_object_class.objects.get(pk=kwargs['id'])
         except ObjectDoesNotExist:
-            msg = "Object with ID {id} not found (Command: {c}).".format(
-                id=kwargs['id'], c=self.command)
+            msg = "Object with ID {id} not found.".format(
+                id=kwargs['id'])
             self.dds_logger.error(msg)
-            raise UsageError(msg)
+            self.output_usage_help()
+            raise UsageError()
 
 
     def _set_config(self, log_msg, **kwargs):

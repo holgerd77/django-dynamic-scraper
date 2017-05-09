@@ -71,6 +71,28 @@ class DjangoSpider(DjangoBaseSpider):
         self.log(msg, logging.INFO)
 
 
+    def output_usage_help(self):
+        out = (
+            '',
+            'DDS Usage',
+            '=========',
+            '  scrapy crawl [scrapy_options] SPIDERNAME -a id=REF_OBJECT_ID [dds_options]',
+            '',
+            'Options',
+            '-------',
+            '-a do_action=(yes|no)                   Save output to DB, default: no (Test Mode)',
+            '-a run_type=(TASK|SHELL)                Simulate task based scraper run, default: SHELL',
+            '-a max_items_read=[Int]                 Limit number of items to read',
+            '-a max_items_save=[Int]                 Limit number of items to save',
+            '-a max_pages_read=[Int]                 Limit number of pages to read',
+            '-a output_num_mp_response_bodies=[Int]  Output response body content of MP for debugging',
+            '-a output_num_dp_response_bodies=[Int]  Output response body content of DP for debugging',
+            '',
+        )
+        for out_str in out:
+            self.dds_logger.info(out_str)
+    
+
     def _set_request_kwargs(self):
         super(DjangoSpider, self)._set_request_kwargs()
         for rpt in self.scraper.requestpagetype_set.all():

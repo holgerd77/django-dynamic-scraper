@@ -34,7 +34,25 @@ class DjangoChecker(DjangoBaseSpider):
         
         msg = "Checker for " + self.ref_object.__class__.__name__ + " \"" + str(self.ref_object) + "\" (" + str(self.ref_object.pk) + ") initialized."
         self.log(msg, logging.INFO)
-
+    
+    
+    def output_usage_help(self):
+        out = (
+            '',
+            'DDS Usage',
+            '=========',
+            '  scrapy crawl [scrapy_options] CHECKERNAME -a id=REF_OBJECT_ID [dds_options]',
+            '',
+            'Options',
+            '-------',
+            '-a do_action=(yes|no)                   Delete on checker success, default: no (Test Mode)',
+            '-a run_type=(TASK|SHELL)                Simulate task based checker run, default: SHELL',
+            '-a output_response_body=(yes|no)        Output response body content for debugging',
+            '',
+        )
+        for out_str in out:
+            self.dds_logger.info(out_str)
+    
     
     def _set_config(self, **kwargs):
         log_msg = ""
