@@ -349,7 +349,10 @@ class DjangoSpider(DjangoBaseSpider):
             msg  = '{page: <4} {rpt_str: <13} {name: <20} {num} '.format(num=str(item_num), name=name, rpt_str=rpt_str, page=from_page)
             c_values = loader.get_collected_values(name)
             if len(c_values) > 0:
-                msg += "'" + smart_text(c_values[0]) + "'"
+                val_str = c_values[0]
+                if self.conf['CONSOLE_LOG_LEVEL'] != 'DEBUG':
+                    val_str = (val_str[:400] + '..') if len(val_str) > 400 else val_str
+                msg += "'" + smart_text(val_str) + "'"
             else:
                 msg += 'None'
             self.log(msg, logging.INFO)
