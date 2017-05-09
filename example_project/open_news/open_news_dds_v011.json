@@ -83,12 +83,12 @@
         "pagination_append_str": "",
         "pagination_page_replace": "",
         "last_scraper_save_alert_period": "1w",
-        "next_last_scraper_save_alert": "2015-12-04T03:36:06",
+        "next_last_scraper_save_alert": "2017-04-27T06:04:08",
         "last_checker_delete_alert_period": "1d",
-        "next_last_checker_delete_alert": "2015-12-04T03:36:06",
+        "next_last_checker_delete_alert": "2017-04-21T05:59:48",
         "comments": "",
-        "last_scraper_save": "2016-01-29T05:38:16.398",
-        "last_checker_delete": "2015-11-30T06:36:33.423"
+        "last_scraper_save": "2017-03-28T03:24:04.945",
+        "last_checker_delete": "2017-03-28T04:00:58.232"
     }
 },
 {
@@ -100,16 +100,16 @@
         "status": "A",
         "max_items_read": 10,
         "max_items_save": null,
-        "pagination_type": "N",
-        "pagination_on_start": false,
-        "pagination_append_str": "",
-        "pagination_page_replace": "",
+        "pagination_type": "R",
+        "pagination_on_start": true,
+        "pagination_append_str": "&page={page}",
+        "pagination_page_replace": "0, 2",
         "last_scraper_save_alert_period": "1d",
-        "next_last_scraper_save_alert": "2015-12-04T03:36:06.988",
+        "next_last_scraper_save_alert": "2017-04-21T06:04:08",
         "last_checker_delete_alert_period": "1w",
-        "next_last_checker_delete_alert": "2015-12-04T03:36:06.956",
+        "next_last_checker_delete_alert": "2017-04-27T05:59:48",
         "comments": "",
-        "last_scraper_save": null,
+        "last_scraper_save": "2017-05-09T07:26:33.860",
         "last_checker_delete": null
     }
 },
