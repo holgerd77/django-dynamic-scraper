@@ -317,7 +317,7 @@ class DjangoSpider(DjangoBaseSpider):
             self.log("Wrong context definition format: " + context_str, logging.ERROR)
     
 
-    def _scrape_item_attr(self, scraper_elem, from_page, item_num):
+    def _scrape_item_attr(self, scraper_elem, response, from_page, item_num):
         if(from_page == scraper_elem.request_page_type):
             procs = self._get_processors(scraper_elem.processors)
             self._set_loader_context(scraper_elem.proc_ctxt)
@@ -346,7 +346,7 @@ class DjangoSpider(DjangoBaseSpider):
             if rpt.render_javascript:
                 rpt_str += '-JS'
             rpt_str += '|' + rpt.method
-            msg  = '{page: <4} {rpt_str: <13} {name: <20} {num} '.format(num=str(item_num), name=name, rpt_str=rpt_str, page=from_page)
+            msg  = '{page_type: <4} {rpt_str: <13} {name: <20} {page}-{num} '.format(page=response.request.meta['page'], num=str(item_num), name=name, rpt_str=rpt_str, page_type=from_page)
             c_values = loader.get_collected_values(name)
             if len(c_values) > 0:
                 val_str = c_values[0]
@@ -419,7 +419,7 @@ class DjangoSpider(DjangoBaseSpider):
         for elem in elems:
             if not elem.scraped_obj_attr.save_to_db:
                 self._set_dummy_loader(response, from_page, xs, self.scraped_obj_item_class())
-            self._scrape_item_attr(elem, from_page, item_num)
+            self._scrape_item_attr(elem, response, from_page, item_num)
         # Dealing with Django Char- and TextFields defining blank field as null
         item = self.loader.load_item()
         for key, value in list(item.items()):
