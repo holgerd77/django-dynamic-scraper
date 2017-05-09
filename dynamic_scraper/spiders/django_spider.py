@@ -341,7 +341,12 @@ class DjangoSpider(DjangoBaseSpider):
                 item = loader.load_item()
                 if name in item:
                     self.tmp_non_db_results[item_num][scraper_elem.scraped_obj_attr.name] = item[name]
-            msg  = '{page: <4} {name: <20}'.format(name=name, page=from_page)
+            rpt = self.scraper.requestpagetype_set.filter(page_type=from_page)[0]
+            rpt_str = rpt.get_content_type_display()
+            if rpt.render_javascript:
+                rpt_str += '-JS'
+            rpt_str += '|' + rpt.method
+            msg  = '{page: <4} {rpt_str: <13} {name: <20} {num} '.format(num=str(item_num), name=name, rpt_str=rpt_str, page=from_page)
             c_values = loader.get_collected_values(name)
             if len(c_values) > 0:
                 msg += "'" + smart_text(c_values[0]) + "'"
