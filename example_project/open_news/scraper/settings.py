@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.join(PROJECT_ROOT, "../../..")) #only for example_pro
 BOT_NAME = 'open_news'
 
 LOG_STDOUT = True
+LOG_LEVEL = 'INFO'
 
 SPIDER_MODULES = ['dynamic_scraper.spiders', 'open_news.scraper',]
 USER_AGENT = '{b}/{v}'.format(b=BOT_NAME, v='1.0')
@@ -37,5 +38,5 @@ IMAGES_THUMBS = {
 DSCRAPER_IMAGES_STORE_FORMAT = 'ALL'
 
 DSCRAPER_LOG_ENABLED = True
-DSCRAPER_LOG_LEVEL = 'INFO'
+DSCRAPER_LOG_LEVEL = 'ERROR'
 DSCRAPER_LOG_LIMIT = 5

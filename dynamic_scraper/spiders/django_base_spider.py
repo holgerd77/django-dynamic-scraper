@@ -37,6 +37,7 @@ class DjangoBaseSpider(CrawlSpider):
         "LOG_ENABLED": True,
         "LOG_LEVEL": 'ERROR',
         "LOG_LIMIT": 250,
+        "CONSOLE_LOG_LEVEL": 'DEBUG',
     }
 
     mp_request_kwargs = {}
@@ -118,14 +119,15 @@ class DjangoBaseSpider(CrawlSpider):
 
         self.conf['LOG_ENABLED'] = settings.get('DSCRAPER_LOG_ENABLED', self.conf['LOG_ENABLED'])
         self.conf['LOG_LEVEL'] = settings.get('DSCRAPER_LOG_LEVEL', self.conf['LOG_LEVEL'])
-        logging.getLogger('scrapy').setLevel(getattr(logging, self.conf['LOG_LEVEL']))
+        
+        self.conf['CONSOLE_LOG_LEVEL'] = settings.get('LOG_LEVEL', self.conf['CONSOLE_LOG_LEVEL'])
         
         self.conf['LOG_LIMIT'] = settings.get('DSCRAPER_LOG_LIMIT', self.conf['LOG_LIMIT'])
         if log_msg == "":
             log_msg = "{}"
         self.log("Runtime config: " + log_msg, logging.INFO)
         
-        if self.conf['LOG_LEVEL'] == 'DEBUG':
+        if self.conf['CONSOLE_LOG_LEVEL'] == 'DEBUG':
             logging.getLogger('twisted').removeFilter(NoParsingFilter)
         
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)

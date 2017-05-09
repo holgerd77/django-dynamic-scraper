@@ -51,7 +51,13 @@ DSCRAPER_LOG_ENABLED
 --------------------
 Default: ``True``
 
-Enable/disable the DDS logging (see :ref:`logging` for more info).
+Enable/disable the DDS logging.
+
+.. note::
+   The ``DSCRAPER_LOG_*`` settings customize the behaviour DDS logs for
+	 post analysis of your scraper runs in the DB (see :ref:`logging` for more info).
+	 Console output log is controlled by the regularly ``Scrapy`` log settings/options.
+	 
 
 DSCRAPER_LOG_LEVEL
 ------------------

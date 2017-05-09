@@ -46,6 +46,7 @@ class DjangoChecker(DjangoBaseSpider):
             'Options',
             '-------',
             '-a do_action=(yes|no)                   Delete on checker success, default: no (Test Mode)',
+            '-L LOG_LEVEL (scrapy option)            Setting the log level for both Scrapy and DDS',
             '-a run_type=(TASK|SHELL)                Simulate task based checker run, default: SHELL',
             '-a output_response_body=(yes|no)        Output response body content for debugging',
             '',

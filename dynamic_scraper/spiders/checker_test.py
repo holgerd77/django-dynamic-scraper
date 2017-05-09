@@ -55,6 +55,7 @@ class CheckerTest(DjangoBaseSpider):
             '',
             'Options',
             '-------',
+            '-L LOG_LEVEL (scrapy option)            Setting the log level for both Scrapy and DDS',
             '-a output_response_body=(yes|no)        Output response body content for debugging',
             '',
         )
