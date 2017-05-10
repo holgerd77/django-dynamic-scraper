@@ -112,7 +112,7 @@ class ValidationPipeline(object):
             if elem.scraped_obj_attr.save_to_db and (\
                 not elem.scraped_obj_attr.name in item or\
                 (elem.scraped_obj_attr.name in item and not item[elem.scraped_obj_attr.name])):
-                spider.log("Item " + dds_id + " dropped, mandatory elem " + elem.scraped_obj_attr.name + " missing!", logging.ERROR)
+                spider.log(spider.bcolors['ERROR'] + "Item " + dds_id + " dropped, mandatory elem " + elem.scraped_obj_attr.name + " missing!" + spider.bcolors['ENDC'], logging.ERROR)
                 raise DropItem()
         
         if spider.conf['MAX_ITEMS_SAVE'] and spider.items_save_count >= spider.conf['MAX_ITEMS_SAVE']:

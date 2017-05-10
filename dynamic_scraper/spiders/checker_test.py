@@ -103,7 +103,7 @@ class CheckerTest(DjangoBaseSpider):
         rpt = kwargs['response'].request.meta['rpt']
         if kwargs['response'].status == 404:
             if checker.checker_type == '4':
-                self.log("Checker configuration working (ref url request returning 404) ({c}).".format(c=str(checker)), logging.INFO)
+                self.log("{cs}Checker configuration working (ref url request returning 404) ({c}).{ce}".format(c=str(checker), cs=self.bcolors['OK'], ce=self.bcolors['ENDC']), logging.INFO)
             if checker.checker_type == 'X':
                 self.log('A request of your checker ref url is returning 404. Your x_path can not be applied ({c})!'.format(c=str(checker)), logging.WARNING)
         else:
@@ -132,7 +132,7 @@ class CheckerTest(DjangoBaseSpider):
             self.log("Checker configuration not working (no elements found for xpath on reference url page) ({c})!".format(c=str(checker)), logging.ERROR)
         else:
             if checker.checker_x_path_result == '':
-                self.log("Checker configuration working (elements for x_path found on reference url page (no x_path result defined)) ({c}).".format(c=str(checker)), logging.INFO)
+                self.log("{cs}Checker configuration working (elements for x_path found on reference url page (no x_path result defined)) ({c}).{ce}".format(c=str(checker, cs=self.bcolors['OK'], ce=self.bcolors['ENDC'])), logging.INFO)
             else:
                 if test_select[0] != checker.checker_x_path_result:
                     self.log("Checker configuration not working (expected x_path result not found on reference url page) ({c})!".format(c=str(checker)), logging.ERROR)

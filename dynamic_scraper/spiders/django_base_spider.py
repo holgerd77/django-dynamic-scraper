@@ -11,6 +11,7 @@ from scrapy.exceptions import CloseSpider, UsageError
 import django
 django.setup()
 
+
 class NoParsingFilter(logging.Filter):
     def filter(self, record=True):
         return False
@@ -38,6 +39,16 @@ class DjangoBaseSpider(CrawlSpider):
         "LOG_LEVEL": 'ERROR',
         "LOG_LIMIT": 250,
         "CONSOLE_LOG_LEVEL": 'DEBUG',
+    }
+    
+    bcolors = {
+        "HEADER": '\033[95m',
+        "OK": '\033[92m',
+        "WARNING": '\033[93m',
+        "ERROR": '\033[91m',
+        "ENDC": '\033[0m',
+        "BOLD": '\033[1m',
+        "UNDERLINE": '\033[4m',
     }
 
     mp_request_kwargs = {}
