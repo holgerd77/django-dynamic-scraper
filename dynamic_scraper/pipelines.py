@@ -61,10 +61,17 @@ class DjangoImagesPipeline(ImagesPipeline):
             item[img_elem.scraped_obj_attr.name] = None
         return item
 
+class NoParsingFilter(logging.Filter):
+    def filter(self, record=True):
+        return False
 
 class ValidationPipeline(object):
 
     def process_item(self, item, spider):
+        
+        dds_id = str(item._dds_item_page) + '-' + str(item._dds_item_id)
+        if spider.conf['CONSOLE_LOG_LEVEL'] != 'DEBUG':
+            logging.getLogger('scrapy.core.scraper').addFilter(NoParsingFilter)
         
         #Process processor placeholders
         for key, value in list(item.items()):
@@ -105,15 +112,15 @@ class ValidationPipeline(object):
             if elem.scraped_obj_attr.save_to_db and (\
                 not elem.scraped_obj_attr.name in item or\
                 (elem.scraped_obj_attr.name in item and not item[elem.scraped_obj_attr.name])):
-                spider.log("Mandatory elem " + elem.scraped_obj_attr.name + " missing!", logging.ERROR)
+                spider.log("Item " + dds_id + " dropped, mandatory elem " + elem.scraped_obj_attr.name + " missing!", logging.ERROR)
                 raise DropItem()
         
         if spider.conf['MAX_ITEMS_SAVE'] and spider.items_save_count >= spider.conf['MAX_ITEMS_SAVE']:
-            spider.log("Max items save reached, item not saved or further processed.", logging.INFO)
+            spider.log("Max items save reached ({num}), item {id} not saved or further processed.".format(num=str(spider.conf['MAX_ITEMS_SAVE']), id=dds_id), logging.INFO)
             raise DropItem()
         
         if not spider.conf['DO_ACTION']:
-            spider.log("Item not saved to Django DB (Test Mode).", logging.INFO)
+            spider.log("Item " + dds_id + " not saved to Django DB (Test Mode).", logging.INFO)
         else:
             if is_double:
                 standard_update_elems = spider.scraper.get_standard_update_elems()
@@ -132,9 +139,13 @@ class ValidationPipeline(object):
                                 updated_attribute_list += attr_name
                 if len(updated_attribute_list) > 0:
                     exist_object.save()
-                    raise DropItem("Item already in DB, attributes updated: " + updated_attribute_list)
+                    msg = "Item " + dds_id + " already in DB, attributes updated: " + updated_attribute_list
+                    spider.dds_logger.error(msg)
+                    raise DropItem()
                 else:
-                    raise DropItem("Double item.")
+                    msg = "Double item " + dds_id + ", not saved."
+                    spider.dds_logger.error(msg)
+                    raise DropItem()
             
             spider.items_save_count += 1
 

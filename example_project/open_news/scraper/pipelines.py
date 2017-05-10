@@ -19,7 +19,8 @@ class DjangoWriterPipeline(object):
                 
                 item.save()
                 spider.action_successful = True
-                spider.log("Item saved to Django DB.", logging.INFO)
+                dds_id_str = str(item._dds_item_page) + '-' + str(item._dds_item_id)
+                spider.log("Item {id} saved to Django DB.".format(id=dds_id_str), logging.INFO)
                     
             except IntegrityError as e:
                 spider.log(str(e), logging.ERROR)

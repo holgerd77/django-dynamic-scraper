@@ -101,9 +101,13 @@ class DjangoSpider(DjangoBaseSpider):
                 try:
                     form_data = json.loads(rpt.form_data)
                 except ValueError:
-                    raise CloseSpider("Incorrect form_data attribute ({pt}): not a valid JSON dict!".format(pt=rpt.page_type))
+                    msg = "Incorrect form_data attribute ({pt}): not a valid JSON dict!".format(pt=rpt.page_type)
+                    self.dds_logger.error(msg)
+                    raise CloseSpider()
                 if not isinstance(form_data, dict):
-                    raise CloseSpider("Incorrect form_data attribute ({pt}): not a valid JSON dict!".format(pt=rpt.page_type))
+                    msg = "Incorrect form_data attribute ({pt}): not a valid JSON dict!".format(pt=rpt.page_type)
+                    self.dds_logger.error(msg)
+                    raise CloseSpider()
                 if rpt.page_type == 'MP':
                     self.mp_form_data = form_data
                 else:
@@ -117,7 +121,9 @@ class DjangoSpider(DjangoBaseSpider):
             try:
                 self.conf['MAX_ITEMS_READ'] = int(kwargs['max_items_read'])
             except ValueError:
-                raise CloseSpider("You have to provide an integer value as max_items_read parameter!")
+                msg = "You have to provide an integer value as max_items_read parameter!"
+                self.dds_logger.error(msg)
+                raise CloseSpider()
             if len(log_msg) > 0:
                 log_msg += ", "
             log_msg += "max_items_read " + str(self.conf['MAX_ITEMS_READ'])
@@ -128,7 +134,9 @@ class DjangoSpider(DjangoBaseSpider):
             try:
                 self.conf['MAX_ITEMS_SAVE'] = int(kwargs['max_items_save'])
             except ValueError:
-                raise CloseSpider("You have to provide an integer value as max_items_save parameter!")
+                msg = "You have to provide an integer value as max_items_save parameter!"
+                self.dds_logger.error(msg)
+                raise CloseSpider()
             if len(log_msg) > 0:
                 log_msg += ", "
             log_msg += "max_items_save " + str(self.conf['MAX_ITEMS_SAVE'])
@@ -139,7 +147,9 @@ class DjangoSpider(DjangoBaseSpider):
             try:
                 self.conf['MAX_PAGES_READ'] = int(kwargs['max_pages_read'])
             except ValueError:
-                raise CloseSpider("You have to provide an integer value as max_pages_read parameter!")
+                msg = "You have to provide an integer value as max_pages_read parameter!"
+                self.dds_logger.error(msg)
+                raise CloseSpider()
             if len(log_msg) > 0:
                 log_msg += ", "
             log_msg += "max_pages_read " + str(self.conf['MAX_PAGES_READ'])
@@ -150,7 +160,9 @@ class DjangoSpider(DjangoBaseSpider):
             try:
                 self.conf['OUTPUT_NUM_MP_RESPONSE_BODIES'] = int(kwargs['output_num_mp_response_bodies'])
             except ValueError:
-                raise CloseSpider("You have to provide an integer value as output_num_mp_response_bodies parameter!")
+                msg = "You have to provide an integer value as output_num_mp_response_bodies parameter!"
+                self.dds_logger.error(msg)
+                raise CloseSpider()
             if len(log_msg) > 0:
                 log_msg += ", "
             log_msg += "output_num_mp_response_bodies " + str(self.conf['OUTPUT_NUM_MP_RESPONSE_BODIES'])
@@ -161,7 +173,9 @@ class DjangoSpider(DjangoBaseSpider):
             try:
                 self.conf['OUTPUT_NUM_DP_RESPONSE_BODIES'] = int(kwargs['output_num_dp_response_bodies'])
             except ValueError:
-                raise CloseSpider("You have to provide an integer value as output_num_dp_response_bodies parameter!")
+                msg = "You have to provide an integer value as output_num_dp_response_bodies parameter!"
+                self.dds_logger.error(msg)
+                raise CloseSpider()
             if len(log_msg) > 0:
                 log_msg += ", "
             log_msg += "output_num_dp_response_bodies " + str(self.conf['OUTPUT_NUM_DP_RESPONSE_BODIES'])
@@ -176,7 +190,9 @@ class DjangoSpider(DjangoBaseSpider):
         
         if self.scraper.pagination_type != 'N':
             if not self.scraper.pagination_page_replace:
-                raise CloseSpider('Please provide a pagination_page_replace context corresponding to pagination_type!')
+                msg = 'Please provide a pagination_page_replace context corresponding to pagination_type!'
+                self.dds_logger.error(msg)
+                raise CloseSpider()
         
         if self.scraper.pagination_type == 'R':
             try:
@@ -186,18 +202,22 @@ class DjangoSpider(DjangoBaseSpider):
                     raise Exception
                 pages = list(range(*list(map(int, pages)))) 
             except Exception:
-                raise CloseSpider('Pagination_page_replace for pagination_type "RANGE_FUNCT" ' +\
-                                  'has to be provided as python range function arguments ' +\
-                                  '[start], stop[, step] (e.g. "1, 50, 10", no brackets)!')
+                msg = 'Pagination_page_replace for pagination_type "RANGE_FUNCT" ' +\
+                      'has to be provided as python range function arguments ' +\
+                      '[start], stop[, step] (e.g. "1, 50, 10", no brackets)!'
+                self.dds_logger.error(msg)
+                raise CloseSpider()
         
         if self.scraper.pagination_type == 'F':
             try:
                 pages = self.scraper.pagination_page_replace
                 pages = pages.strip(', ')
                 pages = ast.literal_eval("[" + pages + ",]")
-            except SyntaxError:
-                raise CloseSpider('Wrong pagination_page_replace format for pagination_type "FREE_LIST", ' +\
-                                  "Syntax: 'Replace string 1', 'Another replace string 2', 'A number 3', ...")   
+            except:
+                msg = 'Wrong pagination_page_replace format for pagination_type "FREE_LIST", ' +\
+                      "Syntax: 'Replace string 1', 'Another replace string 2', 'A number 3', ..."
+                self.dds_logger.error(msg)
+                raise CloseSpider()   
         
         if self.scraper.pagination_type != 'N':
             append_str = self.scraper.pagination_append_str
@@ -246,7 +266,10 @@ class DjangoSpider(DjangoBaseSpider):
                     kwargs['meta'] = {}
             kwargs['meta']['page'] = index + 1
             rpt = self.scraper.get_main_page_rpt()
+            self.dds_logger.info('')
+            self.dds_logger.info('======================================================================================')
             self.log("Scraping data from page {page}: {url}".format(page=index+1, url=url), logging.INFO)
+            self.dds_logger.info('======================================================================================')
             index += 1
             if rpt.request_type == 'R':
                 yield Request(url, callback=self.parse, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
@@ -346,7 +369,8 @@ class DjangoSpider(DjangoBaseSpider):
             if rpt.render_javascript:
                 rpt_str += '-JS'
             rpt_str += '|' + rpt.method
-            msg  = '{page_type: <4} {rpt_str: <13} {name: <20} {page}-{num} '.format(page=response.request.meta['page'], num=str(item_num), name=name, rpt_str=rpt_str, page_type=from_page)
+            page_str = str(response.request.meta['page']) + '-'
+            msg  = '{page_type: <4} {rpt_str: <13} {name: <20} {page}{num} '.format(page=page_str, num=str(item_num), name=name, rpt_str=rpt_str, page_type=from_page)
             c_values = loader.get_collected_values(name)
             if len(c_values) > 0:
                 val_str = c_values[0]
@@ -469,7 +493,9 @@ class DjangoSpider(DjangoBaseSpider):
             try:
                 jsonpath_expr = parse(base_elem.x_path)
             except JsonPathLexerError:
-                raise CloseSpider("JsonPath for base elem could not be processed!")
+                msg = "JsonPath for base elem could not be processed!"
+                self.dds_logger.error(msg)
+                raise CloseSpider()
             base_objects = [match.value for match in jsonpath_expr.find(json_resp)]
             if len(base_objects) > 0:
                 base_objects = base_objects[0]
@@ -487,9 +513,11 @@ class DjangoSpider(DjangoBaseSpider):
         for obj in base_objects:
             item_num = self.items_read_count + 1
             self.tmp_non_db_results[item_num] = {}
+            self.dds_logger.info('--------------------------------------------------------------------------------------')
             self.log("Starting to crawl item {i} from page {p}.".format(i=str(item_num), p=str(response.request.meta['page'])), logging.INFO)
             item = self.parse_item(response, obj, 'MP', item_num)
-            #print item
+            item._dds_item_page = response.request.meta['page']
+            item._dds_item_id = item_num
             
             if item:
                 only_main_page_idfs = True
@@ -532,6 +560,7 @@ class DjangoSpider(DjangoBaseSpider):
                         kwargs['meta']['item'] = item
                         kwargs['meta']['from_page'] = rpt.page_type
                         kwargs['meta']['item_num'] = item_num
+                        kwargs['meta']['page'] = response.request.meta['page']
                         if url_elem == url_elems[len(url_elems)-1]:
                             kwargs['meta']['last'] = True
                         else:
