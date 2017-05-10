@@ -57,15 +57,15 @@ class DjangoBaseSpider(CrawlSpider):
         self.dds_logger = logging.getLogger('dds')
         
         if not 'id' in kwargs:
-            msg = "You have to provide the ID of your reference object."
+            msg = "You have to provide the ID of the reference {type} object.".format(type=ref_object_class.__name__)
             self.dds_logger.error(msg)
             self.output_usage_help()
             raise UsageError()
         try:
             self.ref_object = ref_object_class.objects.get(pk=kwargs['id'])
         except ObjectDoesNotExist:
-            msg = "Object with ID {id} not found.".format(
-                id=kwargs['id'])
+            msg = "{type} object with ID {id} not found.".format(
+                id=kwargs['id'], type=ref_object_class.__name__)
             self.dds_logger.error(msg)
             self.output_usage_help()
             raise UsageError()
