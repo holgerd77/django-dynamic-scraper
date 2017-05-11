@@ -15,7 +15,7 @@ django.setup()
 class NoParsingFilter(logging.Filter):
     def filter(self, record=True):
         return False
-#logging.getLogger('twisted').addFilter(NoParsingFilter)
+logging.getLogger('twisted').addFilter(NoParsingFilter)
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -68,15 +68,17 @@ class DjangoBaseSpider(CrawlSpider):
         self.dds_logger = logging.getLogger('dds')
         
         if not 'id' in kwargs:
-            msg = "You have to provide the ID of the reference {type} object.".format(type=ref_object_class.__name__)
+            msg = "{cs}You have to provide the ID of the reference {type} object.{ce}".format(
+                type=ref_object_class.__name__, cs=self.bcolors["ERROR"], ce=self.bcolors["ENDC"])
             self.dds_logger.error(msg)
             self.output_usage_help()
             raise UsageError()
         try:
             self.ref_object = ref_object_class.objects.get(pk=kwargs['id'])
         except ObjectDoesNotExist:
-            msg = "{type} object with ID {id} not found.".format(
-                id=kwargs['id'], type=ref_object_class.__name__)
+            msg = "{cs}{type} object with ID {id} not found.{ce}".format(
+                id=kwargs['id'], type=ref_object_class.__name__,
+                cs=self.bcolors["ERROR"], ce=self.bcolors["ENDC"])
             self.dds_logger.error(msg)
             self.output_usage_help()
             raise UsageError()
@@ -170,7 +172,9 @@ class DjangoBaseSpider(CrawlSpider):
         try:
             self.scraper.get_main_page_rpt()
         except ObjectDoesNotExist:
-            raise CloseSpider("Scraper must have exactly one main page request page type!")
+            msg = "Scraper must have exactly one main page request page type!"
+            self.dds_logger.error(msg)
+            raise CloseSpider()
 
         for rpt in self.scraper.requestpagetype_set.all():
             if rpt.page_type == 'MP':
@@ -183,9 +187,13 @@ class DjangoBaseSpider(CrawlSpider):
                 try:
                     headers = json.loads(rpt.headers)
                 except ValueError:
-                    raise CloseSpider("Incorrect HTTP header attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type))
+                    msg = "Incorrect HTTP header attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type)
+                    self.dds_logger.error(msg)
+                    raise CloseSpider()
                 if not isinstance(headers, dict):
-                    raise CloseSpider("Incorrect HTTP header attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type))
+                    msg = "Incorrect HTTP header attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type)
+                    self.dds_logger.error(msg)
+                    raise CloseSpider()
                 pt_dict['headers'] = headers
 
             if rpt.body != '':
@@ -195,18 +203,26 @@ class DjangoBaseSpider(CrawlSpider):
                 try:
                     cookies = json.loads(rpt.cookies)
                 except ValueError:
-                    raise CloseSpider("Incorrect cookies attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type))
+                    msg = "Incorrect cookies attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type)
+                    self.dds_logger.error(msg)
+                    raise CloseSpider()
                 if not isinstance(cookies, dict):
-                    raise CloseSpider("Incorrect cookies attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type))
+                    msg = "Incorrect cookies attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type)
+                    self.dds_logger.error(msg)
+                    raise CloseSpider()
                 pt_dict['cookies'] = cookies
 
             if rpt.meta != '':
                 try:
                     meta = json.loads(rpt.meta)
                 except ValueError:
-                    raise CloseSpider("Incorrect meta attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type))
+                    msg = "Incorrect meta attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type)
+                    self.dds_logger.error(msg)
+                    raise CloseSpider()
                 if not isinstance(meta, dict):
-                    raise CloseSpider("Incorrect meta attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type))
+                    msg = "Incorrect meta attribute ({a}): not a valid JSON dict!".format(a=rpt.page_type)
+                    self.dds_logger.error(msg)
+                    raise CloseSpider()
                 pt_dict['meta'] = meta
     
 

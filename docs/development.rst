@@ -90,6 +90,12 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.12.0-beta** (NOT YET RELEASED!)
+
+.. image:: images/screenshot_scrapy_run_command_line.png
+
+.. image:: images/screenshot_dds_command_line_help.png
+
 
 **Changes in version 0.11.6-beta** (2017-04-21)
 

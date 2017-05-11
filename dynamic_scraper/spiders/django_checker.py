@@ -71,7 +71,8 @@ class DjangoChecker(DjangoBaseSpider):
 
     def _check_checker_config(self):
         if self.scraper.checker_set.count() == 0:
-            msg = 'No checkers defined for scraper!'
+            msg = '{cs}No checkers defined for scraper.{ce}'.format(
+                cs=self.bcolors["INFO"], ce=self.bcolors["ENDC"])
             self.dds_logger.warning(msg)
             self.output_usage_help()
             raise CloseSpider(msg)
@@ -120,7 +121,8 @@ class DjangoChecker(DjangoBaseSpider):
         self.scraper.last_checker_delete = datetime.datetime.now()
         self.scraper.save()
         self.action_successful = True
-        self.log("Item deleted.", logging.INFO)
+        self.log("{cs}Item deleted.{ce}".format(
+            cs=self.bcolors["ERROR"], ce=self.bcolors["ENDC"]), logging.INFO)
 
 
     def start_requests(self):
@@ -145,13 +147,14 @@ class DjangoChecker(DjangoBaseSpider):
         rpt = kwargs['response'].request.meta['rpt']
         # 404 test
         if kwargs['response'].status == 404:
-            
             if self.scheduler_runtime.num_zero_actions == 0:
-                self.log("Checker test returned second 404 ({c}). Delete reason.".format(c=str(checker)), logging.INFO)
+                self.log("{cs}Checker test returned second 404 ({c}). Delete reason.{ce}".format(
+                    c=str(checker), cs=self.bcolors["ERROR"], ce=self.bcolors["ENDC"]), logging.INFO)
                 if self.conf['DO_ACTION']:
                     self._del_ref_object()
             else:
-                self.log("Checker test returned first 404 ({c}).".format(str(checker)), logging.INFO)
+                self.log("{cs}Checker test returned first 404 ({c}).{ce}".format(
+                    str(checker), cs=self.bcolors["ERROR"], ce=self.bcolors["ENDC"]), logging.INFO)
                 self.action_successful = True
 
 
@@ -166,14 +169,20 @@ class DjangoChecker(DjangoBaseSpider):
                 resp_body=response.body.decode('utf-8')), logging.INFO)
         
         if checker.checker_type == '4':
-            self.log("No 404 ({c}).".format(c=str(checker)), logging.INFO)
+            self.log("{cs}No 404 result ({c} checker type).{ce}".format(
+                c=str(checker), cs=self.bcolors["OK"], ce=self.bcolors["ENDC"]), logging.INFO)
+            if self.conf['DO_ACTION']:
+                self.dds_logger.info("{cs}Item kept.{ce}".format(
+                    cs=self.bcolors["OK"], ce=self.bcolors["ENDC"]))
             return
         if rpt.content_type == 'J':
             json_resp = json.loads(response.body_as_unicode())
             try:
                 jsonpath_expr = parse(checker.checker_x_path)
             except JsonPathLexerError:
-                raise CloseSpider("Invalid checker JSONPath ({c})!".format(c=str(checker)))
+                msg = "Invalid checker JSONPath ({c})!".format(c=str(checker))
+                self.dds_logger.error(msg)
+                raise CloseSpider()
             test_select = [match.value for match in jsonpath_expr.find(json_resp)]
             #self.log(unicode(test_select), logging.INFO)
         else:
@@ -184,16 +193,22 @@ class DjangoChecker(DjangoBaseSpider):
                 return
         
         if len(test_select) > 0 and checker.checker_x_path_result == '':
-            self.log("Elements for XPath found on page (no result string defined) ({c}). Delete reason.".format(c=str(checker)), logging.INFO)
+            self.log("{cs}Elements for XPath found on page (no result string defined) ({c}). Delete reason.{ce}".format(
+                c=str(checker), cs=self.bcolors["ERROR"], ce=self.bcolors["ENDC"]), logging.INFO)
             if self.conf['DO_ACTION']:
                 self._del_ref_object()
             return
         elif len(test_select) > 0 and test_select[0] == checker.checker_x_path_result:
-            self.log("XPath result string '{s}' found on page ({c}). Delete reason.".format(s=checker.checker_x_path_result, c=str(checker)), logging.INFO)
+            self.log("{cs}XPath result string '{s}' found on page ({c}). Delete reason.{ce}".format(
+                s=checker.checker_x_path_result, c=str(checker), cs=self.bcolors["ERROR"], ce=self.bcolors["ENDC"]), logging.INFO)
             if self.conf['DO_ACTION']:
                 self._del_ref_object()
             return
         else:
-            self.log("XPath result string not found ({c}).".format(c=str(checker)), logging.INFO)
+            self.log("{cs}XPath result string not found ({c}).{ce}".format(
+                c=str(checker), cs=self.bcolors["OK"], ce=self.bcolors["ENDC"]), logging.INFO)
+            if self.conf['DO_ACTION']:
+                self.dds_logger.info("{cs}Item kept.{ce}".format(
+                    cs=self.bcolors["OK"], ce=self.bcolors["ENDC"]))
             return
     
