@@ -267,9 +267,10 @@ class DjangoSpider(DjangoBaseSpider):
             kwargs['meta']['page'] = index + 1
             rpt = self.scraper.get_main_page_rpt()
             self.dds_logger.info('')
-            self.dds_logger.info('\033[;1m======================================================================================' + self.bcolors['ENDC'])
-            self.log("\033[;1mScraping data from page {page}: {url}{ec}".format(page=index+1, url=url, ec=self.bcolors['ENDC']), logging.INFO)
-            self.dds_logger.info('\033[;1m======================================================================================' + self.bcolors['ENDC'])
+            self.dds_logger.info(self.bcolors['BOLD'] + '======================================================================================' + self.bcolors['ENDC'])
+            self.log("{es}{es2}Scraping data from page {page}.{ec}{ec}".format(page=index+1, es=self.bcolors['BOLD'], es2=self.bcolors['HEADER'], ec=self.bcolors['ENDC']), logging.INFO)
+            self.log("URL: {url}".format(url=url), logging.INFO)
+            self.dds_logger.info(self.bcolors['BOLD'] + '======================================================================================' + self.bcolors['ENDC'])
             index += 1
             if rpt.request_type == 'R':
                 yield Request(url, callback=self.parse, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
@@ -370,7 +371,7 @@ class DjangoSpider(DjangoBaseSpider):
                 rpt_str += '-JS'
             rpt_str += '|' + rpt.method
             page_str = str(response.request.meta['page']) + '-'
-            msg  = '{page_type: <4} {rpt_str: <13} \033[;1m{name: <20}{ce} {page}{num} '.format(page=page_str, num=str(item_num), name=name, rpt_str=rpt_str, page_type=from_page, ce=self.bcolors["ENDC"])
+            msg  = '{page_type: <4} {rpt_str: <13} {cs}{name: <20}{ce} {page}{num} '.format(page=page_str, num=str(item_num), name=name, rpt_str=rpt_str, page_type=from_page, cs=self.bcolors["BOLD"], ce=self.bcolors["ENDC"])
             c_values = loader.get_collected_values(name)
             if len(c_values) > 0:
                 val_str = c_values[0]
@@ -513,8 +514,9 @@ class DjangoSpider(DjangoBaseSpider):
         for obj in base_objects:
             item_num = self.items_read_count + 1
             self.tmp_non_db_results[item_num] = {}
-            self.dds_logger.info('\033[;1m--------------------------------------------------------------------------------------' + self.bcolors['ENDC'])
-            self.log("Starting to crawl item {i} from page {p}.".format(i=str(item_num), p=str(response.request.meta['page'])), logging.INFO)
+            self.dds_logger.info(self.bcolors['BOLD'] + '--------------------------------------------------------------------------------------' + self.bcolors['ENDC'])
+            self.log("{cs}Starting to crawl item {i} from page {p}.{ce}".format(i=str(item_num), p=str(response.request.meta['page']), cs=self.bcolors["HEADER"], ce=self.bcolors["ENDC"]), logging.INFO)
+            self.dds_logger.info(self.bcolors['BOLD'] + '--------------------------------------------------------------------------------------' + self.bcolors['ENDC'])
             item = self.parse_item(response, obj, 'MP', item_num)
             item._dds_item_page = response.request.meta['page']
             item._dds_item_id = item_num

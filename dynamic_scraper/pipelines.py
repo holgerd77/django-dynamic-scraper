@@ -112,15 +112,19 @@ class ValidationPipeline(object):
             if elem.scraped_obj_attr.save_to_db and (\
                 not elem.scraped_obj_attr.name in item or\
                 (elem.scraped_obj_attr.name in item and not item[elem.scraped_obj_attr.name])):
-                spider.log(spider.bcolors['ERROR'] + "Item " + dds_id + " dropped, mandatory elem " + elem.scraped_obj_attr.name + " missing!" + spider.bcolors['ENDC'], logging.ERROR)
+                msg = "{cs}Item {id} dropped, mandatory elem {elem} missing!{ce}".format(
+                    id=dds_id, elem=elem.scraped_obj_attr.name, cs=spider.bcolors['ERROR'], ce=spider.bcolors['ENDC'])
+                spider.log(msg, logging.ERROR)
                 raise DropItem()
         
         if spider.conf['MAX_ITEMS_SAVE'] and spider.items_save_count >= spider.conf['MAX_ITEMS_SAVE']:
-            spider.log("Max items save reached ({num}), item {id} not saved or further processed.".format(num=str(spider.conf['MAX_ITEMS_SAVE']), id=dds_id), logging.INFO)
+            spider.log("{cs}Max items save reached ({num}), item {id} not saved or further processed.{ce}".format(
+                num=str(spider.conf['MAX_ITEMS_SAVE']), id=dds_id, cs=spider.bcolors["INFO"], ce=spider.bcolors["ENDC"]), logging.INFO)
             raise DropItem()
         
         if not spider.conf['DO_ACTION']:
-            spider.log("Item " + dds_id + " not saved to Django DB (Test Mode).", logging.INFO)
+            spider.log("{cs}Item {id} not saved to Django DB (Test Mode).{ce}".format(
+                id=dds_id, cs=spider.bcolors["INFO"], ce=spider.bcolors["ENDC"]), logging.WARNING)
         else:
             if is_double:
                 standard_update_elems = spider.scraper.get_standard_update_elems()
@@ -139,11 +143,13 @@ class ValidationPipeline(object):
                                 updated_attribute_list += attr_name
                 if len(updated_attribute_list) > 0:
                     exist_object.save()
-                    msg = "Item " + dds_id + " already in DB, attributes updated: " + updated_attribute_list
-                    spider.dds_logger.error(msg)
+                    msg = "{cs}Item {id} already in DB, attributes updated: {attr_str}{ce}".format(
+                        id=dds_id, attr_str=updated_attribute_list, cs=spider.bcolors["OK"], ce=spider.bcolors["ENDC"])
+                    spider.dds_logger.warning(msg)
                     raise DropItem()
                 else:
-                    msg = "Double item " + dds_id + ", not saved."
+                    msg = "{cs}Double item {id}, not saved.{ce}".format(
+                        id=dds_id, cs=spider.bcolors["INFO"], ce=spider.bcolors["ENDC"])
                     spider.dds_logger.error(msg)
                     raise DropItem()
             
