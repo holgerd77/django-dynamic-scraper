@@ -15,7 +15,6 @@ class CheckerTest(DjangoBaseSpider):
     name = 'checker_test'
     mandatory_vars = ['ref_object', 'scraper',]
     
-    command = 'scrapy crawl checker_test -a id=SCRAPER_ID'
     
     def __init__(self, *args, **kwargs):
         self._set_ref_object(Scraper, **kwargs)
@@ -30,13 +29,13 @@ class CheckerTest(DjangoBaseSpider):
         for checker in self.scraper.checker_set.all():
             if checker.checker_type == '4':
                 if not checker.checker_ref_url:
-                    msg = "Please provide a reference url for your checker ({c}) (Command: {cr}).".format(c=str(checker), cr=self.command)
+                    msg = "Please provide a reference url for your checker ({c}).".format(c=str(checker))
                     self.dds_logger.error(msg)
                     raise CloseSpider(msg)
             
             if checker.checker_type == 'X':
                 if not checker.checker_x_path or not checker.checker_ref_url:
-                    msg = "Please provide the necessary x_path fields for your checker ({c}) (Command: {cr}).".format(c=str(checker), cr=self.command)
+                    msg = "Please provide the necessary x_path fields for your checker ({c}).".format(c=str(checker))
                     self.dds_logger.error(msg)
                     raise CloseSpider(msg)
 
@@ -105,7 +104,8 @@ class CheckerTest(DjangoBaseSpider):
             if checker.checker_type == '4':
                 self.log("{cs}Checker configuration working (ref url request returning 404) ({c}).{ce}".format(c=str(checker), cs=self.bcolors['OK'], ce=self.bcolors['ENDC']), logging.INFO)
             if checker.checker_type == 'X':
-                self.log('A request of your checker ref url is returning 404. Your x_path can not be applied ({c})!'.format(c=str(checker)), logging.WARNING)
+                self.log('{cs}A request of your checker ref url is returning 404. Your x_path can not be applied ({c}).{ce}'.format(
+                    c=str(checker), cs=self.bcolors['INFO'], ce=self.bcolors['ENDC']), logging.WARNING)
         else:
             if checker.checker_type == '4':
                 self.log('Checker ref url request not returning 404 ({c})!'.format(c=str(checker)), logging.WARNING)
@@ -129,14 +129,18 @@ class CheckerTest(DjangoBaseSpider):
             self.log('Invalid x_path ({c})!'.format(c=str(checker)), logging.ERROR)
             return
         if len(test_select) == 0:
-            self.log("Checker configuration not working (no elements found for xpath on reference url page) ({c})!".format(c=str(checker)), logging.ERROR)
+            self.log("{cs}Checker configuration not working (no elements found for xpath on reference url page) ({c})!{ce}".format(
+                c=str(checker), cs=self.bcolors['ERROR'], ce=self.bcolors['ENDC']), logging.ERROR)
         else:
             if checker.checker_x_path_result == '':
-                self.log("{cs}Checker configuration working (elements for x_path found on reference url page (no x_path result defined)) ({c}).{ce}".format(c=str(checker, cs=self.bcolors['OK'], ce=self.bcolors['ENDC'])), logging.INFO)
+                self.log("{cs}Checker configuration working (elements for x_path found on reference url page (no x_path result defined)) ({c}).{ce}".format(
+                    c=str(checker), cs=self.bcolors['OK'], ce=self.bcolors['ENDC']), logging.INFO)
             else:
                 if test_select[0] != checker.checker_x_path_result:
-                    self.log("Checker configuration not working (expected x_path result not found on reference url page) ({c})!".format(c=str(checker)), logging.ERROR)
+                    self.log("{cs}Checker configuration not working (expected x_path result not found on reference url page) ({c})!{ce}".format(
+                        c=str(checker), cs=self.bcolors['ERROR'], ce=self.bcolors['ENDC']), logging.ERROR)
                 else:
-                    self.log("Checker configuration working (expected x_path result found on reference url page) ({c}).".format(c=str(checker)), logging.INFO)
+                    self.log("{cs}Checker configuration working (expected x_path result found on reference url page) ({c}).{ce}".format(
+                        c=str(checker), cs=self.bcolors['OK'], ce=self.bcolors['ENDC']), logging.INFO)
                 
         
