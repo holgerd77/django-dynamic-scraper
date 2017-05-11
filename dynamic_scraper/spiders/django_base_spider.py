@@ -15,7 +15,7 @@ django.setup()
 class NoParsingFilter(logging.Filter):
     def filter(self, record=True):
         return False
-logging.getLogger('twisted').addFilter(NoParsingFilter)
+#logging.getLogger('twisted').addFilter(NoParsingFilter)
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q

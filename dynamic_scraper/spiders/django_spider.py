@@ -296,12 +296,10 @@ class DjangoSpider(DjangoBaseSpider):
 
         # Mark item as DOUBLE item
         if cnt_double > 0:
-            for idf_elem in idf_elems:
-                idf_name = idf_elem.scraped_obj_attr.name
-                if item[idf_name][0:6] != 'DOUBLE':
-                    item[idf_name] = 'DOUBLE' + item[idf_name]
+            item._is_double = True
             return item, True
         else:
+            item._is_double = False
             return item, False
 
 

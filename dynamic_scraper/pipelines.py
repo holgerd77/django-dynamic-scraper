@@ -92,16 +92,13 @@ class ValidationPipeline(object):
                         value = value.replace('{' + name + '}', str(item[name]))
                         item[key] = value
         
-        #Check if item is double and remove DOUBLE string from ID fields
-        #(no good way found to pass meta data to this point...)
         idf_elems = spider.scraper.get_id_field_elems()
-        is_double = False
+        is_double = item._is_double
         exist_objects = spider.scraped_obj_class.objects
+        
         for idf_elem in idf_elems:
             idf_name = idf_elem.scraped_obj_attr.name
-            if idf_name in item and item[idf_name][0:6] == 'DOUBLE':
-                is_double = True
-                item[idf_name] = item[idf_name][6:]
+            if idf_name in item and is_double:
                 exist_objects = exist_objects.filter(**{idf_name:item[idf_name]})
         
         if is_double:
