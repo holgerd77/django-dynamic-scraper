@@ -242,7 +242,8 @@ class DjangoSpider(DjangoBaseSpider):
             url_str = 'URL'
         else:
             url_str = 'URLs'
-        self.log("Scraper set to run on {num} start {url_str}.".format(num=num, url_str=url_str), logging.INFO)
+        self.log("Scraper set to run on {num} start {url_str}.".format(
+            num=num, url_str=url_str), logging.INFO)
 
 
     def start_requests(self):
@@ -268,7 +269,8 @@ class DjangoSpider(DjangoBaseSpider):
             rpt = self.scraper.get_main_page_rpt()
             self.dds_logger.info('')
             self.dds_logger.info(self.bcolors['BOLD'] + '======================================================================================' + self.bcolors['ENDC'])
-            self.log("{es}{es2}Scraping data from page {page}.{ec}{ec}".format(page=index+1, es=self.bcolors['BOLD'], es2=self.bcolors['HEADER'], ec=self.bcolors['ENDC']), logging.INFO)
+            self.log("{es}{es2}Scraping data from page {page}.{ec}{ec}".format(
+                page=index+1, es=self.bcolors['BOLD'], es2=self.bcolors['HEADER'], ec=self.bcolors['ENDC']), logging.INFO)
             self.log("URL: {url}".format(url=url), logging.INFO)
             self.dds_logger.info(self.bcolors['BOLD'] + '======================================================================================' + self.bcolors['ENDC'])
             index += 1
@@ -502,7 +504,8 @@ class DjangoSpider(DjangoBaseSpider):
             base_objects = response.xpath(base_elem.x_path)
 
         if(len(base_objects) == 0):
-            self.log("No base objects found!", logging.ERROR)
+            self.log("{cs}No base objects found.{ce}".format(
+                cs=self.bcolors["INFO"], ce=self.bcolors["ENDC"]), logging.ERROR)
         
         if(self.conf['MAX_ITEMS_READ']):
             items_left = min(len(base_objects), self.conf['MAX_ITEMS_READ'] - self.items_read_count)
@@ -513,7 +516,8 @@ class DjangoSpider(DjangoBaseSpider):
             item_num = self.items_read_count + 1
             self.tmp_non_db_results[item_num] = {}
             self.dds_logger.info(self.bcolors['BOLD'] + '--------------------------------------------------------------------------------------' + self.bcolors['ENDC'])
-            self.log("{cs}Starting to crawl item {i} from page {p}.{ce}".format(i=str(item_num), p=str(response.request.meta['page']), cs=self.bcolors["HEADER"], ce=self.bcolors["ENDC"]), logging.INFO)
+            self.log("{cs}Starting to crawl item {i} from page {p}.{ce}".format(
+                i=str(item_num), p=str(response.request.meta['page']), cs=self.bcolors["HEADER"], ce=self.bcolors["ENDC"]), logging.INFO)
             self.dds_logger.info(self.bcolors['BOLD'] + '--------------------------------------------------------------------------------------' + self.bcolors['ENDC'])
             item = self.parse_item(response, obj, 'MP', item_num)
             item._dds_item_page = response.request.meta['page']

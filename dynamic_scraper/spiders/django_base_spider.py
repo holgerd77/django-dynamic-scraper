@@ -142,6 +142,8 @@ class DjangoBaseSpider(CrawlSpider):
         
         if self.conf['CONSOLE_LOG_LEVEL'] == 'DEBUG':
             logging.getLogger('twisted').removeFilter(NoParsingFilter)
+        if self.conf['CONSOLE_LOG_LEVEL'] != 'DEBUG':
+            logging.getLogger('scrapy.middleware').addFilter(NoParsingFilter)
         
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)
 
