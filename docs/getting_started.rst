@@ -366,7 +366,11 @@ for you but you have to do it manually in your own item pipeline::
               
                   item.save()
                   spider.action_successful = True
-                  spider.log("Item saved.", logging.INFO)
+                  dds_id_str = str(item._dds_item_page) + '-' + str(item._dds_item_id)
+                  spider.log("{cs}Item {id} saved to Django DB.{ce}".format(
+                      id=dds_id_str,
+                      cs=spider.bcolors['OK'],
+                      ce=spider.bcolors['ENDC']), logging.INFO)
                   
               except IntegrityError as e:
                   spider.log(str(e), logging.ERROR)
@@ -397,6 +401,7 @@ as following::
                           [-a do_action=(yes|no) -a run_type=(TASK|SHELL) 
                           -a max_items_read={Int} -a max_items_save={Int}
                           -a max_pages_read={Int}
+                          -a start_page=PAGE -a end_page=PAGE
                           -a output_num_mp_response_bodies={Int} -a output_num_dp_response_bodies={Int} ]
   
 * With ``-a id=REF_OBJECT_ID`` you provide the ID of the reference object items should be scraped for,
@@ -413,6 +418,8 @@ as following::
   params.
 
 * With ``-a max_pages_read={Int}`` you can limit the number of pages read when using pagination
+
+* With ``-a start_page=PAGE`` and/or ``-a end_page=PAGE`` it is possible to set a start and/or end page
 
 * With ``-a output_num_mp_response_bodies={Int}`` and ``-a output_num_dp_response_bodies={Int}`` you can log
   the complete response body content of the {Int} first main/detail page responses to the screen for debugging

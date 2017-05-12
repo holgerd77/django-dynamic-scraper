@@ -101,6 +101,10 @@ You can test your DDS checkers the same way you would run your scrapers::
 As a reference object ID you now have to provide the ID of a scraped item to be checked. With ``do_action=yes``
 an item is really deleted, otherwise the checker is only tested without actually manipulating the DB.
 
+Here is an example of a checker run actually keeping the still-existing item:
+
+.. image:: images/screenshot_command_line_checker_run.png
+
 If you want to test a check on an item scraped in the open news example project, change the url of the item in
 the DB to the checker reference url, look for the item ID and then run::
 
@@ -121,6 +125,8 @@ against the defined reference url. You can run this checker on the command line 
 This scraper is useful both to look, if you have chosen a valid ``checker_x_path_ref_url`` and corresponding ``checker_x_path`` 
 and ``checker_x_path_result`` values as well as to see over time if your reference urls stay valid.
 
+.. image:: images/screenshot_command_line_checker_test_run.png
+
 For running all checker tests at once there exists a simple Django management command called ``run_checker_tests``,
 which executes the ``checker_test`` scraper for all of your defined scrapers and outputs Scrapy log messages 
 on ``WARNING`` level and above::
@@ -132,7 +138,6 @@ generously pass the test on some not so severe cases (e.g. a checker ref url ret
 ``404_OR_X_PATH`` checker type).
 Executing the command with the ``--send-admin-mail`` flag will send an email to Django admins if checker 
 configurations are not working which can be useful if you want to run this command as a cronjob.
-
 
 Scheduling scrapers/checkers
 ============================

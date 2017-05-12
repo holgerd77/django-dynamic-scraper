@@ -92,11 +92,52 @@ Release Notes
 =============
 **Changes in version 0.12.0-beta** (2017-05-12)
 
-This release comes with a completely overhauled output formatting...
+This release comes with a **completely overhauled output formatting for scraper
+runs on the command line** which should
+make it a lot easier to quickly grasp what your scrapers are doing and where things
+go wrong. Here is a sample output of a scraper run:
 
 .. image:: images/screenshot_scrapy_run_command_line.png
 
+This is the output from the ``INFO`` log level (log level is taken from the 
+Scrapy ``LOG_LEVEL`` setting) which should in most cases now suffice for 
+normal scraper runs and debugging.
+
+Some of the goodies:
+
+* Formatted attribute output with extra info on attribute source (MP, DP) and request type
+* Numbering of attributes by page, item number combination to easier track
+  attributes belonging to one scraped object
+* Colors for structuring the scraping output and indicate success/failure (works
+  on both dark/light background terminals, dark theme is recommended though)
+* Largely reducing the noise by supressing ``twisted`` traceroute output on ``INFO``
+  log level
+
+If you want item numbering and colors also in your "Item saved." log output
+messages you have to adopt your custom ``pipelines.py`` class (see: :ref:`adding_pipeline_class`, 
+adopt the ``spider.log`` command).
+
+.. note::
+   There is still a known bug of the ``-L LOG_LEVEL`` setting from the command line
+   not properly taken in some cases, if you have problems here use the ``LOG_LEVEL``
+   setting in your ``settings.py`` file.
+
+There is now also an easier way to get **help on the different command line options**
+for scraper/checker runs and scraper test by typing the command without any options,
+e.g.::
+
+  scrapy crawl article_spider
+
 .. image:: images/screenshot_dds_command_line_help.png
+
+Other changes:
+
+* New ``-a start_page=PAGE`` and ``-a end_page=PAGE`` options for setting a range
+  of pages to scrape
+* Fixed a bug with ``STANDARD (UPDATE)`` scraped object attributes
+* Replaced ``DOUBLE`` keyword-injecting (and bug causing?) workaround mechanism with 
+  ``_is_double meta`` attribute for scraped items
+
 
 
 **Changes in version 0.11.6-beta** (2017-04-21)
