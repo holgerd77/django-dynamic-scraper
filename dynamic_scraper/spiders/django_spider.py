@@ -86,6 +86,8 @@ class DjangoSpider(DjangoBaseSpider):
             '-a max_items_read=[Int]                 Limit number of items to read',
             '-a max_items_save=[Int]                 Limit number of items to save',
             '-a max_pages_read=[Int]                 Limit number of pages to read',
+            '-a start_page=[PAGE]                    Start at page PAGE, e.g. 5, F',
+            '-a end_page=[PAGE]                      End scraping at page PAGE, e.g. 10, M',
             '-a output_num_mp_response_bodies=[Int]  Output response body content of MP for debugging',
             '-a output_num_dp_response_bodies=[Int]  Output response body content of DP for debugging',
             '',
@@ -155,6 +157,16 @@ class DjangoSpider(DjangoBaseSpider):
             log_msg += "max_pages_read " + str(self.conf['MAX_PAGES_READ'])
         else:
             self.conf['MAX_PAGES_READ'] = None
+        #start_page
+        if 'start_page' in kwargs:
+            self.conf['START_PAGE'] = kwargs['start_page']
+        else:
+            self.conf['START_PAGE'] = None
+        #end_page
+        if 'end_page' in kwargs:
+            self.conf['END_PAGE'] = kwargs['end_page']
+        else:
+            self.conf['END_PAGE'] = None
         #output_num_mp_response_bodies
         if 'output_num_mp_response_bodies' in kwargs:
             try:
@@ -185,6 +197,38 @@ class DjangoSpider(DjangoBaseSpider):
         super(DjangoSpider, self)._set_config(log_msg, **kwargs)
 
 
+    def limit_page_nums(self, pages):
+        if self.conf['START_PAGE']:
+            index = 0
+            exists = False
+            for page in pages:
+                if str(page) == self.conf['START_PAGE']:
+                    pages = pages[index:]
+                    exists = True
+                    break
+                index += 1
+            if not exists:
+                msg = "The provided start page doesn't exist in the range of page values!"
+                self.dds_logger.error(msg)
+                raise CloseSpider()
+        
+        if self.conf['END_PAGE']:
+            index = 0
+            exists = False
+            for page in pages:
+                if str(page) == self.conf['END_PAGE']:
+                    pages = pages[:index+1]
+                    exists = True
+                    break
+                index += 1
+            if not exists:
+                msg = "The provided end page doesn't exist in the range of page values!"
+                self.dds_logger.error(msg)
+                raise CloseSpider()
+        
+        return pages
+    
+    
     def _set_start_urls(self, scrape_url):
         self.start_urls = []
         
@@ -200,13 +244,14 @@ class DjangoSpider(DjangoBaseSpider):
                 pages = pages.split(',')
                 if len(pages) > 3:
                     raise Exception
-                pages = list(range(*list(map(int, pages)))) 
+                pages = list(range(*list(map(int, pages))))
             except Exception:
                 msg = 'Pagination_page_replace for pagination_type "RANGE_FUNCT" ' +\
                       'has to be provided as python range function arguments ' +\
                       '[start], stop[, step] (e.g. "1, 50, 10", no brackets)!'
                 self.dds_logger.error(msg)
                 raise CloseSpider()
+            pages = self.limit_page_nums(pages)
         
         if self.scraper.pagination_type == 'F':
             try:
@@ -217,7 +262,8 @@ class DjangoSpider(DjangoBaseSpider):
                 msg = 'Wrong pagination_page_replace format for pagination_type "FREE_LIST", ' +\
                       "Syntax: 'Replace string 1', 'Another replace string 2', 'A number 3', ..."
                 self.dds_logger.error(msg)
-                raise CloseSpider()   
+                raise CloseSpider()
+            pages = self.limit_page_nums(pages)
         
         if self.scraper.pagination_type != 'N':
             append_str = self.scraper.pagination_append_str
@@ -230,7 +276,7 @@ class DjangoSpider(DjangoBaseSpider):
             for page in self.pages:
                 url = scrape_url + append_str.format(page=page)
                 self.start_urls.append(url)
-            if not self.scraper.pagination_on_start:
+            if not self.scraper.pagination_on_start and not self.conf['START_PAGE']:
                 self.start_urls.insert(0, scrape_url)
                 self.pages.insert(0, "")
         

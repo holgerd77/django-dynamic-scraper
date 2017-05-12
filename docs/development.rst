@@ -90,7 +90,9 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.12.0-beta** (NOT YET RELEASED!)
+**Changes in version 0.12.0-beta** (2017-05-12)
+
+This release comes with a completely overhauled output formatting...
 
 .. image:: images/screenshot_scrapy_run_command_line.png
 

@@ -132,7 +132,6 @@ class DjangoBaseSpider(CrawlSpider):
 
         self.conf['LOG_ENABLED'] = settings.get('DSCRAPER_LOG_ENABLED', self.conf['LOG_ENABLED'])
         self.conf['LOG_LEVEL'] = settings.get('DSCRAPER_LOG_LEVEL', self.conf['LOG_LEVEL'])
-        
         self.conf['CONSOLE_LOG_LEVEL'] = settings.get('LOG_LEVEL', self.conf['CONSOLE_LOG_LEVEL'])
         
         self.conf['LOG_LIMIT'] = settings.get('DSCRAPER_LOG_LIMIT', self.conf['LOG_LIMIT'])
