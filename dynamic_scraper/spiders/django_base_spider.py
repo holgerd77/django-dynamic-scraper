@@ -15,7 +15,8 @@ django.setup()
 class NoParsingFilter(logging.Filter):
     def filter(self, record=True):
         return False
-logging.getLogger('twisted').addFilter(NoParsingFilter)
+npf = NoParsingFilter()
+logging.getLogger('twisted').addFilter(npf)
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -140,9 +141,9 @@ class DjangoBaseSpider(CrawlSpider):
         self.log("Runtime config: " + log_msg, logging.INFO)
         
         if self.conf['CONSOLE_LOG_LEVEL'] == 'DEBUG':
-            logging.getLogger('twisted').removeFilter(NoParsingFilter)
+            logging.getLogger('twisted').removeFilter(npf)
         if self.conf['CONSOLE_LOG_LEVEL'] != 'DEBUG':
-            logging.getLogger('scrapy.middleware').addFilter(NoParsingFilter)
+            logging.getLogger('scrapy.middleware').addFilter(npf)
         
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)
 
