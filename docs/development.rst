@@ -90,6 +90,11 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.12.1-beta** (2017-06-03)
+
+* HOTFIX RELEASE! PLEASE UPDATE WHEN USING PYTHON 2.7!
+* Fixed twisted logging filter, causing DDS completely refuse working under Python 2.7
+
 **Changes in version 0.12.0-beta** (2017-05-12)
 
 This release comes with a **completely overhauled output formatting for scraper
