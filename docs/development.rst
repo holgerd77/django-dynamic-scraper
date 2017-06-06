@@ -90,6 +90,10 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.12.2-beta** (NOT YET RELEASED!)
+
+* TODO
+
 **Changes in version 0.12.1-beta** (2017-06-03)
 
 * HOTFIX RELEASE! PLEASE UPDATE WHEN USING PYTHON 2.7!
