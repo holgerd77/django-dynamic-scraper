@@ -145,7 +145,17 @@ TODO
 DjangoSpider
 ------------
 
-TODO
+By default ``DjangoSpider`` uses ``scrapy.loaders.processors.TakeFirst`` loader. It means that it will take first value from group of found elements. 
+
+You can change this behaviour following way: 
+
+	from scrapy.loader.processors import Join
+	
+	class MySpider(DjangoSpider):
+	    def _get_processors(self, *args, **kwargs):
+	        procs = super(MySpider, self)._get_processors(*args, **kwargs)
+	        procs = (Join(','), ) + procs[1:]
+	        return procs
 
 .. _django_checker:
 
