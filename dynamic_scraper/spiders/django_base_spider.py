@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from builtins import str
 import datetime, json, logging, os, sys
+from django.db import connection
 from scrapy import signals
 from scrapy.spiders import Spider
 from scrapy.spiders import CrawlSpider
@@ -258,6 +259,9 @@ class DjangoBaseSpider(CrawlSpider):
             msg += "Next action factor: {naf}, ".format(naf=str(self.scheduler_runtime.next_action_factor))
             msg += "Zero actions: {za})".format(za=str(self.scheduler_runtime.num_zero_actions))
             self.log(msg, logging.INFO)
+        
+        self.log("Closing Django DB connection.", logging.INFO)
+        connection.close()
     
     
     def log(self, message, level=logging.DEBUG):
