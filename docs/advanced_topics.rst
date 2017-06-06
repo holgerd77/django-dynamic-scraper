@@ -308,7 +308,11 @@ server::
 .. note::
    Please see this configuration described here just as a hint to get started. If you want to use
    this in production you have to provide extra measures to make sure that your servers run constantly and that
-   they are secure. See the specific server documentation for more information.  
+   they are secure. See the specific server documentation for more information. 
+
+.. note::
+   There is a known bug causing scheduling not to work when ``LOG_STDOUT`` is set to ``True`` in the scraper
+	 settings. If you know the cause or a fix for this, please report on GitHub!
 
 
 .. _`Scrapy Server`: http://doc.scrapy.org/en/0.14/topics/scrapyd.html

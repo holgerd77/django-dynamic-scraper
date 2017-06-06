@@ -92,7 +92,11 @@ Release Notes
 =============
 **Changes in version 0.12.2-beta** (NOT YET RELEASED!)
 
-* TODO
+* Closing DB connection when spider run is finished
+  (`GitHub issue #84 <https://github.com/holgerd77/django-dynamic-scraper/issues/84>`_)
+* Set ``LOG_STDOUT`` to ``False`` in example project scraper settings due to a bug
+  prevent scheduling from working when setting is activated 
+  (`GitHub issue #80 <https://github.com/holgerd77/django-dynamic-scraper/issues/80>`_)
 
 **Changes in version 0.12.1-beta** (2017-06-03)
 
