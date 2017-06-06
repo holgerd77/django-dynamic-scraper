@@ -292,7 +292,7 @@ class SchedulerRuntime(models.Model):
         ('S', 'SCRAPER'),
         ('C', 'CHECKER'),
     )
-    runtime_type = models.CharField(max_length=1, choices=TYPE, default='P')
+    runtime_type = models.CharField(max_length=1, choices=TYPE, default='C') 
     next_action_time = models.DateTimeField(default=datetime.datetime.now)
     next_action_factor = models.FloatField(blank=True, null=True)
     num_zero_actions = models.IntegerField(default=0)
