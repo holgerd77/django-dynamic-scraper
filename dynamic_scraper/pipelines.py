@@ -140,6 +140,7 @@ class ValidationPipeline(object):
                                 updated_attribute_list += attr_name
                 if len(updated_attribute_list) > 0:
                     exist_object.save()
+                    spider.action_successful = True
                     msg = "{cs}Item {id} already in DB, attributes updated: {attr_str}{ce}".format(
                         id=dds_id, attr_str=updated_attribute_list, cs=spider.bcolors["OK"], ce=spider.bcolors["ENDC"])
                     spider.dds_logger.warning(msg)
