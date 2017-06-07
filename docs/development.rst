@@ -97,6 +97,8 @@ Release Notes
   new migration ``0018``, please run ``python manage.py migrate`` command
 * New ``join`` processor for convenience (see: :ref:`predefined_processors`) analogue to ``Join``
   processor from ``Scrapy``, has to be used with default processors deactivated
+* Official support for ``Scrapy 1.4`` (no changes in the codebase though)
+* Declared ``Python 3.4+`` support as ``stable``
 * Closing DB connection when spider run is finished
   (`GitHub issue #84 <https://github.com/holgerd77/django-dynamic-scraper/issues/84>`_)
 * Set ``LOG_STDOUT`` to ``False`` in example project scraper settings due to a bug
