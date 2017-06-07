@@ -92,11 +92,19 @@ Release Notes
 =============
 **Changes in version 0.12.2-beta** (NOT YET RELEASED!)
 
+* Added ``use_default_procs`` attribute to scraper elems to allow switching of the usage 
+  of the default processors (``Scrapy TakeFirst``, ``DDS string_strip``) (see: :ref:`default_processors`),
+  new migration ``0018``, please run ``python manage.py migrate`` command
+* New ``join`` processor for convenience (see: :ref:`predefined_processors`) analogue to ``Join``
+  processor from ``Scrapy``, has to be used with default processors deactivated
 * Closing DB connection when spider run is finished
   (`GitHub issue #84 <https://github.com/holgerd77/django-dynamic-scraper/issues/84>`_)
 * Set ``LOG_STDOUT`` to ``False`` in example project scraper settings due to a bug
   prevent scheduling from working when setting is activated 
   (`GitHub issue #80 <https://github.com/holgerd77/django-dynamic-scraper/issues/80>`_)
+* Also define an attribute update (STANDARD (UPDATE)) field as a successful action causing 
+  the scheduler to reset the zero actions counter and not increase time between scraper 
+  runs up to the max time (`GitHub issue #88 <https://github.com/holgerd77/django-dynamic-scraper/issues/88>`_)
 
 **Changes in version 0.12.1-beta** (2017-06-03)
 

@@ -162,6 +162,18 @@ Processors
 General Functionality
 ---------------------
 
+.. _default_processors:
+
+Default Processors
+^^^^^^^^^^^^^^^^^^
+For convenience ``TakeFirst`` processor from ``Scrapy`` and ``DDS`` ``string_strip`` processors are applied
+to every attribute scraped as default processors. The default processors can be deactived separately for 
+every scraped attribute in the Django admin scraper definition.
+
+.. note::
+   ``DDS`` is expecting an attribute to be a string after processor runs. Leaving with other data
+   types might lead to unexpected behaviour (especially for non-``STANDARD`` attribute elements).
+
 .. _attribute_placeholders:
 
 Attribute Placeholders
@@ -181,6 +193,16 @@ definition and using a ``pre_url`` processor like ``'pre_url': 'http://someurl.o
 
 Predefined Processors
 ---------------------
+
+join
+^^^^
+============================== ================================================================
+*Description*                  Joins a list of string analogue to the Join processor from 
+                               Scrapy, separated by the separator provided in the proc context
+*Usable with other processors* Default processors have to be deactivated, otherwise: Yes
+*Context definition (Example)* ``'join': '-'`` (optional, default: ' ')
+*Result (Example)*             "['Example', 'Text',]" -> "Example Text"
+============================== ================================================================
 
 string_strip
 ^^^^^^^^^^^^

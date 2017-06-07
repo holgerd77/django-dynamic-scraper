@@ -12,7 +12,7 @@ from jsonpath_rw.lexer import JsonPathLexerError
 from scrapy.selector import Selector
 from scrapy.http import Request, FormRequest
 from scrapy.loader import ItemLoader
-from scrapy.loader.processors import TakeFirst
+from scrapy.loader.processors import Join, TakeFirst
 from scrapy.exceptions import CloseSpider
 
 from django.db.models.signals import post_save
@@ -351,8 +351,13 @@ class DjangoSpider(DjangoBaseSpider):
             return item, False
 
 
-    def _get_processors(self, procs_str):
-        procs = [TakeFirst(), processors.string_strip,]
+    def _get_processors(self, scraper_elem):
+        procs_str = scraper_elem.processors
+        attr_type = scraper_elem.scraped_obj_attr.attr_type
+        if scraper_elem.use_default_procs:
+            procs = [TakeFirst(), processors.string_strip,]
+        else:
+            procs = []
         if not procs_str:
             return procs
         procs_tmp = list(procs_str.split(','))
@@ -389,7 +394,7 @@ class DjangoSpider(DjangoBaseSpider):
 
     def _scrape_item_attr(self, scraper_elem, response, from_page, item_num):
         if(from_page == scraper_elem.request_page_type):
-            procs = self._get_processors(scraper_elem.processors)
+            procs = self._get_processors(scraper_elem)
             self._set_loader_context(scraper_elem.proc_ctxt)
             
             if not scraper_elem.scraped_obj_attr.save_to_db:
@@ -493,6 +498,7 @@ class DjangoSpider(DjangoBaseSpider):
             self._scrape_item_attr(elem, response, from_page, item_num)
         # Dealing with Django Char- and TextFields defining blank field as null
         item = self.loader.load_item()
+        
         for key, value in list(item.items()):
             if value == None and \
                self.scraped_obj_class()._meta.get_field(key).blank and \

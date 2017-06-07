@@ -4,6 +4,13 @@ from builtins import str
 import datetime, logging, re
 
 
+def join(input_list, loader_context):
+    if not isinstance(input_list, list):
+        input_list = list(input_list)
+    separator = loader_context.get('join', ' ')
+    return separator.join(input_list)
+
+
 def string_strip(text, loader_context):
     if not isinstance(text, str):
         text = str(text)
