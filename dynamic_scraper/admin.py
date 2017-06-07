@@ -6,6 +6,7 @@ from datetime import date
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from django.core.exceptions import ValidationError
+from django import forms
 from django.forms.models import BaseInlineFormSet
 from django.utils.translation import ugettext_lazy as _
 from dynamic_scraper.models import *
@@ -108,8 +109,21 @@ class CheckerInline(admin.StackedInline):
     model = Checker
     extra = 0
 
+
+class ScraperElemAdminForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ScraperElemAdminForm, self).__init__(*args, **kwargs)
+        # access object through self.instance...
+        if hasattr(self.instance, 'scraper'):
+            if hasattr(self.instance.scraper, 'scraped_obj_class'):
+                if self.instance.scraper.scraped_obj_class:
+                    self.fields['scraped_obj_attr'].queryset = ScrapedObjAttr.objects.filter(
+                        obj_class=self.instance.scraper.scraped_obj_class)
+
+
 class ScraperElemInline(admin.TabularInline):
     model = ScraperElem
+    form = ScraperElemAdminForm
     extra = 3
 
     
