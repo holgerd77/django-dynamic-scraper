@@ -90,7 +90,7 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.12.2-beta** (NOT YET RELEASED!)
+**Changes in version 0.12.2-beta** (2017-06-07)
 
 * Added ``use_default_procs`` attribute to scraper elems to allow switching of the usage 
   of the default processors (``Scrapy TakeFirst``, ``DDS string_strip``) (see: :ref:`default_processors`),
