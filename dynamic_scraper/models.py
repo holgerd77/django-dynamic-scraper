@@ -265,15 +265,21 @@ class Checker(models.Model):
 @python_2_unicode_compatible
 class ScraperElem(models.Model):
     REQUEST_PAGE_TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP{n}".format(n=str(n)), "Detail Page {n}".format(n=str(n))) for n in list(range(1, 26))])
-    scraped_obj_attr = models.ForeignKey(ScrapedObjAttr)
+    help_text = "The different attributes to be scraped, exactly one attribute of type BASE necessary."
+    scraped_obj_attr = models.ForeignKey(ScrapedObjAttr, help_text=help_text)
     scraper = models.ForeignKey(Scraper)   
-    x_path = models.TextField(blank=True)
-    reg_exp = models.TextField(blank=True)
-    #from_detail_page = models.BooleanField(default=False)
-    request_page_type = models.CharField(max_length=3, choices=REQUEST_PAGE_TYPE_CHOICES, default="MP")
-    processors = models.TextField(blank=True)
-    proc_ctxt = models.TextField(blank=True)
-    mandatory = models.BooleanField(default=True)
+    x_path = models.TextField(blank=True, help_text='XPath or JSONPath expression, leave blank on "static" processor use.')
+    reg_exp = models.TextField(blank=True, help_text="Optional filtering by regular expression (e.g. 'Scrape only (.*) the text in between').")
+    help_text = "Corresponding Request Page Types created for this scraper."
+    request_page_type = models.CharField(max_length=3, choices=REQUEST_PAGE_TYPE_CHOICES, default="MP", help_text=help_text)
+    help_text = "Use the default processors (Scrapy TakeFirst, DDS string_strip) for convenience."
+    use_default_procs = models.BooleanField(default=True, help_text=help_text)
+    help_text = 'Optional comma-separated list of processors used (e.g. "pre_url, post_string").'
+    processors = models.TextField(blank=True, help_text=help_text)
+    help_text = "Comma-separated aditional context (depending on processor) (e.g. 'pre_url': 'http://append_before.org/', 'post_string': '?append_after=True')."
+    proc_ctxt = models.TextField(blank=True, help_text=help_text)
+    help_text = "Drop item if attribute could not be scraped."
+    mandatory = models.BooleanField(default=True, help_text=help_text)
     
     def __str__(self):
         return '{s} > {soa} Attribute ({rpt})'.format(
