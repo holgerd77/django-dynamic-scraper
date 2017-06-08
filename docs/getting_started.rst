@@ -367,10 +367,10 @@ for you but you have to do it manually in your own item pipeline::
                   item.save()
                   spider.action_successful = True
                   dds_id_str = str(item._dds_item_page) + '-' + str(item._dds_item_id)
-                  spider.log("{cs}Item {id} saved to Django DB.{ce}".format(
+                  spider.struct_log("{cs}Item {id} saved to Django DB.{ce}".format(
                       id=dds_id_str,
                       cs=spider.bcolors['OK'],
-                      ce=spider.bcolors['ENDC']), logging.INFO)
+                      ce=spider.bcolors['ENDC']))
                   
               except IntegrityError as e:
                   spider.log(str(e), logging.ERROR)

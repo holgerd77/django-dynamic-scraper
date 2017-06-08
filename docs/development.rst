@@ -92,8 +92,14 @@ Release Notes
 =============
 **Changes in version 0.12.3-beta** (NOT YET RELEASED!)
 
-* Fixing a bug with settings invocation causing log level setting on CL (with ``-L`` or ``--loglevel``)
-  not working properly
+* Fixing a bug causing log level setting on CL (with ``-L`` or ``--loglevel``)
+  not setting the correct log levels for different loggers
+* Using log level ``WARNING`` for a condensed output format for many-items/pages scraper runs
+  by adding structural information ("Starting to crawl item x.", "Item x saved.") to the log output
+* New spider method ``struct_log(msg)`` used for logging structural information like above,
+  if you want to include the "Item saved" log output in the ``WARNING`` log level output adopt your
+  custom ``pipelines.py`` file according to the one in the example project (see: :ref:`adding_pipeline_class`)
+
 
 **Changes in version 0.12.2-beta** (2017-06-07)
 

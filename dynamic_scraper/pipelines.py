@@ -71,25 +71,34 @@ class ValidationPipeline(object):
         
         dds_id = str(item._dds_item_page) + '-' + str(item._dds_item_id)
         if spider.conf['CONSOLE_LOG_LEVEL'] != 'DEBUG':
-            logging.getLogger('scrapy.core.scraper').addFilter(NoParsingFilter)
+            logging.getLogger('scrapy.core.scraper').addFilter(NoParsingFilter())
         
         #Process processor placeholders
         for key, value in list(item.items()):
             standard_elems = spider.scraper.get_standard_elems()
             for scraper_elem in standard_elems:
                 name = scraper_elem.scraped_obj_attr.name
+                placeholder = '{' + name + '}'
                 value = smart_text(value)
                 if not scraper_elem.scraped_obj_attr.save_to_db:
                     if value and name in spider.non_db_results[id(item)] and \
                        spider.non_db_results[id(item)][name] != None and \
-                       '{' + name + '}' in value:
-                        value = value.replace('{' + name + '}', str(spider.non_db_results[id(item)][name]))
+                       placeholder in value:
+                        msg = "Applying placeholder {p} on {k}...".format(p=placeholder, k=key)
+                        spider.log(msg, logging.DEBUG)
+                        spider.log("Value before: " + value, logging.DEBUG)
+                        value = value.replace(placeholder, str(spider.non_db_results[id(item)][name]))
+                        spider.log("Value after: " + value, logging.DEBUG)
                         item[key] = value
                 else:
                     if value and name in item and \
                        item[name] != None and \
-                       '{' + name + '}' in value:
-                        value = value.replace('{' + name + '}', str(item[name]))
+                       placeholder in value:
+                        msg = "Applying placeholder {p} on {k}...".format(p=placeholder, k=key)
+                        spider.log(msg, logging.DEBUG)
+                        spider.log("Value before: " + value, logging.DEBUG)
+                        value = value.replace(placeholder, str(item[name]))
+                        spider.log("Value after: " + value, logging.DEBUG)
                         item[key] = value
         
         idf_elems = spider.scraper.get_id_field_elems()
@@ -143,12 +152,12 @@ class ValidationPipeline(object):
                     spider.action_successful = True
                     msg = "{cs}Item {id} already in DB, attributes updated: {attr_str}{ce}".format(
                         id=dds_id, attr_str=updated_attribute_list, cs=spider.bcolors["OK"], ce=spider.bcolors["ENDC"])
-                    spider.dds_logger.warning(msg)
+                    spider.struct_log(msg)
                     raise DropItem()
                 else:
                     msg = "{cs}Double item {id}, not saved.{ce}".format(
                         id=dds_id, cs=spider.bcolors["INFO"], ce=spider.bcolors["ENDC"])
-                    spider.dds_logger.error(msg)
+                    spider.dds_logger.warning(msg)
                     raise DropItem()
             
             spider.items_save_count += 1

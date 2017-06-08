@@ -12,17 +12,16 @@ from scrapy.exceptions import CloseSpider, UsageError
 import django
 django.setup()
 
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
+from dynamic_scraper.models import Log, LogMarker
+
 
 class NoParsingFilter(logging.Filter):
     def filter(self, record=True):
         return False
 npf = NoParsingFilter()
 logging.getLogger('twisted').addFilter(npf)
-
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
-
-from dynamic_scraper.models import Log, LogMarker
 
 
 class DjangoBaseSpider(CrawlSpider):
@@ -88,9 +87,6 @@ class DjangoBaseSpider(CrawlSpider):
 
 
     def _set_config(self, log_msg, **kwargs):
-        from scrapy.utils.project import get_project_settings
-        settings = get_project_settings()
-        
         #run_type
         if 'run_type' in kwargs:
             self.conf['RUN_TYPE'] = kwargs['run_type']
@@ -250,6 +246,15 @@ class DjangoBaseSpider(CrawlSpider):
                     'endpoint': 'render.html',
                     'args': self.conf['SPLASH_ARGS'].copy()
                 }
+    
+    
+    def struct_log(self, msg):
+        level = self.conf['CONSOLE_LOG_LEVEL']
+        if level == 'INFO' or level == 'DEBUG':
+            self.log(msg, logging.INFO)
+        else:
+            self.log(msg, logging.WARNING)
+    
 
     def spider_closed(self):
         if self.conf['RUN_TYPE'] == 'TASK' and self.conf['DO_ACTION']:

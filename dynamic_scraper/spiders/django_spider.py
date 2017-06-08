@@ -324,9 +324,9 @@ class DjangoSpider(DjangoBaseSpider):
             rpt = self.scraper.get_main_page_rpt()
             self.dds_logger.info('')
             self.dds_logger.info(self.bcolors['BOLD'] + '======================================================================================' + self.bcolors['ENDC'])
-            self.log("{es}{es2}Scraping data from page {page}.{ec}{ec}".format(
-                page=index+1, es=self.bcolors['BOLD'], es2=self.bcolors['HEADER'], ec=self.bcolors['ENDC']), logging.INFO)
-            self.log("URL: {url}".format(url=url), logging.INFO)
+            self.struct_log("{es}{es2}Scraping data from page {page}.{ec}{ec}".format(
+                page=index+1, es=self.bcolors['BOLD'], es2=self.bcolors['HEADER'], ec=self.bcolors['ENDC']))
+            self.struct_log("URL: {url}".format(url=url))
             self.dds_logger.info(self.bcolors['BOLD'] + '======================================================================================' + self.bcolors['ENDC'])
             index += 1
             if rpt.request_type == 'R':
@@ -414,6 +414,11 @@ class DjangoSpider(DjangoBaseSpider):
                 loader = self.loader
 
             static_ctxt = loader.context.get('static', '')
+            
+            if len(procs) > 0:
+                self.log("Applying the following processors: {p_list}".format(
+                    p_list=str([p.__name__ if hasattr(p, '__name__') else type(p).__name__ for p in procs])), 
+                    logging.DEBUG)
             
             if processors.static in procs and static_ctxt:
                 loader.add_value(name, static_ctxt)
@@ -526,16 +531,25 @@ class DjangoSpider(DjangoBaseSpider):
         for scraper_elem in standard_elems:
             if scraper_elem.request_page_type == 'MP':
                 name = scraper_elem.scraped_obj_attr.name
+                placeholder = '{' + name + '}'
                 if not scraper_elem.scraped_obj_attr.save_to_db:
                     if name in self.tmp_non_db_results[item_num] and \
                        self.tmp_non_db_results[item_num][name] != None and \
-                       '{' + name + '}' in url:
-                        url = url.replace('{' + name + '}', self.tmp_non_db_results[item_num][name])
+                       placeholder in url:
+                        msg = "Applying detail page URL placeholder {p}...".format(p=placeholder)
+                        self.log(msg, logging.DEBUG)
+                        self.log("URL before: " + url, logging.DEBUG)
+                        url = url.replace(placeholder, self.tmp_non_db_results[item_num][name])
+                        self.log("URL after: " + url, logging.DEBUG)
                 else:
                     if name in item and \
                        item[name] != None and \
-                       '{' + name + '}' in url:
-                        url = url.replace('{' + name + '}', item[name])
+                       placeholder in url:
+                        msg = "Applying detail page URL placeholder {p}...".format(p=placeholder)
+                        self.log(msg, logging.DEBUG)
+                        self.log("URL before: " + url, logging.DEBUG)
+                        url = url.replace(placeholder, item[name])
+                        self.log("URL after: " + url, logging.DEBUG)
         return url
 
 
@@ -577,8 +591,8 @@ class DjangoSpider(DjangoBaseSpider):
             item_num = self.items_read_count + 1
             self.tmp_non_db_results[item_num] = {}
             self.dds_logger.info(self.bcolors['BOLD'] + '--------------------------------------------------------------------------------------' + self.bcolors['ENDC'])
-            self.log("{cs}Starting to crawl item {i} from page {p}.{ce}".format(
-                i=str(item_num), p=str(response.request.meta['page']), cs=self.bcolors["HEADER"], ce=self.bcolors["ENDC"]), logging.INFO)
+            self.struct_log("{cs}Starting to crawl item {i} from page {p}.{ce}".format(
+                i=str(item_num), p=str(response.request.meta['page']), cs=self.bcolors["HEADER"], ce=self.bcolors["ENDC"]))
             self.dds_logger.info(self.bcolors['BOLD'] + '--------------------------------------------------------------------------------------' + self.bcolors['ENDC'])
             item = self.parse_item(response, obj, 'MP', item_num)
             item._dds_item_page = response.request.meta['page']
