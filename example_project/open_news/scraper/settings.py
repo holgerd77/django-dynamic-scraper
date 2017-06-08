@@ -16,13 +16,12 @@ sys.path.insert(0, os.path.join(PROJECT_ROOT, "../../..")) #only for example_pro
 
 BOT_NAME = 'open_news'
 
-#Setting a default LOG_LEVEL don't play well together with -L (or --loglevel)
-#option on command line, better use only one or the other depending on your needs
-LOG_LEVEL = 'INFO'
 
 #Setting LOG_STDOUT to True will prevent Celery scheduling to work, 2017-06-06
 #If you know the cause or a fix please report on GitHub
 LOG_STDOUT = False
+LOG_LEVEL = 'INFO'
+
 
 SPIDER_MODULES = ['dynamic_scraper.spiders', 'open_news.scraper',]
 USER_AGENT = '{b}/{v}'.format(b=BOT_NAME, v='1.0')

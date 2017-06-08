@@ -37,6 +37,7 @@ class DjangoBaseSpider(CrawlSpider):
         "RUN_TYPE": 'SHELL',
         "SPLASH_ARGS": {},
         "IMAGES_STORE_FORMAT": 'FLAT',
+        "CUSTOM_PROCESSORS": [],
         "LOG_ENABLED": True,
         "LOG_LEVEL": 'ERROR',
         "LOG_LIMIT": 250,
@@ -89,6 +90,7 @@ class DjangoBaseSpider(CrawlSpider):
     def _set_config(self, log_msg, **kwargs):
         from scrapy.utils.project import get_project_settings
         settings = get_project_settings()
+        
         #run_type
         if 'run_type' in kwargs:
             self.conf['RUN_TYPE'] = kwargs['run_type']
@@ -107,18 +109,20 @@ class DjangoBaseSpider(CrawlSpider):
         else:
             self.log("Running in Test Mode (do_action not set).", logging.INFO)
         
-        self.conf['SPLASH_ARGS'] = settings.get('DSCRAPER_SPLASH_ARGS', self.conf['SPLASH_ARGS'])  
+        if self.settings['DSCRAPER_SPLASH_ARGS']:
+            self.conf['SPLASH_ARGS'] = self.settings['DSCRAPER_SPLASH_ARGS'] 
         if 'wait' not in self.conf['SPLASH_ARGS']:
             self.conf['SPLASH_ARGS']['wait'] = 0.5
-
-        self.conf['IMAGES_STORE_FORMAT'] = settings.get('DSCRAPER_IMAGES_STORE_FORMAT', self.conf['IMAGES_STORE_FORMAT'])
+        
+        if self.settings['DSCRAPER_IMAGES_STORE_FORMAT']:
+            self.conf['IMAGES_STORE_FORMAT'] = self.settings['DSCRAPER_IMAGES_STORE_FORMAT']
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             msg = "Use simplified FLAT images store format (save the original or one thumbnail image)"
             self.dds_logger.info(msg)
-            if settings.get('IMAGES_THUMBS') and len(settings.get('IMAGES_THUMBS')) > 0:
+            if self.settings['IMAGES_THUMBS'] and len(self.settings['IMAGES_THUMBS']) > 0:
                 msg =  "IMAGES_THUMBS setting found, saving images as thumbnail images "
                 msg += "with size {size} (first entry)".format(
-                    size=next(iter(settings.get('IMAGES_THUMBS').keys())))
+                    size=next(iter(self.settings['IMAGES_THUMBS'].keys())))
             else:
                 msg = "IMAGES_THUMBS setting not found, saving images with original size"
             self.dds_logger.info(msg)
@@ -129,13 +133,18 @@ class DjangoBaseSpider(CrawlSpider):
             msg = "Use THUMBS images store format (save only the thumbnail images)"
             self.dds_logger.info(msg)
             
-        self.conf['CUSTOM_PROCESSORS'] = settings.get('DSCRAPER_CUSTOM_PROCESSORS', [])
+        if self.settings['DSCRAPER_CUSTOM_PROCESSORS']:
+            self.conf['CUSTOM_PROCESSORS'] = self.settings['DSCRAPER_CUSTOM_PROCESSORS']
 
-        self.conf['LOG_ENABLED'] = settings.get('DSCRAPER_LOG_ENABLED', self.conf['LOG_ENABLED'])
-        self.conf['LOG_LEVEL'] = settings.get('DSCRAPER_LOG_LEVEL', self.conf['LOG_LEVEL'])
-        self.conf['CONSOLE_LOG_LEVEL'] = settings.get('LOG_LEVEL', self.conf['CONSOLE_LOG_LEVEL'])
+        if self.settings['DSCRAPER_LOG_ENABLED']:
+            self.conf['LOG_ENABLED'] = self.settings['DSCRAPER_LOG_ENABLED']
+        if self.settings['DSCRAPER_LOG_LEVEL']:
+            self.conf['LOG_LEVEL'] = self.settings['DSCRAPER_LOG_LEVEL']
+        if self.settings['LOG_LEVEL']:
+            self.conf['CONSOLE_LOG_LEVEL'] = self.settings['LOG_LEVEL']
         
-        self.conf['LOG_LIMIT'] = settings.get('DSCRAPER_LOG_LIMIT', self.conf['LOG_LIMIT'])
+        if self.settings['DSCRAPER_LOG_LIMIT']:
+            self.conf['LOG_LIMIT'] = self.settings['DSCRAPER_LOG_LIMIT']
         if log_msg == "":
             log_msg = "{}"
         self.log("Runtime config: " + log_msg, logging.INFO)
@@ -160,7 +169,7 @@ class DjangoBaseSpider(CrawlSpider):
         for var in self.mandatory_vars:
             attr = getattr(self, var, None)
             if not attr:
-                msg = "Missing attribute {a} (Command: {c}).".format(a=var, c=self.command)
+                msg = "Missing attribute {a}.".format(a=var)
                 self.dds_logger.error(msg)
                 raise CloseSpider(msg)
             

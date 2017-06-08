@@ -41,35 +41,44 @@ class DjangoSpider(DjangoBaseSpider):
         self.mandatory_vars.append('scraped_obj_item_class')
         
         super(DjangoSpider, self).__init__(self, *args, **kwargs)
-        self._set_config(**kwargs)
-        self._set_request_kwargs()
+    
+    
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        spider = cls(*args, **kwargs)
+        spider._set_crawler(crawler)
         
-        for cp_path in self.conf['CUSTOM_PROCESSORS']:
+        spider._set_config(**kwargs)
+        spider._set_request_kwargs()
+        
+        for cp_path in spider.conf['CUSTOM_PROCESSORS']:
             try:
                 custom_processors = importlib.import_module(cp_path)
             except ImportError:
                 msg = "Custom processors from {path} could not be imported, processors won't be applied".format(
                     path=cp_path,
                 )
-                self.log(msg, logging.WARNING)
+                spider.log(msg, logging.WARNING)
         
-        post_save.connect(self._post_save_tasks, sender=self.scraped_obj_class)
+        post_save.connect(spider._post_save_tasks, sender=spider.scraped_obj_class)
         
-        self._set_start_urls(self.scrape_url)
-        self.scheduler = Scheduler(self.scraper.scraped_obj_class.scraper_scheduler_conf)
-        self.from_page = 'MP'
-        self.loader = None
-        self.dummy_loader = None
-        self.items_read_count = 0
-        self.items_save_count = 0
+        spider._set_start_urls(spider.scrape_url)
+        spider.scheduler = Scheduler(spider.scraper.scraped_obj_class.scraper_scheduler_conf)
+        spider.from_page = 'MP'
+        spider.loader = None
+        spider.dummy_loader = None
+        spider.items_read_count = 0
+        spider.items_save_count = 0
         
         msg = 'Spider for {roc} "{ro}" ({pk}) initialized.'.format(
-            roc=self.ref_object.__class__.__name__,
-            ro=str(self.ref_object),
-            pk=str(self.ref_object.pk),
+            roc=spider.ref_object.__class__.__name__,
+            ro=str(spider.ref_object),
+            pk=str(spider.ref_object.pk),
         )
-        self.log(msg, logging.INFO)
-
+        spider.log(msg, logging.INFO)        
+        
+        return spider
+    
 
     def output_usage_help(self):
         out = (
@@ -82,8 +91,6 @@ class DjangoSpider(DjangoBaseSpider):
             '-------',
             '-a do_action=(yes|no)                   Save output to DB, default: no (Test Mode)',
             '-L LOG_LEVEL (scrapy option)            Setting the log level for both Scrapy and DDS',
-            '                                        (unpredicted behaviour if used with LOG_LEVEL',
-            '                                        setting in settings file, use one or the other)',
             '-a run_type=(TASK|SHELL)                Simulate task based scraper run, default: SHELL',
             '-a max_items_read=[Int]                 Limit number of items to read',
             '-a max_items_save=[Int]                 Limit number of items to save',

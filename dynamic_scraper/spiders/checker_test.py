@@ -17,32 +17,42 @@ class CheckerTest(DjangoBaseSpider):
     
     
     def __init__(self, *args, **kwargs):
-        self._set_ref_object(Scraper, **kwargs)
-        self.scraper = self.ref_object
-        self._set_config(**kwargs)
+        pass
+    
+    
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        spider = cls(*args, **kwargs)
+        spider._set_crawler(crawler)
         
-        if self.scraper.checker_set.count() == 0:
+        spider._set_ref_object(Scraper, **kwargs)
+        spider.scraper = spider.ref_object
+        spider._set_config(**kwargs)
+        
+        if spider.scraper.checker_set.count() == 0:
             msg = "No checkers defined for scraper!"
-            self.dds_logger.error(msg)
+            spider.dds_logger.error(msg)
             raise CloseSpider(msg)
         
-        for checker in self.scraper.checker_set.all():
+        for checker in spider.scraper.checker_set.all():
             if checker.checker_type == '4':
                 if not checker.checker_ref_url:
                     msg = "Please provide a reference url for your checker ({c}).".format(c=str(checker))
-                    self.dds_logger.error(msg)
+                    spider.dds_logger.error(msg)
                     raise CloseSpider(msg)
             
             if checker.checker_type == 'X':
                 if not checker.checker_x_path or not checker.checker_ref_url:
                     msg = "Please provide the necessary x_path fields for your checker ({c}).".format(c=str(checker))
-                    self.dds_logger.error(msg)
+                    spider.dds_logger.error(msg)
                     raise CloseSpider(msg)
 
-        self._set_request_kwargs()
-        self._set_meta_splash_args()
+        spider._set_request_kwargs()
+        spider._set_meta_splash_args()
         
-        dispatcher.connect(self.response_received, signal=signals.response_received)
+        dispatcher.connect(spider.response_received, signal=signals.response_received)
+        
+        return spider
     
     
     def output_usage_help(self):

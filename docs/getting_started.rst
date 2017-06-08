@@ -428,12 +428,7 @@ as following::
 
 * If you don't want your output saved to the Django DB but to a custom file you can use Scrapy`s build-in 
   output options ``--output=FILE`` and ``--output-format=FORMAT`` to scrape items into a file. Use this without 
-  setting the ``-a do_action=yes`` parameter!
-
-.. note:
-   Setting a default ``LOG_LEVEL`` in the ``settings`` don't play well together with ``-L`` (or ``--loglevel``)
-   option from Scrapy on the command line. If you encounter problems here, better use only one or the other way 
-   depending on your needs, in doubt always set the log level explicitly on the CL and omit the setting.
+  setting the ``-a do_action=yes`` parameter! 
 
 So, to invoke our Wikinews scraper, we have the following command::
 

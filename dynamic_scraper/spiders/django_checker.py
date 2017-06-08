@@ -24,16 +24,25 @@ class DjangoChecker(DjangoBaseSpider):
 
     def __init__(self, *args, **kwargs):
         super(DjangoChecker, self).__init__(self, *args, **kwargs)
-        self._set_config(**kwargs)
-        self._check_checker_config()
-        self._set_request_kwargs()
-        self._set_meta_splash_args()
+    
+    
+    @classmethod
+    def from_crawler(cls, crawler, *args, **kwargs):
+        spider = cls(*args, **kwargs)
+        spider._set_crawler(crawler)
         
-        self.scheduler = Scheduler(self.scraper.scraped_obj_class.checker_scheduler_conf)
-        dispatcher.connect(self.response_received, signal=signals.response_received)
+        spider._set_config(**kwargs)
+        spider._check_checker_config()
+        spider._set_request_kwargs()
+        spider._set_meta_splash_args()
         
-        msg = "Checker for " + self.ref_object.__class__.__name__ + " \"" + str(self.ref_object) + "\" (" + str(self.ref_object.pk) + ") initialized."
-        self.log(msg, logging.INFO)
+        spider.scheduler = Scheduler(spider.scraper.scraped_obj_class.checker_scheduler_conf)
+        dispatcher.connect(spider.response_received, signal=signals.response_received)
+        
+        msg = "Checker for " + spider.ref_object.__class__.__name__ + " \"" + str(spider.ref_object) + "\" (" + str(spider.ref_object.pk) + ") initialized."
+        spider.log(msg, logging.INFO)
+        
+        return spider
     
     
     def output_usage_help(self):
