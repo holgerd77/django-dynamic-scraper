@@ -175,7 +175,9 @@ class ScraperTest(TestCase):
             settings.set('IMAGES_THUMBS', self.dds_settings['IMAGES_THUMBS'], priority='cmdline')
         if 'DSCRAPER_IMAGES_STORE_FORMAT' in self.dds_settings:
             settings.set('DSCRAPER_IMAGES_STORE_FORMAT', self.dds_settings['DSCRAPER_IMAGES_STORE_FORMAT'], priority='cmdline')
-
+        if 'DSCRAPER_CUSTOM_PROCESSORS' in self.dds_settings:
+            settings.set('DSCRAPER_CUSTOM_PROCESSORS', self.dds_settings['DSCRAPER_CUSTOM_PROCESSORS'], priority='cmdline')
+        
         settings.set('COOKIES_DEBUG', True)
         settings.set('LOG_LEVEL', 'DEBUG')
         settings.set('LOG_ENABLED', False)

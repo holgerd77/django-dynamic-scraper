@@ -119,10 +119,10 @@ class DjangoBaseSpider(CrawlSpider):
         if self.conf["IMAGES_STORE_FORMAT"] == 'FLAT':
             msg = "Use simplified FLAT images store format (save the original or one thumbnail image)"
             self.dds_logger.info(msg)
-            if self.settings['IMAGES_THUMBS'] and len(self.settings['IMAGES_THUMBS']) > 0:
+            if self.settings['DSCRAPER_IMAGES_THUMBS'] and len(self.settings['DSCRAPER_IMAGES_THUMBS']) > 0:
                 msg =  "IMAGES_THUMBS setting found, saving images as thumbnail images "
                 msg += "with size {size} (first entry)".format(
-                    size=next(iter(self.settings['IMAGES_THUMBS'].keys())))
+                    size=next(iter(self.settings['DSCRAPER_IMAGES_THUMBS'].keys())))
             else:
                 msg = "IMAGES_THUMBS setting not found, saving images with original size"
             self.dds_logger.info(msg)
@@ -135,7 +135,7 @@ class DjangoBaseSpider(CrawlSpider):
             
         if self.settings['DSCRAPER_CUSTOM_PROCESSORS']:
             self.conf['CUSTOM_PROCESSORS'] = self.settings['DSCRAPER_CUSTOM_PROCESSORS']
-
+        
         if self.settings['DSCRAPER_LOG_ENABLED']:
             self.conf['LOG_ENABLED'] = self.settings['DSCRAPER_LOG_ENABLED']
         if self.settings['DSCRAPER_LOG_LEVEL']:
