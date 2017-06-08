@@ -89,7 +89,6 @@ class DjangoBaseSpider(CrawlSpider):
     def _set_config(self, log_msg, **kwargs):
         from scrapy.utils.project import get_project_settings
         settings = get_project_settings()
-
         #run_type
         if 'run_type' in kwargs:
             self.conf['RUN_TYPE'] = kwargs['run_type']

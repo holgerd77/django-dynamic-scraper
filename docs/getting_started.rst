@@ -430,6 +430,11 @@ as following::
   output options ``--output=FILE`` and ``--output-format=FORMAT`` to scrape items into a file. Use this without 
   setting the ``-a do_action=yes`` parameter!
 
+.. note:
+   Setting a default ``LOG_LEVEL`` in the ``settings`` don't play well together with ``-L`` (or ``--loglevel``)
+   option from Scrapy on the command line. If you encounter problems here, better use only one or the other way 
+   depending on your needs, in doubt always set the log level explicitly on the CL and omit the setting.
+
 So, to invoke our Wikinews scraper, we have the following command::
 
   scrapy crawl article_spider -a id=1 -a do_action=yes
