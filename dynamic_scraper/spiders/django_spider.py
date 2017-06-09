@@ -675,7 +675,7 @@ class DjangoSpider(DjangoBaseSpider):
                                     self.log(msg, logging.DEBUG)
                                     self.log("COOKIE [" + str(key) + "] before: " + str(value), logging.DEBUG)
                                     self.log("COOKIE [" + str(key) + "] after : " + str(new_value), logging.DEBUG)
-                        if rpt.request_type == 'F':
+                        if rpt.request_type == 'F' and rpt.page_type in self.dp_form_data:
                             for key, value in list(self.dp_form_data[rpt.page_type].items()):
                                 new_value, applied = self._replace_placeholders(value, item, item_num)
                                 self.dp_form_data[rpt.page_type][key] = new_value
@@ -723,7 +723,12 @@ class DjangoSpider(DjangoBaseSpider):
             self.log("COOKIES   : " + str(kwargs['cookies']), level)
             extra_info = True
         if rpt.request_type == 'F':
-            self.log("FORM DATA : " + str(self.dp_form_data[rpt.page_type]), level)
+            if rpt.page_type in self.dp_form_data:
+                self.log("FORM DATA : " + str(self.dp_form_data[rpt.page_type]), level)
+                extra_info = True
+            if rpt.page_type == 'MP':
+                self.log("FORM DATA : " + str(self.mp_form_data), level)
+                extra_info = True
         
         if not extra_info:
             self.log("No additional request information sent.", level)
