@@ -90,7 +90,7 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.12.3-beta** (NOT YET RELEASED!)
+**Changes in version 0.12.3-beta** (2017-06-09)
 
 * Allowing ``placeholders`` with item attributes scraped from the main page in ``HEADERS``, ``BODY``, ``COOKIES`` fields 
   and ``FORM DATA`` for detail page URL requests
