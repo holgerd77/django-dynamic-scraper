@@ -326,7 +326,8 @@ class DjangoSpider(DjangoBaseSpider):
             self.dds_logger.info(self.bcolors['BOLD'] + '======================================================================================' + self.bcolors['ENDC'])
             self.struct_log("{es}{es2}Scraping data from page {page}.{ec}{ec}".format(
                 page=index+1, es=self.bcolors['BOLD'], es2=self.bcolors['HEADER'], ec=self.bcolors['ENDC']))
-            self.struct_log("URL: {url}".format(url=url))
+            self.struct_log("URL     : {url}".format(url=url))
+            self._log_request_info(rpt, kwargs)
             self.dds_logger.info(self.bcolors['BOLD'] + '======================================================================================' + self.bcolors['ENDC'])
             index += 1
             if rpt.request_type == 'R':
@@ -415,10 +416,9 @@ class DjangoSpider(DjangoBaseSpider):
 
             static_ctxt = loader.context.get('static', '')
             
-            if len(procs) > 0:
-                self.log("Applying the following processors: {p_list}".format(
-                    p_list=str([p.__name__ if hasattr(p, '__name__') else type(p).__name__ for p in procs])), 
-                    logging.DEBUG)
+            self.log("Applying the following processors: {p_list}".format(
+                p_list=str([p.__name__ if hasattr(p, '__name__') else type(p).__name__ for p in procs])), 
+                logging.DEBUG)
             
             if processors.static in procs and static_ctxt:
                 loader.add_value(name, static_ctxt)
@@ -590,6 +590,7 @@ class DjangoSpider(DjangoBaseSpider):
         for obj in base_objects:
             item_num = self.items_read_count + 1
             self.tmp_non_db_results[item_num] = {}
+            self.dds_logger.info("")
             self.dds_logger.info(self.bcolors['BOLD'] + '--------------------------------------------------------------------------------------' + self.bcolors['ENDC'])
             self.struct_log("{cs}Starting to crawl item {i} from page {p}.{ce}".format(
                 i=str(item_num), p=str(response.request.meta['page']), cs=self.bcolors["HEADER"], ce=self.bcolors["ENDC"]))
@@ -634,6 +635,7 @@ class DjangoSpider(DjangoBaseSpider):
                             item[url_elem.scraped_obj_attr.name] = url
                         rpt = self.scraper.get_rpt_for_scraped_obj_attr(url_elem.scraped_obj_attr)
                         kwargs = self.dp_request_kwargs[rpt.page_type].copy()
+                        
                         if 'meta' not in kwargs:
                             kwargs['meta'] = {}
                         kwargs['meta']['item'] = item
@@ -646,12 +648,41 @@ class DjangoSpider(DjangoBaseSpider):
                             kwargs['meta']['last'] = False
                         self._set_meta_splash_args()
                         #logging.info(str(kwargs))
+                        self.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", logging.INFO)
+                        msg = "{cs}Calling {dp} URL for item {p}-{n}...{ce}".format(
+                            dp=rpt.page_type, p=str(response.request.meta['page']), n=str(item_num),
+                            cs=self.bcolors["HEADER"], ce=self.bcolors["ENDC"])
+                        self.log(msg, logging.INFO)
+                        msg = "URL     : {url}".format(url=url)
+                        self.log(msg, logging.INFO)
+                        self._log_request_info(rpt, kwargs)
+                        self.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", logging.INFO)
+                        
                         if rpt.request_type == 'R':
                             yield Request(url, callback=self.parse_item, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
                         else:
                             yield FormRequest(url, callback=self.parse_item, method=rpt.method, formdata=self.dp_form_data[rpt.page_type], dont_filter=rpt.dont_filter, **kwargs)
             else:
                 self.log("Item could not be read!", logging.ERROR)
+    
+    
+    def _log_request_info(self, rpt, kwargs):
+        level = logging.DEBUG
+        extra_info = False
+        if 'headers' in kwargs:
+            self.log("HEADERS   : " + str(kwargs['headers']), level)
+            extra_info = True
+        if 'body' in kwargs:
+            self.log("BODY      : " + str(kwargs['body']), level)
+            extra_info = True
+        if 'cookies' in kwargs:
+            self.log("COOKIES   : " + str(kwargs['cookies']), level)
+            extra_info = True
+        if rpt.request_type == 'F':
+            self.log("FORM DATA : " + str(self.dp_form_data[rpt.page_type]), level)
+        
+        if not extra_info:
+            self.log("No additional request information sent.", level)
     
     
     def _post_save_tasks(self, sender, instance, created, **kwargs):

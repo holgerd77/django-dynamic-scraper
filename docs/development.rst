@@ -99,6 +99,7 @@ Release Notes
 * New spider method ``struct_log(msg)`` used for logging structural information like above,
   if you want to include the "Item saved" log output in the ``WARNING`` log level output adopt your
   custom ``pipelines.py`` file according to the one in the example project (see: :ref:`adding_pipeline_class`)
+* Added ``DEBUG`` log level output for ``placeholder`` replacements
 
 
 **Changes in version 0.12.2-beta** (2017-06-07)
