@@ -100,6 +100,7 @@ Release Notes
   if you want to include the "Item saved" log output in the ``WARNING`` log level output adopt your
   custom ``pipelines.py`` file according to the one in the example project (see: :ref:`adding_pipeline_class`)
 * Added ``DEBUG`` log level output for ``placeholder`` replacements
+* Added additional logging output for calling detail page URLs and the additional request information (Headers, Body,...) sent
 
 
 **Changes in version 0.12.2-beta** (2017-06-07)

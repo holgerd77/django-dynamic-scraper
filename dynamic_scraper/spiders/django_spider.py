@@ -526,7 +526,10 @@ class DjangoSpider(DjangoBaseSpider):
         else:
             return item
     
-    def _replace_detail_page_url_placeholders(self, url, item, item_num):
+    def _replace_placeholders(self, text_str, item, item_num):
+        applied = []
+        if type(text_str) != str:
+            return text_str
         standard_elems = self.scraper.get_standard_elems()
         for scraper_elem in standard_elems:
             if scraper_elem.request_page_type == 'MP':
@@ -535,22 +538,16 @@ class DjangoSpider(DjangoBaseSpider):
                 if not scraper_elem.scraped_obj_attr.save_to_db:
                     if name in self.tmp_non_db_results[item_num] and \
                        self.tmp_non_db_results[item_num][name] != None and \
-                       placeholder in url:
-                        msg = "Applying detail page URL placeholder {p}...".format(p=placeholder)
-                        self.log(msg, logging.DEBUG)
-                        self.log("URL before: " + url, logging.DEBUG)
-                        url = url.replace(placeholder, self.tmp_non_db_results[item_num][name])
-                        self.log("URL after: " + url, logging.DEBUG)
+                       placeholder in text_str:
+                        text_str = text_str.replace(placeholder, self.tmp_non_db_results[item_num][name])
+                        applied.append(placeholder)
                 else:
                     if name in item and \
                        item[name] != None and \
-                       placeholder in url:
-                        msg = "Applying detail page URL placeholder {p}...".format(p=placeholder)
-                        self.log(msg, logging.DEBUG)
-                        self.log("URL before: " + url, logging.DEBUG)
-                        url = url.replace(placeholder, item[name])
-                        self.log("URL after: " + url, logging.DEBUG)
-        return url
+                       placeholder in text_str:
+                        text_str = text_str.replace(placeholder, item[name])
+                        applied.append(placeholder)
+        return text_str, applied
 
 
     def parse(self, response):
@@ -626,13 +623,19 @@ class DjangoSpider(DjangoBaseSpider):
                     url_elems = self.scraper.get_detail_page_url_elems()
                     for url_elem in url_elems:
                         if not url_elem.scraped_obj_attr.save_to_db:
-                            url = self.tmp_non_db_results[item_num][url_elem.scraped_obj_attr.name]
-                            url = self._replace_detail_page_url_placeholders(url, item, item_num)
+                            url_before = self.tmp_non_db_results[item_num][url_elem.scraped_obj_attr.name]
+                            url, applied = self._replace_placeholders(url_before, item, item_num)
                             self.tmp_non_db_results[item_num][url_elem.scraped_obj_attr.name] = url
                         else:
-                            url = item[url_elem.scraped_obj_attr.name]
-                            url = self._replace_detail_page_url_placeholders(url, item, item_num)
+                            url_before = item[url_elem.scraped_obj_attr.name]
+                            url, applied = self._replace_placeholders(url_before, item, item_num)
                             item[url_elem.scraped_obj_attr.name] = url
+                        if len(applied) > 0:
+                            msg = "Detail page URL placeholder(s) applied (item {p}-{n}): {a}".format(
+                                a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
+                            self.log(msg, logging.DEBUG)
+                            self.log("URL before: " + url_before, logging.DEBUG)
+                            self.log("URL after : " + url, logging.DEBUG)
                         rpt = self.scraper.get_rpt_for_scraped_obj_attr(url_elem.scraped_obj_attr)
                         kwargs = self.dp_request_kwargs[rpt.page_type].copy()
                         
@@ -642,6 +645,41 @@ class DjangoSpider(DjangoBaseSpider):
                         kwargs['meta']['from_page'] = rpt.page_type
                         kwargs['meta']['item_num'] = item_num
                         kwargs['meta']['page'] = response.request.meta['page']
+                        
+                        if 'headers' in kwargs:
+                            for key, value in list(kwargs['headers'].items()):
+                                new_value, applied = self._replace_placeholders(value, item, item_num)
+                                kwargs['headers'][key] = new_value
+                                if len(applied) > 0:
+                                    msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
+                                        a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
+                                    self.log(msg, logging.DEBUG)
+                                    self.log("HEADERS [" + str(key) + "] before: " + str(value), logging.DEBUG)
+                                    self.log("HEADERS [" + str(key) + "] after : " + str(new_value), logging.DEBUG)
+                        if 'body' in kwargs:
+                            body_before = kwargs['body']
+                            kwargs['body'], applied = self._replace_placeholders(kwargs['body'], item, item_num)
+                            if len(applied) > 0:
+                                msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
+                                    a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
+                                self.log(msg, logging.DEBUG)
+                                self.log("BODY before: " + body_before, logging.DEBUG)
+                                self.log("BODY after : " + kwargs['body'], logging.DEBUG)
+                        if 'cookies' in kwargs:
+                            for key, value in list(kwargs['cookies'].items()):
+                                new_value, applied = self._replace_placeholders(value, item, item_num)
+                                kwargs['cookies'][key] = new_value
+                                if len(applied) > 0:
+                                    msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
+                                        a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
+                                    self.log(msg, logging.DEBUG)
+                                    self.log("COOKIE [" + str(key) + "] before: " + str(value), logging.DEBUG)
+                                    self.log("COOKIE [" + str(key) + "] after : " + str(new_value), logging.DEBUG)
+                            
+                            #kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', str(self.pages[index])))
+                        #if form_data:
+                        #    form_data = json.loads(json.dumps(form_data).replace('{page}', str(self.pages[index])))
+                        
                         if url_elem == url_elems[len(url_elems)-1]:
                             kwargs['meta']['last'] = True
                         else:
