@@ -233,7 +233,7 @@ class RequestPageType(models.Model):
     body = models.TextField(blank=True, help_text="Optional HTTP message body provided as a unicode string, can use {main page attribute} and {page} placeholders.")
     cookies = models.TextField(blank=True, help_text="Optional cookies as JSON dict (use double quotes!), can use {main page attribute} and {page} placeholders.")
     meta = models.TextField(blank=True, help_text="Optional Scrapy meta attributes as JSON dict (use double quotes!), see Scrapy docs for reference.")
-    form_data = models.TextField(blank=True, help_text="Optional HTML form data as JSON dict (use double quotes!), only used with FormRequest request type, can use {page} placeholder of pagination.")
+    form_data = models.TextField(blank=True, help_text="Optional HTML form data as JSON dict (use double quotes!), only used with FormRequest request type, can use {main page attribute} and {page} placeholders.")
     dont_filter = models.BooleanField(default=False, help_text="Do not filter duplicate requests, useful for some scenarios with requests falsely marked as being duplicate (e.g. uniform URL + pagination by HTTP header).")
     comments = models.TextField(blank=True)
 
