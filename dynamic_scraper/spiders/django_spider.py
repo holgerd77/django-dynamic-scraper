@@ -528,8 +528,8 @@ class DjangoSpider(DjangoBaseSpider):
     
     def _replace_placeholders(self, text_str, item, item_num):
         applied = []
-        if type(text_str) != str:
-            return text_str
+        if type(text_str).__name__ != 'str' and type(text_str).__name__ != 'unicode':
+            return text_str, applied
         standard_elems = self.scraper.get_standard_elems()
         for scraper_elem in standard_elems:
             if scraper_elem.request_page_type == 'MP':
