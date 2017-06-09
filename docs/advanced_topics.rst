@@ -424,12 +424,23 @@ HTTP Headers
 
 For setting/changing specific ``HTTP header`` fields like the referer URL use the ``headers`` text field in the request options.
 
+You can use attribute placeholders (e.g. "{title}") to inject results of item attributes scraped from the main page
+(no escaping of curly brackets inside JSON value strings).
+
+You can also use the ``{page}`` placeholder. This placeholder is replaced for consecutive pages according
+to your pagination parameters (see: :ref:`pagination`).
+
 HTTP Body
 ---------
 .. image:: images/screenshot_django-admin_scraper_request_body.png
 
 Setting/changing the ``HTTP body``. This can be useful for some special-case scenarios, for example if you want
 to send a  ``POST`` request with content type for the request altered and sending ``POST`` parameters as a ``JSON`` dict.
+
+You can use attribute placeholders (e.g. "{title}") to inject results of item attributes scraped from the main page.
+
+You can also use the ``{page}`` placeholder. This placeholder is replaced for consecutive pages according
+to your pagination parameters (see: :ref:`pagination`).
 
 .. note::
    Don't be fooled, especially by the example provided: data for the body attribute is NOT provided as ``JSON`` but
@@ -443,6 +454,9 @@ Request Cookies
 Sometime the output of a website you want to scrape might depend on the values of some cookies sent to the server.
 For this occasion you can use the ``Cookies`` form in the request options tab, e.g. for setting the language of a
 website to ``english``.
+
+You can use attribute placeholders (e.g. "{title}") to inject results of item attributes scraped from the main page
+(no escaping of curly brackets inside JSON value strings).
 
 You can also use the ``{page}`` placeholder. This placeholder is replaced for consecutive pages according
 to your pagination parameters (see: :ref:`pagination`).
@@ -465,6 +479,9 @@ Form Data
 If you want to scrape data provided on a website via a web form, data is often returned via ``POST`` request after
 sending various ``POST request parameters`` for narrowing the results. For this scenario use the ``FormRequest`` request
 type and ``POST`` as method in the scraper admin and provide the adequate form data as a JSON dictionary in the request options.
+
+You can use attribute placeholders (e.g. "{title}") to inject results of item attributes scraped from the main page
+(no escaping of curly brackets inside JSON value strings).
 
 You can also use the ``{page}`` placeholder. This placeholder is replaced for consecutive pages according
 to your pagination parameters (see: :ref:`pagination`).

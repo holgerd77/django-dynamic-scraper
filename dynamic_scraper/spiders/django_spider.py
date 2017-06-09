@@ -675,10 +675,16 @@ class DjangoSpider(DjangoBaseSpider):
                                     self.log(msg, logging.DEBUG)
                                     self.log("COOKIE [" + str(key) + "] before: " + str(value), logging.DEBUG)
                                     self.log("COOKIE [" + str(key) + "] after : " + str(new_value), logging.DEBUG)
-                            
-                            #kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', str(self.pages[index])))
-                        #if form_data:
-                        #    form_data = json.loads(json.dumps(form_data).replace('{page}', str(self.pages[index])))
+                        if rpt.request_type == 'F':
+                            for key, value in list(self.dp_form_data[rpt.page_type].items()):
+                                new_value, applied = self._replace_placeholders(value, item, item_num)
+                                self.dp_form_data[rpt.page_type][key] = new_value
+                                if len(applied) > 0:
+                                    msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
+                                        a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
+                                    self.log(msg, logging.DEBUG)
+                                    self.log("FORM DATA [" + str(key) + "] before: " + str(value), logging.DEBUG)
+                                    self.log("FORM DATA [" + str(key) + "] after : " + str(new_value), logging.DEBUG)
                         
                         if url_elem == url_elems[len(url_elems)-1]:
                             kwargs['meta']['last'] = True

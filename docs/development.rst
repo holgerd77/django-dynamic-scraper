@@ -92,6 +92,8 @@ Release Notes
 =============
 **Changes in version 0.12.3-beta** (NOT YET RELEASED!)
 
+* Allowing ``placeholders`` with item attributes scraped from the main page in ``HEADERS``, ``BODY``, ``COOKIES`` fields 
+  and ``FORM DATA`` for detail page URL requests
 * Fixing a bug causing log level setting on CL (with ``-L`` or ``--loglevel``)
   not setting the correct log levels for different loggers
 * Using log level ``WARNING`` for a condensed output format for many-items/pages scraper runs
