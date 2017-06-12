@@ -76,6 +76,8 @@
         "name": "Wikinews Scraper",
         "scraped_obj_class": 1,
         "status": "A",
+        "work_status": "N",
+        "owner": "",
         "max_items_read": null,
         "max_items_save": null,
         "pagination_type": "N",
@@ -87,7 +89,7 @@
         "last_checker_delete_alert_period": "1d",
         "next_last_checker_delete_alert": "2017-04-21T05:59:48",
         "comments": "",
-        "last_scraper_save": "2017-03-28T03:24:04.945",
+        "last_scraper_save": "2017-06-12T06:06:46.891",
         "last_checker_delete": "2017-03-28T04:00:58.232"
     }
 },
@@ -98,6 +100,8 @@
         "name": "US Department of Justice - Press Release Scraper",
         "scraped_obj_class": 1,
         "status": "A",
+        "work_status": "N",
+        "owner": "",
         "max_items_read": 10,
         "max_items_save": null,
         "pagination_type": "R",
@@ -215,6 +219,7 @@
         "x_path": "//td[@class=\"l_box\"]",
         "reg_exp": "",
         "request_page_type": "MP",
+        "use_default_procs": true,
         "processors": "",
         "proc_ctxt": "",
         "mandatory": true
@@ -229,6 +234,7 @@
         "x_path": "//h1[@id=\"firstHeading\"]/text()",
         "reg_exp": "",
         "request_page_type": "DP1",
+        "use_default_procs": true,
         "processors": "",
         "proc_ctxt": "",
         "mandatory": true
@@ -243,6 +249,7 @@
         "x_path": "p/span[@class=\"l_summary\"]/text()",
         "reg_exp": "",
         "request_page_type": "MP",
+        "use_default_procs": true,
         "processors": "",
         "proc_ctxt": "",
         "mandatory": true
@@ -257,6 +264,7 @@
         "x_path": "span[@class=\"l_title\"]/a/@href",
         "reg_exp": "",
         "request_page_type": "MP",
+        "use_default_procs": true,
         "processors": "pre_url",
         "proc_ctxt": "'pre_url': 'http://en.wikinews.org'",
         "mandatory": true
@@ -271,6 +279,7 @@
         "x_path": "div[@class=\"l_image\"]/a/img/@src",
         "reg_exp": "",
         "request_page_type": "MP",
+        "use_default_procs": true,
         "processors": "pre_url",
         "proc_ctxt": "'pre_url': 'https:'",
         "mandatory": true
@@ -285,6 +294,7 @@
         "x_path": "results",
         "reg_exp": "",
         "request_page_type": "MP",
+        "use_default_procs": true,
         "processors": "",
         "proc_ctxt": "",
         "mandatory": true
@@ -299,6 +309,7 @@
         "x_path": "body",
         "reg_exp": "",
         "request_page_type": "MP",
+        "use_default_procs": true,
         "processors": "",
         "proc_ctxt": "",
         "mandatory": true
@@ -313,6 +324,7 @@
         "x_path": "title",
         "reg_exp": "",
         "request_page_type": "MP",
+        "use_default_procs": true,
         "processors": "",
         "proc_ctxt": "",
         "mandatory": true
@@ -327,6 +339,7 @@
         "x_path": "url",
         "reg_exp": "",
         "request_page_type": "MP",
+        "use_default_procs": true,
         "processors": "",
         "proc_ctxt": "",
         "mandatory": true
