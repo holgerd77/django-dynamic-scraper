@@ -99,8 +99,12 @@ class Scraper(models.Model):
     )
     name = models.CharField(max_length=200)
     scraped_obj_class = models.ForeignKey(ScrapedObjClass)
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
-    work_status = models.CharField(max_length=2, choices=WORK_STATUS_CHOICES, default='N')
+    help_text = "Runtime status of the scraper, used by scheduling mechanism."
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P', help_text=help_text)
+    help_text = "Internal work/progress status of the scraper."
+    work_status = models.CharField(max_length=2, choices=WORK_STATUS_CHOICES, default='N', help_text=help_text)
+    help_text = "Optional owner when working on scrapers with various people"
+    owner = models.CharField(max_length=12, blank=True, help_text=help_text)
     max_items_read = models.IntegerField(blank=True, null=True, help_text="Max number of items to be read (empty: unlimited).")
     max_items_save = models.IntegerField(blank=True, null=True, help_text="Max number of items to be saved (empty: unlimited).")
     pagination_type = models.CharField(max_length=1, choices=PAGINATION_TYPE, default='N')

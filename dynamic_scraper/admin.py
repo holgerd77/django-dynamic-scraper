@@ -131,10 +131,10 @@ class ScraperAdmin(admin.ModelAdmin):
     class Media(object):
         js = ("js/admin_custom.js",)
     list_display = ('id', 'name', 'scraped_obj_class', 'status', 'work_status', \
-        'checkers', 'last_scraper_save_', 'last_checker_delete_',)
+        'owner', 'last_scraper_save_', 'last_checker_delete_',)
     list_display_links = ('name',)
     list_editable = ('status', 'work_status',)
-    list_filter = ('scraped_obj_class', 'status', 'work_status',)
+    list_filter = ('scraped_obj_class', 'status', 'work_status', 'owner',)
     search_fields = ['name']
     inlines = [
         RequestPageTypeInline,
@@ -143,7 +143,7 @@ class ScraperAdmin(admin.ModelAdmin):
     ]
     fieldsets = (
         (None, {
-            'fields': ('name', 'scraped_obj_class', 'status', \
+            'fields': ('name', 'scraped_obj_class', 'status', 'work_status', 'owner', \
                 'max_items_read', 'max_items_save')
         }),
         (None, {

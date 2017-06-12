@@ -90,6 +90,30 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.12.4-beta** (2017-06-12)
+
+Added possibility to select an internal ``work_status`` for a scraper to ease getting an
+overview where work needs to be done, following values are possible::
+
+  WORK_STATUS_CHOICES = (
+        ('R2', 'REVISION NEEDED (MAJOR)'),
+        ('R1', 'REVISION NEEDED (MINOR)'),
+        ('BR', 'BROKEN'),
+        ('W', 'WORKING'),
+        ('RC', 'RELEASE CANDIDATE'),
+        ('BE', 'BETA'),
+        ('A', 'ALPHA'),
+        ('D', 'DRAFT'),
+        ('S', 'SUSPENDED'),
+        ('U', 'UNKNOWN'),
+        ('N', 'NOT SET'),
+    )
+
+* Added ``owner`` attribute to scraper to assign scrapers to different owners
+  when working on scrapers with various people (implemented as a simple/short
+  plain text field to not endanger ex-/importability of scrapers)
+* New migrations ``0020``, ``0021`` please run ``python manage.py migrate`` command
+
 **Changes in version 0.12.3-beta** (2017-06-09)
 
 * Allowing ``placeholders`` with item attributes scraped from the main page in ``HEADERS``, ``BODY``, ``COOKIES`` fields 
