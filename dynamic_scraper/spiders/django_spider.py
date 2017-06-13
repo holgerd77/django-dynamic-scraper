@@ -89,16 +89,16 @@ class DjangoSpider(DjangoBaseSpider):
             '',
             'Options',
             '-------',
-            '-a do_action=(yes|no)                   Save output to DB, default: no (Test Mode)',
-            '-L LOG_LEVEL (scrapy option)            Setting the log level for both Scrapy and DDS',
-            '-a run_type=(TASK|SHELL)                Simulate task based scraper run, default: SHELL',
-            '-a max_items_read=[Int]                 Limit number of items to read',
-            '-a max_items_save=[Int]                 Limit number of items to save',
-            '-a max_pages_read=[Int]                 Limit number of pages to read',
-            '-a start_page=[PAGE]                    Start at page PAGE, e.g. 5, F',
-            '-a end_page=[PAGE]                      End scraping at page PAGE, e.g. 10, M',
-            '-a output_num_mp_response_bodies=[Int]  Output response body content of MP for debugging',
-            '-a output_num_dp_response_bodies=[Int]  Output response body content of DP for debugging',
+            '-a do_action=(yes|no)                       Save output to DB, default: no (Test Mode)',
+            '-L LOG_LEVEL (scrapy option)                Setting the log level for both Scrapy and DDS',
+            '-a run_type|rt=(TASK|SHELL)                 Simulate task based scraper run, default: SHELL',
+            '-a max_items_read|mir=[Int]                 Limit number of items to read',
+            '-a max_items_save|mis=[Int]                 Limit number of items to save',
+            '-a max_pages_read|mpr=[Int]                 Limit number of pages to read',
+            '-a start_page|sp=[PAGE]                     Start at page PAGE, e.g. 5, F',
+            '-a end_page|ep=[PAGE]                       End scraping at page PAGE, e.g. 10, M',
+            '-a output_num_mp_response_bodies|omp=[Int]  Output response body content of MP for debugging',
+            '-a output_num_dp_response_bodies|odb=[Int]  Output response body content of DP for debugging',
             '',
         )
         for out_str in out:
@@ -127,7 +127,9 @@ class DjangoSpider(DjangoBaseSpider):
 
     def _set_config(self, **kwargs):
         log_msg = ""
-        #max_items_read 
+        #max_items_read|mir
+        if 'mir' in kwargs:
+            kwargs['max_items_read'] = kwargs['mir']
         if 'max_items_read' in kwargs:
             try:
                 self.conf['MAX_ITEMS_READ'] = int(kwargs['max_items_read'])
@@ -140,7 +142,9 @@ class DjangoSpider(DjangoBaseSpider):
             log_msg += "max_items_read " + str(self.conf['MAX_ITEMS_READ'])
         else:
             self.conf['MAX_ITEMS_READ'] = self.scraper.max_items_read
-        #max_items_save 
+        #max_items_save|mis
+        if 'mis' in kwargs:
+            kwargs['max_items_save'] = kwargs['mis']
         if 'max_items_save' in kwargs:
             try:
                 self.conf['MAX_ITEMS_SAVE'] = int(kwargs['max_items_save'])
@@ -153,7 +157,9 @@ class DjangoSpider(DjangoBaseSpider):
             log_msg += "max_items_save " + str(self.conf['MAX_ITEMS_SAVE'])
         else:
             self.conf['MAX_ITEMS_SAVE'] = self.scraper.max_items_save
-        #max_pages_read 
+        #max_pages_read|mpr
+        if 'mpr' in kwargs:
+            kwargs['max_pages_read'] = kwargs['mpr'] 
         if 'max_pages_read' in kwargs:
             try:
                 self.conf['MAX_PAGES_READ'] = int(kwargs['max_pages_read'])
@@ -166,17 +172,23 @@ class DjangoSpider(DjangoBaseSpider):
             log_msg += "max_pages_read " + str(self.conf['MAX_PAGES_READ'])
         else:
             self.conf['MAX_PAGES_READ'] = None
-        #start_page
+        #start_page|sp
+        if 'sp' in kwargs:
+            kwargs['start_page'] = kwargs['sp']
         if 'start_page' in kwargs:
             self.conf['START_PAGE'] = kwargs['start_page']
         else:
             self.conf['START_PAGE'] = None
-        #end_page
+        #end_page|ep
+        if 'ep' in kwargs:
+            kwargs['end_page'] = kwargs['ep']
         if 'end_page' in kwargs:
             self.conf['END_PAGE'] = kwargs['end_page']
         else:
             self.conf['END_PAGE'] = None
-        #output_num_mp_response_bodies
+        #output_num_mp_response_bodies|omp
+        if 'omp' in kwargs:
+            kwargs['output_num_mp_response_bodies'] = kwargs['omp']
         if 'output_num_mp_response_bodies' in kwargs:
             try:
                 self.conf['OUTPUT_NUM_MP_RESPONSE_BODIES'] = int(kwargs['output_num_mp_response_bodies'])
@@ -189,7 +201,9 @@ class DjangoSpider(DjangoBaseSpider):
             log_msg += "output_num_mp_response_bodies " + str(self.conf['OUTPUT_NUM_MP_RESPONSE_BODIES'])
         else:
             self.conf['OUTPUT_NUM_MP_RESPONSE_BODIES'] = 0
-        #output_num_dp_response_bodies
+        #output_num_dp_response_bodies|odp
+        if 'odp' in kwargs:
+            kwargs['output_num_dp_response_bodies'] = kwargs['odp']
         if 'output_num_dp_response_bodies' in kwargs:
             try:
                 self.conf['OUTPUT_NUM_DP_RESPONSE_BODIES'] = int(kwargs['output_num_dp_response_bodies'])
