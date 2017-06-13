@@ -582,7 +582,7 @@ class DjangoSpider(DjangoBaseSpider):
             try:
                 json_resp = json.loads(response.body_as_unicode())
             except JSONDecodeError:
-                msg = "JSON response for MP could not be read!"
+                msg = "JSON response for MP could not be parsed!"
                 self.log(msg, logging.ERROR)
             if json_resp:
                 try:

@@ -143,7 +143,11 @@ class ScraperAdmin(admin.ModelAdmin):
     ]
     fieldsets = (
         (None, {
-            'fields': ('name', 'scraped_obj_class', 'status', 'work_status', 'owner', \
+            'fields': ('name', 'status', 'work_status',)
+        }),
+        ('General settings', {
+            'classes': ('collapse',),
+            'fields': ( 'scraped_obj_class', 'owner', \
                 'max_items_read', 'max_items_save')
         }),
         (None, {
