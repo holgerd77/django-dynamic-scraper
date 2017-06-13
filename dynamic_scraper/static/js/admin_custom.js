@@ -1,7 +1,7 @@
 var $ = django.jQuery
 
 // From: https://djangosnippets.org/snippets/1492/, 2015-09-16
-$(document).ready(function() {
+$(window).load(function() {
 	$('div.inline-group div.inline-related:not(.tabular)').each(function() {
         fs = $(this).find('fieldset')
         h3 = $(this).find('h3:first')

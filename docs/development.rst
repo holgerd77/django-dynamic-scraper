@@ -97,6 +97,7 @@ Added short forms for command line options:
 .. image:: images/screenshot_dds_command_line_help.png
 
 * Output DDS configuration dict on ``DEBUG`` log level
+* Added a ``general settings`` tab for the ``scraper`` form in the ``Django admin``
 
 **Changes in version 0.12.4-beta** (2017-06-12)
 
