@@ -98,6 +98,7 @@ Added short forms for command line options:
 
 * Output DDS configuration dict on ``DEBUG`` log level
 * Added a ``general settings`` tab for the ``scraper`` form in the ``Django admin``
+* Fixed scraper elem ``textarea`` resize for the ``Django admin`` ``scraper`` form
 
 **Changes in version 0.12.4-beta** (2017-06-12)
 

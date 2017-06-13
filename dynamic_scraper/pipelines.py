@@ -129,7 +129,7 @@ class ValidationPipeline(object):
             raise DropItem()
         
         if not spider.conf['DO_ACTION']:
-            spider.log("{cs}Item {id} not saved to Django DB (Test Mode).{ce}".format(
+            spider.log("{cs}Item {id} not saved to Django DB (Test Mode or File Output).{ce}".format(
                 id=dds_id, cs=spider.bcolors["INFO"], ce=spider.bcolors["ENDC"]), logging.WARNING)
         else:
             if is_double:

@@ -105,7 +105,7 @@ class DjangoBaseSpider(CrawlSpider):
                 log_msg += ", "
             log_msg += "do_action " + str(self.conf['DO_ACTION'])
         else:
-            self.log("Running in Test Mode (do_action not set).", logging.INFO)
+            self.log("Attribute do_action not set, not saving to Django DB.", logging.INFO)
         
         if self.settings['DSCRAPER_SPLASH_ARGS']:
             self.conf['SPLASH_ARGS'] = self.settings['DSCRAPER_SPLASH_ARGS'] 

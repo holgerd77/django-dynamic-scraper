@@ -69,6 +69,7 @@ class Scraper(models.Model):
     WORK_STATUS_CHOICES = (
         ('R2', 'REVISION NEEDED (MAJOR)'),
         ('R1', 'REVISION NEEDED (MINOR)'),
+        ('UR', 'UNRESOLVED'),
         ('BR', 'BROKEN'),
         ('W', 'WORKING'),
         ('RC', 'RELEASE CANDIDATE'),

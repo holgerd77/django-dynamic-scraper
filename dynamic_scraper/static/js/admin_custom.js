@@ -31,7 +31,7 @@ $(window).load(function() {
 				// Limit height of common textarea_fields
 				var c_ta_fields = 'div.field-pagination_page_replace textarea, ';
 				c_ta_fields += 'div.dynamic-requestpagetype_set textarea';
-				$(c_ta_fields).css('height', '54px');
+				$(c_ta_fields).css('height', '128px');
 				
 				// Limit height of ScraperElem textarea fields
 				var ta_fields = 'tr.dynamic-scraperelem_set textarea, ';

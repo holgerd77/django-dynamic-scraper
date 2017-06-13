@@ -90,7 +90,7 @@ class DjangoSpider(DjangoBaseSpider):
             '',
             'Options',
             '-------',
-            '-a do_action=(yes|no)                       Save output to DB, default: no (Test Mode)',
+            '-a do_action=(yes|no)                       Save output to DB, default: no (Test Mode or File Output)',
             '-L LOG_LEVEL (scrapy option)                Setting the log level for both Scrapy and DDS',
             '-a run_type|rt=(TASK|SHELL)                 Simulate task based scraper run, default: SHELL',
             '-a max_items_read|mir=[Int]                 Limit number of items to read',
