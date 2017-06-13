@@ -87,7 +87,9 @@ class DjangoBaseSpider(CrawlSpider):
 
 
     def _set_config(self, log_msg, **kwargs):
-        #run_type
+        #run_type|rt
+        if 'rt' in kwargs:
+            kwargs['run_type'] = kwargs['rt']
         if 'run_type' in kwargs:
             self.conf['RUN_TYPE'] = kwargs['run_type']
             if len(log_msg) > 0:
@@ -149,6 +151,8 @@ class DjangoBaseSpider(CrawlSpider):
             logging.getLogger('twisted').removeFilter(npf)
         if self.conf['CONSOLE_LOG_LEVEL'] != 'DEBUG':
             logging.getLogger('scrapy.middleware').addFilter(npf)
+        
+        self.log("Configuration set: " + str(self.conf), logging.DEBUG)
         
         dispatcher.connect(self.spider_closed, signal=signals.spider_closed)
 
