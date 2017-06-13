@@ -6,6 +6,7 @@ from builtins import map
 from builtins import range
 import ast, datetime, importlib, json, logging, scrapy
 
+from json.decoder import JSONDecodeError
 from jsonpath_rw import jsonpath, parse
 from jsonpath_rw.lexer import JsonPathLexerError
 
@@ -566,6 +567,7 @@ class DjangoSpider(DjangoBaseSpider):
 
     def parse(self, response):
         xs = Selector(response)
+        base_objects = []
         base_elem = self.scraper.get_base_elem()
         
         if self.current_output_num_mp_response_bodies < self.conf['OUTPUT_NUM_MP_RESPONSE_BODIES']:
@@ -576,16 +578,22 @@ class DjangoSpider(DjangoBaseSpider):
                 num=self.current_output_num_mp_response_bodies), logging.INFO)
         
         if self.scraper.get_main_page_rpt().content_type == 'J':
-            json_resp = json.loads(response.body_as_unicode())
+            json_resp = None
             try:
-                jsonpath_expr = parse(base_elem.x_path)
-            except JsonPathLexerError:
-                msg = "JsonPath for base elem could not be processed!"
-                self.dds_logger.error(msg)
-                raise CloseSpider()
-            base_objects = [match.value for match in jsonpath_expr.find(json_resp)]
-            if len(base_objects) > 0:
-                base_objects = base_objects[0]
+                json_resp = json.loads(response.body_as_unicode())
+            except JSONDecodeError:
+                msg = "JSON response for MP could not be read!"
+                self.log(msg, logging.ERROR)
+            if json_resp:
+                try:
+                    jsonpath_expr = parse(base_elem.x_path)
+                except JsonPathLexerError:
+                    msg = "JsonPath for base elem could not be processed!"
+                    self.dds_logger.error(msg)
+                    raise CloseSpider()
+                base_objects = [match.value for match in jsonpath_expr.find(json_resp)]
+                if len(base_objects) > 0:
+                    base_objects = base_objects[0]
         else:
             base_objects = response.xpath(base_elem.x_path)
 
