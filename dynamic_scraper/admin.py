@@ -155,7 +155,8 @@ class ScraperAdmin(admin.ModelAdmin):
         }),
         ('Pagination options', {
             'classes': ('collapse',),
-            'fields': ('pagination_on_start', 'pagination_append_str', 'pagination_page_replace')
+            'fields': ('pagination_on_start', 'pagination_append_str', 'pagination_page_replace', \
+                'follow_pages_by_xpath', 'num_pages_follow',)
         }),
         ('Monitoring', {
             'classes': ('collapse',),

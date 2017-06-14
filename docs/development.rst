@@ -96,6 +96,7 @@ Release Notes
   ``Scrapy`` version to the latest ``1.4`` release version
 * Using ``response.follow`` function from ``Scrapy 1.4`` for following detail page URLs 
   links (supports relative URLs)
+* New migrations ``0022``, ``0023`` and ``0024``,please run ``python manage.py migrate`` command
 
 Added short forms for command line options:
 
@@ -107,8 +108,7 @@ Added short forms for command line options:
 * Output DDS configuration dict on ``DEBUG`` log level
 * Added a ``general settings`` tab for the ``scraper`` form in the ``Django admin``
 * Fixed scraper elem ``textarea`` resize for the ``Django admin`` ``scraper`` form
-* Added new option ``UNRESOLVED`` to scraper ``work_status``, new migration ``0022``,
-  please run ``python manage.py migrate`` command
+* Added new option ``UNRESOLVED`` to scraper ``work_status``
 
 **Changes in version 0.12.4-beta** (2017-06-12)
 

@@ -95,8 +95,9 @@ class Scraper(models.Model):
     )
     PAGINATION_TYPE = (
         ('N', 'NONE'),
-        ('R', 'RANGE_FUNCT'),
-        ('F', 'FREE_LIST'),
+        ('R', 'RANGE_FUNCT (+FOLLOW)'),
+        ('F', 'FREE_LIST (+FOLLOW)'),
+        ('O', 'FOLLOW'),
     )
     name = models.CharField(max_length=200)
     scraped_obj_class = models.ForeignKey(ScrapedObjClass)
@@ -113,6 +114,10 @@ class Scraper(models.Model):
     pagination_append_str = models.CharField(max_length=200, blank=True, help_text="Syntax: /somepartofurl/{page}/moreurlstuff.html")
     pagination_page_replace = models.TextField(blank=True, 
         help_text="RANGE_FUNCT: uses Python range funct., syntax: [start], stop[, step], FREE_LIST: 'Replace text 1', 'Some other text 2', 'Maybe a number 3', ...")
+    help_text = "Optional, follow links from a single non-paginated or all statically paginated (RANGE_FUNCT, FREE_LIST) main pages"
+    follow_pages_by_xpath = models.TextField(blank=True, help_text=help_text)
+    help_text = "Optionally limit number of pages to follow (default: follow until XPath fails)"
+    num_pages_follow = models.IntegerField(blank=True, null=True, help_text=help_text)
     last_scraper_save_alert_period = models.CharField(max_length=5, blank=True, 
         help_text="Optional, used for scraper monitoring with 'check_last_scraper_saves' management cmd, \
         syntax: [HOURS]h or [DAYS]d or [WEEKS]w (e.g. '6h', '5d', '2w')")
@@ -227,7 +232,7 @@ class Scraper(models.Model):
 
 @python_2_unicode_compatible
 class RequestPageType(models.Model):
-    TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP{n}".format(n=str(n)), "Detail Page {n}".format(n=str(n))) for n in list(range(1, 26))])
+    TYPE_CHOICES = tuple([("MP", "Main Page"), ("FP", "Follow Page"),] + [("DP{n}".format(n=str(n)), "Detail Page {n}".format(n=str(n))) for n in list(range(1, 26))])
     CONTENT_TYPE_CHOICES = (
         ('H', 'HTML'),
         ('X', 'XML'),
@@ -241,7 +246,8 @@ class RequestPageType(models.Model):
         ('GET', 'GET'),
         ('POST', 'POST'),
     )
-    page_type = models.CharField(max_length=3, choices=TYPE_CHOICES)
+    help_text = "One main page RPT, an optional follow page RPT (if follow pagination is used) and detail page RPTs for all DETAIL_PAGE_URLs"
+    page_type = models.CharField(max_length=3, choices=TYPE_CHOICES, help_text=help_text)
     scraped_obj_attr = models.ForeignKey(ScrapedObjAttr, blank=True, null=True, help_text="Empty for main page, attribute of type DETAIL_PAGE_URL scraped from main page for detail pages.")
     scraper = models.ForeignKey(Scraper)
     content_type = models.CharField(max_length=1, choices=CONTENT_TYPE_CHOICES, default='H', help_text="Data type format for scraped pages of page type (for JSON use JSONPath instead of XPath)")
