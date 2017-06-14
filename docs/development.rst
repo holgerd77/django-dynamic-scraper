@@ -90,7 +90,7 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.12.5-beta** (NOT YET RELEASED)!
+**Changes in version 0.13.0-beta** (NOT YET RELEASED)!
 
 Added short forms for command line options:
 
