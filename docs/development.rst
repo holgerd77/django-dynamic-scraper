@@ -92,6 +92,11 @@ Release Notes
 =============
 **Changes in version 0.13.0-beta** (NOT YET RELEASED)!
 
+* Dropped support for ``Scrapy`` ``1.1``, ``1.2`` and ``1.3``, please update your
+  ``Scrapy`` version to the latest ``1.4`` release version
+* Using ``response.follow`` function from ``Scrapy 1.4`` for following detail page URLs 
+  links (supports relative URLs)
+
 Added short forms for command line options:
 
 .. image:: images/screenshot_dds_command_line_help.png
