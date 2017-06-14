@@ -54,6 +54,7 @@ class DjangoBaseSpider(CrawlSpider):
     }
 
     mp_request_kwargs = {}
+    fp_request_kwargs = {}
     dp_request_kwargs = {}
     
     
@@ -172,7 +173,13 @@ class DjangoBaseSpider(CrawlSpider):
                 msg = "Missing attribute {a}.".format(a=var)
                 self.dds_logger.error(msg)
                 raise CloseSpider(msg)
-            
+        
+        if self.scraper.pagination_type != 'N' and self.scraper.follow_pages_by_xpath != '':
+            if self.scraper.get_follow_page_rpts().count() != 1:
+                msg = "You have to add a FOLLOW_PAGE RPT (RequestPageType) when using follow pagination."
+                self.dds_logger.error(msg)
+                raise CloseSpider(msg)
+        
         if self.scraper.status == 'P' or self.scraper.status == 'I':
             msg = 'Scraper status set to {s}!'.format(s=self.scraper.get_status_display())
             self.log(msg, logging.WARNING)
@@ -190,6 +197,8 @@ class DjangoBaseSpider(CrawlSpider):
         for rpt in self.scraper.requestpagetype_set.all():
             if rpt.page_type == 'MP':
                 pt_dict = self.mp_request_kwargs
+            elif rpt.page_type == 'FP':
+                pt_dict = self.fp_request_kwargs
             else:
                 self.dp_request_kwargs[rpt.page_type] = {}
                 pt_dict = self.dp_request_kwargs[rpt.page_type]

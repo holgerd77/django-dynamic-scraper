@@ -30,6 +30,7 @@ from dynamic_scraper.utils import processors
 class DjangoSpider(DjangoBaseSpider):
 
     mp_form_data = None
+    fp_form_data = None
     dp_form_data = {}
     tmp_non_db_results = {}
     non_db_results = {}
@@ -122,6 +123,8 @@ class DjangoSpider(DjangoBaseSpider):
                     raise CloseSpider()
                 if rpt.page_type == 'MP':
                     self.mp_form_data = form_data
+                elif rpt.page_type == 'FP':
+                    self.fp_form_data = form_data
                 else:
                     self.dp_form_data[rpt.page_type] = form_data
 
@@ -335,8 +338,10 @@ class DjangoSpider(DjangoBaseSpider):
                 form_data = json.loads(json.dumps(form_data).replace('{page}', str(self.pages[index])))
             if 'meta' not in kwargs:
                     kwargs['meta'] = {}
-            kwargs['meta']['page'] = index + 1
+            kwargs['meta']['page_num'] = index + 1
+            kwargs['meta']['follow_page_num'] = 0
             rpt = self.scraper.get_main_page_rpt()
+            kwargs['meta']['rpt'] = rpt
             self.dds_logger.info('')
             self.dds_logger.info(self.bcolors['BOLD'] + '======================================================================================' + self.bcolors['ENDC'])
             self.struct_log("{es}{es2}Scraping data from page {page}.{ec}{ec}".format(
@@ -418,7 +423,8 @@ class DjangoSpider(DjangoBaseSpider):
     
 
     def _scrape_item_attr(self, scraper_elem, response, from_page, item_num):
-        if(from_page == scraper_elem.request_page_type):
+        if(from_page == scraper_elem.request_page_type or 
+            (from_page == 'FP' and scraper_elem.request_page_type == 'MP')):
             procs = self._get_processors(scraper_elem)
             self._set_loader_context(scraper_elem.proc_ctxt)
             
@@ -450,7 +456,8 @@ class DjangoSpider(DjangoBaseSpider):
             if rpt.render_javascript:
                 rpt_str += '-JS'
             rpt_str += '|' + rpt.method
-            page_str = str(response.request.meta['page']) + '-'
+            page_str = str(response.request.meta['page_num'])
+            page_str += '(' + str(response.request.meta['follow_page_num']) + ')-'
             msg  = '{page_type: <4} {rpt_str: <13} {cs}{name: <20}{ce} {page}{num} '.format(page=page_str, num=str(item_num), name=name, rpt_str=rpt_str, page_type=from_page, cs=self.bcolors["BOLD"], ce=self.bcolors["ENDC"])
             c_values = loader.get_collected_values(name)
             if len(c_values) > 0:
@@ -466,7 +473,7 @@ class DjangoSpider(DjangoBaseSpider):
     def _set_loader(self, response, from_page, xs, item):
         self.from_page = from_page
         rpt = self.scraper.get_rpt(from_page)
-        if not self.from_page == 'MP':
+        if not (self.from_page == 'MP' or self.from_page == 'FP'):
             item = response.request.meta['item']
             if rpt.content_type == 'J':
                 json_resp = json.loads(response.body_as_unicode())
@@ -485,7 +492,7 @@ class DjangoSpider(DjangoBaseSpider):
     def _set_dummy_loader(self, response, from_page, xs, item):
         self.from_page = from_page
         rpt = self.scraper.get_rpt(from_page)
-        if not self.from_page == 'MP':
+        if not (self.from_page == 'MP' or self.from_page == 'FP'):
             item = response.request.meta['item']
             if rpt.content_type == 'J':
                 json_resp = json.loads(response.body_as_unicode())
@@ -509,7 +516,7 @@ class DjangoSpider(DjangoBaseSpider):
             item_num = response.request.meta['item_num']
         self._set_loader(response, from_page, xs, self.scraped_obj_item_class())
         self._set_dummy_loader(response, from_page, xs, self.scraped_obj_item_class())
-        if from_page == 'MP':
+        if from_page == 'MP' or from_page == 'FP':
             self.items_read_count += 1
         else:
             if self.current_output_num_dp_response_bodies < self.conf['OUTPUT_NUM_DP_RESPONSE_BODIES']:
@@ -533,7 +540,7 @@ class DjangoSpider(DjangoBaseSpider):
                self.scraped_obj_class()._meta.get_field(key).blank and \
                not self.scraped_obj_class()._meta.get_field(key).null:
                 item[key] = ''
-        if from_page != 'MP':
+        if not (from_page == 'MP' or from_page == 'FP'):
             item, is_double = self._check_for_double_item(item)
             if response.request.meta['last']:
                 self.non_db_results[id(item)] = self.tmp_non_db_results[item_num].copy()
@@ -569,15 +576,21 @@ class DjangoSpider(DjangoBaseSpider):
         xs = Selector(response)
         base_objects = []
         base_elem = self.scraper.get_base_elem()
+        rpt = response.request.meta['rpt']
         
-        if self.current_output_num_mp_response_bodies < self.conf['OUTPUT_NUM_MP_RESPONSE_BODIES']:
-            self.current_output_num_mp_response_bodies += 1
-            self.log("Response body ({url})\n\n***** RP_MP_{num}_START *****\n{resp_body}\n***** RP_MP_{num}_END *****\n\n".format(
-                url=response.url,
-                resp_body=response.body,
-                num=self.current_output_num_mp_response_bodies), logging.INFO)
+        page_num = response.request.meta['page_num']
+        page = self.pages[page_num - 1]
+        follow_page_num = response.request.meta['follow_page_num']
         
-        if self.scraper.get_main_page_rpt().content_type == 'J':
+        if rpt.page_type == 'MP':
+            if self.current_output_num_mp_response_bodies < self.conf['OUTPUT_NUM_MP_RESPONSE_BODIES']:
+                self.current_output_num_mp_response_bodies += 1
+                self.log("Response body ({url})\n\n***** RP_MP_{num}_START *****\n{resp_body}\n***** RP_MP_{num}_END *****\n\n".format(
+                    url=response.url,
+                    resp_body=response.body,
+                    num=self.current_output_num_mp_response_bodies), logging.INFO)
+        
+        if rpt.content_type == 'J':
             json_resp = None
             try:
                 json_resp = json.loads(response.body_as_unicode())
@@ -609,13 +622,15 @@ class DjangoSpider(DjangoBaseSpider):
         for obj in base_objects:
             item_num = self.items_read_count + 1
             self.tmp_non_db_results[item_num] = {}
+            page_str = str(page_num) + '(' + str(follow_page_num) + ')'
             self.dds_logger.info("")
             self.dds_logger.info(self.bcolors['BOLD'] + '--------------------------------------------------------------------------------------' + self.bcolors['ENDC'])
             self.struct_log("{cs}Starting to crawl item {i} from page {p}.{ce}".format(
-                i=str(item_num), p=str(response.request.meta['page']), cs=self.bcolors["HEADER"], ce=self.bcolors["ENDC"]))
+                i=str(item_num), p=page_str, cs=self.bcolors["HEADER"], ce=self.bcolors["ENDC"]))
             self.dds_logger.info(self.bcolors['BOLD'] + '--------------------------------------------------------------------------------------' + self.bcolors['ENDC'])
-            item = self.parse_item(response, obj, 'MP', item_num)
-            item._dds_item_page = response.request.meta['page']
+            item = self.parse_item(response, obj, rpt.page_type, item_num)
+            item._dds_item_page = page_num
+            item._dds_item_follow_page = follow_page_num
             item._dds_item_id = item_num
             
             if item:
@@ -658,16 +673,18 @@ class DjangoSpider(DjangoBaseSpider):
                             self.log(msg, logging.DEBUG)
                             self.log("URL before: " + url_before, logging.DEBUG)
                             self.log("URL after : " + url, logging.DEBUG)
-                        rpt = self.scraper.get_rpt_for_scraped_obj_attr(url_elem.scraped_obj_attr)
-                        kwargs = self.dp_request_kwargs[rpt.page_type].copy()
+                        dp_rpt = self.scraper.get_rpt_for_scraped_obj_attr(url_elem.scraped_obj_attr)
+                        kwargs = self.dp_request_kwargs[dp_rpt.page_type].copy()
                         
                         if 'meta' not in kwargs:
                             kwargs['meta'] = {}
+                        kwargs['meta']['page_num'] = page_num
+                        kwargs['meta']['follow_page_num'] = follow_page_num
                         kwargs['meta']['item'] = item
-                        kwargs['meta']['from_page'] = rpt.page_type
+                        kwargs['meta']['from_page'] = dp_rpt.page_type
                         kwargs['meta']['item_num'] = item_num
-                        kwargs['meta']['page'] = response.request.meta['page']
-                        page = self.pages[kwargs['meta']['page'] - 1]
+                        
+                        kwargs['meta']['rpt'] = dp_rpt
                         
                         if 'headers' in kwargs:
                             kwargs['headers'] = json.loads(json.dumps(kwargs['headers']).replace('{page}', str(page)))
@@ -701,11 +718,11 @@ class DjangoSpider(DjangoBaseSpider):
                                     self.log(msg, logging.DEBUG)
                                     self.log("COOKIE [" + str(key) + "] before: " + str(value), logging.DEBUG)
                                     self.log("COOKIE [" + str(key) + "] after : " + str(new_value), logging.DEBUG)
-                        if rpt.request_type == 'F' and rpt.page_type in self.dp_form_data:
-                            self.dp_form_data[rpt.page_type] = json.loads(json.dumps(self.dp_form_data[rpt.page_type]).replace('{page}', str(page)))
-                            for key, value in list(self.dp_form_data[rpt.page_type].items()):
+                        if dp_rpt.request_type == 'F' and dp_rpt.page_type in self.dp_form_data:
+                            self.dp_form_data[dp_rpt.page_type] = json.loads(json.dumps(self.dp_form_data[dp_rpt.page_type]).replace('{page}', str(page)))
+                            for key, value in list(self.dp_form_data[dp_rpt.page_type].items()):
                                 new_value, applied = self._replace_placeholders(value, item, item_num)
-                                self.dp_form_data[rpt.page_type][key] = new_value
+                                self.dp_form_data[dp_rpt.page_type][key] = new_value
                                 if len(applied) > 0:
                                     msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
                                         a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
@@ -721,20 +738,38 @@ class DjangoSpider(DjangoBaseSpider):
                         #logging.info(str(kwargs))
                         self.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", logging.INFO)
                         msg = "{cs}Calling {dp} URL for item {p}-{n}...{ce}".format(
-                            dp=rpt.page_type, p=str(response.request.meta['page']), n=str(item_num),
+                            dp=dp_rpt.page_type, p=str(page_num), n=str(item_num),
                             cs=self.bcolors["HEADER"], ce=self.bcolors["ENDC"])
                         self.log(msg, logging.INFO)
                         msg = "URL     : {url}".format(url=url)
                         self.log(msg, logging.INFO)
-                        self._log_request_info(rpt, kwargs)
+                        self._log_request_info(dp_rpt, kwargs)
                         self.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", logging.INFO)
                         
-                        if rpt.request_type == 'R':
-                            yield response.follow(url, callback=self.parse_item, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
+                        if dp_rpt.request_type == 'R':
+                            yield response.follow(url, callback=self.parse_item, method=dp_rpt.method, dont_filter=dp_rpt.dont_filter, **kwargs)
                         else:
-                            yield FormRequest(url, callback=self.parse_item, method=rpt.method, formdata=self.dp_form_data[rpt.page_type], dont_filter=rpt.dont_filter, **kwargs)
+                            yield FormRequest(url, callback=self.parse_item, method=dp_rpt.method, formdata=self.dp_form_data[dp_rpt.page_type], dont_filter=dp_rpt.dont_filter, **kwargs)
             else:
                 self.log("Item could not be read!", logging.ERROR)
+        if self.scraper.follow_pages_by_xpath:
+            if not self.scraper.num_pages_follow or follow_page_num < self.scraper.num_pages_follow:
+                url = response.xpath(self.scraper.follow_pages_by_xpath).extract_first()
+                if url is not None:
+                    self._set_meta_splash_args()
+                    kwargs = self.fp_request_kwargs.copy()
+                    if self.fp_form_data:
+                        form_data = self.fp_form_data.copy()
+                    else:
+                        form_data = None
+                    follow_page_num += 1
+                    kwargs['meta']['follow_page_num'] = follow_page_num
+                    f_rpt = self.scraper.get_follow_page_rpts()[0]
+                    if f_rpt.request_type == 'R':
+                        yield response.follow(url, callback=self.parse, method=f_rpt.method, dont_filter=f_rpt.dont_filter, **kwargs)
+                    else:
+                        url = response.urljoin(url)
+                        yield FormRequest(url, callback=self.parse, method=f_rpt.method, formdata=form_data, dont_filter=f_rpt.dont_filter, **kwargs)
     
     
     def _log_request_info(self, rpt, kwargs):

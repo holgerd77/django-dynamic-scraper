@@ -160,6 +160,9 @@ class Scraper(models.Model):
     
     def get_main_page_rpt(self):
         return self.requestpagetype_set.get(page_type='MP')
+    
+    def get_follow_page_rpts(self):
+        return self.requestpagetype_set.filter(page_type='FP')
 
     def get_detail_page_rpts(self):
         return s.requestpagetype_set.filter(~Q(page_type='MP'))
