@@ -96,9 +96,14 @@ Added short forms for command line options:
 
 .. image:: images/screenshot_dds_command_line_help.png
 
+* Allowing/enabling ``{page}`` ``placeholders`` for ``HEADERS``, ``BODY``, ``COOKIES`` fields 
+  and ``FORM DATA`` for detail page URL requests (so you can inject the current page from
+  the main page into the detail page URL request)
 * Output DDS configuration dict on ``DEBUG`` log level
 * Added a ``general settings`` tab for the ``scraper`` form in the ``Django admin``
 * Fixed scraper elem ``textarea`` resize for the ``Django admin`` ``scraper`` form
+* Added new option ``UNRESOLVED`` to scraper ``work_status``, new migration ``0022``,
+  please run ``python manage.py migrate`` command
 
 **Changes in version 0.12.4-beta** (2017-06-12)
 

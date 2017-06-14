@@ -457,7 +457,7 @@ class DjangoSpider(DjangoBaseSpider):
                 val_str = c_values[0]
                 if self.conf['CONSOLE_LOG_LEVEL'] != 'DEBUG':
                     val_str = (val_str[:400] + '..') if len(val_str) > 400 else val_str
-                msg += smart_text(val_str) + "'"
+                msg += smart_text(val_str)
             else:
                 msg += 'None'
             self.log(msg, logging.INFO)
@@ -667,8 +667,10 @@ class DjangoSpider(DjangoBaseSpider):
                         kwargs['meta']['from_page'] = rpt.page_type
                         kwargs['meta']['item_num'] = item_num
                         kwargs['meta']['page'] = response.request.meta['page']
+                        page = self.pages[kwargs['meta']['page'] - 1]
                         
                         if 'headers' in kwargs:
+                            kwargs['headers'] = json.loads(json.dumps(kwargs['headers']).replace('{page}', str(page)))
                             for key, value in list(kwargs['headers'].items()):
                                 new_value, applied = self._replace_placeholders(value, item, item_num)
                                 kwargs['headers'][key] = new_value
@@ -680,6 +682,7 @@ class DjangoSpider(DjangoBaseSpider):
                                     self.log("HEADERS [" + str(key) + "] after : " + str(new_value), logging.DEBUG)
                         if 'body' in kwargs:
                             body_before = kwargs['body']
+                            kwargs['body'] = kwargs['body'].replace('{page}', str(page))
                             kwargs['body'], applied = self._replace_placeholders(kwargs['body'], item, item_num)
                             if len(applied) > 0:
                                 msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
@@ -688,6 +691,7 @@ class DjangoSpider(DjangoBaseSpider):
                                 self.log("BODY before: " + body_before, logging.DEBUG)
                                 self.log("BODY after : " + kwargs['body'], logging.DEBUG)
                         if 'cookies' in kwargs:
+                            kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', str(page)))
                             for key, value in list(kwargs['cookies'].items()):
                                 new_value, applied = self._replace_placeholders(value, item, item_num)
                                 kwargs['cookies'][key] = new_value
@@ -698,6 +702,7 @@ class DjangoSpider(DjangoBaseSpider):
                                     self.log("COOKIE [" + str(key) + "] before: " + str(value), logging.DEBUG)
                                     self.log("COOKIE [" + str(key) + "] after : " + str(new_value), logging.DEBUG)
                         if rpt.request_type == 'F' and rpt.page_type in self.dp_form_data:
+                            self.dp_form_data[rpt.page_type] = json.loads(json.dumps(self.dp_form_data[rpt.page_type]).replace('{page}', str(page)))
                             for key, value in list(self.dp_form_data[rpt.page_type].items()):
                                 new_value, applied = self._replace_placeholders(value, item, item_num)
                                 self.dp_form_data[rpt.page_type][key] = new_value
