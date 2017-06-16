@@ -550,13 +550,13 @@ class DjangoSpider(DjangoBaseSpider):
         else:
             return item
     
-    def _replace_placeholders(self, text_str, item, item_num):
+    def _replace_placeholders(self, text_str, item, item_num, only_mp):
         applied = []
         if type(text_str).__name__ != 'str' and type(text_str).__name__ != 'unicode':
             return text_str, applied
         standard_elems = self.scraper.get_standard_elems()
         for scraper_elem in standard_elems:
-            if scraper_elem.request_page_type == 'MP':
+            if not only_mp or scraper_elem.request_page_type == 'MP':
                 name = scraper_elem.scraped_obj_attr.name
                 placeholder = '{' + name + '}'
                 if not scraper_elem.scraped_obj_attr.save_to_db:
@@ -577,7 +577,7 @@ class DjangoSpider(DjangoBaseSpider):
     def _do_req_info_replacements(self, item, item_num, page, json_dict, info_str):
         json_dict = json.loads(json.dumps(json_dict).replace('{page}', str(page)))
         for key, value in list(json_dict.items()):
-            new_value, applied = self._replace_placeholders(value, item, item_num)
+            new_value, applied = self._replace_placeholders(value, item, item_num, True)
             json_dict[key] = new_value
             if len(applied) > 0:
                 msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
@@ -678,11 +678,11 @@ class DjangoSpider(DjangoBaseSpider):
                     for url_elem in url_elems:
                         if not url_elem.scraped_obj_attr.save_to_db:
                             url_before = self.tmp_non_db_results[item_num][url_elem.scraped_obj_attr.name]
-                            url, applied = self._replace_placeholders(url_before, item, item_num)
+                            url, applied = self._replace_placeholders(url_before, item, item_num, True)
                             self.tmp_non_db_results[item_num][url_elem.scraped_obj_attr.name] = url
                         else:
                             url_before = item[url_elem.scraped_obj_attr.name]
-                            url, applied = self._replace_placeholders(url_before, item, item_num)
+                            url, applied = self._replace_placeholders(url_before, item, item_num, True)
                             item[url_elem.scraped_obj_attr.name] = url
                         if len(applied) > 0:
                             msg = "Detail page URL placeholder(s) applied (item {p}-{n}): {a}".format(
@@ -708,7 +708,7 @@ class DjangoSpider(DjangoBaseSpider):
                         if 'body' in kwargs:
                             body_before = kwargs['body']
                             kwargs['body'] = kwargs['body'].replace('{page}', str(page))
-                            kwargs['body'], applied = self._replace_placeholders(kwargs['body'], item, item_num)
+                            kwargs['body'], applied = self._replace_placeholders(kwargs['body'], item, item_num, True)
                             if len(applied) > 0:
                                 msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
                                     a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
@@ -742,6 +742,14 @@ class DjangoSpider(DjangoBaseSpider):
                             yield response.follow(url, callback=self.parse_item, method=dp_rpt.method, dont_filter=dp_rpt.dont_filter, **kwargs)
                         else:
                             yield FormRequest(url, callback=self.parse_item, method=dp_rpt.method, formdata=form_data, dont_filter=dp_rpt.dont_filter, **kwargs)
+                for key, value in list(item.items()):
+                    if value and '{page}' in value:
+                        msg = "Applying page placeholder on {k}...".format(k=key)
+                        self.log(msg, logging.DEBUG)
+                        self.log("Value before: " + value, logging.DEBUG)
+                        value = value.replace('{page}', str(page))
+                        item[key] = value
+                        self.log("Value after: " + value, logging.DEBUG)
             else:
                 self.log("Item could not be read!", logging.ERROR)
         if self.scraper.follow_pages_by_xpath:
