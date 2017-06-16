@@ -753,6 +753,8 @@ class DjangoSpider(DjangoBaseSpider):
                     form_data_orig = None
                     if self.scraper.get_follow_page_rpts().count() > 0:
                         form_data_orig = self.scraper.get_follow_page_rpts()[0].form_data
+                    else:
+                        form_data_orig = self.scraper.get_main_page_rpt().form_data
                     kwargs, form_data = self._prepare_mp_req_data(self.fp_request_kwargs, form_data_orig, page)
                     
                     follow_page_num += 1
