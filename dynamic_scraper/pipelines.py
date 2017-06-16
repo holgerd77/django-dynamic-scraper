@@ -69,7 +69,7 @@ class ValidationPipeline(object):
 
     def process_item(self, item, spider):
         
-        dds_id = str(item._dds_item_page) + '-' + str(item._dds_item_id)
+        dds_id = str(item._dds_item_page) + '(' + str(item._dds_item_follow_page) + ')-' + str(item._dds_item_id)
         if spider.conf['CONSOLE_LOG_LEVEL'] != 'DEBUG':
             logging.getLogger('scrapy.core.scraper').addFilter(NoParsingFilter())
         

@@ -250,6 +250,8 @@ class DjangoBaseSpider(CrawlSpider):
         for rpt in self.scraper.requestpagetype_set.all():
             if rpt.page_type == 'MP':
                 pt_dict = self.mp_request_kwargs
+            elif rpt.page_type == 'FP':
+                pt_dict = self.fp_request_kwargs
             else:
                 pt_dict = self.dp_request_kwargs[rpt.page_type]
             if rpt.content_type == 'H' and rpt.render_javascript:

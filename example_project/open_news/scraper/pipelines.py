@@ -19,7 +19,9 @@ class DjangoWriterPipeline(object):
                 
                 item.save()
                 spider.action_successful = True
-                dds_id_str = str(item._dds_item_page) + '-' + str(item._dds_item_id)
+                dds_id_str  = str(item._dds_item_page)
+                dds_id_str += '(' + str(item._dds_item_follow_page) + ')-'
+                dds_id_str += str(item._dds_item_id)
                 spider.struct_log("{cs}Item {id} saved to Django DB.{ce}".format(
                     id=dds_id_str,
                     cs=spider.bcolors['OK'],

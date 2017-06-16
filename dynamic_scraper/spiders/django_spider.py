@@ -28,10 +28,7 @@ from dynamic_scraper.utils import processors
 
 
 class DjangoSpider(DjangoBaseSpider):
-
-    mp_form_data = None
-    fp_form_data = None
-    dp_form_data = {}
+    
     tmp_non_db_results = {}
     non_db_results = {}
     
@@ -121,12 +118,6 @@ class DjangoSpider(DjangoBaseSpider):
                     msg = "Incorrect form_data attribute ({pt}): not a valid JSON dict!".format(pt=rpt.page_type)
                     self.dds_logger.error(msg)
                     raise CloseSpider()
-                if rpt.page_type == 'MP':
-                    self.mp_form_data = form_data
-                elif rpt.page_type == 'FP':
-                    self.fp_form_data = form_data
-                else:
-                    self.dp_form_data[rpt.page_type] = form_data
 
 
     def _set_config(self, **kwargs):
@@ -317,38 +308,49 @@ class DjangoSpider(DjangoBaseSpider):
             url_str = 'URLs'
         self.log("Scraper set to run on {num} start {url_str}.".format(
             num=num, url_str=url_str), logging.INFO)
-
-
+    
+    
+    def _prepare_mp_req_data(self, kwargs_orig, form_data_orig, page):
+        kwargs = kwargs_orig.copy()
+        if 'meta' not in kwargs:
+                kwargs['meta'] = {}
+        form_data = None
+        if form_data_orig:
+            form_data = json.loads(form_data_orig).copy()
+        if 'headers' in kwargs:
+            kwargs['headers'] = json.loads(json.dumps(kwargs['headers']).replace('{page}', str(page)))
+        if 'body' in kwargs:
+            kwargs['body'] = kwargs['body'].replace('{page}', str(page))
+        if 'cookies' in kwargs:
+            kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', str(page)))
+        if form_data:
+            form_data = json.loads(json.dumps(form_data).replace('{page}', str(page)))
+        return kwargs, form_data
+    
+    
+    def _log_page_info(self, page_num, follow_page_num, url, rpt, form_data, kwargs):
+        self.dds_logger.info('')
+        self.dds_logger.info(self.bcolors['BOLD'] + '======================================================================================' + self.bcolors['ENDC'])
+        self.struct_log("{es}{es2}Scraping data from page {p}({fp}).{ec}{ec}".format(
+            p=page_num, fp=follow_page_num, es=self.bcolors['BOLD'], es2=self.bcolors['HEADER'], ec=self.bcolors['ENDC']))
+        self.struct_log("URL     : {url}".format(url=url))
+        self._log_request_info(rpt, form_data, kwargs)
+        self.dds_logger.info(self.bcolors['BOLD'] + '======================================================================================' + self.bcolors['ENDC'])
+    
+    
     def start_requests(self):
         index = 0
+        rpt = self.scraper.get_main_page_rpt()
+        page_num = index + 1
+        follow_page_num = 0
+        
         for url in self.start_urls:
             self._set_meta_splash_args()
-            kwargs = self.mp_request_kwargs.copy()
-            if self.mp_form_data:
-                form_data = self.mp_form_data.copy()
-            else:
-                form_data = None
-            if 'headers' in kwargs:
-                kwargs['headers'] = json.loads(json.dumps(kwargs['headers']).replace('{page}', str(self.pages[index])))
-            if 'body' in kwargs:
-                kwargs['body'] = kwargs['body'].replace('{page}', str(self.pages[index]))
-            if 'cookies' in kwargs:
-                kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', str(self.pages[index])))
-            if form_data:
-                form_data = json.loads(json.dumps(form_data).replace('{page}', str(self.pages[index])))
-            if 'meta' not in kwargs:
-                    kwargs['meta'] = {}
-            kwargs['meta']['page_num'] = index + 1
-            kwargs['meta']['follow_page_num'] = 0
-            rpt = self.scraper.get_main_page_rpt()
+            kwargs, form_data = self._prepare_mp_req_data(self.mp_request_kwargs, self.scraper.get_main_page_rpt().form_data, self.pages[index])
+            kwargs['meta']['page_num'] = page_num
+            kwargs['meta']['follow_page_num'] = follow_page_num
             kwargs['meta']['rpt'] = rpt
-            self.dds_logger.info('')
-            self.dds_logger.info(self.bcolors['BOLD'] + '======================================================================================' + self.bcolors['ENDC'])
-            self.struct_log("{es}{es2}Scraping data from page {page}.{ec}{ec}".format(
-                page=index+1, es=self.bcolors['BOLD'], es2=self.bcolors['HEADER'], ec=self.bcolors['ENDC']))
-            self.struct_log("URL     : {url}".format(url=url))
-            self._log_request_info(rpt, kwargs)
-            self.dds_logger.info(self.bcolors['BOLD'] + '======================================================================================' + self.bcolors['ENDC'])
+            self._log_page_info(page_num, follow_page_num, url, rpt, form_data, kwargs)
             index += 1
             if rpt.request_type == 'R':
                 yield Request(url, callback=self.parse, method=rpt.method, dont_filter=rpt.dont_filter, **kwargs)
@@ -572,6 +574,21 @@ class DjangoSpider(DjangoBaseSpider):
         return text_str, applied
 
 
+    def _do_req_info_replacements(self, item, item_num, page, json_dict, info_str):
+        json_dict = json.loads(json.dumps(json_dict).replace('{page}', str(page)))
+        for key, value in list(json_dict.items()):
+            new_value, applied = self._replace_placeholders(value, item, item_num)
+            json_dict[key] = new_value
+            if len(applied) > 0:
+                msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
+                    a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
+                self.log(msg, logging.DEBUG)
+                self.log(info_str + " [" + str(key) + "] before: " + str(value), logging.DEBUG)
+                self.log(info_str + " [" + str(key) + "] after : " + str(new_value), logging.DEBUG)
+        return json_dict
+    
+    
+
     def parse(self, response):
         xs = Selector(response)
         base_objects = []
@@ -687,16 +704,7 @@ class DjangoSpider(DjangoBaseSpider):
                         kwargs['meta']['rpt'] = dp_rpt
                         
                         if 'headers' in kwargs:
-                            kwargs['headers'] = json.loads(json.dumps(kwargs['headers']).replace('{page}', str(page)))
-                            for key, value in list(kwargs['headers'].items()):
-                                new_value, applied = self._replace_placeholders(value, item, item_num)
-                                kwargs['headers'][key] = new_value
-                                if len(applied) > 0:
-                                    msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
-                                        a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
-                                    self.log(msg, logging.DEBUG)
-                                    self.log("HEADERS [" + str(key) + "] before: " + str(value), logging.DEBUG)
-                                    self.log("HEADERS [" + str(key) + "] after : " + str(new_value), logging.DEBUG)
+                            kwargs['headers'] = self._do_req_info_replacements(page, item, item_num, kwargs['headers'], "HEADERS")
                         if 'body' in kwargs:
                             body_before = kwargs['body']
                             kwargs['body'] = kwargs['body'].replace('{page}', str(page))
@@ -708,27 +716,11 @@ class DjangoSpider(DjangoBaseSpider):
                                 self.log("BODY before: " + body_before, logging.DEBUG)
                                 self.log("BODY after : " + kwargs['body'], logging.DEBUG)
                         if 'cookies' in kwargs:
-                            kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', str(page)))
-                            for key, value in list(kwargs['cookies'].items()):
-                                new_value, applied = self._replace_placeholders(value, item, item_num)
-                                kwargs['cookies'][key] = new_value
-                                if len(applied) > 0:
-                                    msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
-                                        a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
-                                    self.log(msg, logging.DEBUG)
-                                    self.log("COOKIE [" + str(key) + "] before: " + str(value), logging.DEBUG)
-                                    self.log("COOKIE [" + str(key) + "] after : " + str(new_value), logging.DEBUG)
-                        if dp_rpt.request_type == 'F' and dp_rpt.page_type in self.dp_form_data:
-                            self.dp_form_data[dp_rpt.page_type] = json.loads(json.dumps(self.dp_form_data[dp_rpt.page_type]).replace('{page}', str(page)))
-                            for key, value in list(self.dp_form_data[dp_rpt.page_type].items()):
-                                new_value, applied = self._replace_placeholders(value, item, item_num)
-                                self.dp_form_data[dp_rpt.page_type][key] = new_value
-                                if len(applied) > 0:
-                                    msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
-                                        a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
-                                    self.log(msg, logging.DEBUG)
-                                    self.log("FORM DATA [" + str(key) + "] before: " + str(value), logging.DEBUG)
-                                    self.log("FORM DATA [" + str(key) + "] after : " + str(new_value), logging.DEBUG)
+                            kwargs['cookies'] = self._do_req_info_replacements(page, item, item_num, kwargs['cookies'], "COOKIES")
+                        form_data = None
+                        if dp_rpt.request_type == 'F' and dp_rpt.form_data:
+                            form_data = json.loads(dp_rpt.form_data).copy()
+                            form_data = self._do_req_info_replacements(page, item, item_num, form_data, "FORM DATA")
                         
                         if url_elem == url_elems[len(url_elems)-1]:
                             kwargs['meta']['last'] = True
@@ -737,19 +729,19 @@ class DjangoSpider(DjangoBaseSpider):
                         self._set_meta_splash_args()
                         #logging.info(str(kwargs))
                         self.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", logging.INFO)
-                        msg = "{cs}Calling {dp} URL for item {p}-{n}...{ce}".format(
-                            dp=dp_rpt.page_type, p=str(page_num), n=str(item_num),
+                        msg = "{cs}Calling {dp} URL for item {p}({fp})-{n}...{ce}".format(
+                            dp=dp_rpt.page_type, p=str(page_num), fp=follow_page_num, n=str(item_num),
                             cs=self.bcolors["HEADER"], ce=self.bcolors["ENDC"])
                         self.log(msg, logging.INFO)
                         msg = "URL     : {url}".format(url=url)
                         self.log(msg, logging.INFO)
-                        self._log_request_info(dp_rpt, kwargs)
+                        self._log_request_info(dp_rpt, form_data, kwargs)
                         self.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", logging.INFO)
                         
                         if dp_rpt.request_type == 'R':
                             yield response.follow(url, callback=self.parse_item, method=dp_rpt.method, dont_filter=dp_rpt.dont_filter, **kwargs)
                         else:
-                            yield FormRequest(url, callback=self.parse_item, method=dp_rpt.method, formdata=self.dp_form_data[dp_rpt.page_type], dont_filter=dp_rpt.dont_filter, **kwargs)
+                            yield FormRequest(url, callback=self.parse_item, method=dp_rpt.method, formdata=form_data, dont_filter=dp_rpt.dont_filter, **kwargs)
             else:
                 self.log("Item could not be read!", logging.ERROR)
         if self.scraper.follow_pages_by_xpath:
@@ -757,14 +749,20 @@ class DjangoSpider(DjangoBaseSpider):
                 url = response.xpath(self.scraper.follow_pages_by_xpath).extract_first()
                 if url is not None:
                     self._set_meta_splash_args()
-                    kwargs = self.fp_request_kwargs.copy()
-                    if self.fp_form_data:
-                        form_data = self.fp_form_data.copy()
-                    else:
-                        form_data = None
+                    
+                    form_data_orig = None
+                    if self.scraper.get_follow_page_rpts().count() > 0:
+                        form_data_orig = self.scraper.get_follow_page_rpts()[0].form_data
+                    kwargs, form_data = self._prepare_mp_req_data(self.fp_request_kwargs, form_data_orig, page)
+                    
                     follow_page_num += 1
+                    kwargs['meta']['page_num'] = page_num
                     kwargs['meta']['follow_page_num'] = follow_page_num
                     f_rpt = self.scraper.get_follow_page_rpts()[0]
+                    kwargs['meta']['rpt'] = f_rpt
+                    
+                    self._log_page_info(page_num, follow_page_num, url, f_rpt, form_data, kwargs)
+                    
                     if f_rpt.request_type == 'R':
                         yield response.follow(url, callback=self.parse, method=f_rpt.method, dont_filter=f_rpt.dont_filter, **kwargs)
                     else:
@@ -772,7 +770,7 @@ class DjangoSpider(DjangoBaseSpider):
                         yield FormRequest(url, callback=self.parse, method=f_rpt.method, formdata=form_data, dont_filter=f_rpt.dont_filter, **kwargs)
     
     
-    def _log_request_info(self, rpt, kwargs):
+    def _log_request_info(self, rpt, form_data, kwargs):
         level = logging.DEBUG
         extra_info = False
         if 'headers' in kwargs:
@@ -784,12 +782,8 @@ class DjangoSpider(DjangoBaseSpider):
         if 'cookies' in kwargs:
             self.log("COOKIES   : " + str(kwargs['cookies']), level)
             extra_info = True
-        if rpt.request_type == 'F':
-            if rpt.page_type in self.dp_form_data:
-                self.log("FORM DATA : " + str(self.dp_form_data[rpt.page_type]), level)
-                extra_info = True
-            if rpt.page_type == 'MP':
-                self.log("FORM DATA : " + str(self.mp_form_data), level)
+        if rpt.request_type == 'F' and form_data:
+                self.log("FORM DATA : " + str(form_data), level)
                 extra_info = True
         
         if not extra_info:
