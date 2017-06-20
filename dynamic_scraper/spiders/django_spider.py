@@ -6,7 +6,6 @@ from builtins import map
 from builtins import range
 import ast, datetime, importlib, json, logging, scrapy
 
-from json.decoder import JSONDecodeError
 from jsonpath_rw import jsonpath, parse
 from jsonpath_rw.lexer import JsonPathLexerError
 
@@ -611,7 +610,7 @@ class DjangoSpider(DjangoBaseSpider):
             json_resp = None
             try:
                 json_resp = json.loads(response.body_as_unicode())
-            except JSONDecodeError:
+            except ValueError:
                 msg = "JSON response for MP could not be parsed!"
                 self.log(msg, logging.ERROR)
             if json_resp:
