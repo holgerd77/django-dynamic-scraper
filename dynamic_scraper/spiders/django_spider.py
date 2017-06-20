@@ -341,11 +341,11 @@ class DjangoSpider(DjangoBaseSpider):
     def start_requests(self):
         index = 0
         rpt = self.scraper.get_main_page_rpt()
-        page_num = index + 1
         follow_page_num = 0
         
         for url in self.start_urls:
             self._set_meta_splash_args()
+            page_num = index + 1
             kwargs, form_data = self._prepare_mp_req_data(self.mp_request_kwargs, self.scraper.get_main_page_rpt().form_data, self.pages[index])
             kwargs['meta']['page_num'] = page_num
             kwargs['meta']['follow_page_num'] = follow_page_num
@@ -743,7 +743,7 @@ class DjangoSpider(DjangoBaseSpider):
                         else:
                             yield FormRequest(url, callback=self.parse_item, method=dp_rpt.method, formdata=form_data, dont_filter=dp_rpt.dont_filter, **kwargs)
                 for key, value in list(item.items()):
-                    if value and '{page}' in value:
+                    if value and (type(value).__name__ in ['str', 'unicode']) and '{page}' in value:
                         msg = "Applying page placeholder on {k}...".format(k=key)
                         self.log(msg, logging.DEBUG)
                         self.log("Value before: " + value, logging.DEBUG)
