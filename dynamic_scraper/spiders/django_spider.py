@@ -580,8 +580,8 @@ class DjangoSpider(DjangoBaseSpider):
             new_value, applied = self._replace_placeholders(value, item, item_num, True)
             json_dict[key] = new_value
             if len(applied) > 0:
-                msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
-                    a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
+                msg = "Request info placeholder(s) applied (item {id}): {a}".format(
+                    a=str(applied), id=item._dds_id_str)
                 self.log(msg, logging.DEBUG)
                 self.log(info_str + " [" + str(key) + "] before: " + str(value), logging.DEBUG)
                 self.log(info_str + " [" + str(key) + "] after : " + str(new_value), logging.DEBUG)
@@ -649,6 +649,7 @@ class DjangoSpider(DjangoBaseSpider):
             item._dds_item_page = page_num
             item._dds_item_follow_page = follow_page_num
             item._dds_item_id = item_num
+            item._dds_id_str = str(item._dds_item_page) + '(' + str(item._dds_item_follow_page) + ')-' + str(item._dds_item_id)
             
             if item:
                 only_main_page_idfs = True
@@ -685,8 +686,8 @@ class DjangoSpider(DjangoBaseSpider):
                             url, applied = self._replace_placeholders(url_before, item, item_num, True)
                             item[url_elem.scraped_obj_attr.name] = url
                         if len(applied) > 0:
-                            msg = "Detail page URL placeholder(s) applied (item {p}-{n}): {a}".format(
-                                a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
+                            msg = "Detail page URL placeholder(s) applied (item {id}): {a}".format(
+                                a=str(applied), id=item._dds_id_str)
                             self.log(msg, logging.DEBUG)
                             self.log("URL before: " + url_before, logging.DEBUG)
                             self.log("URL after : " + url, logging.DEBUG)
@@ -710,8 +711,8 @@ class DjangoSpider(DjangoBaseSpider):
                             kwargs['body'] = kwargs['body'].replace('{page}', str(page))
                             kwargs['body'], applied = self._replace_placeholders(kwargs['body'], item, item_num, True)
                             if len(applied) > 0:
-                                msg = "Request info placeholder(s) applied (item {p}-{n}): {a}".format(
-                                    a=str(applied), p=item._dds_item_page, n=item._dds_item_id)
+                                msg = "Request info placeholder(s) applied (item {id}): {a}".format(
+                                    a=str(applied), id=item._dds_id_str)
                                 self.log(msg, logging.DEBUG)
                                 self.log("BODY before: " + body_before, logging.DEBUG)
                                 self.log("BODY after : " + kwargs['body'], logging.DEBUG)
@@ -729,8 +730,8 @@ class DjangoSpider(DjangoBaseSpider):
                         self._set_meta_splash_args()
                         #logging.info(str(kwargs))
                         self.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", logging.INFO)
-                        msg = "{cs}Calling {dp} URL for item {p}({fp})-{n}...{ce}".format(
-                            dp=dp_rpt.page_type, p=str(page_num), fp=follow_page_num, n=str(item_num),
+                        msg = "{cs}Calling {dp} URL for item {id}...{ce}".format(
+                            dp=dp_rpt.page_type, id=item._dds_id_str,
                             cs=self.bcolors["HEADER"], ce=self.bcolors["ENDC"])
                         self.log(msg, logging.INFO)
                         msg = "URL     : {url}".format(url=url)
