@@ -309,7 +309,7 @@ class DjangoSpider(DjangoBaseSpider):
             num=num, url_str=url_str), logging.INFO)
     
     
-    def _prepare_mp_req_data(self, kwargs_orig, form_data_orig, page):
+    def _prepare_mp_req_data(self, kwargs_orig, form_data_orig, page, follow_page=''):
         kwargs = kwargs_orig.copy()
         if 'meta' not in kwargs:
                 kwargs['meta'] = {}
@@ -318,12 +318,16 @@ class DjangoSpider(DjangoBaseSpider):
             form_data = json.loads(form_data_orig).copy()
         if 'headers' in kwargs:
             kwargs['headers'] = json.loads(json.dumps(kwargs['headers']).replace('{page}', str(page)))
+            kwargs['headers'] = json.loads(json.dumps(kwargs['headers']).replace('{follow_page}', str(follow_page)))
         if 'body' in kwargs:
             kwargs['body'] = kwargs['body'].replace('{page}', str(page))
+            kwargs['body'] = kwargs['body'].replace('{follow_page}', str(follow_page))
         if 'cookies' in kwargs:
             kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{page}', str(page)))
+            kwargs['cookies'] = json.loads(json.dumps(kwargs['cookies']).replace('{follow_page}', str(follow_page)))
         if form_data:
             form_data = json.loads(json.dumps(form_data).replace('{page}', str(page)))
+            form_data = json.loads(json.dumps(form_data).replace('{follow_page}', str(follow_page)))
         return kwargs, form_data
     
     
@@ -752,18 +756,20 @@ class DjangoSpider(DjangoBaseSpider):
                         self.log("Value after: " + value, logging.DEBUG)
             else:
                 self.log("Item could not be read!", logging.ERROR)
-        if self.scraper.follow_pages_by_xpath:
+        if self.scraper.follow_pages_url_xpath:
             if not self.scraper.num_pages_follow or follow_page_num < self.scraper.num_pages_follow:
-                url = response.xpath(self.scraper.follow_pages_by_xpath).extract_first()
+                url = response.xpath(self.scraper.follow_pages_url_xpath).extract_first()
                 if url is not None:
                     self._set_meta_splash_args()
-                    
+                    follow_page = ''
+                    if self.scraper.follow_pages_page_xpath:
+                        follow_page = response.xpath(self.scraper.follow_pages_page_xpath).extract_first()
                     form_data_orig = None
                     if self.scraper.get_follow_page_rpts().count() > 0:
                         form_data_orig = self.scraper.get_follow_page_rpts()[0].form_data
                     else:
                         form_data_orig = self.scraper.get_main_page_rpt().form_data
-                    kwargs, form_data = self._prepare_mp_req_data(self.fp_request_kwargs, form_data_orig, page)
+                    kwargs, form_data = self._prepare_mp_req_data(self.fp_request_kwargs, form_data_orig, page, follow_page)
                     
                     follow_page_num += 1
                     kwargs['meta']['page_num'] = page_num

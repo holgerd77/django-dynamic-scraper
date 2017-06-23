@@ -92,11 +92,20 @@ Release Notes
 =============
 **Changes in version 0.13.0-beta** (NOT YET RELEASED)!
 
+* New, second pagination layer with ``FOLLOW`` pagination type, building upon pull request
+  `#24 <https://github.com/holgerd77/django-dynamic-scraper/pull/24>`_ and allow for dynamic
+  pagination by extracting an URL to follow from consequent pages (for example to follow
+  pagination on the website to scrape). This can be combined with other pagination types
+  (currently ``RANGE_FUNC`` and ``FREE_LIST``). See the updated :ref:`pagination` section
+  for further details.
+
+.. image:: images/screenshot_django-admin_pagination.png
+
 * Dropped support for ``Scrapy`` ``1.1``, ``1.2`` and ``1.3``, please update your
   ``Scrapy`` version to the latest ``1.4`` release version
 * Using ``response.follow`` function from ``Scrapy 1.4`` for following detail page URLs 
   links (supports relative URLs)
-* New migrations ``0022``, ``0023`` and ``0024``,please run ``python manage.py migrate`` command
+* New migrations ``0022``, ``0023``, ``0024`` and ``0024``,please run ``python manage.py migrate`` command
 
 Added short forms for command line options:
 

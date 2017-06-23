@@ -115,7 +115,9 @@ class Scraper(models.Model):
     pagination_page_replace = models.TextField(blank=True, 
         help_text="RANGE_FUNCT: uses Python range funct., syntax: [start], stop[, step], FREE_LIST: 'Replace text 1', 'Some other text 2', 'Maybe a number 3', ...")
     help_text = "Optional, follow links from a single non-paginated or all statically paginated (RANGE_FUNCT, FREE_LIST) main pages"
-    follow_pages_by_xpath = models.TextField(blank=True, help_text=help_text)
+    follow_pages_url_xpath = models.TextField(blank=True, help_text=help_text)
+    help_text = "Optional additional XPath for the page number, can be used in {follow_page} placeholder."
+    follow_pages_page_xpath = models.TextField(blank=True, help_text=help_text)
     help_text = "Optionally limit number of pages to follow (default: follow until XPath fails)"
     num_pages_follow = models.IntegerField(blank=True, null=True, help_text=help_text)
     last_scraper_save_alert_period = models.CharField(max_length=5, blank=True, 
@@ -257,11 +259,11 @@ class RequestPageType(models.Model):
     render_javascript = models.BooleanField(default=False, help_text="Render Javascript on pages (ScrapyJS/Splash deployment needed, careful: resource intense)")
     request_type = models.CharField(max_length=1, choices=REQUEST_TYPE_CHOICES, default='R', help_text="Normal (typically GET) request (default) or form request (typically POST), using Scrapys corresponding request classes (not used for checker).")
     method = models.CharField(max_length=10, choices=METHOD_CHOICES, default='GET', help_text="HTTP request via GET or POST.")
-    headers = models.TextField(blank=True, help_text='Optional HTTP headers sent with each request, provided as a JSON dict (e.g. {"Referer":"http://referer_url"}, use double quotes!)), can use {main page attribute} and {page} placeholders.')
-    body = models.TextField(blank=True, help_text="Optional HTTP message body provided as a unicode string, can use {main page attribute} and {page} placeholders.")
-    cookies = models.TextField(blank=True, help_text="Optional cookies as JSON dict (use double quotes!), can use {main page attribute} and {page} placeholders.")
+    headers = models.TextField(blank=True, help_text='Optional HTTP headers sent with each request, provided as a JSON dict (e.g. {"Referer":"http://referer_url"}, use double quotes!)), can use {main page attribute}, {page} and {follow_page} placeholders.')
+    body = models.TextField(blank=True, help_text="Optional HTTP message body provided as a unicode string, can use {main page attribute}, {page} and {follow_page} placeholders.")
+    cookies = models.TextField(blank=True, help_text="Optional cookies as JSON dict (use double quotes!), can use {main page attribute}, {page} and {follow_page} placeholders.")
     meta = models.TextField(blank=True, help_text="Optional Scrapy meta attributes as JSON dict (use double quotes!), see Scrapy docs for reference.")
-    form_data = models.TextField(blank=True, help_text="Optional HTML form data as JSON dict (use double quotes!), only used with FormRequest request type, can use {main page attribute} and {page} placeholders.")
+    form_data = models.TextField(blank=True, help_text="Optional HTML form data as JSON dict (use double quotes!), only used with FormRequest request type, can use {main page attribute}, {page} and {follow_page} placeholders.")
     dont_filter = models.BooleanField(default=False, help_text="Do not filter duplicate requests, useful for some scenarios with requests falsely marked as being duplicate (e.g. uniform URL + pagination by HTTP header).")
     comments = models.TextField(blank=True)
 

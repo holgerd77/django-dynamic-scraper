@@ -153,10 +153,13 @@ class ScraperAdmin(admin.ModelAdmin):
         (None, {
             'fields': ('pagination_type',)
         }),
-        ('Pagination options', {
+        ('First Layer Pagination (Static)', {
             'classes': ('collapse',),
-            'fields': ('pagination_on_start', 'pagination_append_str', 'pagination_page_replace', \
-                'follow_pages_by_xpath', 'num_pages_follow',)
+            'fields': ('pagination_on_start', 'pagination_append_str', 'pagination_page_replace',)
+        }),
+        ('Second Layer Pagination (Dynamic)', {
+            'classes': ('collapse',),
+            'fields': ('follow_pages_url_xpath', 'follow_pages_page_xpath', 'num_pages_follow',)
         }),
         ('Monitoring', {
             'classes': ('collapse',),
