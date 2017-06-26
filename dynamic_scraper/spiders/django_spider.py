@@ -282,7 +282,7 @@ class DjangoSpider(DjangoBaseSpider):
                 raise CloseSpider()
             pages = self.limit_page_nums(pages)
         
-        if self.scraper.pagination_type != 'N':
+        if self.scraper.pagination_type in ['R', 'F',]:
             append_str = self.scraper.pagination_append_str
             if scrape_url[-1:] == '/' and append_str[0:1] == '/':
                 append_str = append_str[1:]
@@ -297,7 +297,7 @@ class DjangoSpider(DjangoBaseSpider):
                 self.start_urls.insert(0, scrape_url)
                 self.pages.insert(0, "")
         
-        if self.scraper.pagination_type == 'N':
+        if self.scraper.pagination_type in ['N', 'O',]:
             self.start_urls.append(scrape_url)
             self.pages = ["",]
         num = len(self.start_urls)
