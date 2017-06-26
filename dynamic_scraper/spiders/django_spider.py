@@ -756,7 +756,11 @@ class DjangoSpider(DjangoBaseSpider):
                         self.log("Value after: " + value, logging.DEBUG)
             else:
                 self.log("Item could not be read!", logging.ERROR)
-        if self.scraper.follow_pages_url_xpath:
+                
+        mir_reached = False
+        if self.conf['MAX_ITEMS_READ'] and (self.conf['MAX_ITEMS_READ'] - self.items_read_count <= 0):
+            mir_reached = True
+        if self.scraper.follow_pages_url_xpath and not mir_reached:
             if not self.scraper.num_pages_follow or follow_page_num < self.scraper.num_pages_follow:
                 url = response.xpath(self.scraper.follow_pages_url_xpath).extract_first()
                 if url is not None:
