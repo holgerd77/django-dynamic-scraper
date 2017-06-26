@@ -766,15 +766,16 @@ class DjangoSpider(DjangoBaseSpider):
                         follow_page = response.xpath(self.scraper.follow_pages_page_xpath).extract_first()
                     form_data_orig = None
                     if self.scraper.get_follow_page_rpts().count() > 0:
+                        f_rpt = self.scraper.get_follow_page_rpts()[0]
                         form_data_orig = self.scraper.get_follow_page_rpts()[0].form_data
                     else:
+                        f_rpt = self.scraper.get_main_page_rpt()
                         form_data_orig = self.scraper.get_main_page_rpt().form_data
                     kwargs, form_data = self._prepare_mp_req_data(self.fp_request_kwargs, form_data_orig, page, follow_page)
                     
                     follow_page_num += 1
                     kwargs['meta']['page_num'] = page_num
                     kwargs['meta']['follow_page_num'] = follow_page_num
-                    f_rpt = self.scraper.get_follow_page_rpts()[0]
                     kwargs['meta']['rpt'] = f_rpt
                     
                     self._log_page_info(page_num, follow_page_num, url, f_rpt, form_data, kwargs)
