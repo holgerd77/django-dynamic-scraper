@@ -93,7 +93,7 @@ class DjangoSpider(DjangoBaseSpider):
             '-a max_items_read|mir=[Int]                 Limit number of items to read',
             '-a max_items_save|mis=[Int]                 Limit number of items to save',
             '-a max_pages_read|mpr=[Int]                 Limit number of pages to read (static pagination)',
-            '-a start_page|sp=[PAGE]                     Start at page PAGE, e.g. 5, F' (static pagination),
+            '-a start_page|sp=[PAGE]                     Start at page PAGE, e.g. 5, F (static pagination)',
             '-a end_page|ep=[PAGE]                       End scraping at page PAGE, e.g. 10, M (static pagination)',
             '-a num_pages_follow|npf=[Int]               Number of pages to follow (dynamic pagination)',
             '-a output_num_mp_response_bodies|omp=[Int]  Output response body content of MP for debugging',
