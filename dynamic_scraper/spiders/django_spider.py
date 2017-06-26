@@ -249,7 +249,7 @@ class DjangoSpider(DjangoBaseSpider):
     def _set_start_urls(self, scrape_url):
         self.start_urls = []
         
-        if self.scraper.pagination_type != 'N':
+        if self.scraper.pagination_type in ['R', 'F',]:
             if not self.scraper.pagination_page_replace:
                 msg = 'Please provide a pagination_page_replace context corresponding to pagination_type!'
                 self.dds_logger.error(msg)
