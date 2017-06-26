@@ -92,9 +92,10 @@ class DjangoSpider(DjangoBaseSpider):
             '-a run_type|rt=(TASK|SHELL)                 Simulate task based scraper run, default: SHELL',
             '-a max_items_read|mir=[Int]                 Limit number of items to read',
             '-a max_items_save|mis=[Int]                 Limit number of items to save',
-            '-a max_pages_read|mpr=[Int]                 Limit number of pages to read',
-            '-a start_page|sp=[PAGE]                     Start at page PAGE, e.g. 5, F',
-            '-a end_page|ep=[PAGE]                       End scraping at page PAGE, e.g. 10, M',
+            '-a max_pages_read|mpr=[Int]                 Limit number of pages to read (static pagination)',
+            '-a start_page|sp=[PAGE]                     Start at page PAGE, e.g. 5, F' (static pagination),
+            '-a end_page|ep=[PAGE]                       End scraping at page PAGE, e.g. 10, M (static pagination)',
+            '-a num_pages_follow|npf=[Int]               Number of pages to follow (dynamic pagination)',
             '-a output_num_mp_response_bodies|omp=[Int]  Output response body content of MP for debugging',
             '-a output_num_dp_response_bodies|odb=[Int]  Output response body content of DP for debugging',
             '',
@@ -180,6 +181,21 @@ class DjangoSpider(DjangoBaseSpider):
             self.conf['END_PAGE'] = kwargs['end_page']
         else:
             self.conf['END_PAGE'] = None
+        #num_pages_follow|npf
+        if 'npf' in kwargs:
+            kwargs['num_pages_follow'] = kwargs['npf']
+        if 'num_pages_follow' in kwargs:
+            try:
+                self.conf['NUM_PAGES_FOLLOW'] = int(kwargs['num_pages_follow'])
+            except ValueError:
+                msg = "You have to provide an integer value as num_pages_follow parameter!"
+                self.dds_logger.error(msg)
+                raise CloseSpider()
+            if len(log_msg) > 0:
+                log_msg += ", "
+            log_msg += "num_pages_follow " + str(self.conf['NUM_PAGES_FOLLOW'])
+        else:
+            self.conf['NUM_PAGES_FOLLOW'] = self.scraper.num_pages_follow
         #output_num_mp_response_bodies|omp
         if 'omp' in kwargs:
             kwargs['output_num_mp_response_bodies'] = kwargs['omp']
@@ -761,7 +777,7 @@ class DjangoSpider(DjangoBaseSpider):
         if self.conf['MAX_ITEMS_READ'] and (self.conf['MAX_ITEMS_READ'] - self.items_read_count <= 0):
             mir_reached = True
         if self.scraper.follow_pages_url_xpath and not mir_reached:
-            if not self.scraper.num_pages_follow or follow_page_num < self.scraper.num_pages_follow:
+            if not self.conf['NUM_PAGES_FOLLOW'] or follow_page_num < self.conf['NUM_PAGES_FOLLOW']:
                 url = response.xpath(self.scraper.follow_pages_url_xpath).extract_first()
                 if url is not None:
                     self._set_meta_splash_args()
