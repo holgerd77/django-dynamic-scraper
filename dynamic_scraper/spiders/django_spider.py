@@ -724,7 +724,7 @@ class DjangoSpider(DjangoBaseSpider):
                         kwargs['meta']['rpt'] = dp_rpt
                         
                         if 'headers' in kwargs:
-                            kwargs['headers'] = self._do_req_info_replacements(page, item, item_num, kwargs['headers'], "HEADERS")
+                            kwargs['headers'] = self._do_req_info_replacements(item, item_num, page, kwargs['headers'], "HEADERS")
                         if 'body' in kwargs:
                             body_before = kwargs['body']
                             kwargs['body'] = kwargs['body'].replace('{page}', str(page))
@@ -736,11 +736,11 @@ class DjangoSpider(DjangoBaseSpider):
                                 self.log("BODY before: " + body_before, logging.DEBUG)
                                 self.log("BODY after : " + kwargs['body'], logging.DEBUG)
                         if 'cookies' in kwargs:
-                            kwargs['cookies'] = self._do_req_info_replacements(page, item, item_num, kwargs['cookies'], "COOKIES")
+                            kwargs['cookies'] = self._do_req_info_replacements(item, item_num, page, kwargs['cookies'], "COOKIES")
                         form_data = None
                         if dp_rpt.request_type == 'F' and dp_rpt.form_data:
                             form_data = json.loads(dp_rpt.form_data).copy()
-                            form_data = self._do_req_info_replacements(page, item, item_num, form_data, "FORM DATA")
+                            form_data = self._do_req_info_replacements(item, item_num, page, form_data, "FORM DATA")
                         
                         if url_elem == url_elems[len(url_elems)-1]:
                             kwargs['meta']['last'] = True
