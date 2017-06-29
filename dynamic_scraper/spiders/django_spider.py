@@ -763,6 +763,12 @@ class DjangoSpider(DjangoBaseSpider):
                         else:
                             yield FormRequest(url, callback=self.parse_item, method=dp_rpt.method, formdata=form_data, dont_filter=dp_rpt.dont_filter, **kwargs)
                 for key, value in list(item.items()):
+                    #Fixing some extremely weird Python 2 encoding failure, 2017-06-29
+                    if type(value).__name__ == 'str':
+                        try:
+                            value = value.decode('utf-8')
+                        except AttributeError:
+                            pass
                     if value and (type(value).__name__ in ['str', 'unicode']) and '{page}' in value:
                         msg = "Applying page placeholder on {k}...".format(k=key)
                         self.log(msg, logging.DEBUG)

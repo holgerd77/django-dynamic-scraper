@@ -90,7 +90,12 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.13.0-beta** (NOT YET RELEASED)!
+**Changes in version 0.13.0-beta** (2017-06-29)
+
+* Pre-note: Due to an increasing test burden, this library might drop ``Python 2.7`` support
+  in the foreseable future (not decided yet, if so, probably within 6-12 month). 
+  If you haven't already done so you might want to start upgrading your projects to run on a 
+  ``Python 3`` basis.
 
 * New, second pagination layer with ``FOLLOW`` pagination type, building upon pull request
   `#24 <https://github.com/holgerd77/django-dynamic-scraper/pull/24>`_ and allow for dynamic
