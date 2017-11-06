@@ -643,6 +643,8 @@ class DjangoSpider(DjangoBaseSpider):
                 base_objects = [match.value for match in jsonpath_expr.find(json_resp)]
                 if len(base_objects) > 0:
                     base_objects = base_objects[0]
+                if type(base_objects) == dict:  # enables parsing of scraped dictionary
+                    base_objects = [base_objects]
         else:
             base_objects = response.xpath(base_elem.x_path)
 
