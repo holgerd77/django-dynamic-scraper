@@ -80,6 +80,9 @@ and the result string "create this page" to uniquely identifying a scraped item 
 It is also possible to leave out the result string. Then the checker already succeeds when the
 given xpath is finding elements on the page. 
 
+.. note:: Be sure to add your new checkers module to the SPIDERS_MODULES list in scrapy's settings.py.
+          
+
 .. note:: Attention! Make sure that the XPath/result string combination you choose is NOT succeeding on normal
           item pages, otherwise the checker will delete all your items!
           
