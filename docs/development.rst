@@ -90,8 +90,10 @@ Docker container can be run with::
 
 Release Notes
 =============
-**Changes in version 0.13.1-beta** (NOT YET RELEASED!)
+**Changes in version 0.13.1-beta** (2017-11-07)
 
+* Replaced hard-coded port ``6800`` for scheduled scraper/checker runs with setting from
+  ``Scrapyd`` (thanks @DeanSherwin for the `PR <https://github.com/holgerd77/django-dynamic-scraper/pull/97>`_)
 * Renamed internal item variables ``item._dds_item_page`` to ``item._dds_item_page_num``,
   and ``item._dds_item_follow_page`` to ``item._dds_item_follow_page_num`` (eventually
   have a look at your custom ``pipelines.py`` file if used there), use ``item._dds_item_page``
