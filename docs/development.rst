@@ -90,6 +90,13 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.13.1-beta** (NOT YET RELEASED!)
+
+* Renamed internal item variables ``item._dds_item_page`` to ``item._dds_item_page_num``,
+  and ``item._dds_item_follow_page`` to ``item._dds_item_follow_page_num`` (eventually
+  have a look at your custom ``pipelines.py`` file if used there), use ``item._dds_item_page``
+  for storing the page from the pagination
+
 **Changes in version 0.13.0-beta** (2017-06-29)
 
 * Pre-note: Due to an increasing test burden, this library might drop ``Python 2.7`` support

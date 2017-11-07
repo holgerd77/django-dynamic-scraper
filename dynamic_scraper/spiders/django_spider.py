@@ -665,10 +665,11 @@ class DjangoSpider(DjangoBaseSpider):
                 i=str(item_num), p=page_str, cs=self.bcolors["HEADER"], ce=self.bcolors["ENDC"]))
             self.dds_logger.info(self.bcolors['BOLD'] + '--------------------------------------------------------------------------------------' + self.bcolors['ENDC'])
             item = self.parse_item(response, obj, rpt.page_type, item_num)
-            item._dds_item_page = page_num
-            item._dds_item_follow_page = follow_page_num
+            item._dds_item_page = page
+            item._dds_item_page_num = page_num
+            item._dds_item_follow_page_num = follow_page_num
             item._dds_item_id = item_num
-            item._dds_id_str = str(item._dds_item_page) + '(' + str(item._dds_item_follow_page) + ')-' + str(item._dds_item_id)
+            item._dds_id_str = str(item._dds_item_page_num) + '(' + str(item._dds_item_follow_page_num) + ')-' + str(item._dds_item_id)
             
             if item:
                 only_main_page_idfs = True
