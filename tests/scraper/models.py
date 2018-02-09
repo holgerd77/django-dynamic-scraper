@@ -13,7 +13,7 @@ class EventWebsite(models.Model):
     scraper = models.ForeignKey(Scraper, blank=True, null=True, on_delete=models.SET_NULL)
     url = models.URLField()
     scraper_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
-    
+
     def __str__(self):
         return self.name + " (" + str(self.id) + ")"
 
@@ -21,13 +21,13 @@ class EventWebsite(models.Model):
 @python_2_unicode_compatible
 class Event(models.Model):
     title = models.CharField(max_length=200)
-    event_website = models.ForeignKey(EventWebsite) 
+    event_website = models.ForeignKey(EventWebsite, on_delete=models.CASCADE) 
     description = models.TextField(blank=True)
     description2 = models.TextField(blank=True)
     url = models.URLField(blank=True)
     url2 = models.URLField(blank=True)
     checker_runtime = models.ForeignKey(SchedulerRuntime, blank=True, null=True, on_delete=models.SET_NULL)
-    
+
     def __str__(self):
         return self.title + " (" + str(self.id) + ")"
 

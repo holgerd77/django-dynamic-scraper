@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.db.models.deletion
 import datetime
 
 
@@ -98,7 +99,7 @@ class Migration(migrations.Migration):
                 ('checker_x_path_result', models.CharField(max_length=200, blank=True)),
                 ('checker_ref_url', models.URLField(max_length=500, blank=True)),
                 ('comments', models.TextField(blank=True)),
-                ('scraped_obj_class', models.ForeignKey(to='dynamic_scraper.ScrapedObjClass')),
+                ('scraped_obj_class', models.ForeignKey(to='dynamic_scraper.ScrapedObjClass', on_delete=django.db.models.deletion.CASCADE)),
             ],
             options={
                 'ordering': ['name', 'scraped_obj_class'],
@@ -115,8 +116,8 @@ class Migration(migrations.Migration):
                 ('processors', models.CharField(max_length=200, blank=True)),
                 ('proc_ctxt', models.CharField(max_length=200, blank=True)),
                 ('mandatory', models.BooleanField(default=True)),
-                ('scraped_obj_attr', models.ForeignKey(to='dynamic_scraper.ScrapedObjAttr')),
-                ('scraper', models.ForeignKey(to='dynamic_scraper.Scraper')),
+                ('scraped_obj_attr', models.ForeignKey(to='dynamic_scraper.ScrapedObjAttr', on_delete=django.db.models.deletion.CASCADE)),
+                ('scraper', models.ForeignKey(to='dynamic_scraper.Scraper', on_delete=django.db.models.deletion.CASCADE)),
             ],
             options={
             },
@@ -125,19 +126,19 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='scrapedobjattr',
             name='obj_class',
-            field=models.ForeignKey(to='dynamic_scraper.ScrapedObjClass'),
+            field=models.ForeignKey(to='dynamic_scraper.ScrapedObjClass', on_delete=django.db.models.deletion.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='logmarker',
             name='scraper',
-            field=models.ForeignKey(blank=True, to='dynamic_scraper.Scraper', null=True),
+            field=models.ForeignKey(blank=True, to='dynamic_scraper.Scraper', null=True, on_delete=django.db.models.deletion.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='log',
             name='scraper',
-            field=models.ForeignKey(blank=True, to='dynamic_scraper.Scraper', null=True),
+            field=models.ForeignKey(blank=True, to='dynamic_scraper.Scraper', null=True, on_delete=django.db.models.deletion.CASCADE),
             preserve_default=True,
         ),
     ]
