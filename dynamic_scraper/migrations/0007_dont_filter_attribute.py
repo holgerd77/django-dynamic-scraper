@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='scraper',
             name='dont_filter',
-            field=models.BooleanField(default=False, help_text=b'Do not filter duplicate requests, useful for some scenarios with requests falsely marked as being duplicate (e.g. uniform URL + pagination by HTTP header).'),
+            field=models.BooleanField(default=False, help_text='Do not filter duplicate requests, useful for some scenarios with requests falsely marked as being duplicate (e.g. uniform URL + pagination by HTTP header).'),
         ),
     ]

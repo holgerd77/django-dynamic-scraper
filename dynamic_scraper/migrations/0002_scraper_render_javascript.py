@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='scraper',
             name='render_javascript',
-            field=models.BooleanField(default=False, help_text=b'Render Javascript on pages (ScrapyJS/Splash deployment needed, careful: resource intense)'),
+            field=models.BooleanField(default=False, help_text='Render Javascript on pages (ScrapyJS/Splash deployment needed, careful: resource intense)'),
         ),
     ]
