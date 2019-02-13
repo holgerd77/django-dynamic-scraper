@@ -39,8 +39,9 @@ setup(
     #    'kombu>=3.0.37,<3.1',
     #    'Celery==3.1.25',
     #    'django-celery==3.2.1', # Scheduling
-        'future>=0.15,<0.16',
-        'pillow>=3.0,<4.0',
+        'future>=0.17,<0.18',
+        'pillow>=5.0,<6.0',
+        'attrs>=17.4.0',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
