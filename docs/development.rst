@@ -92,19 +92,19 @@ Release Notes
 =============
 **Changes in version 0.13.2-beta** (2019-02-15)
 
-* Added Python `3.6` and `3.7` (experimental) support, dropped 
-  Python `3.4` from support list,
-  PR [#119](https://github.com/holgerd77/django-dynamic-scraper/pull/119)
-* Added Scrapy `0.15` support, dropped Scrapy `0.14` from support list,
-  PR [#120](https://github.com/holgerd77/django-dynamic-scraper/pull/120)
-* Removed Django `1.8`, `1.9`, `1.10` from support list,
-  PR [#120](https://github.com/holgerd77/django-dynamic-scraper/pull/120)
-* Updated dependencies: `future` `0.15.x` -> `0.17.x`, `Pillow` `3.x` to `5.x`
-  (Python `3.6` support), explicit new `attrs>=17.4.0` dependency
-  (Python `3.6` support),
-  PR [#119](https://github.com/holgerd77/django-dynamic-scraper/pull/119)
+* Added Python ``3.6`` and ``3.7`` (experimental) support, dropped 
+  Python ``3.4`` from support list,
+  PR `#119 <https://github.com/holgerd77/django-dynamic-scraper/pull/119>`_
+* Added Scrapy ``0.15`` support, dropped Scrapy ``0.14`` from support list,
+  PR `#120 <https://github.com/holgerd77/django-dynamic-scraper/pull/120>`_
+* Removed Django ``1.8``, ``1.9``, ``1.10`` from support list,
+  PR `#120 <https://github.com/holgerd77/django-dynamic-scraper/pull/120>`_
+* Updated dependencies: ``future`` ``0.15.x`` -> ``0.17.x``, ``Pillow`` ``3.x`` to ``5.x``
+  (Python ``3.6`` support), explicit new ``attrs>=17.4.0`` dependency
+  (Python ``3.6`` support),
+  PR `#119 <https://github.com/holgerd77/django-dynamic-scraper/pull/119>`_
 * Improved Travis CI support displaying test failure or passing on GitHub PRs,
-  PR [#117](https://github.com/holgerd77/django-dynamic-scraper/pull/117)
+  PR `#117 <https://github.com/holgerd77/django-dynamic-scraper/pull/117>`_
 
 **Changes in version 0.13.1-beta** (2017-11-07)
 
