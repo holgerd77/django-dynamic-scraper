@@ -100,7 +100,7 @@ class Scraper(models.Model):
         ('O', 'FOLLOW'),
     )
     name = models.CharField(max_length=200)
-    scraped_obj_class = models.ForeignKey(ScrapedObjClass, models.SET_NULL)
+    scraped_obj_class = models.ForeignKey(ScrapedObjClass, models.CASCADE)
     help_text = "Runtime status of the scraper, used by scheduling mechanism."
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P', help_text=help_text)
     help_text = "Internal work/progress status of the scraper."
@@ -253,7 +253,7 @@ class RequestPageType(models.Model):
     )
     help_text = "One main page RPT, an optional follow page RPT (if follow pagination is used) and detail page RPTs for all DETAIL_PAGE_URLs"
     page_type = models.CharField(max_length=3, choices=TYPE_CHOICES, help_text=help_text)
-    scraped_obj_attr = models.ForeignKey(ScrapedObjAttr, blank=True, null=True, help_text="Empty for main page, attribute of type DETAIL_PAGE_URL scraped from main page for detail pages.",on_delete=models.SET_NULL)
+    scraped_obj_attr = models.ForeignKey(ScrapedObjAttr, blank=True, null=True, help_text="Empty for main page, attribute of type DETAIL_PAGE_URL scraped from main page for detail pages.",on_delete=models.CASCADE)
     scraper = models.ForeignKey(Scraper, on_delete=models.CASCADE)
     content_type = models.CharField(max_length=1, choices=CONTENT_TYPE_CHOICES, default='H', help_text="Data type format for scraped pages of page type (for JSON use JSONPath instead of XPath)")
     render_javascript = models.BooleanField(default=False, help_text="Render Javascript on pages (ScrapyJS/Splash deployment needed, careful: resource intense)")
@@ -357,7 +357,7 @@ class LogMarker(models.Model):
     mark_with_type = models.CharField(max_length=2, choices=TYPE_CHOICES, help_text=help_text)
     custom_type = models.CharField(max_length=25, blank=True)
     spider_name = models.CharField(max_length=200, blank=True)
-    scraper = models.ForeignKey(Scraper, blank=True, null=True, on_delete=models.SET_NULL)
+    scraper = models.ForeignKey(Scraper, blank=True, null=True, on_delete=models.CASCADE)
 
 
 class Log(models.Model):
@@ -373,7 +373,7 @@ class Log(models.Model):
     type = models.CharField(max_length=25, blank=True)
     level = models.IntegerField(choices=LEVEL_CHOICES)
     spider_name = models.CharField(max_length=200)
-    scraper = models.ForeignKey(Scraper, blank=True, null=True, on_delete=models.SET_NULL)
+    scraper = models.ForeignKey(Scraper, blank=True, null=True, on_delete=models.CASCADE)
     date = models.DateTimeField(default=datetime.datetime.now)
     
     @staticmethod
