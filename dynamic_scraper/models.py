@@ -1,6 +1,4 @@
-#Stage 2 Update (Python 3)
 from __future__ import unicode_literals
-from django.utils.encoding import python_2_unicode_compatible
 from builtins import range
 from builtins import str
 from builtins import object
@@ -9,7 +7,6 @@ from django.db import models
 from django.db.models import Q
 
 
-@python_2_unicode_compatible
 class ScrapedObjClass(models.Model):
     name = models.CharField(max_length=200)
     scraper_scheduler_conf = models.TextField(default='\
@@ -30,12 +27,12 @@ class ScrapedObjClass(models.Model):
         return self.name
 
     class Meta(object):
+        db_tablespace = "tables"
         verbose_name = "Scraped object class"
         verbose_name_plural = "Scraped object classes"
         ordering = ['name',]
 
 
-@python_2_unicode_compatible
 class ScrapedObjAttr(models.Model):
     ATTR_TYPE_CHOICES = (
         ('S', 'STANDARD'),
@@ -55,10 +52,10 @@ class ScrapedObjAttr(models.Model):
         return self.name + " (" + str(self.obj_class) + ")"
 
     class Meta(object):
+        db_tablespace = "tables"
         ordering = ['order',]
 
 
-@python_2_unicode_compatible
 class Scraper(models.Model):
     STATUS_CHOICES = (
         ('A', 'ACTIVE'),
@@ -167,7 +164,7 @@ class Scraper(models.Model):
         return self.requestpagetype_set.filter(page_type='FP')
 
     def get_detail_page_rpts(self):
-        return s.requestpagetype_set.filter(~Q(page_type='MP'))
+        return self.requestpagetype_set.filter(~Q(page_type='MP'))
 
     def get_rpt(self, page_type):
         return self.requestpagetype_set.get(page_type=page_type)
@@ -232,10 +229,10 @@ class Scraper(models.Model):
         return self.name + " (" + self.scraped_obj_class.name + ")"
 
     class Meta(object):
+        db_tablespace = "tables"
         ordering = ['name', 'scraped_obj_class',]
 
 
-@python_2_unicode_compatible
 class RequestPageType(models.Model):
     TYPE_CHOICES = tuple([("MP", "Main Page"), ("FP", "Follow Page"),] + [("DP{n}".format(n=str(n)), "Detail Page {n}".format(n=str(n))) for n in list(range(1, 26))])
     CONTENT_TYPE_CHOICES = (
@@ -274,7 +271,6 @@ class RequestPageType(models.Model):
         return ret_str
 
 
-@python_2_unicode_compatible
 class Checker(models.Model):
     CHECKER_TYPE = (
         ('4', '404'),
@@ -293,7 +289,6 @@ class Checker(models.Model):
         return  str(self.scraped_obj_attr) + ' > ' + self.get_checker_type_display()
 
 
-@python_2_unicode_compatible
 class ScraperElem(models.Model):
     REQUEST_PAGE_TYPE_CHOICES = tuple([("MP", "Main Page")] + [("DP{n}".format(n=str(n)), "Detail Page {n}".format(n=str(n))) for n in list(range(1, 26))])
     help_text = "The different attributes to be scraped, exactly one attribute of type BASE necessary."
@@ -322,8 +317,6 @@ class ScraperElem(models.Model):
         ordering = ['scraped_obj_attr__order',]
 
 
-
-@python_2_unicode_compatible
 class SchedulerRuntime(models.Model):
     TYPE = (
         ('S', 'SCRAPER'),
@@ -338,6 +331,7 @@ class SchedulerRuntime(models.Model):
         return str(self.id)
 
     class Meta(object):
+        db_tablespace = "tables"
         ordering = ['next_action_time',]
 
 
@@ -385,4 +379,5 @@ class Log(models.Model):
         return numeric_level        
     
     class Meta(object):
+        db_tablespace = "tables"
         ordering = ['-date']
