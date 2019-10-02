@@ -25,18 +25,18 @@ For **scraping images** you will need the Pillow Library:
 * `Pillow Libray (PIL fork) 5.x <https://python-pillow.github.io/>`_
 
 Since ``v.0.4.1`` ``DDS`` has basic ``Splash`` support for rendering/processing ``Javascript`` before
-scraping the page. For this to work you have to install and configure ```Splash`` and the connecting (see: :ref:`setting_up_scrapyjs_splash`) 
+scraping the page. For this to work you have to install and configure ```Splash`` and the connecting (see: :ref:`setting_up_scrapyjs_splash`)
 ``scrapy-splash`` library:
 
-* `scrapy-splash <https://github.com/scrapy-plugins/scrapy-splash>`_ 0.7 
- 
+* `scrapy-splash <https://github.com/scrapy-plugins/scrapy-splash>`_ 0.7
+
 .. _release_compatibility:
 
 Release Compatibility Table
 ---------------------------
-Have a look at the following table for an overview which ``Django``, ``Scrapy``, 
-``Python`` and ``django-celery`` versions are supported by which ``DDS`` version. 
-Due to dev resource constraints backwards compatibility for older ``Django`` or 
+Have a look at the following table for an overview which ``Django``, ``Scrapy``,
+``Python`` and ``django-celery`` versions are supported by which ``DDS`` version.
+Due to dev resource constraints backwards compatibility for older ``Django`` or
 ``Scrapy`` releases for new ``DDS`` releases normally can not be granted.
 
 +-------------+-------------------+----------------------+-----------------------+-------------------------------+
@@ -59,7 +59,7 @@ Due to dev resource constraints backwards compatibility for older ``Django`` or
 
 Installation with Pip
 ---------------------
-Django Dynamic Scraper can be found on the PyPI Package Index `(see package description) <http://pypi.python.org/pypi/django-dynamic-scraper>`_. 
+Django Dynamic Scraper can be found on the PyPI Package Index `(see package description) <http://pypi.python.org/pypi/django-dynamic-scraper>`_.
 For the installation with Pip, first install the requirements above. Then install DDS with::
 
     pip install django-dynamic-scraper
@@ -73,22 +73,22 @@ git into a folder of your choice::
 
 Then you have to met the requirements above. You can do this by
 manually installing the libraries you need with ``pip`` or ``easy_install``, which may be a better choice
-if you e.g. don't want to risk your Django installation to be touched during the installation process. 
+if you e.g. don't want to risk your Django installation to be touched during the installation process.
 However if you are sure that there
 is no danger ahead or if you are running DDS in a new ``virtualenv`` environment, you can install all the
 requirements above together with::
 
     pip install -r requirements.txt
-    
-Then either add the ``dynamic_scraper`` folder to your 
+
+Then either add the ``dynamic_scraper`` folder to your
 ``PYTHONPATH`` or your project manually or install DDS with::
 
     python setup.py install
-    
-Note, that the requirements are NOT included in the ``setup.py`` script since this caused some problems 
+
+Note, that the requirements are NOT included in the ``setup.py`` script since this caused some problems
 when testing the installation and the requirements installation process with ``pip`` turned out to be
 more stable.
-    
+
 Now, to use DDS in your Django project add ``'dynamic_scraper'`` to your ``INSTALLED_APPS`` in your
 project settings.
 
@@ -103,10 +103,10 @@ Scrapy Configuration
 ^^^^^^^^^^^^^^^^^^^^
 
 For getting Scrapy_ to work the recommended way to start a new Scrapy project normally is to create a directory
-and template file structure with the ``scrapy startproject myscrapyproject`` command on the shell first. 
+and template file structure with the ``scrapy startproject myscrapyproject`` command on the shell first.
 However, there is (initially) not so much code to be written left and the directory structure
 created by the ``startproject`` command cannot really be used when connecting Scrapy to the Django Dynamic Scraper
-library. So the easiest way to start a new scrapy project is to just manually add the ``scrapy.cfg`` 
+library. So the easiest way to start a new scrapy project is to just manually add the ``scrapy.cfg``
 project configuration file as well as the Scrapy ``settings.py`` file and adjust these files to your needs.
 It is recommended to just create the Scrapy project in the same Django app you used to create the models you
 want to scrape and then place the modules needed for scrapy in a sub package called ``scraper`` or something
@@ -117,19 +117,19 @@ similar. After finishing this chapter you should end up with a directory structu
     scrapy.cfg
     open_news/
       models.py # Your models.py file
-      (tasks.py)      
+      (tasks.py)
       scraper/
         settings.py
         spiders.py
         (checkers.py)
         pipelines.py
-      
+
 Your ``scrapy.cfg`` file should look similar to the following, just having adjusted the reference to the
 settings file and the project name::
-  
+
   [settings]
   default = open_news.scraper.settings
-  
+
   #Scrapy till 0.16
   [deploy]
   #url = http://localhost:6800/
@@ -138,21 +138,21 @@ settings file and the project name::
   #Scrapy with separate scrapyd (0.18+)
   [deploy:scrapyd1]
   url = http://localhost:6800/
-  project = open_news 
+  project = open_news
 
 
 And this is your ``settings.py`` file::
 
   import os
-  
+
   PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
   os.environ.setdefault("DJANGO_SETTINGS_MODULE", "example_project.settings") #Changed in DDS v.0.3
 
   BOT_NAME = 'open_news'
-  
+
   SPIDER_MODULES = ['dynamic_scraper.spiders', 'open_news.scraper',]
   USER_AGENT = '%s/%s' % (BOT_NAME, '1.0')
-  
+
   #Scrapy 0.20+
   ITEM_PIPELINES = {
       'dynamic_scraper.pipelines.ValidationPipeline': 400,
@@ -165,27 +165,29 @@ And this is your ``settings.py`` file::
       'open_news.scraper.pipelines.DjangoWriterPipeline',
   ]
 
+  SCRAPYD_URL = 'http://localhost:6800' # Optional
+
 The ``SPIDER_MODULES`` setting is referencing the basic spiders of DDS and our ``scraper`` package where
 Scrapy will find the (yet to be written) spider module. For the ``ITEM_PIPELINES`` setting we have to
 add (at least) two pipelines. The first one is the mandatory pipeline from DDS, doing stuff like checking
 for the mandatory attributes we have defined in our scraper in the DB or preventing double entries already
-existing in the DB (identified by the url attribute of your scraped items) to be saved a second time.  
+existing in the DB (identified by the url attribute of your scraped items) to be saved a second time.
 
 .. _setting_up_scrapyjs_splash:
 
 Setting up Splash (Optional)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-More and more webpages only show their full information load after various ``Ajax`` calls and/or ``Javascript`` 
+More and more webpages only show their full information load after various ``Ajax`` calls and/or ``Javascript``
 function processing. For being able to scrape those websites ``DDS`` supports ``Splash`` for basic JS rendering/processing.
 
-For this to work you have to install ``Splash`` (the Javascript rendering service) installed - probably via ``Docker``- 
+For this to work you have to install ``Splash`` (the Javascript rendering service) installed - probably via ``Docker``-
 (see `installation instructions <https://splash.readthedocs.org/en/latest/install.html>`_).
 
 Tested versions to work with ``DDS``:
- 
+
 * Splash 1.8
-* Splash 2.3  
+* Splash 2.3
 
 Then ``scrapy-splash`` with::
 
@@ -201,4 +203,3 @@ For customization of ``Splash`` args ``DSCRAPER_SPLASH_ARGS`` setting can be use
    Resources needed for completely rendering a website on your scraping machine are vastly larger then for just
    requesting/working on the plain HTML text without further processing, so make use of ``Splash`` capability
    on when needed!
-
