@@ -20,7 +20,8 @@ class TaskUtils(object):
 
     def __init__(self, *args, **kwargs):
         super(TaskUtils, self).__init__(*args, **kwargs)
-        self._scrapyd_base_url = settings.get('SCRAPYD_URL', "localhost:{}".format(scrapyd_port))
+        self._scrapyd_hostname = settings.get('SCRAPYD_HOSTNAME', 'localhost')
+        self._scrapyd_port = settings.get('SCRAPYD_PORT', scrapyd_port)
 
     def _run_spider(self, **kwargs):
         param_dict = {
@@ -32,14 +33,15 @@ class TaskUtils(object):
         }
         params = urllib.parse.urlencode(param_dict)
         headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
-        conn = http.client.HTTPConnection(self._scrapyd_base_url)
+        conn = http.client.HTTPConnection('{}:{}'.format(self._scrapyd_hostname, self._scrapyd_port))
         conn.request("POST", "/schedule.json", params, headers)
         conn.getresponse()
 
 
     def _pending_jobs(self, spider):
         # Ommit scheduling new jobs if there are still pending jobs for same spider
-        resp = urllib.request.urlopen('{}/listjobs.json?project=default'.format(self._scrapyd_base_url))
+        resp = urllib.request.urlopen('http://{}:{}/listjobs.json?project=default'
+                             .format(self._scrapyd_hostname, self._scrapyd_port))
         data = json.loads(resp.read().decode('utf-8'))
         if 'pending' in data:
             for item in data['pending']:
