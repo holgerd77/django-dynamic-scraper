@@ -90,6 +90,28 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.13.3-beta** (2021-06-25)
+
+* Dropped Python ``2.7`` support from support list
+* Updated ``Pillow`` dependency from v5 to v6 (v6.2.1+),
+  PR `#147 <https://github.com/holgerd77/django-dynamic-scraper/pull/147>`_
+
+**Changes in version 0.13.2-beta** (2019-02-15)
+
+* Added Python ``3.6`` and ``3.7`` (experimental) support, dropped 
+  Python ``3.4`` from support list,
+  PR `#119 <https://github.com/holgerd77/django-dynamic-scraper/pull/119>`_
+* Added Scrapy ``0.15`` support, dropped Scrapy ``0.14`` from support list,
+  PR `#120 <https://github.com/holgerd77/django-dynamic-scraper/pull/120>`_
+* Removed Django ``1.8``, ``1.9``, ``1.10`` from support list,
+  PR `#120 <https://github.com/holgerd77/django-dynamic-scraper/pull/120>`_
+* Updated dependencies: ``future`` ``0.15.x`` -> ``0.17.x``, ``Pillow`` ``3.x`` to ``5.x``
+  (Python ``3.6`` support), explicit new ``attrs>=17.4.0`` dependency
+  (Python ``3.6`` support),
+  PR `#119 <https://github.com/holgerd77/django-dynamic-scraper/pull/119>`_
+* Improved Travis CI support displaying test failure or passing on GitHub PRs,
+  PR `#117 <https://github.com/holgerd77/django-dynamic-scraper/pull/117>`_
+
 **Changes in version 0.13.1-beta** (2017-11-07)
 
 * Replaced hard-coded port ``6800`` for scheduled scraper/checker runs with setting from
