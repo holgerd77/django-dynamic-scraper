@@ -9,7 +9,7 @@ Requirements
 ------------
 The **basic requirements** for Django Dynamic Scraper are:
 
-* Python 2.7 or Python 3.5, 3.6, 3.7 (experimental)
+* Python 3.5, 3.6, 3.7 (experimental)
 * `Django <https://www.djangoproject.com/>`_ 1.11 (2.0+ not supported yet)
 * `Scrapy <http://www.scrapy.org>`_ 1.5
 * `scrapy-djangoitem <https://github.com/scrapy-plugins/scrapy-djangoitem>`_ 1.1
@@ -22,7 +22,7 @@ If you want to use the **scheduling mechanism** of DDS you also have to install 
 
 For **scraping images** you will need the Pillow Library:
 
-* `Pillow Libray (PIL fork) 5.x <https://python-pillow.github.io/>`_
+* `Pillow Libray (PIL fork) 6.x <https://python-pillow.github.io/>`_
 
 Since ``v.0.4.1`` ``DDS`` has basic ``Splash`` support for rendering/processing ``Javascript`` before
 scraping the page. For this to work you have to install and configure ```Splash`` and the connecting (see: :ref:`setting_up_scrapyjs_splash`) 
@@ -39,19 +39,19 @@ Have a look at the following table for an overview which ``Django``, ``Scrapy``,
 Due to dev resource constraints backwards compatibility for older ``Django`` or 
 ``Scrapy`` releases for new ``DDS`` releases normally can not be granted.
 
-+-------------+-------------------+----------------------+-----------------------+-------------------------------+
-| DDS Version | Django            | Scrapy               | Python                | django-celery/Celery/Kombu    |
-+=============+===================+======================+=======================+===============================+
-| 0.13        | 1.11              | 1.5                  | 2.7/3.5/3.6/3.7 (exp) | 3.2.1/3.1.25/3.0.37           |
-+-------------+-------------------+----------------------+-----------------------+-------------------------------+
-| 0.11/0.12   | 1.8/1.9/1.10/1.11 | 1.1/1.2(?)/1.3/1.4   | 2.7+/3.4+             | 3.2.1/3.1.25/3.0.37           |
-+-------------+-------------------+----------------------+-----------------------+-------------------------------+
-| 0.4-0.9     | 1.7/1.8           | 0.22/0.24            | 2.7                   | 3.1.16 (newer untested)       |
-+-------------+-------------------+----------------------+-----------------------+-------------------------------+
-| 0.3         | 1.4-1.6           | 0.16/0.18            | 2.7                   | 3.0+ (3.1+ untested)          |
-+-------------+-------------------+----------------------+-----------------------+-------------------------------+
-| 0.2         | 1.4               | 0.14                 | 2.7                   | (3.0 untested)                |
-+-------------+-------------------+----------------------+-----------------------+-------------------------------+
++-------------+-------------------+----------------------+-------------------------+-------------------------------+
+| DDS Version | Django            | Scrapy               | Python                  | django-celery/Celery/Kombu    |
++=============+===================+======================+=========================+===============================+
+| 0.13        | 1.11              | 1.5                  | (2.7)/3.5/3.6/3.7 (exp) | 3.2.1/3.1.25/3.0.37           |
++-------------+-------------------+----------------------+-------------------------+-------------------------------+
+| 0.11/0.12   | 1.8/1.9/1.10/1.11 | 1.1/1.2(?)/1.3/1.4   | 2.7+/3.4+               | 3.2.1/3.1.25/3.0.37           |
++-------------+-------------------+----------------------+-------------------------+-------------------------------+
+| 0.4-0.9     | 1.7/1.8           | 0.22/0.24            | 2.7                     | 3.1.16 (newer untested)       |
++-------------+-------------------+----------------------+-------------------------+-------------------------------+
+| 0.3         | 1.4-1.6           | 0.16/0.18            | 2.7                     | 3.0+ (3.1+ untested)          |
++-------------+-------------------+----------------------+-------------------------+-------------------------------+
+| 0.2         | 1.4               | 0.14                 | 2.7                     | (3.0 untested)                |
++-------------+-------------------+----------------------+-------------------------+-------------------------------+
 
 .. note::
    Please get in touch (`GitHub <https://github.com/holgerd77/django-dynamic-scraper>`_) if you have any additions to this table. A library version is counted as supported if the

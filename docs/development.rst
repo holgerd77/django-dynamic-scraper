@@ -90,6 +90,12 @@ Docker container can be run with::
 
 Release Notes
 =============
+**Changes in version 0.13.3-beta** (2021-06-25)
+
+* Dropped Python ``2.7`` support from support list
+* Updated ``Pillow`` dependency from v5 to v6 (v6.2.1+),
+  PR `#147 <https://github.com/holgerd77/django-dynamic-scraper/pull/147>`_
+
 **Changes in version 0.13.2-beta** (2019-02-15)
 
 * Added Python ``3.6`` and ``3.7`` (experimental) support, dropped 
