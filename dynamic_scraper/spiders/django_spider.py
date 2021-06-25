@@ -785,33 +785,38 @@ class DjangoSpider(DjangoBaseSpider):
             mir_reached = True
         if self.scraper.follow_pages_url_xpath and not mir_reached:
             if not self.conf['NUM_PAGES_FOLLOW'] or follow_page_num < self.conf['NUM_PAGES_FOLLOW']:
-                url = response.xpath(self.scraper.follow_pages_url_xpath).extract_first()
-                if url is not None:
-                    self._set_meta_splash_args()
-                    follow_page = ''
-                    if self.scraper.follow_pages_page_xpath:
-                        follow_page = response.xpath(self.scraper.follow_pages_page_xpath).extract_first()
-                    form_data_orig = None
-                    if self.scraper.get_follow_page_rpts().count() > 0:
-                        f_rpt = self.scraper.get_follow_page_rpts()[0]
-                        form_data_orig = self.scraper.get_follow_page_rpts()[0].form_data
-                    else:
-                        f_rpt = self.scraper.get_main_page_rpt()
-                        form_data_orig = self.scraper.get_main_page_rpt().form_data
-                    kwargs, form_data = self._prepare_mp_req_data(self.fp_request_kwargs, form_data_orig, page, follow_page)
-                    
-                    follow_page_num += 1
-                    kwargs['meta']['page_num'] = page_num
-                    kwargs['meta']['follow_page_num'] = follow_page_num
-                    kwargs['meta']['rpt'] = f_rpt
-                    
-                    self._log_page_info(page_num, follow_page_num, url, f_rpt, form_data, kwargs)
-                    
-                    if f_rpt.request_type == 'R':
-                        yield response.follow(url, callback=self.parse, method=f_rpt.method, dont_filter=f_rpt.dont_filter, **kwargs)
-                    else:
-                        url = response.urljoin(url)
-                        yield FormRequest(url, callback=self.parse, method=f_rpt.method, formdata=form_data, dont_filter=f_rpt.dont_filter, **kwargs)
+                urls = response.xpath(self.scraper.follow_pages_url_xpath).getall()
+                if urls is not None:
+                    for url in urls:
+                        self._set_meta_splash_args()
+                        follow_page = ''
+                        if self.scraper.follow_pages_page_xpath:
+                            follow_page = response.xpath(
+                                self.scraper.follow_pages_page_xpath).extract_first()
+                        form_data_orig = None
+                        if self.scraper.get_follow_page_rpts().count() > 0:
+                            f_rpt = self.scraper.get_follow_page_rpts()[0]
+                            form_data_orig = self.scraper.get_follow_page_rpts()[
+                                0].form_data
+                        else:
+                            f_rpt = self.scraper.get_main_page_rpt()
+                            form_data_orig = self.scraper.get_main_page_rpt().form_data
+                        kwargs, form_data = self._prepare_mp_req_data(
+                            self.fp_request_kwargs, form_data_orig, page, follow_page)
+
+                        follow_page_num += 1
+                        kwargs['meta']['page_num'] = page_num
+                        kwargs['meta']['follow_page_num'] = follow_page_num
+                        kwargs['meta']['rpt'] = f_rpt
+
+                        self._log_page_info(
+                            page_num, follow_page_num, url, f_rpt, form_data, kwargs)
+
+                        if f_rpt.request_type == 'R':
+                            yield response.follow(url, callback=self.parse, method=f_rpt.method, dont_filter=f_rpt.dont_filter, **kwargs)
+                        else:
+                            url = response.urljoin(url)
+                            yield FormRequest(url, callback=self.parse, method=f_rpt.method, formdata=form_data, dont_filter=f_rpt.dont_filter, **kwargs)
     
     
     def _log_request_info(self, rpt, form_data, kwargs):
