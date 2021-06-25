@@ -21,7 +21,7 @@ class EventWebsite(models.Model):
 @python_2_unicode_compatible
 class Event(models.Model):
     title = models.CharField(max_length=200)
-    event_website = models.ForeignKey(EventWebsite) 
+    event_website = models.ForeignKey(EventWebsite,on_delete=models.CASCADE)
     description = models.TextField(blank=True)
     description2 = models.TextField(blank=True)
     url = models.URLField(blank=True)
