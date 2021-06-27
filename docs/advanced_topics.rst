@@ -255,11 +255,11 @@ The two methods are decorated with the Celery task decorator to tell Celery that
 regarded as tasks. In each task, a method from the ``TaskUtils`` module from DDS is called to run the
 spiders/checkers ready for the next execution.
 
-Now you can create a peridoc task both for your scraper and your checker in the Django admin interface:
+Now you can create a periodic task both for your scraper and your checker in the Django admin interface:
 
 .. image:: images/screenshot_django-admin_peridoc_task.png
 
-In the peridoc task form you should be able to select your tasks defined above. Create an interval how often
+In the periodic task form you should be able to select your tasks defined above. Create an interval how often
 these tasks are performed. In our open news example, 2 hours should be a good value. Please keep in mind, that
 these are not the values how often a scraper/checker is actually run. If you define a two hour timeframe here,
 it just means, that ever two hours, the task method executed is checking for scrapers/checkers with a next
