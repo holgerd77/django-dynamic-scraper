@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.db.models.deletion
 
 
 def create_default_checker_objects(apps, schema_editor):
@@ -20,7 +21,7 @@ def create_default_checker_objects(apps, schema_editor):
                 checker_x_path=s.checker_x_path, checker_x_path_result=s.checker_x_path_result, \
                 checker_ref_url=s.checker_ref_url)
             c.save()
-    
+
 
 class Migration(migrations.Migration):
 
@@ -33,13 +34,13 @@ class Migration(migrations.Migration):
             name='Checker',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('checker_type', models.CharField(default=b'4', max_length=1, choices=[(b'4', b'404'), (b'X', b'404_OR_X_PATH')])),
+                ('checker_type', models.CharField(default='4', max_length=1, choices=[('4', '404'), ('X', '404_OR_X_PATH')])),
                 ('checker_x_path', models.CharField(max_length=200, blank=True)),
                 ('checker_x_path_result', models.CharField(max_length=200, blank=True)),
                 ('checker_ref_url', models.URLField(max_length=500, blank=True)),
                 ('comments', models.TextField(blank=True)),
-                ('scraped_obj_attr', models.ForeignKey(help_text=b'Attribute of type DETAIL_PAGE_URL, several checkers for same DETAIL_PAGE_URL attribute possible.', to='dynamic_scraper.ScrapedObjAttr')),
-                ('scraper', models.ForeignKey(to='dynamic_scraper.Scraper')),
+                ('scraped_obj_attr', models.ForeignKey(help_text='Attribute of type DETAIL_PAGE_URL, several checkers for same DETAIL_PAGE_URL attribute possible.', to='dynamic_scraper.ScrapedObjAttr', on_delete=django.db.models.deletion.CASCADE)),
+                ('scraper', models.ForeignKey(to='dynamic_scraper.Scraper', on_delete=django.db.models.deletion.CASCADE)),
             ],
         ),
         migrations.AddField(
@@ -50,7 +51,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='requestpagetype',
             name='scraped_obj_attr',
-            field=models.ForeignKey(blank=True, to='dynamic_scraper.ScrapedObjAttr', help_text=b'Empty for main page, attribute of type DETAIL_PAGE_URL scraped from main page for detail pages.', null=True),
+            field=models.ForeignKey(blank=True, to='dynamic_scraper.ScrapedObjAttr', help_text='Empty for main page, attribute of type DETAIL_PAGE_URL scraped from main page for detail pages.', null=True, on_delete=django.db.models.deletion.CASCADE),
         ),
         migrations.RunPython(create_default_checker_objects),
     ]
