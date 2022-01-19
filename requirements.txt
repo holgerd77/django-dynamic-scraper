@@ -10,4 +10,3 @@ django-celery==3.2.1
 future>=0.17,<0.18
 pillow>=6.2.1,<7.0
 attrs>=17.4.0
-
